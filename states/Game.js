@@ -4,21 +4,19 @@ window.Phaser = require('../js/libs/phaser-split.min');
 
 class Game extends window.Phaser.State {
   create() {
-    this.bg = this.add.tileSprite(
+    this.ground = this.add.tileSprite(
       0,
       0,
       this.world.width,
       this.world.height,
-      'bg'
+      'ground'
     );
-    this.hero = this.add.sprite(this.world.centerX, this.world.centerY, 'hero');
-    this.hero.anchor.setTo(0.5);
-    this.hero.inputEnabled = true;
-    this.hero.input.enableDrag();
+    this.wall = this.add.sprite(this.world.centerX, 0, 'wall');
+    this.wall.anchor.setTo(0.5, 0);
   }
 
   update() {
-    this.bg.tilePosition.y += 1;
+    // this.bg.tilePosition.y += 1;
   }
 }
 

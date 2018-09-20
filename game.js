@@ -10,7 +10,7 @@ import StartState from './states/Start.js';
 import GameState from './states/Game.js';
 
 var aspect = window.innerWidth / window.innerHeight;
-var gameWidth = 1024;
+var gameWidth = 715;
 var gameHeight = Math.round(gameWidth / aspect);
 
 console.log('game size', gameWidth, gameHeight);

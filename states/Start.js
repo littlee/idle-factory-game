@@ -2,6 +2,8 @@ window.PIXI = require('../js/libs/pixi.min');
 window.p2 = require('../js/libs/p2.min');
 window.Phaser = require('../js/libs/phaser-split.min');
 
+import config from '../config';
+
 class Start extends window.Phaser.State {
   init() {
     this.stage.backgroundColor = '#fff';
@@ -11,8 +13,9 @@ class Start extends window.Phaser.State {
   }
 
   preload() {
-    this.load.image('bg', 'images/bg.jpg');
-    this.load.image('hero', 'images/hero.png');
+    this.load.baseURL = config.BASE_URL;
+    this.load.image('ground', 'images/Ground00_88400421.png');
+    this.load.image('wall', 'images/WallWide_88400188.png');
   }
 
   create() {
