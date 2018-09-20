@@ -4,7 +4,8 @@
   "description": "## Current Using Phaser-CE Build",
   "main": "game.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "anywhere -s -d __static"
   },
   "repository": {
     "type": "git",
@@ -15,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/littlee/wechat-small-game-phaser/issues"
   },
-  "homepage": "https://github.com/littlee/wechat-small-game-phaser#readme"
+  "homepage": "https://github.com/littlee/wechat-small-game-phaser#readme",
+  "devDependencies": {
+    "anywhere": "^1.5.0"
+  }
 }

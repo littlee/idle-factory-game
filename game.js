@@ -10,8 +10,10 @@ import StartState from './states/Start.js';
 import GameState from './states/Game.js';
 
 var aspect = window.innerWidth / window.innerHeight;
-var gameWidth = 640;
-var gameHeight = gameWidth / aspect;
+var gameWidth = 1024;
+var gameHeight = Math.round(gameWidth / aspect);
+
+console.log('game size', gameWidth, gameHeight);
 
 var game = new Phaser.Game({
   width: gameWidth,
