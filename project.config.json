@@ -11,6 +11,18 @@
 	"libVersion": "2.3.0",
 	"appid": "wxcdd91952896863ae",
 	"projectname": "ilde-factory-game",
+	"packOptions": {
+		"ignore": [
+			{
+				"type": "folder",
+				"value": "__static"
+			},
+			{
+				"type": "folder",
+				"value": "node_modules"
+			}
+		]
+	},
 	"condition": {
 		"search": {
 			"current": -1,
@@ -28,17 +40,5 @@
 			"current": -1,
 			"list": []
 		}
-	},
-  "packOptions": {
-    "ignore": [
-      {
-        "type": "folder",
-        "value": "__static"
-      },
-      {
-        "type": "folder",
-        "value": "node_modules"
-      }
-    ]
-  }
+	}
 }
