@@ -5,7 +5,7 @@
   "main": "game.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "anywhere -s -d __static"
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
@@ -18,6 +18,9 @@
   },
   "homepage": "https://github.com/littlee/wechat-small-game-phaser#readme",
   "devDependencies": {
-    "anywhere": "^1.5.0"
+    "address": "^1.0.3",
+    "anywhere": "^1.5.0",
+    "prettier": "^1.14.3",
+    "shelljs": "^0.8.2"
   }
 }

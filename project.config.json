@@ -10,7 +10,7 @@
 	"compileType": "game",
 	"libVersion": "2.3.0",
 	"appid": "wxcdd91952896863ae",
-	"projectname": "ilde-factory-game",
+	"projectname": "idle-factory-game",
 	"packOptions": {
 		"ignore": [
 			{
