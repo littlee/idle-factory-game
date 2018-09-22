@@ -1,13 +1,13 @@
 /*
 问题遗留：
 -1- 弹窗出来之后，背景依然可以被scroll
--2- 弹窗可以被scroll的区域不是mask的部分，而是最长的那个display object
+-2- 弹窗可以被scroll的区域不是mask的部分，而是整个group的区域，区域会发生变化
 */
 export default (
   {
     mask = null, // 一个对象 {height: xx, width: xx}
-    direction = 'vertical',
     targetToScroll = null, // should be a group
+    direction = 'vertical',
   }
 ) => {
   let pressed,
@@ -37,6 +37,7 @@ export default (
     pressed = true;
     lastY = initPos;
 
+    lastOffset = offset;
     vUsed = amplitude = 0;
     timestamp = Date.now();
     ticker = setInterval(trackVelocity, 100);
@@ -94,7 +95,7 @@ export default (
 
     if (vUsed > 10 || vUsed < -10) {
       // factor 0.1 is tweakable, fancy a 'heavy-scrolling-feel', reduce the value of factor.
-      amplitude = Math.round(0.3 * vUsed);
+      amplitude = Math.round(0.6 * vUsed);
       target = Math.round(offset + amplitude);
       timestamp = Date.now();
       // requestAnimationFrame only schedules a single update to the script-based animation. If subsequent animation frames are needed, then requestAnimationFrame will need to be called again from within the callback.
@@ -119,6 +120,7 @@ export default (
     }
   }
   targetToScroll.game.input.addMoveCallback(dragOnScreen);
+
   targetToScroll.setAllChildren('inputEnabled', true);
   targetToScroll.onChildInputDown.add(touchScreen);
   targetToScroll.onChildInputUp.add(releasePointer);
