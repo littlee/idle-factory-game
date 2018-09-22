@@ -1,7 +1,7 @@
 {
-  "name": "wechat-small-game-phaser",
+  "name": "idle-factory-game",
   "version": "1.0.0",
-  "description": "## Current Using Phaser-CE Build",
+  "description": "666",
   "main": "game.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
