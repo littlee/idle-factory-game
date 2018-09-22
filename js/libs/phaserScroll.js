@@ -1,3 +1,8 @@
+/*
+问题遗留：
+-1- 弹窗出来之后，背景依然可以被scroll
+-2- 弹窗可以被scroll的区域不是mask的部分，而是最长的那个display object
+*/
 export default (
   {
     mask = null, // 一个对象 {height: xx, width: xx}
@@ -17,7 +22,8 @@ export default (
       // new
       max,
       target,
-      min;
+      min,
+      margin = 100;
 
   function touchScreen(pointerGame, pointerObj) {
     let pointer = targetToScroll ? pointerObj : pointerGame;
@@ -40,7 +46,7 @@ export default (
     minosSize = direction === 'vertical'
       ? mask === null ? targetToScroll.game.camera.view.height : mask.height
       : mask === null ? targetToScroll.game.camera.view.width : mask.width;
-    max = targetSize - minosSize;
+    max = mask === null ? targetSize - minosSize : targetSize - minosSize + margin;
     return true
   }
 

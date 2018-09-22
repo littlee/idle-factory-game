@@ -36,8 +36,7 @@ class Game extends window.Phaser.State {
       mask: {
         height: 360,
         width: txt.width
-      },
-      testMask: txt.mask
+      }
     })
 
 
