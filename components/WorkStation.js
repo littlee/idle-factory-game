@@ -31,7 +31,7 @@ const INPUT_NUM_STYLE = {
   strokeThickness: 5
 };
 
-class WorkStation extends window.Phaser.Group {
+class Workstation extends window.Phaser.Group {
   constructor(game, x, y, stationLevel = 1, index = 1) {
     super(game);
     this.x = x;
@@ -57,15 +57,40 @@ class WorkStation extends window.Phaser.Group {
     this.table = this.gameRef.make.image(0, 0, `table_level_${stationLevel}`);
     this.table.alignIn(this.ground, window.Phaser.TOP_CENTER);
 
+    this.tableCover = this.gameRef.make.sprite(0, 0, 'table_cover');
+    this.tableCover.alignIn(this.table, window.Phaser.TOP_LEFT, 5, 0);
+
+    this.buyBtnSuperCash = this.gameRef.make.sprite(0, 0, 'btn_buy_ws_super_cash');
+    this.buyBtnSuperCash.alignIn(this.table, window.Phaser.TOP_LEFT, -5, -5);
+    this.buyBtnSuperCash.inputEnabled = true;
+    this.buyBtnSuperCash.events.onInputDown.add(() => {
+      console.log('点击超级现金购买');
+    });
+
+    this.buyBtnSuperCashText = this.gameRef.make.text(0, 0, '123', BTN_TEXT_STYLE);
+    this.buyBtnSuperCashText.alignIn(this.buyBtnSuperCash, window.Phaser.TOP_LEFT, -70, -5);
+
+    this.buyBtnCash = this.gameRef.make.sprite(0, 0, 'btn_buy_ws_cash');
+    this.buyBtnCash.alignIn(this.table, window.Phaser.TOP_RIGHT, -10, -5);
+    this.buyBtnCash.inputEnabled = true;
+    this.buyBtnCash.events.onInputDown.add(() => {
+      console.log('点击现金购买');
+    });
+
+    this.buyBtnCashText = this.gameRef.make.text(0, 0, '123', BTN_TEXT_STYLE);
+    this.buyBtnCashText.alignIn(this.buyBtnCash, window.Phaser.TOP_LEFT, -70, -5);
+
     this.productBtn = this.gameRef.make.sprite(0, 0, 'btn_product_holder');
     this.productBtn.alignIn(this.table, window.Phaser.TOP_RIGHT, -15, -15);
     this.productBtn.inputEnabled = true;
     this.productBtn.events.onInputDown.add(() => {
       console.log('点击工作台产品按钮');
     });
+    this.productBtn.visible = false;
 
     this.productBtnItem = this.gameRef.make.sprite(0, 0, 'source_steel');
     this.productBtnItem.alignIn(this.productBtn, window.Phaser.CENTER, 0, -5);
+    this.productBtnItem.visible = false;
 
     this.inputItems = this.gameRef.make.group();
     range(5).forEach(index => {
@@ -73,9 +98,11 @@ class WorkStation extends window.Phaser.Group {
     });
     this.inputItems.sort('z', window.Phaser.Group.SORT_DESCENDING);
     this.inputItems.alignIn(this.table, window.Phaser.TOP_LEFT, -30);
+    this.inputItems.visible = false;
 
-    this.inputNum = this.gameRef.make.text(0, 0, formatBigNum(Big('123456789').toString()), INPUT_NUM_STYLE);
+    this.inputNum = this.gameRef.make.text(0, 0, formatBigNum(Big('123456789')), INPUT_NUM_STYLE);
     this.inputNum.alignIn(this.table, window.Phaser.TOP_LEFT, -30);
+    this.inputNum.visible = false;
 
     this.outputItems = this.gameRef.make.group();
     range(5).forEach(index => {
@@ -83,6 +110,7 @@ class WorkStation extends window.Phaser.Group {
     });
     this.outputItems.sort('z', window.Phaser.Group.SORT_DESCENDING);
     this.outputItems.alignIn(this.table, window.Phaser.TOP_CENTER);
+    this.outputItems.visible = false;
 
     this.worker = this.gameRef.make.sprite(0, 0, 'worker');
     this.worker.alignTo(this.table, window.Phaser.TOP_CENTER);
@@ -123,6 +151,11 @@ class WorkStation extends window.Phaser.Group {
     this.add(this.groundNum);
     this.add(this.manager);
     this.add(this.table);
+    this.add(this.tableCover);
+    this.add(this.buyBtnSuperCash);
+    this.add(this.buyBtnSuperCashText);
+    this.add(this.buyBtnCash);
+    this.add(this.buyBtnCashText);
     this.add(this.productBtn);
     this.add(this.productBtnItem);
     this.add(this.inputItems);
@@ -200,4 +233,4 @@ class WorkStation extends window.Phaser.Group {
   }
 }
 
-export default WorkStation;
+export default Workstation;

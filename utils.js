@@ -1,5 +1,5 @@
-export function formatBigNum(num) {
-  let numStr = `${num}`;
+export function formatBigNum(bigNum) {
+  let numStr = bigNum.toString();
   const UNITS = ['', 'K', 'M', 'B', 'T', 'aa', 'ab', 'ac', 'ad'];
   const UNIT_CARRTY = 3;
   const DIGITS_LEN = 3;

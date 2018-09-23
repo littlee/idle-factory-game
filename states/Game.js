@@ -6,7 +6,7 @@ import BtnIdleCash from '../components/BtnIdleCash';
 import BtnCash from '../components/BtnCash';
 import BtnSuperCash from '../components/BtnSuperCash';
 
-import WorkStation from '../components/WorkStation';
+import Workstation from '../components/Workstation';
 
 class Game extends window.Phaser.State {
   create() {
@@ -29,7 +29,7 @@ class Game extends window.Phaser.State {
     this.marketTruck.anchor.setTo(1);
 
     // eslint-disable-next-line
-    let workStation = new WorkStation(this.game, 0, 915);
+    let workStation = new Workstation(this.game, 0, 915);
 
     this.wall = this.add.sprite(this.world.centerX, 81, 'wall');
     this.wall.anchor.setTo(0.5, 0);
