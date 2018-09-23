@@ -1,8 +1,9 @@
+import config from '../config';
+
 window.PIXI = require('../js/libs/pixi.min');
 window.p2 = require('../js/libs/p2.min');
 window.Phaser = require('../js/libs/phaser-split.min');
 
-import config from '../config';
 // import Big from '../js/libs/big.min.js';
 // import { formatBigNum } from '../utils';
 
@@ -17,6 +18,7 @@ class Start extends window.Phaser.State {
   preload() {
     this.load.baseURL = config.BASE_URL;
 
+    this.load.image('arrow', 'images/icon_level_up.png');
     this.load.image('bell_hole', 'images/bell_hole.png');
     this.load.image('bell_red', 'images/bell_red.png');
     this.load.image('bell_yellow', 'images/bell_yellow.png');
