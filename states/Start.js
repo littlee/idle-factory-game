@@ -3,6 +3,8 @@ window.p2 = require('../js/libs/p2.min');
 window.Phaser = require('../js/libs/phaser-split.min');
 
 import config from '../config';
+// import Big from '../js/libs/big.min.js';
+// import { formatBigNum } from '../utils';
 
 class Start extends window.Phaser.State {
   init() {
@@ -25,6 +27,8 @@ class Start extends window.Phaser.State {
 
     // this.state.start('Game');
     this.state.start('Test');
+
+    // console.log(formatBigNum(Big('123456789123456789')))
   }
 }
 
