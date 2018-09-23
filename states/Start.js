@@ -20,6 +20,8 @@ class Start extends window.Phaser.State {
     this.load.image('bell_hole', 'images/bell_hole.png');
     this.load.image('bell_red', 'images/bell_red.png');
     this.load.image('bell_yellow', 'images/bell_yellow.png');
+    this.load.spritesheet('box_collect_holder', 'images/box_collect_holder.png', 75, 75);
+    this.load.image('box_collect', 'images/box_collect.png');
     this.load.image('btn_cash', 'images/btn_cash.png');
     this.load.image('btn_idle_cash', 'images/btn_idle_cash.png');
     this.load.image('btn_level', 'images/btn_level.png');
@@ -33,6 +35,7 @@ class Start extends window.Phaser.State {
     this.load.image('table_cover', 'images/table_cover.png');
     this.load.image('table_level_0', 'images/table_level_0.png');
     this.load.image('wall', 'images/wall.png');
+    this.load.image('worker', 'images/worker.png');
 
     this.load.image('test_ground', 'test/Ground00_88400421.png');
     this.load.image('test_wall', 'test/WallWide_88400188.png');

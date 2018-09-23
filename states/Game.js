@@ -6,6 +6,8 @@ import BtnIdleCash from '../components/BtnIdleCash';
 import BtnCash from '../components/BtnCash';
 import BtnSuperCash from '../components/BtnSuperCash';
 
+import WorkStation from '../components/WorkStation';
+
 class Game extends window.Phaser.State {
   create() {
     this.wareHouseGround = this.add.graphics();
@@ -19,6 +21,8 @@ class Game extends window.Phaser.State {
     this.marketGround.endFill();
 
     this.exitGround = this.add.tileSprite(0, 674, this.world.width, 241, 'ground_level_0');
+
+    let workStation = new WorkStation(this.game, 0, 915);
 
 
     this.wall = this.add.sprite(this.world.centerX, 81, 'wall');
