@@ -17,6 +17,22 @@ class Start extends window.Phaser.State {
   preload() {
     this.load.baseURL = config.BASE_URL;
 
+    this.load.image('bell_hole', 'images/bell_hole.png');
+    this.load.image('bell_red', 'images/bell_red.png');
+    this.load.image('bell_yellow', 'images/bell_yellow.png');
+    this.load.image('btn_cash', 'images/btn_cash.png');
+    this.load.image('btn_idle_cash', 'images/btn_idle_cash.png');
+    this.load.image('btn_level', 'images/btn_level.png');
+    this.load.image('btn_product_holder', 'images/btn_product_holder.png');
+    this.load.image('btn_super_cash', 'images/btn_super_cash.png');
+    this.load.image('ground_level_0', 'images/ground_level_0.png');
+    this.load.image('icon_level_up', 'images/icon_level_up.png');
+    this.load.image('mgr_market', 'images/mgr_market.png');
+    this.load.image('mgr_warehouse', 'images/mgr_warehouse.png');
+    this.load.image('mgr_worker', 'images/mgr_worker.png');
+    this.load.image('table_cover', 'images/table_cover.png');
+    this.load.image('table_level_0', 'images/table_level_0.png');
+    this.load.image('wall', 'images/wall.png');
 
     this.load.image('test_ground', 'test/Ground00_88400421.png');
     this.load.image('test_wall', 'test/WallWide_88400188.png');
@@ -26,9 +42,8 @@ class Start extends window.Phaser.State {
   }
 
   create() {
-
-    // this.state.start('Game');
-    this.state.start('Test');
+    this.state.start('Game');
+    // this.state.start('Test');
 
     // console.log(formatBigNum(Big('123456789123456789')))
   }
