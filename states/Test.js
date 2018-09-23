@@ -12,7 +12,7 @@ class Game extends window.Phaser.State {
       0,
       this.world.width,
       this.world.height * 3,
-      'wall'
+      'test_wall'
     );
     this.bgGroup = this.add.group();
     this.bgGroup.addChild(wall)
@@ -20,10 +20,10 @@ class Game extends window.Phaser.State {
     this.panelGroup = this.add.group();
     this.panelGroup.visible = false;
     this.txtGroup = this.add.group();
-    let panel = this.add.image(this.game.world.centerX, this.game.world.centerY, 'panel');
+    let panel = this.add.image(this.game.world.centerX, this.game.world.centerY, 'test_panel');
     panel.anchor.set(0.5, 0.5);
 
-    let txt = this.add.image(this.game.world.centerX + 35, this.game.world.centerY - 30, 'txt');
+    let txt = this.add.image(this.game.world.centerX + 35, this.game.world.centerY - 30, 'test_txt');
     txt.anchor.set(0.5, 0);
     txt.mask = this.game.add.graphics();
     txt.mask.drawRect(txt.x - txt.width / 2, txt.y, txt.width, 360);
@@ -40,7 +40,7 @@ class Game extends window.Phaser.State {
     })
 
 
-    let icon = this.add.image(this.game.width, 100, 'iconEgg');
+    let icon = this.add.image(this.game.width, 100, 'test_iconEgg');
     icon.anchor.set(1, 0);
     icon.inputEnabled = true;
     icon.events.onInputDown.add(() => {

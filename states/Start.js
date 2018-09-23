@@ -16,11 +16,13 @@ class Start extends window.Phaser.State {
 
   preload() {
     this.load.baseURL = config.BASE_URL;
-    this.load.image('ground', 'images/Ground00_88400421.png');
-    this.load.image('wall', 'images/WallWide_88400188.png');
-    this.load.image('iconEgg', 'images/Egg_Base.png');
-    this.load.image('panel', 'images/act_rule_frame.png');
-    this.load.image('txt', 'images/act_rule_text.png');
+
+
+    this.load.image('test_ground', 'test/Ground00_88400421.png');
+    this.load.image('test_wall', 'test/WallWide_88400188.png');
+    this.load.image('test_iconEgg', 'test/Egg_Base.png');
+    this.load.image('test_panel', 'test/act_rule_frame.png');
+    this.load.image('test_txt', 'test/act_rule_text.png');
   }
 
   create() {
