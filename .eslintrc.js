@@ -84,7 +84,8 @@ module.exports = {
   },
 
   globals: {
-    Phaser: true
+    Phaser: false,
+    canvas: false
   },
 
   rules: {

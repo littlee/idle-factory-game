@@ -18,7 +18,6 @@ export default (
       amplitude,
       timestamp,
       ticker,
-      delta,
       // new
       max,
       target,
@@ -48,7 +47,7 @@ export default (
       ? mask === null ? targetToScroll.game.camera.view.height : mask.height
       : mask === null ? targetToScroll.game.camera.view.width : mask.width;
     max = mask === null ? targetSize - minosSize : targetSize - minosSize + margin;
-    return true
+    return true;
   }
 
   function trackVelocity() {
@@ -69,7 +68,7 @@ export default (
   function dragOnScreen(pointer) {
     let nowY, delta;
     if (pressed) {
-      let nowY = direction === 'vertical' ? pointer.y : pointer.x;
+      nowY = direction === 'vertical' ? pointer.y : pointer.x;
       delta = lastY - nowY; // lastY is the reference
       if (delta > 1 || delta < -1) {
         lastY = nowY;

@@ -18,7 +18,7 @@ class Start extends window.Phaser.State {
   preload() {
     this.load.baseURL = config.BASE_URL;
 
-
+    this.load.image('arrow', 'images/icon_level_up.png');
     this.load.image('test_ground', 'test/Ground00_88400421.png');
     this.load.image('test_wall', 'test/WallWide_88400188.png');
     this.load.image('test_iconEgg', 'test/Egg_Base.png');

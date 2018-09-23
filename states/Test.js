@@ -1,4 +1,4 @@
-import getScrolling from '../js/libs/phaserScroll.js';
+import Scroller from '../js/libs/Scroller.js';
 
 window.PIXI = require('../js/libs/pixi.min');
 window.p2 = require('../js/libs/p2.min');
@@ -14,8 +14,38 @@ class Game extends window.Phaser.State {
       this.world.height * 3,
       'test_wall'
     );
+    let topIndicator = this.add.image(this.game.world.centerX, 0, 'arrow');
+    let bottomIndicator = this.add.image(this.game.world.centerX, wall.height, 'arrow');
+    bottomIndicator.anchor.set(0, 1);
     this.bgGroup = this.add.group();
-    this.bgGroup.addChild(wall)
+    this.bgGroup.addChild(wall);
+    this.bgGroup.addChild(topIndicator);
+    this.bgGroup.addChild(bottomIndicator);
+
+    let bgScroller = new Scroller({
+      targetToScroll: this.bgGroup
+    });
+    bgScroller.enableScroll();
+
+    let arrowUp = this.add.image(10, 3 / 10 * this.game.height, 'arrow');
+    let arrowDown = this.add.image(10, 3 / 8 * this.game.height, 'arrow');
+    arrowDown.scale.y = -1;
+    this.arrowGroup = this.add.group();
+    this.arrowGroup.fixToCamera = true;
+    this.arrowGroup.scale.x = 2;
+    this.arrowGroup.scale.y = 2;
+    this.arrowGroup.addChild(arrowUp);
+    this.arrowGroup.addChild(arrowDown);
+    this.arrowGroup.setAllChildren('inputEnabled', true);
+    arrowUp.events.onInputDown.add(() => {
+      console.log('scroll to top');
+      bgScroller.scrollToTop();
+    });
+    arrowDown.events.onInputDown.add(() => {
+      console.log('scroll to a specified pos');
+      bgScroller.scrollTo(1000);
+    });
+
 
     this.panelGroup = this.add.group();
     this.panelGroup.visible = false;
@@ -31,13 +61,14 @@ class Game extends window.Phaser.State {
     this.panelGroup.addChild(panel);
     this.panelGroup.addChild(this.txtGroup);
 
-    getScrolling({
+    let txtScroller = new Scroller({
       targetToScroll: this.txtGroup,
       mask: {
         height: 360,
         width: txt.width
       }
-    })
+    });
+    txtScroller.enableScroll();
 
 
     let icon = this.add.image(this.game.width, 100, 'test_iconEgg');
@@ -46,11 +77,9 @@ class Game extends window.Phaser.State {
     icon.events.onInputDown.add(() => {
       console.log('egg is clicked');
       this.panelGroup.visible = this.panelGroup.visible === false ? true : false;
-    })
+    });
 
-    getScrolling({
-      targetToScroll: this.bgGroup
-    })
+
 
 
   }
