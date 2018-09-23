@@ -27,14 +27,18 @@ class Start extends window.Phaser.State {
     this.load.image('btn_level', 'images/btn_level.png');
     this.load.image('btn_product_holder', 'images/btn_product_holder.png');
     this.load.image('btn_super_cash', 'images/btn_super_cash.png');
-    this.load.image('ground_level_0', 'images/ground_level_0.png');
+    this.load.image('ground_level_1', 'images/ground_level_1.png');
     this.load.image('icon_level_up', 'images/icon_level_up.png');
+    this.load.image('market_truck', 'images/market_truck.png');
     this.load.image('mgr_market', 'images/mgr_market.png');
     this.load.image('mgr_warehouse', 'images/mgr_warehouse.png');
     this.load.image('mgr_worker', 'images/mgr_worker.png');
+    this.load.image('source_ore', 'images/source_ore.png');
+    this.load.image('source_steel', 'images/source_steel.png');
     this.load.image('table_cover', 'images/table_cover.png');
-    this.load.image('table_level_0', 'images/table_level_0.png');
+    this.load.image('table_level_1', 'images/table_level_1.png');
     this.load.image('wall', 'images/wall.png');
+    this.load.image('warehouse_table', 'images/warehouse_table.png');
     this.load.image('worker', 'images/worker.png');
 
     this.load.image('test_ground', 'test/Ground00_88400421.png');
