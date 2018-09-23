@@ -71,7 +71,7 @@ export default (
     if (pressed) {
       let nowY = direction === 'vertical' ? pointer.y : pointer.x;
       delta = lastY - nowY; // lastY is the reference
-      if (delta > 2 || delta < -2) {
+      if (delta > 1 || delta < -1) {
         lastY = nowY;
 
         getScrolling(delta + offset);
@@ -124,6 +124,4 @@ export default (
   targetToScroll.setAllChildren('inputEnabled', true);
   targetToScroll.onChildInputDown.add(touchScreen);
   targetToScroll.onChildInputUp.add(releasePointer);
-
-
 };
