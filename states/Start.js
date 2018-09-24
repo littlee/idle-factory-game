@@ -51,11 +51,13 @@ class Start extends window.Phaser.State {
     this.load.image('test_iconEgg', 'test/Egg_Base.png');
     this.load.image('test_panel', 'test/act_rule_frame.png');
     this.load.image('test_txt', 'test/act_rule_text.png');
+    // try
+    this.load.image('btn_close', 'test/modal/btn_close.png');
   }
 
   create() {
-    this.state.start('Game');
-    // this.state.start('Test');
+    // this.state.start('Game');
+    this.state.start('Test');
 
     // console.log(formatBigNum(Big('123456789123456789')))
   }

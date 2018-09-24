@@ -73,19 +73,21 @@ class Game extends window.Phaser.State {
     });
     txtScroller.enableScroll();
 
+    // raw modal
+    let modal = new ModalRaw({
+      game: this.game,
+    });
+
     // btn-egg
     let icon = this.add.image(this.game.width, 100, 'test_iconEgg');
     icon.anchor.set(1, 0);
     icon.inputEnabled = true;
     icon.events.onInputDown.add(() => {
       console.log('egg is clicked');
-      this.panelGroup.visible = this.panelGroup.visible === false ? true : false;
+      modal.visible = true;
     });
 
-    // raw modal
-    let modal = new ModalRaw({
-      game: this.game
-    });
+
     // let sprite
 
   }
