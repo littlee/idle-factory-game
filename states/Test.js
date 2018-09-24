@@ -1,5 +1,6 @@
 import Scroller from '../components/Scroller.js';
-import ModalRaw from '../components/ModalRaw.js';
+// import ModalRaw from '../components/ModalRaw.js';
+import ModalLevel from '../components/ModalLevel.js';
 
 window.PIXI = require('../js/libs/pixi.min');
 window.p2 = require('../js/libs/p2.min');
@@ -25,7 +26,8 @@ class Game extends window.Phaser.State {
     this.bgGroup.addChild(bottomIndicator);
 
     let bgScroller = new Scroller({
-      targetToScroll: this.bgGroup
+      targetToScroll: this.bgGroup,
+      priority: 0,
     });
     bgScroller.enableScroll();
 
@@ -74,9 +76,9 @@ class Game extends window.Phaser.State {
     txtScroller.enableScroll();
 
     // raw modal
-    let modal = new ModalRaw({
-      game: this.game,
-    });
+    let modal = new ModalLevel(
+      this.game,
+    );
 
     // btn-egg
     let icon = this.add.image(this.game.width, 100, 'test_iconEgg');

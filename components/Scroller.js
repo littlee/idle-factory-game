@@ -10,7 +10,7 @@ bouncing写错，再来
 */
 
 export default class Scroller {
-  constructor({ mask = null, targetToScroll = null, direction = 'vertical'}) {
+  constructor({ mask = null, targetToScroll = null, direction = 'vertical', priority = 10}) {
     // params
     this.mask = mask;
     this.targetToScroll = targetToScroll;
@@ -21,6 +21,7 @@ export default class Scroller {
     this.tween = this.game.add.tween(targetToScroll);
     this.axis = direction === 'vertical' ? 'y' : 'x';
     this.veil = null;
+    this.veilPriorityID = priority;
     // this.bounceDistance = 0;
     // this.bouncing = false;
 
@@ -229,6 +230,7 @@ export default class Scroller {
     this.targetToScroll.addChild(this.veil);
 
     this.veil.inputEnabled = true;
+    this.veil.input.priorityID = this.veilPriorityID;
     this.veil.events.onInputDown.add(this._touchScreen);
     this.veil.events.onInputUp.add(this._releasePointer);
   };
