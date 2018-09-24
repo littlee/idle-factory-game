@@ -1,4 +1,5 @@
-import Scroller from '../js/libs/Scroller.js';
+import Scroller from '../components/Scroller.js';
+import ModalRaw from '../components/ModalRaw.js';
 
 window.PIXI = require('../js/libs/pixi.min');
 window.p2 = require('../js/libs/p2.min');
@@ -7,6 +8,7 @@ window.Phaser = require('../js/libs/phaser-split.min');
 
 class Game extends window.Phaser.State {
   create() {
+    // main page
     let wall = this.add.tileSprite(
       0,
       0,
@@ -27,6 +29,7 @@ class Game extends window.Phaser.State {
     });
     bgScroller.enableScroll();
 
+    // arrow for tweening control
     let arrowUp = this.add.image(10, 3 / 10 * this.game.height, 'arrow');
     let arrowDown = this.add.image(10, 3 / 8 * this.game.height, 'arrow');
     arrowDown.scale.y = -1;
@@ -46,7 +49,7 @@ class Game extends window.Phaser.State {
       bgScroller.scrollTo(1000);
     });
 
-
+    // rules modal
     this.panelGroup = this.add.group();
     this.panelGroup.visible = false;
     this.txtGroup = this.add.group();
@@ -70,7 +73,7 @@ class Game extends window.Phaser.State {
     });
     txtScroller.enableScroll();
 
-
+    // btn-egg
     let icon = this.add.image(this.game.width, 100, 'test_iconEgg');
     icon.anchor.set(1, 0);
     icon.inputEnabled = true;
@@ -79,8 +82,11 @@ class Game extends window.Phaser.State {
       this.panelGroup.visible = this.panelGroup.visible === false ? true : false;
     });
 
-
-
+    // raw modal
+    let modal = new ModalRaw({
+      game: this.game
+    });
+    // let sprite
 
   }
 
@@ -90,6 +96,7 @@ class Game extends window.Phaser.State {
 
   render() {
     this.game.debug.cameraInfo(this.game.camera, 32, 32);
+    // this.game.debug.bodyInfo(sprite, 32, 32);
   }
 }
 
