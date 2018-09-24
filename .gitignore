@@ -1,2 +1,5 @@
 .DS_Store
 node_modules
+
+# share the effort of conflict merging
+config.js
