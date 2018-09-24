@@ -47,7 +47,7 @@ class ModalRaw extends window.Phaser.Group {
     this.x = (this.cameraView.width - this.w) / 2;
     this.y = (this.cameraView.height - this.h) / 2;
 
-    this._drawVeilnAdd2World();
+    this._createVeil();
 
     // frame
     this.frame = this.game.make.graphics(0, 0); // graphics( [x] [, y] )
@@ -76,7 +76,7 @@ class ModalRaw extends window.Phaser.Group {
 
   }
 
-  _drawVeilnAdd2World = () => {
+  _createVeil = () => {
     // veil beginFill(color, alpha)
     let x = -this.x;
     let y = -this.y;
