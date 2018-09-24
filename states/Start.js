@@ -1,11 +1,12 @@
 import config from '../config';
+// import Big from '../js/libs/big.min.js';
+// import { formatBigNum } from '../utils';
 
 window.PIXI = require('../js/libs/pixi.min');
 window.p2 = require('../js/libs/p2.min');
 window.Phaser = require('../js/libs/phaser-split.min');
 
-// import Big from '../js/libs/big.min.js';
-// import { formatBigNum } from '../utils';
+
 
 class Start extends window.Phaser.State {
   init() {

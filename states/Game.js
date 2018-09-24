@@ -1,12 +1,12 @@
-window.PIXI = require('../js/libs/pixi.min');
-window.p2 = require('../js/libs/p2.min');
-window.Phaser = require('../js/libs/phaser-split.min');
-
 import BtnIdleCash from '../components/BtnIdleCash';
 import BtnCash from '../components/BtnCash';
 import BtnSuperCash from '../components/BtnSuperCash';
 
 import Workstation from '../components/Workstation';
+
+window.PIXI = require('../js/libs/pixi.min');
+window.p2 = require('../js/libs/p2.min');
+window.Phaser = require('../js/libs/phaser-split.min');
 
 class Game extends window.Phaser.State {
   create() {

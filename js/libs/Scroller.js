@@ -10,7 +10,7 @@ bouncing写错，再来
 */
 
 export default class Scroller {
-  constructor({ mask = null, targetToScroll = null, direction = 'vertical' }) {
+  constructor({ mask = null, targetToScroll = null, direction = 'vertical'}) {
     // params
     this.mask = mask;
     this.targetToScroll = targetToScroll;
@@ -20,6 +20,7 @@ export default class Scroller {
     this.game = targetToScroll.game;
     this.tween = this.game.add.tween(targetToScroll);
     this.axis = direction === 'vertical' ? 'y' : 'x';
+    this.veil = null;
     // this.bounceDistance = 0;
     // this.bouncing = false;
 
@@ -81,10 +82,10 @@ export default class Scroller {
     minosSize =
       this.direction === 'vertical'
         ? this.mask === null
-          ? this.targetToScroll.game.camera.view.height
+          ? this.game.camera.view.height
           : this.mask.height
         : this.mask === null
-          ? this.targetToScroll.game.camera.view.width
+          ? this.game.camera.view.width
           : this.mask.width;
     this.max =
       this.mask === null
@@ -130,8 +131,8 @@ export default class Scroller {
   _getBouncing = (bounceDistance) => {
     // `max` and `min` are the pos(x || y) of this.targetToScroll's extremities at this.axis
     let max = this.direction === 'vertical'
-      ? -(this.targetToScroll.height - this.targetToScroll.game.camera.view.height)
-      : -(this.targetToScroll.width - this.targetToScroll.game.camera.view.width);
+      ? -(this.targetToScroll.height - this.game.camera.view.height)
+      : -(this.targetToScroll.width - this.game.camera.view.width);
     let min = this.min;
     let pos = this.targetToScroll[this.axis];
     if (pos > max && pos < min) return false; // pos is ranging from [-0, -this.targetToScroll.height]
@@ -220,9 +221,16 @@ export default class Scroller {
 
 
   enableScroll = () => {
-    this.targetToScroll.setAllChildren('inputEnabled', true);
-    this.targetToScroll.onChildInputDown.add(this._touchScreen);
-    this.targetToScroll.onChildInputUp.add(this._releasePointer);
+    // better off this way: attach events to a veil with the same size of the this.targetToScroll, as opposed to attach events to all children of the group
+    this.veil = this.game.add.sprite(0, 0);
+    this.veil.alignIn(this.targetToScroll);
+    this.veil.width = this.targetToScroll.width;
+    this.veil.height = this.targetToScroll.height;
+    this.targetToScroll.addChild(this.veil);
+
+    this.veil.inputEnabled = true;
+    this.veil.events.onInputDown.add(this._touchScreen);
+    this.veil.events.onInputUp.add(this._releasePointer);
   };
 
   scrollToTop = () => {
@@ -247,7 +255,6 @@ export default class Scroller {
 
     // do the tweening
     if (!this.tween || this.tween.isRunning === false) {
-      console.log('tweening start');
       this.tween = this.game.add.tween(this.targetToScroll);
       this.tween.to(
         {
