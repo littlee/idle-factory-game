@@ -31,6 +31,8 @@ const INPUT_NUM_STYLE = {
   strokeThickness: 5
 };
 
+const PRIORITY_ID = 999;
+
 class Workstation extends window.Phaser.Group {
   constructor(game, x, y, stationLevel = 1, index = 1) {
     super(game);
@@ -63,6 +65,7 @@ class Workstation extends window.Phaser.Group {
     this.buyBtnSuperCash = this.gameRef.make.sprite(0, 0, 'btn_buy_ws_super_cash');
     this.buyBtnSuperCash.alignIn(this.table, window.Phaser.TOP_LEFT, -5, -5);
     this.buyBtnSuperCash.inputEnabled = true;
+    this.buyBtnSuperCash.input.priorityID = PRIORITY_ID;
     this.buyBtnSuperCash.events.onInputDown.add(() => {
       console.log('点击超级现金购买');
     });
@@ -73,6 +76,7 @@ class Workstation extends window.Phaser.Group {
     this.buyBtnCash = this.gameRef.make.sprite(0, 0, 'btn_buy_ws_cash');
     this.buyBtnCash.alignIn(this.table, window.Phaser.TOP_RIGHT, -10, -5);
     this.buyBtnCash.inputEnabled = true;
+    this.buyBtnCash.input.priorityID = PRIORITY_ID;
     this.buyBtnCash.events.onInputDown.add(() => {
       console.log('点击现金购买');
     });
@@ -83,6 +87,7 @@ class Workstation extends window.Phaser.Group {
     this.productBtn = this.gameRef.make.sprite(0, 0, 'btn_product_holder');
     this.productBtn.alignIn(this.table, window.Phaser.TOP_RIGHT, -15, -15);
     this.productBtn.inputEnabled = true;
+    this.productBtn.input.priorityID = PRIORITY_ID;
     this.productBtn.events.onInputDown.add(() => {
       console.log('点击工作台产品按钮');
     });
@@ -123,16 +128,19 @@ class Workstation extends window.Phaser.Group {
     this.boxHolderProd = this.gameRef.make.sprite(0, 0, 'box_collect_holder');
     this.boxHolderProd.alignTo(this.table, window.Phaser.BOTTOM_LEFT, -20, -5);
     this.boxHolderProd.inputEnabled = true;
+    this.boxHolderProd.input.priorityID = PRIORITY_ID;
     this.boxHolderProd.events.onInputDown.add(this._setData.bind(this, { collectType: COLLECT_TYPES.PROD }));
 
     this.boxHolderCash = this.gameRef.make.sprite(0, 0, 'box_collect_holder');
     this.boxHolderCash.alignTo(this.table, window.Phaser.BOTTOM_RIGHT, -20, -5);
     this.boxHolderCash.inputEnabled = true;
+    this.boxHolderCash.input.priorityID = PRIORITY_ID;
     this.boxHolderCash.events.onInputDown.add(this._setData.bind(this, { collectType: COLLECT_TYPES.CASH }));
 
     this.upgradeBtn = this.gameRef.make.sprite(0, 0, 'btn_level');
     this.upgradeBtn.alignIn(this.table, window.Phaser.BOTTOM_CENTER, 0, 30);
     this.upgradeBtn.inputEnabled = true;
+    this.upgradeBtn.input.priorityID = PRIORITY_ID;
     this.upgradeBtn.events.onInputDown.add(() => {
       console.log('点击工作台升级按钮');
     });

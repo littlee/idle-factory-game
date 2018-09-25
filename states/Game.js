@@ -18,7 +18,6 @@ class Game extends window.Phaser.State {
     this.bgGroup = this.game.add.group();
     // create the wall and 2 markets
     this._createWalln2markets();
-
     // ground 0
     this.exitGround = this.add.tileSprite(0, 674, this.world.width, 241, 'ground_level_1');
     this.warehouseManager = this.add.sprite(0, 0, 'mgr_warehouse');
