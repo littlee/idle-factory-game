@@ -3,6 +3,7 @@ import { formatBigNum } from '../utils';
 import Big from '../js/libs/big.min';
 
 import ModalLevel from './ModalLevel';
+import Worker from './Worker';
 
 window.PIXI = require('../js/libs/pixi.min');
 window.p2 = require('../js/libs/p2.min');
@@ -244,9 +245,10 @@ class Workstation extends window.Phaser.Group {
     this.productGroup.add(this.inputItemsMoving);
     this.productGroup.add(this.outputItemsMovingLeft);
     this.productGroup.add(this.outputItemsMovingRight);
-
-    this.worker = this.gameRef.make.sprite(0, 0, 'worker');
-    this.worker.alignTo(this.table, window.Phaser.TOP_CENTER);
+    
+    this.worker = new Worker(this.game, 0, 0);
+    this.worker.alignTo(this.table, window.Phaser.TOP_CENTER, 20, -10);
+    this.worker.work();
 
     this.manager = this.gameRef.make.sprite(0, 0, 'mgr_worker');
     this.manager.alignIn(this.table, window.Phaser.TOP_LEFT, -15, 100);
@@ -303,6 +305,7 @@ class Workstation extends window.Phaser.Group {
     this.add(this.ground);
     this.add(this.groundNum);
     this.add(this.manager);
+    this.add(this.worker);
     this.add(this.table);
     this.add(this.tableCover);
 
@@ -310,7 +313,6 @@ class Workstation extends window.Phaser.Group {
 
     this.add(this.productGroup);
 
-    this.add(this.worker);
     this.add(this.boxHolderProd);
     this.add(this.boxHolderCash);
     this.add(this.boxCollect);

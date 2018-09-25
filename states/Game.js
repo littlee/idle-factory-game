@@ -8,6 +8,9 @@ import WorkerWarehouse from '../components/WorkerWarehouse';
 import WorkerMarket from '../components/WorkerMarket';
 import Scroller from '../components/Scroller.js';
 
+import BellRed from '../components/BellRed';
+import BellYellow from '../components/BellYellow';
+
 window.PIXI = require('../js/libs/pixi.min');
 window.p2 = require('../js/libs/p2.min');
 window.Phaser = require('../js/libs/phaser-split.min');
@@ -76,6 +79,13 @@ class Game extends window.Phaser.State {
     this.menuBottom.endFill();
 
     
+    this.bellRed = new BellRed(this.game, 80, 116);
+    this.bellRed.unlock();
+    this.bellRed.disable();
+
+    this.bellYellow = new BellYellow(this.game, 550, 116);
+    this.bellYellow.unlock();
+
     let wh = new WorkerWarehouse(this.game, 50, 600);
     this.add.existing(wh);
 
@@ -121,6 +131,8 @@ class Game extends window.Phaser.State {
     this.wall = this.add.sprite(this.world.centerX, 81, 'wall');
     this.wall.anchor.setTo(0.5, 0);
     // this.wall.visible = false;
+
+
   }
 
   _createFastScrollArrow = (scroller) => {
