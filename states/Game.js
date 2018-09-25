@@ -15,6 +15,7 @@ window.Phaser = require('../js/libs/phaser-split.min');
 关于priorityID:
 -1- 让整个屏幕滑动的veil是0，屏幕中其他有自己input事件的game object是999.
 -2- 让modal滑动的veil是1000， modal里头要有自己input事件的game object需要设置成 > 1000.
+-3- menu以及其他fixed在屏幕的，设置成888
 */
 
 const PRIORITY_ID = 999;
@@ -79,12 +80,12 @@ class Game extends window.Phaser.State {
   }
 
   _addAllRelatedStuff2Bg = () => {
+    this.bgGroup.addChild(this.exitGround);
     this.bgGroup.addChild(this.warehouseGround);
     this.bgGroup.addChild(this.warehouseTable);
     this.bgGroup.addChild(this.marketGround);
     this.bgGroup.addChild(this.marketTruck);
     this.bgGroup.addChild(this.wall);
-    this.bgGroup.addChild(this.exitGround);
     this.bgGroup.addChild(this.warehouseManager);
     this.bgGroup.addChild(this.marketManager);
     this.bgGroup.addChild(this.workStation1);

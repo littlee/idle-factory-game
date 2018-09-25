@@ -20,6 +20,9 @@ class BtnCash extends window.Phaser.Group {
 
     this.text = this.gameRef.make.text(55, 45, '', TEXT_STYLE);
     this.add(this.text);
+
+    this.setAllChildren('inputEnabled', true);
+    this.setAllChildren('input.priorityID', 888);
   }
 
   setText(text) {
