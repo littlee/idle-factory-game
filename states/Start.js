@@ -1,4 +1,4 @@
-import config from '../config';
+import serverConfig from '../server_config';
 // import Big from '../js/libs/big.min.js';
 // import { formatBigNum } from '../utils';
 
@@ -17,7 +17,7 @@ class Start extends window.Phaser.State {
   }
 
   preload() {
-    this.load.baseURL = config.BASE_URL;
+    this.load.baseURL = serverConfig.BASE_URL;
 
     this.load.image('arrow', 'images/icon_level_up.png');
     this.load.image('bell_hole', 'images/bell_hole.png');
