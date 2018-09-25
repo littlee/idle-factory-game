@@ -60,13 +60,13 @@ class ModalRaw extends window.Phaser.Group {
     this.visible = false;
 
     this._createVeil();
-    this._createVeilTop();
+    // this._createVeilTop(); // for bug fixing
     this._getSubGroupInit();
 
     // the display object in this group, from top down
     this.addChild(this.veil);
     this.addChild(this.subGroup);
-    this.addChild(this.veilTop);
+    // this.addChild(this.veilTop); // for bug fixing
 
     // prep for input
     this.setAllChildren('inputEnabled', true);
@@ -92,7 +92,8 @@ class ModalRaw extends window.Phaser.Group {
     this.frame.lineTo(0, this.h);
     this.frame.lineTo(0, 0);
 
-    this.getContextGroupInit();
+    /* real content goes here */
+    // this.DEVgetContextGroupInit();
 
     // btn_close ...should be a sprite rather than img
     this.btnClose = this.game.make.button(this.w - 1, 0 + 1, 'btn_close', this._handleClose);
@@ -158,13 +159,14 @@ class ModalRaw extends window.Phaser.Group {
       mask: {
         width: this.w,
         height: this.h
-      }
+      },
+      heading: this.btnClose.height + 35,
     });
     this.scroller.enableScroll();
   }
 
   // try-out
-  getContextGroupInit = () => {
+  DEVgetContextGroupInit = () => {
     this.test = this.game.make.graphics(0, 0); // graphics( [x] [, y] )
     this.test.beginFill(0xFF0000);
     this.test.drawRect(80, 80, this.w - 160, this.h);
@@ -181,6 +183,12 @@ class ModalRaw extends window.Phaser.Group {
     this.contentGroup.addChild(this.test1);
     this.contentGroup.addChild(this.test2);
   }
+
+  getContextGroupInit = () => {
+    // test
+  }
+
+
 
 }
 

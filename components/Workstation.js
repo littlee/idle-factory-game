@@ -143,7 +143,8 @@ class Workstation extends window.Phaser.Group {
     this.upgradeBtn.alignIn(this.table, window.Phaser.BOTTOM_CENTER, 0, 30);
     this.upgradeBtn.inputEnabled = true;
     this.upgradeBtn.input.priorityID = PRIORITY_ID;
-    this.upgradeModal = new ModalLevel(this.game);
+    // ModalLevel
+    this.upgradeModal = new ModalLevel({game: this.game});
     this.upgradeBtn.events.onInputDown.add(() => {
       console.log('点击工作台升级按钮');
       this.upgradeModal.visible = true;

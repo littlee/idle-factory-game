@@ -25,11 +25,11 @@ class Game extends window.Phaser.State {
     this.bgGroup.addChild(topIndicator);
     this.bgGroup.addChild(bottomIndicator);
 
-    // let bgScroller = new Scroller({
-    //   targetToScroll: this.bgGroup,
-    //   priority: 0,
-    // });
-    // bgScroller.enableScroll();
+    let bgScroller = new Scroller({
+      targetToScroll: this.bgGroup,
+      priority: 0,
+    });
+    bgScroller.enableScroll();
 
     // arrow for tweening control
     let arrowUp = this.add.image(10, 3 / 10 * this.game.height, 'arrow');
@@ -42,14 +42,14 @@ class Game extends window.Phaser.State {
     this.arrowGroup.addChild(arrowUp);
     this.arrowGroup.addChild(arrowDown);
     this.arrowGroup.setAllChildren('inputEnabled', true);
-    // arrowUp.events.onInputDown.add(() => {
-    //   console.log('scroll to top');
-    //   bgScroller.scrollToTop();
-    // });
-    // arrowDown.events.onInputDown.add(() => {
-    //   console.log('scroll to a specified pos');
-    //   bgScroller.scrollTo(1000);
-    // });
+    arrowUp.events.onInputDown.add(() => {
+      console.log('scroll to top');
+      bgScroller.scrollToTop();
+    });
+    arrowDown.events.onInputDown.add(() => {
+      console.log('scroll to a specified pos');
+      bgScroller.scrollTo(1000);
+    });
 
     // rules modal
     this.panelGroup = this.add.group();
@@ -76,11 +76,14 @@ class Game extends window.Phaser.State {
     txtScroller.enableScroll();
 
     // raw modal
-    let modal = new ModalLevel(
-      this.game,
+    let modal = new ModalLevel({
+      game: this.game,
+      scrollable: true
+    }
     );
 
     // btn-egg
+    modal.visible = true;
     let icon = this.add.image(this.game.width, 100, 'test_iconEgg');
     icon.anchor.set(1, 0);
     icon.inputEnabled = true;

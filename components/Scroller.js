@@ -11,7 +11,7 @@ bouncing写错，再来
 */
 
 export default class Scroller {
-  constructor({ mask = null, targetToScroll = null, direction = 'vertical', priority = 10, veilWidth, veilHeight }) {
+  constructor({ mask = null, targetToScroll = null, direction = 'vertical', priority = 10, heading = 0 }) {
     // params
     this.mask = mask;
     this.targetToScroll = targetToScroll;
@@ -26,6 +26,7 @@ export default class Scroller {
     this.veilPriorityID = priority;
     this.veilWidth = mask ? this.mask.width : 0;
     this.veilHeight = mask ? this.mask.height : 0;
+    this.veilY = heading;
     // this.bounceDistance = 0;
     // this.bouncing = false;
 
@@ -230,9 +231,10 @@ export default class Scroller {
     let width = this.mask ? this.veilWidth : this.cameraView.width;
     let height = this.mask ? this.veilHeight : this.cameraView.height;
 
-    this.veil = this.game.make.graphics(0, 0);
+    // veil 定位在heading之下
+    this.veil = this.game.make.graphics(0, this.veilY);
     this.veil.fixedToCamera = true;
-    this.veil.beginFill(0x000000, 0.01);
+    this.veil.beginFill(0x000000, 0.1);
     this.veil.drawRect(0, 0, width, height);
     this.veil.endFill();
 
