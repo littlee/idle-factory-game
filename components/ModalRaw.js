@@ -166,15 +166,15 @@ class ModalRaw extends window.Phaser.Group {
   getContextGroupInit = () => {
     this.test = this.game.make.graphics(0, 0); // graphics( [x] [, y] )
     this.test.beginFill(0xFF0000);
-    this.test.drawRect(80, 80, this.w-160, this.h);
+    this.test.drawRect(80, 80, this.w - 160, this.h);
     this.test.endFill();
     this.test1 = this.game.make.graphics(0, 0); // graphics( [x] [, y] )
     this.test1.beginFill(0x00FF00);
-    this.test1.drawRect(80, 80+this.h, this.w-160, this.h);
+    this.test1.drawRect(80, 80 + this.h, this.w - 160, this.h);
     this.test1.endFill();
     this.test2 = this.game.make.graphics(0, 0); // graphics( [x] [, y] )
     this.test2.beginFill(0x0000FF);
-    this.test2.drawRect(80, 80+this.h*2, this.w-160, this.h);
+    this.test2.drawRect(80, 80 + this.h * 2, this.w - 160, this.h);
     this.test2.endFill();
     this.contentGroup.addChild(this.test);
     this.contentGroup.addChild(this.test1);

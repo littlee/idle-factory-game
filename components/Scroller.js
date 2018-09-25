@@ -10,7 +10,7 @@ bouncing写错，再来
 */
 
 export default class Scroller {
-  constructor({ mask = null, targetToScroll = null, direction = 'vertical', priority = 10, veilWidth, veilHeight}) {
+  constructor({ mask = null, targetToScroll = null, direction = 'vertical', priority = 10, veilWidth, veilHeight }) {
     // params
     this.mask = mask;
     this.targetToScroll = targetToScroll;
@@ -160,18 +160,18 @@ export default class Scroller {
 
     } else if (!this.pressed) {
       console.log('bounce back');
-        this.tween = this.game.add.tween(this.targetToScroll);
-        this.tween.to(
-          {
-            [this.axis]: end
-          },
-          this.config.BOUNCE_DURATION,
-          Phaser.Easing.Quadratic.Out,
-          true,
-          0,
-          0,
-          false
-        );
+      this.tween = this.game.add.tween(this.targetToScroll);
+      this.tween.to(
+        {
+          [this.axis]: end
+        },
+        this.config.BOUNCE_DURATION,
+        Phaser.Easing.Quadratic.Out,
+        true,
+        0,
+        0,
+        false
+      );
     }
     return false;
   };
