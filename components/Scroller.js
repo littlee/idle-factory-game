@@ -4,6 +4,7 @@ key：
 -2- 要enable手动scroll的话，invoke <instance>.enableScroll() 不需要参数
 -3- 要enable滑动到指定target顶部的话，invoke <instance>.scrollToTop() 不需要参数
 -4- 要enable滑动指定target到某个位置的话，invoke <instance>.scrollTo(<number>) 参数指定位置的px值
+-5- 目前无法避免input被veil吃掉，所以，要scroll的group里头要实现input事件触发的话，需要开发者自行升级game object的priorityID值
 
 todo:
 bouncing写错，再来
@@ -235,12 +236,15 @@ export default class Scroller {
     this.veil.drawRect(0, 0, width, height);
     this.veil.endFill();
 
+    this.targetToScroll.parent.addChild(this.veil); // this.targetToScroll本身是scroll的，做不了fixed
+
+    this.targetToScroll.setAllChildren('inputEnabled', true);
+
     this.veil.inputEnabled = true;
-    this.veil.input.priorityID = this.veilPriorityID;
     this.veil.events.onInputDown.add(this._touchScreen);
     this.veil.events.onInputUp.add(this._releasePointer);
+    this.veil.input.priorityID = this.veilPriorityID;
 
-    this.targetToScroll.parent.add(this.veil); // this.targetToScroll本身是scroll的，做不了fixed
   };
 
   scrollToTop = () => {
