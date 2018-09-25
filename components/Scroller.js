@@ -234,7 +234,7 @@ export default class Scroller {
     // veil 定位在heading之下
     this.veil = this.game.make.graphics(0, this.veilY);
     this.veil.fixedToCamera = true;
-    this.veil.beginFill(0x000000, 0.1);
+    this.veil.beginFill(0x000000, 0.01);
     this.veil.drawRect(0, 0, width, height);
     this.veil.endFill();
 

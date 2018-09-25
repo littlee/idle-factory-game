@@ -54,12 +54,21 @@ class Start extends window.Phaser.State {
     this.load.image('test_panel', 'test/act_rule_frame.png');
     this.load.image('test_txt', 'test/act_rule_text.png');
     // try
-    this.load.image('btn_close', 'test/modal/btn_close.png');
+    this.load.image('btn_close', 'images/btn_close.png');
+    this.load.image('avatar_tran', 'images/avatar_transporter.png');
+    this.load.image('arrow_levelUp', 'images/arrow_level_upgrade.png');
+    this.load.image('icon_loading_speed', 'images/icon_loading_speed.png');
+    this.load.image('icon_transporter', 'images/icon_transporter.png');
+    this.load.image('icon_walk_speed', 'images/icon_walk_speed.png');
+    this.load.image('icon_max_resource', 'images/icon_max_resource.png');
+    this.load.image('icon_transporter_capacity', 'images/icon_transporter_capacity.png');
+    this.load.image('btn_level_upgrade', 'images/btn_level_upgrade.png');
+    this.load.image('btn_pick_upgrade', 'images/btn_activated.png');
   }
 
   create() {
-    this.state.start('Game');
-    // this.state.start('Test');
+    // this.state.start('Game');
+    this.state.start('Test');
 
     // console.log(formatBigNum(Big('123456789123456789')))
   }

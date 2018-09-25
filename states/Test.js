@@ -78,7 +78,8 @@ class Game extends window.Phaser.State {
     // raw modal
     let modal = new ModalLevel({
       game: this.game,
-      scrollable: true
+      scrollable: true,
+      headingTxt: '233级仓库'
     }
     );
 
