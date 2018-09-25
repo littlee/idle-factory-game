@@ -3,7 +3,7 @@ const address = require('address');
 const shell = require('shelljs');
 const fs = require('fs');
 const path = require('path');
-const configFile = path.resolve(__dirname, 'config.js');
+const configFile = path.resolve(__dirname, 'server_config.js');
 const localIP = address.ip();
 
 let config = require('./config');
