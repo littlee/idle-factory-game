@@ -11,6 +11,12 @@ window.PIXI = require('../js/libs/pixi.min');
 window.p2 = require('../js/libs/p2.min');
 window.Phaser = require('../js/libs/phaser-split.min');
 
+/*
+关于priorityID:
+-1- 让整个屏幕滑动的veil是0，屏幕中其他有自己input事件的game object是999.
+-2- 让modal滑动的veil是1000， modal里头要有自己input事件的game object需要设置成 > 1000.
+*/
+
 const PRIORITY_ID = 999;
 
 class Game extends window.Phaser.State {
@@ -44,7 +50,7 @@ class Game extends window.Phaser.State {
     // with bg fills with stull, scrolling now is all set
     let wholeGameScroller = new Scroller({
       targetToScroll: this.bgGroup,
-      priority: 0,
+      priority: 0, // 区别弹窗的scroll
     });
     wholeGameScroller.enableScroll();
 
@@ -113,12 +119,13 @@ class Game extends window.Phaser.State {
   }
 
   _createFastScrollArrow = (scroller) => {
-    // this.arrowFastDown should scroll to a internal-shared data
-    this.arrowFastUp = this.add.image(40, this.game.camera.view.height / 12 * 10,  'arrow_fast_scroll');
+    // this.arrowFastDown should scroll to a internal-shared data, use hitArea to enlarge the clickable area if needed
+    this.arrowFastUp = this.add.image(40, this.game.camera.view.height / 13 * 10.5,  'arrow_fast_scroll');
     this.arrowFastDown = this.add.image(40, this.game.camera.view.height / 13 * 11.5,  'arrow_fast_scroll');
     this.arrowFastUp.scale.x = this.arrowFastDown.scale.x = 0.25;
     this.arrowFastUp.scale.y = -0.25;
     this.arrowFastDown.scale.y = 0.25;
+    console.log('width: ', this.arrowFastUp.width);
 
     this.arrowFastUp.inputEnabled = true;
     this.arrowFastDown.inputEnabled = true;

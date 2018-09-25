@@ -17,6 +17,7 @@ key:
 -9- 应该有个heading, 和btnClose的水平位置差不多，这样滑动的时候，才不会有overlay btnClose的可能。[未实现]
 -10- this.contentGroup里头的值，以及heading的尺寸和具体高度，要可以传入。[未实现]
 -11- mask和Scroller的veil的尺寸的位置要更加heading的尺寸做相应的调整。[为实现]
+-12- modal 的scroll里头的对象如果要有自己的input事件，需要设置priority > 1000
 */
 const config = {
   HEIGHT: 935,
@@ -31,7 +32,7 @@ const config = {
 
 class ModalRaw extends window.Phaser.Group {
   // new Group(game [, parent] [, name] [, addToStage] [, enableBody] [, physicsBodyType])
-  constructor(game, height = config.HEIGHT, width = config.WIDTH, scrollable = true, priority = 10) {
+  constructor(game, height = config.HEIGHT, width = config.WIDTH, scrollable = true, priority = 1000) {
     // params
     super(game);
     this.h = height;

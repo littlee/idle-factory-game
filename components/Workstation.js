@@ -2,6 +2,8 @@ import range from '../js/libs/_/range';
 import { formatBigNum } from '../utils';
 import Big from '../js/libs/big.min';
 
+import ModalLevel from './ModalLevel';
+
 window.PIXI = require('../js/libs/pixi.min');
 window.p2 = require('../js/libs/p2.min');
 window.Phaser = require('../js/libs/phaser-split.min');
@@ -141,8 +143,10 @@ class Workstation extends window.Phaser.Group {
     this.upgradeBtn.alignIn(this.table, window.Phaser.BOTTOM_CENTER, 0, 30);
     this.upgradeBtn.inputEnabled = true;
     this.upgradeBtn.input.priorityID = PRIORITY_ID;
+    this.upgradeModal = new ModalLevel(this.game);
     this.upgradeBtn.events.onInputDown.add(() => {
       console.log('点击工作台升级按钮');
+      this.upgradeModal.visible = true;
     });
 
     this.upgradeBtnText = this.gameRef.make.text(0, 0, '等级', BTN_TEXT_STYLE);
