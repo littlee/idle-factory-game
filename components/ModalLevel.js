@@ -7,9 +7,9 @@ window.Phaser = require('../js/libs/phaser-split.min');
 // let const = {};
 
 class ModalLevel extends ModalRaw {
-  constructor(game) {
+  constructor({game, scrollable}) {
     // parems
-    super(game);
+    super(game, undefined, undefined, scrollable);
     this.data = 'data';
   }
 

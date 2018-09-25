@@ -47,6 +47,7 @@ class Start extends window.Phaser.State {
     this.load.spritesheet('worker_market', 'images/worker_market.png', 84, 126);
     this.load.spritesheet('worker_warehouse', 'images/worker_warehouse.png', 84, 126);
     this.load.image('worker', 'images/worker.png');
+    this.load.image('arrow_fast_scroll', 'images/arrow_fast_scroll.png');
 
     this.load.image('test_ground', 'test/Ground00_88400421.png');
     this.load.image('test_wall', 'test/WallWide_88400188.png');

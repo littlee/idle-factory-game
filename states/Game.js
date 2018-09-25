@@ -12,6 +12,15 @@ window.PIXI = require('../js/libs/pixi.min');
 window.p2 = require('../js/libs/p2.min');
 window.Phaser = require('../js/libs/phaser-split.min');
 
+/*
+关于priorityID:
+-1- 让整个屏幕滑动的veil是0，屏幕中其他有自己input事件的game object是999.
+-2- 让modal滑动的veil是1000， modal里头要有自己input事件的game object需要设置成 > 1000.
+-3- menu以及其他fixed在屏幕的，设置成888
+*/
+
+const PRIORITY_ID = 999;
+
 class Game extends window.Phaser.State {
 
   // create(): execution order inside MATTERS!!
@@ -37,14 +46,17 @@ class Game extends window.Phaser.State {
 
     // menus should be the last to add
     this._createMenus();
+
     // add stuff to bg to enable scroll
     this._addAllRelatedStuff2Bg();
     // with bg fills with stull, scrolling now is all set
-    let gameGroup = new Scroller({
+    let wholeGameScroller = new Scroller({
       targetToScroll: this.bgGroup,
-      priority: 0,
+      priority: 0, // 区别弹窗的scroll
     });
-    gameGroup.enableScroll();
+    wholeGameScroller.enableScroll();
+
+    this._createFastScrollArrow(wholeGameScroller);
   }
 
   _createMenus = () => {
@@ -72,12 +84,12 @@ class Game extends window.Phaser.State {
   }
 
   _addAllRelatedStuff2Bg = () => {
+    this.bgGroup.addChild(this.exitGround);
     this.bgGroup.addChild(this.warehouseGround);
     this.bgGroup.addChild(this.warehouseTable);
     this.bgGroup.addChild(this.marketGround);
     this.bgGroup.addChild(this.marketTruck);
     this.bgGroup.addChild(this.wall);
-    this.bgGroup.addChild(this.exitGround);
     this.bgGroup.addChild(this.warehouseManager);
     this.bgGroup.addChild(this.marketManager);
     this.bgGroup.addChild(this.workStation1);
@@ -109,6 +121,23 @@ class Game extends window.Phaser.State {
     this.wall = this.add.sprite(this.world.centerX, 81, 'wall');
     this.wall.anchor.setTo(0.5, 0);
     // this.wall.visible = false;
+  }
+
+  _createFastScrollArrow = (scroller) => {
+    // this.arrowFastDown should scroll to a internal-shared data, use hitArea to enlarge the clickable area if needed
+    this.arrowFastUp = this.add.image(40, this.game.camera.view.height / 13 * 10.5,  'arrow_fast_scroll');
+    this.arrowFastDown = this.add.image(40, this.game.camera.view.height / 13 * 11.5,  'arrow_fast_scroll');
+    this.arrowFastUp.scale.x = this.arrowFastDown.scale.x = 0.25;
+    this.arrowFastUp.scale.y = -0.25;
+    this.arrowFastDown.scale.y = 0.25;
+    console.log('width: ', this.arrowFastUp.width);
+
+    this.arrowFastUp.inputEnabled = true;
+    this.arrowFastDown.inputEnabled = true;
+    this.arrowFastUp.input.priorityID = PRIORITY_ID;
+    this.arrowFastDown.input.priorityID = PRIORITY_ID;
+    this.arrowFastUp.events.onInputUp.add(scroller.scrollToTop);
+    this.arrowFastDown.events.onInputUp.add(scroller.scrollTo.bind(this, 1000));
   }
 
 }
