@@ -4,6 +4,8 @@ import BtnSuperCash from '../components/BtnSuperCash';
 
 import Workstation from '../components/Workstation';
 
+import WorkerMarket from '../components/WorkerMarket';
+
 window.PIXI = require('../js/libs/pixi.min');
 window.p2 = require('../js/libs/p2.min');
 window.Phaser = require('../js/libs/phaser-split.min');
@@ -54,6 +56,10 @@ class Game extends window.Phaser.State {
     this.menuBottom.beginFill(0x282c30);
     this.menuBottom.drawRect(0, this.world.height - 81, this.world.width, 81);
     this.menuBottom.endFill();
+
+    let wm = new WorkerMarket(this.game, 100, 1000);
+    this.add.existing(wm);
+    wm.walk();
   }
 }
 
