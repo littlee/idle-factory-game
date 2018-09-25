@@ -27,7 +27,6 @@ const config = {
   FRAME_LINE_WIDTH: 1,
   FRAME_LINE_COLOR: 0x000000,
   FRAME_LINE_ALPHA: 0.7,
-
 };
 
 class ModalRaw extends window.Phaser.Group {
@@ -60,11 +59,13 @@ class ModalRaw extends window.Phaser.Group {
     this.visible = false;
 
     this._createVeil();
+    this._createVeilTop();
     this._getSubGroupInit();
 
     // the display object in this group, from top down
     this.addChild(this.veil);
     this.addChild(this.subGroup);
+    this.addChild(this.veilTop);
 
     // prep for input
     this.setAllChildren('inputEnabled', true);
@@ -73,7 +74,6 @@ class ModalRaw extends window.Phaser.Group {
 
     // prep for scrolling
     this._getScrollWhenNeeded();
-
   }
 
   _getSubGroupInit = () => {
@@ -111,13 +111,29 @@ class ModalRaw extends window.Phaser.Group {
     let h = this.cameraView.height + this.y;
 
     this.veil = this.game.make.graphics(x, y);
+    this.veil.fixedToCamera = true;
     this.veil.beginFill(config.VEIL_RGB, config.VEIL_ALPHA);
     this.veil.drawRect(x, y, w, h);
     this.veil.endFill();
 
-    this.veil.fixedToCamera = true;
     this.veil.inputEnabled = true;
     this.veil.events.onInputDown.add(this._handleClose);
+  }
+
+  _createVeilTop = () => {
+    let x = -this.x;
+    let y = -this.y;
+    let w = this.cameraView.width + this.x;
+    let h = this.y;
+
+    this.veilTop = this.game.make.graphics(x, y);
+    this.veilTop.fixedToCamera = true;
+    this.veilTop.beginFill(0xFF0000, 0.7);
+    this.veilTop.drawRect(x, y, w, h);
+    this.veilTop.endFill();
+
+    this.veilTop.inputEnabled = true;
+    this.veilTop.events.onInputDown.add(this._handleClose);
   }
 
   _handleClose = () => {

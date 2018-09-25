@@ -10,7 +10,7 @@ bouncing写错，再来
 */
 
 export default class Scroller {
-  constructor({ mask = null, targetToScroll = null, direction = 'vertical', priority = 10}) {
+  constructor({ mask = null, targetToScroll = null, direction = 'vertical', priority = 10, veilWidth, veilHeight}) {
     // params
     this.mask = mask;
     this.targetToScroll = targetToScroll;
@@ -18,10 +18,13 @@ export default class Scroller {
 
     // shared
     this.game = targetToScroll.game;
+    this.cameraView = targetToScroll.game.camera.view;
     this.tween = this.game.add.tween(targetToScroll);
     this.axis = direction === 'vertical' ? 'y' : 'x';
     this.veil = null;
     this.veilPriorityID = priority;
+    this.veilWidth = mask ? this.mask.width : 0;
+    this.veilHeight = mask ? this.mask.height : 0;
     // this.bounceDistance = 0;
     // this.bouncing = false;
 
@@ -223,16 +226,21 @@ export default class Scroller {
 
   enableScroll = () => {
     // better off this way: attach events to a veil with the same size of the this.targetToScroll, as opposed to attach events to all children of the group
-    this.veil = this.game.add.sprite(0, 0);
-    this.veil.alignIn(this.targetToScroll);
-    this.veil.width = this.targetToScroll.width;
-    this.veil.height = this.targetToScroll.height;
-    this.targetToScroll.addChild(this.veil);
+    let width = this.mask ? this.veilWidth : this.cameraView.width;
+    let height = this.mask ? this.veilHeight : this.cameraView.height;
+
+    this.veil = this.game.make.graphics(0, 0);
+    this.veil.fixedToCamera = true;
+    this.veil.beginFill(0x000000, 0.01);
+    this.veil.drawRect(0, 0, width, height);
+    this.veil.endFill();
 
     this.veil.inputEnabled = true;
     this.veil.input.priorityID = this.veilPriorityID;
     this.veil.events.onInputDown.add(this._touchScreen);
     this.veil.events.onInputUp.add(this._releasePointer);
+
+    this.targetToScroll.parent.add(this.veil); // this.targetToScroll本身是scroll的，做不了fixed
   };
 
   scrollToTop = () => {
