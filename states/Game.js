@@ -4,6 +4,7 @@ import BtnSuperCash from '../components/BtnSuperCash';
 
 import Workstation from '../components/Workstation';
 
+import WorkerWarehouse from '../components/WorkerWarehouse';
 import WorkerMarket from '../components/WorkerMarket';
 import Scroller from '../components/Scroller.js';
 
@@ -62,9 +63,12 @@ class Game extends window.Phaser.State {
     this.menuBottom.drawRect(0, this.world.height - 81, this.world.width, 81);
     this.menuBottom.endFill();
 
-    let wm = new WorkerMarket(this.game, 100, 1000);
+    
+    let wh = new WorkerWarehouse(this.game, 50, 600);
+    this.add.existing(wh);
+
+    let wm = new WorkerMarket(this.game, this.game.world.width - 150, 600);
     this.add.existing(wm);
-    wm.walk();
   }
 
   _addAllRelatedStuff2Bg = () => {
