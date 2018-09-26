@@ -1,7 +1,3 @@
-window.PIXI = require('../js/libs/pixi.min');
-window.p2 = require('../js/libs/p2.min');
-window.Phaser = require('../js/libs/phaser-split.min');
-
 class WorkerMarket extends window.Phaser.Sprite {
   constructor(game, x, y) {
     super(game, x, y, 'worker_market');

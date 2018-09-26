@@ -2,11 +2,6 @@ import Scroller from '../components/Scroller.js';
 // import ModalRaw from '../components/ModalRaw.js';
 import ModalLevel from '../components/ModalLevel.js';
 
-window.PIXI = require('../js/libs/pixi.min');
-window.p2 = require('../js/libs/p2.min');
-window.Phaser = require('../js/libs/phaser-split.min');
-
-
 class Game extends window.Phaser.State {
   create() {
     // main page
