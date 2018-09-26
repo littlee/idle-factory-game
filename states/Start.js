@@ -54,15 +54,17 @@ class Start extends window.Phaser.State {
     this.load.image('test_txt', 'test/act_rule_text.png');
     // try
     this.load.image('btn_close', 'images/btn_close.png');
-    this.load.image('avatar_tran', 'images/avatar_transporter.png');
+    this.load.image('avatar_tran_warehose', 'images/avatar_transporter.png');
     this.load.image('arrow_levelUp', 'images/arrow_level_upgrade.png');
     this.load.image('icon_loading_speed', 'images/icon_loading_speed.png');
     this.load.image('icon_transporter', 'images/icon_transporter.png');
     this.load.image('icon_walk_speed', 'images/icon_walk_speed.png');
     this.load.image('icon_max_resource', 'images/icon_max_resource.png');
     this.load.image('icon_transporter_capacity', 'images/icon_transporter_capacity.png');
+    this.load.image('icon_money_transported', 'images/icon_money_transported.png');
     this.load.image('btn_level_upgrade', 'images/btn_level_upgrade.png');
     this.load.image('btn_pick_upgrade', 'images/btn_activated.png');
+    this.load.image('avatar_tran_market', 'images/avatar_market_transporter.png');
   }
 
   create() {

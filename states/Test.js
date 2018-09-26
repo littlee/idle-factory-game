@@ -70,20 +70,33 @@ class Game extends window.Phaser.State {
     });
     txtScroller.enableScroll();
 
-    // raw modal
+    // modal
     let modal = new ModalLevel({
       game: this.game,
       scrollable: true,
       headingTxt: '233级仓库',
       opts: {
-        avatarImg: 'avatar_tran',
+        avatarImg: 'avatar_tran_market',
         avatarHeading: '下一次大升级',
         avatarDes: '将在等级333时获得额外的运输工人',
-        item1Icon: 'icon_max_resource',
-        item1Des: '已运输最大资源'
+        item1Icon: 'icon_money_transported',
+        item1Des: '已运输最高现金'
       }
-    }
-    );
+    });
+
+    // modal
+    // let modal = new ModalLevel({
+    //   game: this.game,
+    //   scrollable: true,
+    //   headingTxt: '233级仓库',
+    //   opts: {
+    //     avatarImg: 'avatar_tran_warehose',
+    //     avatarHeading: '下一次大升级',
+    //     avatarDes: '将在等级333时获得额外的运输工人',
+    //     item1Icon: 'icon_max_resource',
+    //     item1Des: '已运输最大资源'
+    //   }
+    // });
 
     // btn-egg
     modal.visible = true;

@@ -12,6 +12,7 @@ import BellRed from '../components/BellRed';
 import BellYellow from '../components/BellYellow';
 
 import BtnUpgrade from '../components/BtnUpgrade';
+import ModalLevel from '../components/ModalLevel.js';
 
 /*
 关于priorityID:
@@ -62,16 +63,44 @@ class Game extends window.Phaser.State {
     this.bellYellow = new BellYellow(this.game, 550, 116);
     this.bellYellow.unlock();
 
+    this.modalWarehose = new ModalLevel({
+      game: this.game,
+      scrollable: true,
+      headingTxt: '233级仓库',
+      opts: {
+        avatarImg: 'avatar_tran_warehose',
+        avatarHeading: '下一次大升级',
+        avatarDes: '将在等级333时获得额外的运输工人',
+        item1Icon: 'icon_max_resource',
+        item1Des: '已运输最大资源'
+      }
+    });
+
+    this.modalMarket = new ModalLevel({
+      game: this.game,
+      scrollable: true,
+      headingTxt: '555级市场',
+      opts: {
+        avatarImg: 'avatar_tran_market',
+        avatarHeading: '下一次大升级',
+        avatarDes: '将在等级666时获得额外的运输工人',
+        item1Icon: 'icon_money_transported',
+        item1Des: '已运输最高现金'
+      }
+    });
+
     this.upBtnWarehouse = new BtnUpgrade(this.game, 0, 0);
     this.upBtnWarehouse.alignIn(this.wall, window.Phaser.LEFT_CENTER, -60, -10);
     this.upBtnWarehouse.onClick(() => {
       console.log('仓库升级按钮');
+      this.modalWarehose.visible = true;
     });
 
     this.upBtnMarket = new BtnUpgrade(this.game, 0, 0);
     this.upBtnMarket.alignIn(this.wall, window.Phaser.RIGHT_CENTER, -50, -10);
     this.upBtnMarket.onClick(() => {
       console.log('市场升级按钮');
+      this.modalMarket.visible = true;
     });
 
     let wh = new WorkerWarehouse(this.game, 50, 600);
