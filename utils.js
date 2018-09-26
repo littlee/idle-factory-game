@@ -19,3 +19,19 @@ export function formatBigNum(bigNum) {
   }
   return `${digits}${unit}`;
 }
+
+
+function padZero(num) {
+  if (`${num}`.length < 2) {
+    num = `0${num}`;
+  }
+  return num;
+}
+
+export function formatSec(sec) {
+  let min = Math.floor(sec / 60);
+
+  sec = sec % 60;
+
+  return `${padZero(min)}:${padZero(sec)}`;
+}

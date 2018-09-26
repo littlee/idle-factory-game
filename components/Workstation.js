@@ -3,6 +3,7 @@ import { formatBigNum } from '../utils';
 import Big from '../js/libs/big.min';
 
 import ModalLevel from './ModalLevel';
+import Worker from './Worker';
 
 window.PIXI = require('../js/libs/pixi.min');
 window.p2 = require('../js/libs/p2.min');
@@ -63,8 +64,16 @@ class Workstation extends window.Phaser.Group {
 
     this.tableCover = this.gameRef.make.sprite(0, 0, 'table_cover');
     this.tableCover.alignIn(this.table, window.Phaser.TOP_LEFT, 5, 0);
+    this.tableCover.visible = false;
 
-    this.buyBtnSuperCash = this.gameRef.make.sprite(0, 0, 'btn_buy_ws_super_cash');
+    // 购买按钮
+    this.buyBtnGroup = this.gameRef.make.group();
+
+    this.buyBtnSuperCash = this.gameRef.make.sprite(
+      0,
+      0,
+      'btn_buy_ws_super_cash'
+    );
     this.buyBtnSuperCash.alignIn(this.table, window.Phaser.TOP_LEFT, -5, -5);
     this.buyBtnSuperCash.inputEnabled = true;
     this.buyBtnSuperCash.input.priorityID = PRIORITY_ID;
@@ -72,8 +81,18 @@ class Workstation extends window.Phaser.Group {
       console.log('点击超级现金购买');
     });
 
-    this.buyBtnSuperCashText = this.gameRef.make.text(0, 0, '123', BTN_TEXT_STYLE);
-    this.buyBtnSuperCashText.alignIn(this.buyBtnSuperCash, window.Phaser.TOP_LEFT, -70, -5);
+    this.buyBtnSuperCashText = this.gameRef.make.text(
+      0,
+      0,
+      '123',
+      BTN_TEXT_STYLE
+    );
+    this.buyBtnSuperCashText.alignIn(
+      this.buyBtnSuperCash,
+      window.Phaser.TOP_LEFT,
+      -70,
+      -5
+    );
 
     this.buyBtnCash = this.gameRef.make.sprite(0, 0, 'btn_buy_ws_cash');
     this.buyBtnCash.alignIn(this.table, window.Phaser.TOP_RIGHT, -10, -5);
@@ -84,8 +103,21 @@ class Workstation extends window.Phaser.Group {
     });
 
     this.buyBtnCashText = this.gameRef.make.text(0, 0, '123', BTN_TEXT_STYLE);
-    this.buyBtnCashText.alignIn(this.buyBtnCash, window.Phaser.TOP_LEFT, -70, -5);
+    this.buyBtnCashText.alignIn(
+      this.buyBtnCash,
+      window.Phaser.TOP_LEFT,
+      -70,
+      -5
+    );
 
+    this.buyBtnGroup.add(this.buyBtnSuperCash);
+    this.buyBtnGroup.add(this.buyBtnSuperCashText);
+    this.buyBtnGroup.add(this.buyBtnCash);
+    this.buyBtnGroup.add(this.buyBtnCashText);
+    this.buyBtnGroup.visible = false;
+
+    // 生产相关
+    this.productGroup = this.gameRef.make.group();
     this.productBtn = this.gameRef.make.sprite(0, 0, 'btn_product_holder');
     this.productBtn.alignIn(this.table, window.Phaser.TOP_RIGHT, -15, -15);
     this.productBtn.inputEnabled = true;
@@ -93,11 +125,8 @@ class Workstation extends window.Phaser.Group {
     this.productBtn.events.onInputDown.add(() => {
       console.log('点击工作台产品按钮');
     });
-    this.productBtn.visible = false;
-
     this.productBtnItem = this.gameRef.make.sprite(0, 0, 'source_steel');
     this.productBtnItem.alignIn(this.productBtn, window.Phaser.CENTER, 0, -5);
-    this.productBtnItem.visible = false;
 
     this.inputItems = this.gameRef.make.group();
     range(5).forEach(index => {
@@ -105,11 +134,14 @@ class Workstation extends window.Phaser.Group {
     });
     this.inputItems.sort('z', window.Phaser.Group.SORT_DESCENDING);
     this.inputItems.alignIn(this.table, window.Phaser.TOP_LEFT, -30);
-    this.inputItems.visible = false;
 
-    this.inputNum = this.gameRef.make.text(0, 0, formatBigNum(Big('123456789')), INPUT_NUM_STYLE);
+    this.inputNum = this.gameRef.make.text(
+      0,
+      0,
+      formatBigNum(Big('123456789')),
+      INPUT_NUM_STYLE
+    );
     this.inputNum.alignIn(this.table, window.Phaser.TOP_LEFT, -30);
-    this.inputNum.visible = false;
 
     this.outputItems = this.gameRef.make.group();
     range(5).forEach(index => {
@@ -117,10 +149,106 @@ class Workstation extends window.Phaser.Group {
     });
     this.outputItems.sort('z', window.Phaser.Group.SORT_DESCENDING);
     this.outputItems.alignIn(this.table, window.Phaser.TOP_CENTER);
-    this.outputItems.visible = false;
 
-    this.worker = this.gameRef.make.sprite(0, 0, 'worker');
-    this.worker.alignTo(this.table, window.Phaser.TOP_CENTER);
+    this.inputItemsMoving = this.gameRef.make.group();
+    this.inputItemsMovingTwns = [];
+    range(3).forEach(index => {
+      let item = this.inputItemsMoving.create(0, 0, 'source_ore');
+      item.scale.setTo(0.7);
+
+      let itemTwn = this.gameRef.add.tween(item).to(
+        {
+          x: '+100'
+        },
+        1000,
+        null,
+        false,
+        index * 250,
+        -1
+      );
+      this.inputItemsMovingTwns.push(itemTwn);
+    });
+    this.inputItemsMoving.alignIn(this.table, window.Phaser.TOP_LEFT, -30, -30);
+
+    this.inputItemsMovingTwns.forEach(twn => {
+      // twn.start();
+    });
+    this.inputItemsMoving.visible = false;
+
+    this.outputItemsMovingLeft = this.gameRef.make.group();
+    this.outputItemsMovingLeftTwns = [];
+    range(3).forEach(index => {
+      let item = this.outputItemsMovingLeft.create(0, 0, 'source_steel');
+      item.scale.setTo(0.7);
+      item.anchor.setTo(0.5);
+      let itemTwn = this.gameRef.add.tween(item).to(
+        {
+          x: '-100',
+          y: '+100'
+        },
+        1000,
+        null,
+        false,
+        index * 250,
+        -1
+      );
+      this.outputItemsMovingLeftTwns.push(itemTwn);
+    });
+    this.outputItemsMovingLeft.alignIn(
+      this.table,
+      window.Phaser.TOP_CENTER,
+      0,
+      -30
+    );
+
+    this.outputItemsMovingLeftTwns.forEach(twn => {
+      // twn.start();
+    });
+    this.outputItemsMovingLeft.visible = false;
+
+    this.outputItemsMovingRight = this.gameRef.make.group();
+    this.outputItemsMovingRightTwns = [];
+    range(3).forEach(index => {
+      let item = this.outputItemsMovingRight.create(0, 0, 'source_steel');
+      item.scale.setTo(0.7);
+      item.anchor.setTo(0.5);
+      let itemTwn = this.gameRef.add.tween(item).to(
+        {
+          x: '+100',
+          y: '+100'
+        },
+        1000,
+        null,
+        false,
+        index * 250,
+        -1
+      );
+      this.outputItemsMovingRightTwns.push(itemTwn);
+    });
+    this.outputItemsMovingRight.alignIn(
+      this.table,
+      window.Phaser.TOP_CENTER,
+      0,
+      -30
+    );
+
+    this.outputItemsMovingRightTwns.forEach(twn => {
+      // twn.start();
+    });
+    this.outputItemsMovingRight.visible = false;
+
+    this.productGroup.add(this.productBtn);
+    this.productGroup.add(this.productBtnItem);
+    this.productGroup.add(this.inputItems);
+    this.productGroup.add(this.inputNum);
+    this.productGroup.add(this.outputItems);
+    this.productGroup.add(this.inputItemsMoving);
+    this.productGroup.add(this.outputItemsMovingLeft);
+    this.productGroup.add(this.outputItemsMovingRight);
+    
+    this.worker = new Worker(this.game, 0, 0);
+    this.worker.alignTo(this.table, window.Phaser.TOP_CENTER, 20, -10);
+    this.worker.work();
 
     this.manager = this.gameRef.make.sprite(0, 0, 'mgr_worker');
     this.manager.alignIn(this.table, window.Phaser.TOP_LEFT, -15, 100);
@@ -131,13 +259,17 @@ class Workstation extends window.Phaser.Group {
     this.boxHolderProd.alignTo(this.table, window.Phaser.BOTTOM_LEFT, -20, -5);
     this.boxHolderProd.inputEnabled = true;
     this.boxHolderProd.input.priorityID = PRIORITY_ID;
-    this.boxHolderProd.events.onInputDown.add(this._setData.bind(this, { collectType: COLLECT_TYPES.PROD }));
+    this.boxHolderProd.events.onInputDown.add(
+      this._setData.bind(this, { collectType: COLLECT_TYPES.PROD })
+    );
 
     this.boxHolderCash = this.gameRef.make.sprite(0, 0, 'box_collect_holder');
     this.boxHolderCash.alignTo(this.table, window.Phaser.BOTTOM_RIGHT, -20, -5);
     this.boxHolderCash.inputEnabled = true;
     this.boxHolderCash.input.priorityID = PRIORITY_ID;
-    this.boxHolderCash.events.onInputDown.add(this._setData.bind(this, { collectType: COLLECT_TYPES.CASH }));
+    this.boxHolderCash.events.onInputDown.add(
+      this._setData.bind(this, { collectType: COLLECT_TYPES.CASH })
+    );
 
     this.upgradeBtn = this.gameRef.make.sprite(0, 0, 'btn_level');
     this.upgradeBtn.alignIn(this.table, window.Phaser.BOTTOM_CENTER, 0, 30);
@@ -151,9 +283,19 @@ class Workstation extends window.Phaser.Group {
     });
 
     this.upgradeBtnText = this.gameRef.make.text(0, 0, '等级', BTN_TEXT_STYLE);
-    this.upgradeBtnText.alignIn(this.upgradeBtn, window.Phaser.TOP_CENTER, 0, -15);
+    this.upgradeBtnText.alignIn(
+      this.upgradeBtn,
+      window.Phaser.TOP_CENTER,
+      0,
+      -15
+    );
 
-    this.levelText = this.gameRef.make.text(0, 0, this._data.level, BTN_TEXT_STYLE);
+    this.levelText = this.gameRef.make.text(
+      0,
+      0,
+      this._data.level,
+      BTN_TEXT_STYLE
+    );
     this.levelText.alignIn(this.upgradeBtn, window.Phaser.BOTTOM_CENTER, 0, -5);
 
     this.upgradeArrow = this.gameRef.make.sprite(0, 0, 'icon_level_up');
@@ -163,18 +305,14 @@ class Workstation extends window.Phaser.Group {
     this.add(this.ground);
     this.add(this.groundNum);
     this.add(this.manager);
+    this.add(this.worker);
     this.add(this.table);
     this.add(this.tableCover);
-    this.add(this.buyBtnSuperCash);
-    this.add(this.buyBtnSuperCashText);
-    this.add(this.buyBtnCash);
-    this.add(this.buyBtnCashText);
-    this.add(this.productBtn);
-    this.add(this.productBtnItem);
-    this.add(this.inputItems);
-    this.add(this.outputItems);
-    this.add(this.inputNum);
-    this.add(this.worker);
+
+    this.add(this.buyBtnGroup);
+
+    this.add(this.productGroup);
+
     this.add(this.boxHolderProd);
     this.add(this.boxHolderCash);
     this.add(this.boxCollect);
@@ -210,11 +348,11 @@ class Workstation extends window.Phaser.Group {
   _setCollectType() {
     const { collectType } = this._data;
     if (collectType === COLLECT_TYPES.CASH) {
-      this.boxCollect.alignIn(this.boxHolderCash, window.Phaser.CENTER);
+      this.boxCollect.alignIn(this.boxHolderCash, window.Phaser.CENTER, 0, -5);
       this.boxHolderCash.frame = 1;
       this.boxHolderProd.frame = 0;
     } else if (collectType === COLLECT_TYPES.PROD) {
-      this.boxCollect.alignIn(this.boxHolderProd, window.Phaser.CENTER);
+      this.boxCollect.alignIn(this.boxHolderProd, window.Phaser.CENTER, 0, -5);
       this.boxHolderProd.frame = 1;
       this.boxHolderCash.frame = 0;
     }

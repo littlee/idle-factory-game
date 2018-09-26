@@ -20,9 +20,13 @@ class Start extends window.Phaser.State {
     this.load.baseURL = serverConfig.BASE_URL;
 
     this.load.image('arrow', 'images/icon_level_up.png');
+    this.load.image('bell_base', 'images/bell_base.png');
+    this.load.image('bell_body_red', 'images/bell_body_red.png');
+    this.load.image('bell_body_yellow', 'images/bell_body_yellow.png');
+    this.load.image('bell_handle_red', 'images/bell_handle_red.png');
+    this.load.image('bell_handle_yellow', 'images/bell_handle_yellow.png');
     this.load.image('bell_hole', 'images/bell_hole.png');
-    this.load.image('bell_red', 'images/bell_red.png');
-    this.load.image('bell_yellow', 'images/bell_yellow.png');
+    this.load.image('bell_timer', 'images/bell_timer.png');
     this.load.spritesheet('box_collect_holder', 'images/box_collect_holder.png', 75, 75);
     this.load.image('box_collect', 'images/box_collect.png');
     this.load.image('btn_buy_ws_cash', 'images/btn_buy_ws_cash.png');
@@ -44,8 +48,9 @@ class Start extends window.Phaser.State {
     this.load.image('table_level_1', 'images/table_level_1.png');
     this.load.image('wall', 'images/wall.png');
     this.load.image('warehouse_table', 'images/warehouse_table.png');
-    this.load.spritesheet('worker_market', 'images/worker_market.png', 50, 75);
-    this.load.image('worker', 'images/worker.png');
+    this.load.spritesheet('worker_market', 'images/worker_market.png', 84, 126);
+    this.load.spritesheet('worker_warehouse', 'images/worker_warehouse.png', 84, 126);
+    this.load.spritesheet('worker', 'images/worker.png', 96, 110);
     this.load.image('arrow_fast_scroll', 'images/arrow_fast_scroll.png');
 
     this.load.image('test_ground', 'test/Ground00_88400421.png');

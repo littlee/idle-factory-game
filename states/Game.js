@@ -4,8 +4,12 @@ import BtnSuperCash from '../components/BtnSuperCash';
 
 import Workstation from '../components/Workstation';
 
+import WorkerWarehouse from '../components/WorkerWarehouse';
 import WorkerMarket from '../components/WorkerMarket';
 import Scroller from '../components/Scroller.js';
+
+import BellRed from '../components/BellRed';
+import BellYellow from '../components/BellYellow';
 
 window.PIXI = require('../js/libs/pixi.min');
 window.p2 = require('../js/libs/p2.min');
@@ -74,9 +78,19 @@ class Game extends window.Phaser.State {
     this.menuBottom.drawRect(0, this.world.height - 81, this.world.width, 81);
     this.menuBottom.endFill();
 
-    let wm = new WorkerMarket(this.game, 100, 1000);
+    
+    this.bellRed = new BellRed(this.game, 80, 116);
+    this.bellRed.unlock();
+    this.bellRed.disable();
+
+    this.bellYellow = new BellYellow(this.game, 550, 116);
+    this.bellYellow.unlock();
+
+    let wh = new WorkerWarehouse(this.game, 50, 600);
+    this.add.existing(wh);
+
+    let wm = new WorkerMarket(this.game, this.game.world.width - 150, 600);
     this.add.existing(wm);
-    wm.walk();
   }
 
   _addAllRelatedStuff2Bg = () => {
@@ -117,6 +131,8 @@ class Game extends window.Phaser.State {
     this.wall = this.add.sprite(this.world.centerX, 81, 'wall');
     this.wall.anchor.setTo(0.5, 0);
     // this.wall.visible = false;
+
+
   }
 
   _createFastScrollArrow = (scroller) => {
