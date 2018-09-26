@@ -14,6 +14,8 @@ import BellYellow from '../components/BellYellow';
 import BtnUpgrade from '../components/BtnUpgrade';
 import ModalLevel from '../components/ModalLevel.js';
 
+import range from '../js/libs/_/range';
+
 /*
 关于priorityID:
 -1- 让整个屏幕滑动的veil是0，屏幕中其他有自己input事件的game object是999.
@@ -48,13 +50,20 @@ class Game extends window.Phaser.State {
     this.marketManager = this.add.sprite(0, 0, 'mgr_market');
     this.marketManager.alignIn(this.wall, window.Phaser.BOTTOM_CENTER, 80, 80);
     // group 1-5
-    /* eslint-disable */
-    this.workStation1 = new Workstation(this.game, 0, 915, 1, 1);
-    this.workStation2 = new Workstation(this.game, 0, 915 + 339, 1, 2);
-    // this.workStation3 = new Workstation(this.game, 0, 915 + 339 * 2, 1, 3);
-    // this.workStation4 = new Workstation(this.game, 0, 915 + 339 * 3, 1, 4);
-    // this.workStation5 = new Workstation(this.game, 0, 915 + 339 * 4, 1, 5);
-    /* eslint-enable */
+
+    const WORKSTATION_START_Y = 915;
+    const WORKSTATION_HEIGHT = 339;
+    this.workstationGroup = this.add.group();
+    range(5).forEach(index => {
+      let workstation = new Workstation(
+        this.game,
+        0,
+        WORKSTATION_START_Y + index * WORKSTATION_HEIGHT,
+        1,
+        index + 1
+      );
+      this.workstationGroup.add(workstation);
+    });
 
     this.bellRed = new BellRed(this.game, 80, 116);
     this.bellRed.unlock();
@@ -103,11 +112,27 @@ class Game extends window.Phaser.State {
       this.modalMarket.visible = true;
     });
 
-    let wh = new WorkerWarehouse(this.game, 50, 600);
-    this.add.existing(wh);
+    this.workerWarehouseGroup = this.add.group();
+    range(5).forEach(index => {
+      let worker = new WorkerWarehouse(this.game, 50 + index * 5, 600);
+      this.workerWarehouseGroup.add(worker);
+      if (index > 0) {
+        worker.kill();
+      }
+    });
 
-    let wm = new WorkerMarket(this.game, this.game.world.width - 150, 600);
-    this.add.existing(wm);
+    this.workerMarketGroup = this.add.group();
+    range(5).forEach(index => {
+      let worker = new WorkerMarket(
+        this.game,
+        this.game.world.width - 180 + index * 5,
+        600
+      );
+      this.workerMarketGroup.add(worker);
+      if (index > 0) {
+        worker.kill();
+      }
+    });
 
     // menus should be the last to add
     this._createMenus();
@@ -155,11 +180,10 @@ class Game extends window.Phaser.State {
     this.bgGroup.addChild(this.upBtnMarket);
     this.bgGroup.addChild(this.upBtnWarehouse);
 
-    this.bgGroup.addChild(this.workStation1);
-    this.bgGroup.addChild(this.workStation2);
-    // this.bgGroup.addChild(this.workStation3);
-    // this.bgGroup.addChild(this.workStation4);
-    // this.bgGroup.addChild(this.workStation5);
+    this.bgGroup.addChild(this.workstationGroup);
+
+    this.bgGroup.addChild(this.workerWarehouseGroup);
+    this.bgGroup.addChild(this.workerMarketGroup);
   };
 
   _createWalln2markets = () => {
@@ -210,7 +234,6 @@ class Game extends window.Phaser.State {
     this.arrowFastUp.scale.x = this.arrowFastDown.scale.x = 0.25;
     this.arrowFastUp.scale.y = -0.25;
     this.arrowFastDown.scale.y = 0.25;
-    console.log('width: ', this.arrowFastUp.width);
 
     this.arrowFastUp.inputEnabled = true;
     this.arrowFastDown.inputEnabled = true;

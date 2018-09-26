@@ -126,8 +126,8 @@ class Workstation extends window.Phaser.Group {
     this.productBtnItem.alignIn(this.productBtn, window.Phaser.CENTER, 0, -5);
 
     this.inputItems = this.gameRef.make.group();
-    range(5).forEach(index => {
-      this.inputItems.create(0, index * 5, 'source_ore');
+    this.inputItems.createMultiple(5, 'source_ore', null, true, (item, index) => {
+      item.y = index * 5;
     });
     this.inputItems.sort('z', window.Phaser.Group.SORT_DESCENDING);
     this.inputItems.alignIn(this.table, window.Phaser.TOP_LEFT, -30);
@@ -141,8 +141,8 @@ class Workstation extends window.Phaser.Group {
     this.inputNum.alignIn(this.table, window.Phaser.TOP_LEFT, -30);
 
     this.outputItems = this.gameRef.make.group();
-    range(5).forEach(index => {
-      this.outputItems.create(0, index * 5, 'source_steel');
+    this.outputItems.createMultiple(5, 'source_steel', null, true, (item, index) => {
+      item.y = index * 5;
     });
     this.outputItems.sort('z', window.Phaser.Group.SORT_DESCENDING);
     this.outputItems.alignIn(this.table, window.Phaser.TOP_CENTER);
