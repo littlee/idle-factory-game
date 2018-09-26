@@ -36,7 +36,7 @@ const FONT_STYLE = {
 
 class ModalRaw extends window.Phaser.Group {
   // new Group(game [, parent] [, name] [, addToStage] [, enableBody] [, physicsBodyType])
-  constructor(game, headingTxt, height = config.HEIGHT, width = config.WIDTH, scrollable = true, cb, priority = 1000, headingH = 100) {
+  constructor(game, headingTxt, height = config.HEIGHT, width = config.WIDTH, scrollable = true, headingStyles = {}, priority = 1000, headingH = 100) {
     // params
     super(game);
     this.h = height;
@@ -45,6 +45,7 @@ class ModalRaw extends window.Phaser.Group {
     this.priorityID = priority;
     this.headingTxt = headingTxt || '标题';
     this.headingH = headingH;
+    this.headingStyles = Object.assign({}, FONT_STYLE, headingStyles);
 
     // shortcuts
     this.cameraView = this.game.camera.view;
@@ -126,7 +127,7 @@ class ModalRaw extends window.Phaser.Group {
     this.btnClose = this.game.make.button(this.w - 1, 0 + 1, 'btn_close', this._handleClose);
     this.btnClose.anchor.set(1, 0);
 
-    this.heading = this.game.make.text(0, 0, this.headingTxt, FONT_STYLE);
+    this.heading = this.game.make.text(0, 0, this.headingTxt, this.headingStyles);
     this.heading.setTextBounds(0, 0, this.w - this.btnClose.width, this.headingH);
 
   }
@@ -145,8 +146,6 @@ class ModalRaw extends window.Phaser.Group {
     this.addChild(this.veil);
     this.addChild(this.subGroup);
   }
-
-
 
   // for improve, not use yet
   _createVeilTop = () => {
