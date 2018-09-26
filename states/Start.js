@@ -65,6 +65,14 @@ class Start extends window.Phaser.State {
     this.load.image('btn_level_upgrade', 'images/btn_level_upgrade.png');
     this.load.image('btn_pick_upgrade', 'images/btn_activated.png');
     this.load.image('avatar_tran_market', 'images/avatar_market_transporter.png');
+    this.load.image('reso_barrel', 'images/reso_barrel.png');
+    this.load.image('reso_copper', 'images/reso_copper.png');
+    this.load.image('reso_plug', 'images/reso_plug.png');
+    this.load.image('reso_aluminium', 'images/reso_aluminium.png');
+    this.load.image('reso_rubber', 'images/reso_rubber.png');
+    this.load.image('icon_tick', 'images/icon_tick.png');
+    this.load.image('btn_cash_able2buy', 'images/btn_cash_able2buy.png');
+    this.load.image('btn_cash_unable2buy', 'images/btn_cash_unable2buy.png');
   }
 
   create() {

@@ -13,6 +13,7 @@ import BellYellow from '../components/BellYellow';
 
 import BtnUpgrade from '../components/BtnUpgrade';
 import ModalLevel from '../components/ModalLevel.js';
+import ModalRescources from '../components/ModalResources.js';
 
 import range from '../js/libs/_/range';
 
@@ -97,6 +98,14 @@ class Game extends window.Phaser.State {
         item1Des: '已运输最高现金'
       }
     });
+
+    this.modalRescources = new ModalRescources({
+      game: this.game,
+      scrollable: true,
+      headingTxt: '进口生产原料',
+    });
+
+    // this.modelWorkstation;
 
     this.upBtnWarehouse = new BtnUpgrade(this.game, 0, 0);
     this.upBtnWarehouse.alignIn(this.wall, window.Phaser.LEFT_CENTER, -60, -10);
@@ -194,6 +203,12 @@ class Game extends window.Phaser.State {
 
     this.warehouseTable = this.add.sprite(100, 650, 'warehouse_table');
     this.warehouseTable.anchor.setTo(0, 1);
+    this.warehouseTable.inputEnabled = true;
+    this.warehouseTable.input.priorityID = PRIORITY_ID;
+    // console.log('check: ',this.warehouseTable.input);
+    this.warehouseTable.events.onInputDown.add(() => {
+      this.modalRescources.visible = true;
+    });
 
     // bg of selling
     this.marketGround = this.add.graphics();
