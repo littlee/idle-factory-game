@@ -382,6 +382,7 @@ class Workstation extends window.Phaser.Group {
       canUpgrade
     });
   }
+
 }
 
 export default Workstation;

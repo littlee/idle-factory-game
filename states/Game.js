@@ -25,7 +25,6 @@ window.Phaser = require('../js/libs/phaser-split.min');
 const PRIORITY_ID = 999;
 
 class Game extends window.Phaser.State {
-
   // create(): execution order inside MATTERS!!
   create() {
     // bg of warehouse of raw material
@@ -33,18 +32,29 @@ class Game extends window.Phaser.State {
     // create the wall and 2 markets
     this._createWalln2markets();
     // ground 0
-    this.exitGround = this.add.tileSprite(0, 674, this.world.width, 241, 'ground_level_1');
+    this.exitGround = this.add.tileSprite(
+      0,
+      674,
+      this.world.width,
+      241,
+      'ground_level_1'
+    );
     this.warehouseManager = this.add.sprite(0, 0, 'mgr_warehouse');
-    this.warehouseManager.alignIn(this.wall, window.Phaser.BOTTOM_CENTER, -80, 80);
+    this.warehouseManager.alignIn(
+      this.wall,
+      window.Phaser.BOTTOM_CENTER,
+      -80,
+      80
+    );
     this.marketManager = this.add.sprite(0, 0, 'mgr_market');
     this.marketManager.alignIn(this.wall, window.Phaser.BOTTOM_CENTER, 80, 80);
     // group 1-5
     /* eslint-disable */
     this.workStation1 = new Workstation(this.game, 0, 915, 1, 1);
-    this.workStation2 = new Workstation(this.game, 0, 915 + 339, 1, 2);
-    this.workStation3 = new Workstation(this.game, 0, 915 + 339 * 2, 1, 3);
-    this.workStation4 = new Workstation(this.game, 0, 915 + 339 * 3, 1, 4);
-    this.workStation5 = new Workstation(this.game, 0, 915 + 339 * 4, 1, 5);
+    window.ws = this.workStation1; // this.workStation2 = new Workstation(this.game, 0, 915 + 339, 1, 2);
+    // this.workStation3 = new Workstation(this.game, 0, 915 + 339 * 2, 1, 3);
+    // this.workStation4 = new Workstation(this.game, 0, 915 + 339 * 3, 1, 4);
+    // this.workStation5 = new Workstation(this.game, 0, 915 + 339 * 4, 1, 5);
     /* eslint-enable */
 
     // menus should be the last to add
@@ -55,7 +65,7 @@ class Game extends window.Phaser.State {
     // with bg fills with stull, scrolling now is all set
     let wholeGameScroller = new Scroller({
       targetToScroll: this.bgGroup,
-      priority: 0, // 区别弹窗的scroll
+      priority: 0 // 区别弹窗的scroll
     });
     wholeGameScroller.enableScroll();
 
@@ -78,7 +88,6 @@ class Game extends window.Phaser.State {
     this.menuBottom.drawRect(0, this.world.height - 81, this.world.width, 81);
     this.menuBottom.endFill();
 
-    
     this.bellRed = new BellRed(this.game, 80, 116);
     this.bellRed.unlock();
     this.bellRed.disable();
@@ -91,7 +100,7 @@ class Game extends window.Phaser.State {
 
     let wm = new WorkerMarket(this.game, this.game.world.width - 150, 600);
     this.add.existing(wm);
-  }
+  };
 
   _addAllRelatedStuff2Bg = () => {
     this.bgGroup.addChild(this.exitGround);
@@ -103,11 +112,11 @@ class Game extends window.Phaser.State {
     this.bgGroup.addChild(this.warehouseManager);
     this.bgGroup.addChild(this.marketManager);
     this.bgGroup.addChild(this.workStation1);
-    this.bgGroup.addChild(this.workStation2);
-    this.bgGroup.addChild(this.workStation3);
-    this.bgGroup.addChild(this.workStation4);
-    this.bgGroup.addChild(this.workStation5);
-  }
+    // this.bgGroup.addChild(this.workStation2);
+    // this.bgGroup.addChild(this.workStation3);
+    // this.bgGroup.addChild(this.workStation4);
+    // this.bgGroup.addChild(this.workStation5);
+  };
 
   _createWalln2markets = () => {
     this.warehouseGround = this.add.graphics();
@@ -121,24 +130,39 @@ class Game extends window.Phaser.State {
     // bg of selling
     this.marketGround = this.add.graphics();
     this.marketGround.beginFill(0xfc7b2d);
-    this.marketGround.drawRect(this.world.centerX, 0, this.world.width / 2, 674);
+    this.marketGround.drawRect(
+      this.world.centerX,
+      0,
+      this.world.width / 2,
+      674
+    );
     this.marketGround.endFill();
 
-    this.marketTruck = this.add.sprite(this.world.width - 30, 700, 'market_truck');
+    this.marketTruck = this.add.sprite(
+      this.world.width - 30,
+      700,
+      'market_truck'
+    );
     this.marketTruck.anchor.setTo(1);
 
     // wall behind the above two
     this.wall = this.add.sprite(this.world.centerX, 81, 'wall');
     this.wall.anchor.setTo(0.5, 0);
     // this.wall.visible = false;
+  };
 
-
-  }
-
-  _createFastScrollArrow = (scroller) => {
+  _createFastScrollArrow = scroller => {
     // this.arrowFastDown should scroll to a internal-shared data, use hitArea to enlarge the clickable area if needed
-    this.arrowFastUp = this.add.image(40, this.game.camera.view.height / 13 * 10.5,  'arrow_fast_scroll');
-    this.arrowFastDown = this.add.image(40, this.game.camera.view.height / 13 * 11.5,  'arrow_fast_scroll');
+    this.arrowFastUp = this.add.image(
+      40,
+      (this.game.camera.view.height / 13) * 10.5,
+      'arrow_fast_scroll'
+    );
+    this.arrowFastDown = this.add.image(
+      40,
+      (this.game.camera.view.height / 13) * 11.5,
+      'arrow_fast_scroll'
+    );
     this.arrowFastUp.scale.x = this.arrowFastDown.scale.x = 0.25;
     this.arrowFastUp.scale.y = -0.25;
     this.arrowFastDown.scale.y = 0.25;
@@ -150,8 +174,7 @@ class Game extends window.Phaser.State {
     this.arrowFastDown.input.priorityID = PRIORITY_ID;
     this.arrowFastUp.events.onInputUp.add(scroller.scrollToTop);
     this.arrowFastDown.events.onInputUp.add(scroller.scrollTo.bind(this, 1000));
-  }
-
+  };
 }
 
 export default Game;
