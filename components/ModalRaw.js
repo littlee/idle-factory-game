@@ -57,12 +57,6 @@ class ModalRaw extends window.Phaser.Group {
     this.scroller = null;
     this.x = 0;
     this.y = 0;
-
-    // 方法
-    this.getContextGroupInit = cb.bind(this) || null;
-
-    // init
-    this._getInit();
   }
 
   _positionModal = () => {
@@ -89,29 +83,36 @@ class ModalRaw extends window.Phaser.Group {
     this.veil.events.onInputDown.add(this._handleClose);
   }
 
+  // how inherited class should be inited
   _getInit = () => {
     this._positionModal();
     this._createOuterVeil();
+    // frame, btn, heading
     this._DrawSubGroupStuff();
+    // mask for contentGroup
+    this._setMask4ContentGroup();
+    /* real content goes here */
+    this.getContextGroupInit();
+    // add frame, contentGroup, heading, btn to subGroup
+    this._addStuff2SubGroup();
+    // add outerveil, subGroup to modal
+    this._addStuff2Modal();
 
-    // the display object in this group, from top down
-    this.addChild(this.veil);
-    this.addChild(this.subGroup);
-    // this.addChild(this.veilTop); // for bug fixing
-
-    // prep for input
-    this.setAllChildren('inputEnabled', true);
-    this.setAllChildren('input.priorityID', this.priorityID);
-    this.btnClose.input.priorityID = this.priorityID + 1;
-
-    // prep for scrolling, let the inherit class call this instead
+    // make sure children object inside have higher priority then scroller's veil
+    this._boostInputPriority4Children();
+    // prep for scrolling, should be called after contentGroup is all set
     this._getScrollWhenNeeded();
   }
 
-  _DrawSubGroupStuff = () => {
-    /* frame, heading, btn_close, mask for contentGroup */
-    // this._setMask4SubGroup();
+  _boostInputPriority4Children = () => {
+    // prep for input
+    this.setAllChildren('inputEnabled', true);
+    this.setAllChildren('input.priorityID', this.priorityID + 1);
+    // this.btnClose.input.priorityID = this.priorityID + 1;
+  }
 
+  _DrawSubGroupStuff = () => {
+    /* frame, heading, btn_close*/
     // frame
     this.frame = this.game.make.graphics(0, 0); // graphics( [x] [, y] )
     this.frame.beginFill(config.FRAME_RGB);
@@ -131,19 +132,21 @@ class ModalRaw extends window.Phaser.Group {
     this.heading = this.game.make.text(0, 0, this.headingTxt, FONT_STYLE);
     this.heading.setTextBounds(0, 0, this.w - this.btnClose.width, this.headingH);
 
-     /* real content goes here */
-    this._setMask4SubGroup();
-    this.getContextGroupInit();
+  }
 
+  _addStuff2SubGroup = () => {
     // the display object in the sub-group, from top down
     this.subGroup.addChild(this.frame);
     this.subGroup.addChild(this.contentGroup);
     this.subGroup.addChild(this.btnClose);
     this.subGroup.addChild(this.heading);
+
   }
 
-  _addStuff2SubGroup = () => {
-
+  _addStuff2Modal = () => {
+     // the display object in this group, from top down
+    this.addChild(this.veil);
+    this.addChild(this.subGroup);
   }
 
 
@@ -170,7 +173,7 @@ class ModalRaw extends window.Phaser.Group {
     this.visible = false;
   }
 
-  _setMask4SubGroup = () => {
+  _setMask4ContentGroup = () => {
     let mask = this.game.add.graphics(0, 0, this.subGroup); // graphics( [x] [, y] [, group] )
     mask.beginFill(0xFF0000, 0.5);
     mask.drawRect(0, this.headingH, this.w, this.h - this.headingH);

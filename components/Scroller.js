@@ -81,6 +81,7 @@ export default class Scroller {
     this.ticker = setInterval(this._trackVelocity, 100);
 
     this.min = 0;
+    // 考虑 targetSize 可能 < 理论上的minosSize可能
     targetSize =
       this.direction === 'vertical'
         ? this.targetToScroll.height

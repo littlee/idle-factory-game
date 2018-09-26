@@ -12,18 +12,54 @@ const LEVEL = {
   desHeight: 85
 };
 
-
-function getFontStyle (fSize, color) {
+function getFontStyle (fSize, color, align, weight) {
   return {
-    fontWeight: 'bold',
+    fontWeight: weight || 'bold',
     fontSize: fSize,
     fill: color || '#3A0A00', // '#00FF00',
     boundsAlignH: 'center',
     boundsAlignV: 'middle',
+    align: align || 'left'
   };
 }
 
-function getContextGroupInit() {
+/*
+opts = {
+  avatarImg: <key>,
+  avatarHeading: string,
+  avatarDes: string,
+  item1Icon: <key>,
+  item1Des: string
+}
+*/
+
+class ModalLevel extends ModalRaw {
+  constructor({game, headingTxt, scrollable, opts}) {
+    // parems
+    super(game, headingTxt, undefined, undefined, scrollable);
+    this.opts = opts;
+    this.currDollar = '59aa';
+    this._getInit();
+  }
+
+  _getInit = () => {
+    this._positionModal();
+    this._createOuterVeil();
+    this._DrawSubGroupStuff();
+
+    this._setMask4ContentGroup();
+    /* real content goes here */
+    this.getContextGroupInit();
+
+    this._addStuff2SubGroup();
+    this._addStuff2Modal();
+
+    this._boostInputPriority4Children();
+    // prep for scrolling, should be called after contentGroup is all set
+    this._getScrollWhenNeeded();
+  }
+
+  getContextGroupInit = () => {
     // 添加的东西 y 要 >= this.headingH
     const OFFSET = this.headingH;
     this.avatarBg = this.game.make.graphics((this.w - LEVEL.aWidth) / 2, OFFSET); // graphics( [x] [, y] )
@@ -32,14 +68,14 @@ function getContextGroupInit() {
     this.avatarBg.endFill();
 
     this.avatarGroup = this.game.add.group(this.avatarBg);
-    this.avatar = this.game.make.image(40, 110, 'avatar_tran');
-    this.avatarHeading = this.game.make.text(60 + this.avatar.width, 120, '下一次大升级', getFontStyle('24px'));
+    this.avatar = this.game.make.image(40, 110, this.opts.avatarImg);
+    this.avatarHeading = this.game.make.text(60 + this.avatar.width, 120, this.opts.avatarHeading, getFontStyle('24px'));
     this.avatarDesBg = this.game.make.graphics(0, 0);
     this.avatarDesBg.beginFill(0x000000, 0.1);
     this.avatarDesBg.drawRect(0, 0, 339, 30);
     this.avatarDesBg.endFill();
     this.avatarDesBg.alignTo(this.avatarHeading, Phaser.BOTTOM_LEFT, 0, 10);
-    this.avatarDesTxt = this.game.make.text(0, 0, '将在等级333时获得额外的运输工人', getFontStyle('18px', 'white'));
+    this.avatarDesTxt = this.game.make.text(0, 0, this.opts.avatarDes, getFontStyle('18px', 'white'));
     this.avatarDesTxt.setTextBounds(0, 0, 339, 30); // 同上
     this.avatarDesTxt.alignTo(this.avatarDesBg, Phaser.Phaser.TOP_LEFT, 0, -28);
 
@@ -71,8 +107,8 @@ function getContextGroupInit() {
     let item1 = new UpgradeItem({
       game: this.game,
       parent: this.contentGroup,
-      key: 'icon_max_resource',
-      txt: '已运输最大资源',
+      key: this.opts.item1Icon,
+      txt: this.opts.item1Des,
       x: (this.w - LEVEL.aWidth) / 2,
       y: 290,
       currTxt: '58aa/分',
@@ -127,18 +163,17 @@ function getContextGroupInit() {
       parent: this.contentGroup
     });
 
+    this.btnUpgrade = this.game.make.image(0, 0, 'btn_level_upgrade');
+    this.btnUpgrade.alignTo(upgradeBtns, Phaser.RIGHT_BOTTOM, 75);
+    this.txtCurrDollar = this.game.make.text(0, 0, this.currDollar, getFontStyle('24px', 'white', 'center', 'normal'));
+    this.txtCurrDollar.alignTo(upgradeBtns, Phaser.RIGHT_TOP, 140, -7);
+
     this.contentGroup.addChild(this.avatarBg);
     this.contentGroup.addChild(this.avatarGroup);
+    this.contentGroup.addChild(this.btnUpgrade);
+    this.contentGroup.addChild(this.txtCurrDollar);
   }
 
-
-class ModalLevel extends ModalRaw {
-  constructor({game, headingTxt, scrollable, cb = getContextGroupInit }) {
-    // parems
-    super(game, headingTxt, undefined, undefined, scrollable, cb);
-
-    this.test = () => {console.log('child');};
-  }
 }
 
 export default ModalLevel;
