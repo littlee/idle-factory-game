@@ -2,12 +2,9 @@ import range from '../js/libs/_/range';
 import { formatBigNum } from '../utils';
 import Big from '../js/libs/big.min';
 
-import ModalLevel from './ModalLevel';
+// import ModalLevel from './ModalLevel';
 import Worker from './Worker';
-
-window.PIXI = require('../js/libs/pixi.min');
-window.p2 = require('../js/libs/p2.min');
-window.Phaser = require('../js/libs/phaser-split.min');
+import BtnUpgrade from './BtnUpgrade';
 
 const COLLECT_TYPES = {
   CASH: 'cash',
@@ -245,7 +242,7 @@ class Workstation extends window.Phaser.Group {
     this.productGroup.add(this.inputItemsMoving);
     this.productGroup.add(this.outputItemsMovingLeft);
     this.productGroup.add(this.outputItemsMovingRight);
-    
+
     this.worker = new Worker(this.game, 0, 0);
     this.worker.alignTo(this.table, window.Phaser.TOP_CENTER, 20, -10);
     this.worker.work();
@@ -271,35 +268,11 @@ class Workstation extends window.Phaser.Group {
       this._setData.bind(this, { collectType: COLLECT_TYPES.CASH })
     );
 
-    this.upgradeBtn = this.gameRef.make.sprite(0, 0, 'btn_level');
-    this.upgradeBtn.alignIn(this.table, window.Phaser.BOTTOM_CENTER, 0, 30);
-    this.upgradeBtn.inputEnabled = true;
-    this.upgradeBtn.input.priorityID = PRIORITY_ID;
-    // ModalLevel
-    this.upgradeModal = new ModalLevel({game: this.game});
-    this.upgradeBtn.events.onInputDown.add(() => {
+    this.upBtn = new BtnUpgrade(this.game, 0, 0);
+    this.upBtn.alignIn(this.table, window.Phaser.BOTTOM_CENTER, 0, 30);
+    this.upBtn.onClick(() => {
       console.log('点击工作台升级按钮');
-      this.upgradeModal.visible = true;
     });
-
-    this.upgradeBtnText = this.gameRef.make.text(0, 0, '等级', BTN_TEXT_STYLE);
-    this.upgradeBtnText.alignIn(
-      this.upgradeBtn,
-      window.Phaser.TOP_CENTER,
-      0,
-      -15
-    );
-
-    this.levelText = this.gameRef.make.text(
-      0,
-      0,
-      this._data.level,
-      BTN_TEXT_STYLE
-    );
-    this.levelText.alignIn(this.upgradeBtn, window.Phaser.BOTTOM_CENTER, 0, -5);
-
-    this.upgradeArrow = this.gameRef.make.sprite(0, 0, 'icon_level_up');
-    this.upgradeArrow.alignIn(this.upgradeBtn, window.Phaser.TOP_RIGHT, 10, 10);
 
     // for simple z-depth
     this.add(this.ground);
@@ -316,17 +289,14 @@ class Workstation extends window.Phaser.Group {
     this.add(this.boxHolderProd);
     this.add(this.boxHolderCash);
     this.add(this.boxCollect);
-    this.add(this.upgradeBtn);
-    this.add(this.upgradeBtnText);
-    this.add(this.levelText);
-    this.add(this.upgradeArrow);
+
+    this.add(this.upBtn);
 
     this._init();
   }
 
   _init() {
     this._setCollectType();
-    this._setCanUpgrade();
   }
 
   _setData(data) {
@@ -363,26 +333,10 @@ class Workstation extends window.Phaser.Group {
     this.levelText.setText(level);
   }
 
-  _setCanUpgrade() {
-    const { canUpgrade } = this._data;
-    if (canUpgrade) {
-      this.upgradeArrow.visible = true;
-    } else {
-      this.upgradeArrow.visible = false;
-    }
-  }
-
   // public methods
   getData() {
     return this._data;
   }
-
-  setCanUpgrade(canUpgrade) {
-    this._setData({
-      canUpgrade
-    });
-  }
-
 }
 
 export default Workstation;

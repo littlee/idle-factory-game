@@ -2,12 +2,6 @@ import serverConfig from '../server_config';
 // import Big from '../js/libs/big.min.js';
 // import { formatBigNum } from '../utils';
 
-window.PIXI = require('../js/libs/pixi.min');
-window.p2 = require('../js/libs/p2.min');
-window.Phaser = require('../js/libs/phaser-split.min');
-
-
-
 class Start extends window.Phaser.State {
   init() {
     this.stage.backgroundColor = '#fff';

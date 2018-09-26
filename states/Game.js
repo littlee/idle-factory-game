@@ -11,9 +11,7 @@ import Scroller from '../components/Scroller.js';
 import BellRed from '../components/BellRed';
 import BellYellow from '../components/BellYellow';
 
-window.PIXI = require('../js/libs/pixi.min');
-window.p2 = require('../js/libs/p2.min');
-window.Phaser = require('../js/libs/phaser-split.min');
+import BtnUpgrade from '../components/BtnUpgrade';
 
 /*
 关于priorityID:
@@ -51,11 +49,36 @@ class Game extends window.Phaser.State {
     // group 1-5
     /* eslint-disable */
     this.workStation1 = new Workstation(this.game, 0, 915, 1, 1);
-    window.ws = this.workStation1; // this.workStation2 = new Workstation(this.game, 0, 915 + 339, 1, 2);
+    this.workStation2 = new Workstation(this.game, 0, 915 + 339, 1, 2);
     // this.workStation3 = new Workstation(this.game, 0, 915 + 339 * 2, 1, 3);
     // this.workStation4 = new Workstation(this.game, 0, 915 + 339 * 3, 1, 4);
     // this.workStation5 = new Workstation(this.game, 0, 915 + 339 * 4, 1, 5);
     /* eslint-enable */
+
+    this.bellRed = new BellRed(this.game, 80, 116);
+    this.bellRed.unlock();
+    this.bellRed.disable();
+
+    this.bellYellow = new BellYellow(this.game, 550, 116);
+    this.bellYellow.unlock();
+
+    this.upBtnWarehouse = new BtnUpgrade(this.game, 0, 0);
+    this.upBtnWarehouse.alignIn(this.wall, window.Phaser.LEFT_CENTER, -60, -10);
+    this.upBtnWarehouse.onClick(() => {
+      console.log('仓库升级按钮');
+    });
+
+    this.upBtnMarket = new BtnUpgrade(this.game, 0, 0);
+    this.upBtnMarket.alignIn(this.wall, window.Phaser.RIGHT_CENTER, -50, -10);
+    this.upBtnMarket.onClick(() => {
+      console.log('市场升级按钮');
+    });
+
+    let wh = new WorkerWarehouse(this.game, 50, 600);
+    this.add.existing(wh);
+
+    let wm = new WorkerMarket(this.game, this.game.world.width - 150, 600);
+    this.add.existing(wm);
 
     // menus should be the last to add
     this._createMenus();
@@ -87,19 +110,6 @@ class Game extends window.Phaser.State {
     this.menuBottom.beginFill(0x282c30);
     this.menuBottom.drawRect(0, this.world.height - 81, this.world.width, 81);
     this.menuBottom.endFill();
-
-    this.bellRed = new BellRed(this.game, 80, 116);
-    this.bellRed.unlock();
-    this.bellRed.disable();
-
-    this.bellYellow = new BellYellow(this.game, 550, 116);
-    this.bellYellow.unlock();
-
-    let wh = new WorkerWarehouse(this.game, 50, 600);
-    this.add.existing(wh);
-
-    let wm = new WorkerMarket(this.game, this.game.world.width - 150, 600);
-    this.add.existing(wm);
   };
 
   _addAllRelatedStuff2Bg = () => {
@@ -111,8 +121,11 @@ class Game extends window.Phaser.State {
     this.bgGroup.addChild(this.wall);
     this.bgGroup.addChild(this.warehouseManager);
     this.bgGroup.addChild(this.marketManager);
+    this.bgGroup.addChild(this.bellRed);
+    this.bgGroup.addChild(this.bellYellow);
+
     this.bgGroup.addChild(this.workStation1);
-    // this.bgGroup.addChild(this.workStation2);
+    this.bgGroup.addChild(this.workStation2);
     // this.bgGroup.addChild(this.workStation3);
     // this.bgGroup.addChild(this.workStation4);
     // this.bgGroup.addChild(this.workStation5);

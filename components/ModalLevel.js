@@ -2,10 +2,6 @@ import ModalRaw from './ModalRaw.js';
 import UpgradeItem from './UpgradeItem.js';
 import PanelUpgrade from './PanelUpgrade.js';
 
-window.PIXI = require('../js/libs/pixi.min');
-window.p2 = require('../js/libs/p2.min');
-window.Phaser = require('../js/libs/phaser-split.min');
-
 const LEVEL = {
   aWidth: 537,
   aHeight: 178,
