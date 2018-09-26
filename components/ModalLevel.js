@@ -5,12 +5,18 @@ window.p2 = require('../js/libs/p2.min');
 window.Phaser = require('../js/libs/phaser-split.min');
 
 // let const = {};
+function fn () {
+  console.log('lala');
+}
 
 class ModalLevel extends ModalRaw {
-  constructor({game, headingTxt, scrollable}) {
+  constructor({game, headingTxt, scrollable, cb=fn}) {
     // parems
-    super(game, headingTxt, undefined, undefined, scrollable);
+    super(game, headingTxt, undefined, undefined, scrollable, cb);
     this.data = 'data';
+    // this.test = this._test;
+
+    this.test();
   }
 
   _handleUpgrade = () => {

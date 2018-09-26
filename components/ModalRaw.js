@@ -60,7 +60,7 @@ const LEVEL = {
 
 class ModalRaw extends window.Phaser.Group {
   // new Group(game [, parent] [, name] [, addToStage] [, enableBody] [, physicsBodyType])
-  constructor(game, headingTxt, height = config.HEIGHT, width = config.WIDTH, scrollable = true, priority = 1000, headingH = 100) {
+  constructor(game, headingTxt, height = config.HEIGHT, width = config.WIDTH, scrollable = true, cb, priority = 1000, headingH = 100) {
     // params
     super(game);
     this.h = height;
@@ -78,9 +78,16 @@ class ModalRaw extends window.Phaser.Group {
     this.scroller = null;
     this.x = 0;
     this.y = 0;
+    this.test = cb || this._test;
+    // this.test = this._test;
 
     // init
     this._getInit();
+    this.test();
+  }
+
+  _test = () => {
+    console.log('parent');
   }
 
   _getInit = () => {
@@ -88,7 +95,6 @@ class ModalRaw extends window.Phaser.Group {
     this.x = (this.cameraView.width - this.w) / 2;
     this.y = (this.cameraView.height - this.h) / 2;
     this.visible = false;
-    // this.contentGroup.y = this.headingH;
 
     this._createVeil();
     // this._createVeilTop(); // for bug fixing
@@ -110,7 +116,7 @@ class ModalRaw extends window.Phaser.Group {
 
   _getSubGroupInit = () => {
     // frame -> sub-group
-    this._setMask4SubGroup();
+    // this._setMask4SubGroup();
 
     this.frame = this.game.make.graphics(0, 0); // graphics( [x] [, y] )
     this.frame.beginFill(config.FRAME_RGB);
@@ -124,6 +130,7 @@ class ModalRaw extends window.Phaser.Group {
     this.frame.lineTo(0, 0);
 
     /* real content goes here */
+    this._setMask4SubGroup();
     this.getContextGroupInit();
 
     // btn_close ...should be a sprite rather than img
@@ -138,6 +145,8 @@ class ModalRaw extends window.Phaser.Group {
     this.subGroup.addChild(this.contentGroup);
     this.subGroup.addChild(this.btnClose);
     this.subGroup.addChild(this.heading);
+
+
 
   }
 
@@ -187,6 +196,7 @@ class ModalRaw extends window.Phaser.Group {
     this.contentGroup.mask = mask;
   }
 
+
   _getScrollWhenNeeded = () => {
     if (this.scrollable === false) return false;
     this.scroller = new Scroller({
@@ -197,6 +207,7 @@ class ModalRaw extends window.Phaser.Group {
         height: this.h - this.headingH
       },
       heading: this.headingH,
+      margin: 0,
     });
     this.scroller.enableScroll();
   }
@@ -305,18 +316,6 @@ class ModalRaw extends window.Phaser.Group {
       game: this.game,
       parent: this.contentGroup
     });
-
-    // this.levelGroup = this.game.add.group(this.levelPanelBg);
-    // let levelOne = this.game.make.text(0, 0, 'X1', getFontStyle('28px', 'white'));
-    // levelOne.alignTo(this.levelPanelBg, Phaser.TOP_LEFT, -20, -60);
-
-    // let levelTen = this.game.make.text(0, 0, 'X10', getFontStyle('28px', 'white'));
-    // levelOne.alignTo(this.levelPanelBg, Phaser.TOP_LEFT, -50, -60);
-    // let levelFifth = this.game.add.text(0, 0, 'X50', getFontStyle('28px', 'white'));
-    // levelOne.alignTo(this.levelPanelBg, Phaser.TOP_LEFT, -80, -60);
-    // let levelMax = this.game.add.text(0, 0, '最高', getFontStyle('28px', 'white'));
-    // levelOne.alignTo(this.levelPanelBg, Phaser.TOP_LEFT, -110, -60);
-
 
     this.contentGroup.addChild(this.avatarBg);
     this.contentGroup.addChild(this.avatarGroup);

@@ -29,6 +29,7 @@ class PanelUpgrade extends window.Phaser.Group {
     this.btnOne = this.game.make.image(0, 0, 'btn_pick_upgrade');
     this.btnOne.alignTo(this.bg, Phaser.TOP_LEFT, -2, -90);
 
+
     this.ten = this.game.make.text(0, 0, 'x10', getFontStyle());
     this.ten.setTextBounds(0, 0, 72, 85);
     this.ten.alignTo(this.bg, Phaser.TOP_LEFT, -72, -40);
