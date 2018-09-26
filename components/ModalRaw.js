@@ -65,65 +65,14 @@ class ModalRaw extends window.Phaser.Group {
     this._getInit();
   }
 
-  _getInit = () => {
+  _positionModal = () => {
     // init group 的 position & size: this.x this.y this.w this.h
     this.x = (this.cameraView.width - this.w) / 2;
     this.y = (this.cameraView.height - this.h) / 2;
     this.visible = false;
-
-    this._createVeil();
-    // this._createVeilTop(); // for bug fixing
-    this._getSubGroupInit();
-
-    // the display object in this group, from top down
-    this.addChild(this.veil);
-    this.addChild(this.subGroup);
-    // this.addChild(this.veilTop); // for bug fixing
-
-    // prep for input
-    this.setAllChildren('inputEnabled', true);
-    this.setAllChildren('input.priorityID', this.priorityID);
-    this.btnClose.input.priorityID = this.priorityID + 1;
-
-    // prep for scrolling, let the inherit class call this instead
-    this._getScrollWhenNeeded();
   }
 
-  _getSubGroupInit = () => {
-    /* frame, heading, btn_close, mask for contentGroup */
-    // this._setMask4SubGroup();
-
-    // frame
-    this.frame = this.game.make.graphics(0, 0); // graphics( [x] [, y] )
-    this.frame.beginFill(config.FRAME_RGB);
-    this.frame.drawRect(0, 0, this.w, this.h);
-    this.frame.endFill();
-    this.frame.lineStyle(config.FRAME_LINE_WIDTH, config.FRAME_LINE_COLOR, config.FRAME_LINE_ALPHA);
-    this.frame.moveTo(0, 0);
-    this.frame.lineTo(this.w, 0);
-    this.frame.lineTo(this.w, this.h);
-    this.frame.lineTo(0, this.h);
-    this.frame.lineTo(0, 0);
-
-    /* real content goes here */
-    this._setMask4SubGroup();
-    this.getContextGroupInit();
-
-    // btn_close ...should be a sprite rather than img
-    this.btnClose = this.game.make.button(this.w - 1, 0 + 1, 'btn_close', this._handleClose);
-    this.btnClose.anchor.set(1, 0);
-
-    this.heading = this.game.make.text(0, 0, this.headingTxt, FONT_STYLE);
-    this.heading.setTextBounds(0, 0, this.w - this.btnClose.width, this.headingH);
-
-    // the display object in the sub-group, from top down
-    this.subGroup.addChild(this.frame);
-    this.subGroup.addChild(this.contentGroup);
-    this.subGroup.addChild(this.btnClose);
-    this.subGroup.addChild(this.heading);
-  }
-
-  _createVeil = () => {
+   _createOuterVeil = () => {
     // veil beginFill(color, alpha)
     let x = -this.x;
     let y = -this.y;
@@ -139,6 +88,65 @@ class ModalRaw extends window.Phaser.Group {
     this.veil.inputEnabled = true;
     this.veil.events.onInputDown.add(this._handleClose);
   }
+
+  _getInit = () => {
+    this._positionModal();
+    this._createOuterVeil();
+    this._DrawSubGroupStuff();
+
+    // the display object in this group, from top down
+    this.addChild(this.veil);
+    this.addChild(this.subGroup);
+    // this.addChild(this.veilTop); // for bug fixing
+
+    // prep for input
+    this.setAllChildren('inputEnabled', true);
+    this.setAllChildren('input.priorityID', this.priorityID);
+    this.btnClose.input.priorityID = this.priorityID + 1;
+
+    // prep for scrolling, let the inherit class call this instead
+    this._getScrollWhenNeeded();
+  }
+
+  _DrawSubGroupStuff = () => {
+    /* frame, heading, btn_close, mask for contentGroup */
+    // this._setMask4SubGroup();
+
+    // frame
+    this.frame = this.game.make.graphics(0, 0); // graphics( [x] [, y] )
+    this.frame.beginFill(config.FRAME_RGB);
+    this.frame.drawRect(0, 0, this.w, this.h);
+    this.frame.endFill();
+    this.frame.lineStyle(config.FRAME_LINE_WIDTH, config.FRAME_LINE_COLOR, config.FRAME_LINE_ALPHA);
+    this.frame.moveTo(0, 0);
+    this.frame.lineTo(this.w, 0);
+    this.frame.lineTo(this.w, this.h);
+    this.frame.lineTo(0, this.h);
+    this.frame.lineTo(0, 0);
+
+    // btn_close ...should be a sprite rather than img
+    this.btnClose = this.game.make.button(this.w - 1, 0 + 1, 'btn_close', this._handleClose);
+    this.btnClose.anchor.set(1, 0);
+
+    this.heading = this.game.make.text(0, 0, this.headingTxt, FONT_STYLE);
+    this.heading.setTextBounds(0, 0, this.w - this.btnClose.width, this.headingH);
+
+     /* real content goes here */
+    this._setMask4SubGroup();
+    this.getContextGroupInit();
+
+    // the display object in the sub-group, from top down
+    this.subGroup.addChild(this.frame);
+    this.subGroup.addChild(this.contentGroup);
+    this.subGroup.addChild(this.btnClose);
+    this.subGroup.addChild(this.heading);
+  }
+
+  _addStuff2SubGroup = () => {
+
+  }
+
+
 
   // for improve, not use yet
   _createVeilTop = () => {

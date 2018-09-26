@@ -88,12 +88,16 @@ export default class Scroller {
     minosSize =
       this.direction === 'vertical'
         ? this.mask === null
-          ? this.game.camera.view.height
+          ? this.game.camera.view.height > targetSize
+            ? targetSize
+            : this.game.camera.view.height
           : this.mask.height > targetSize
             ? targetSize
             : this.mask.height
         : this.mask === null
-          ? this.game.camera.view.width
+          ? this.game.camera.view.width > targetSize
+            ? targetSize
+            : this.game.camera.view.width
           : this.mask.width > targetSize
             ? targetSize
             : this.mask.width;
@@ -186,7 +190,7 @@ export default class Scroller {
 
   _getScrolling = delta2scroll => {
     if (this.bouncing) return false;
-    console.log('scrolling');
+    // console.log('scrolling');
     this.offset =
       delta2scroll > this.max
         ? this.max
