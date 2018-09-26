@@ -1,12 +1,6 @@
 import ModalRaw from './ModalRaw.js';
 import ResourceItem from './ResourceItem';
 
-const LEVEL = {
-  aWidth: 537,
-  aHeight: 178,
-  desHeight: 85
-};
-
 const FONT_STYLE = {
   fontWeight: 'bold',
   fontSize: '34px',
@@ -15,33 +9,18 @@ const FONT_STYLE = {
   boundsAlignV: 'middle',
 };
 
-function getFontStyle (fSize, color, align, weight) {
-  return {
-    fontWeight: weight || 'bold',
-    fontSize: fSize,
-    fill: color || '#3A0A00', // '#00FF00',
-    boundsAlignH: 'center',
-    boundsAlignV: 'middle',
-    align: align || 'left'
-  };
-}
+const CONFIG = {
+  width: 500,
+  height: 717
+};
 
-/*
-opts = {
-  avatarImg: <key>,
-  avatarHeading: string,
-  avatarDes: string,
-  item1Icon: <key>,
-  item1Des: string
-}
-*/
 class ModalRescources extends ModalRaw {
-  constructor({game, height = 717, width = 500, headingTxt, headingStyles = FONT_STYLE, scrollable, opts}) {
+  constructor({game, height = CONFIG.height, width = CONFIG.width, headingTxt, headingStyles = FONT_STYLE, scrollable}) {
     // parems
     super(game, headingTxt, height, width, scrollable, headingStyles);
     this.w = width;
     this.h = height;
-    // this.opts = opts;
+
     this._getInit();
   }
 

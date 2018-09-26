@@ -73,11 +73,13 @@ class Start extends window.Phaser.State {
     this.load.image('icon_tick', 'images/icon_tick.png');
     this.load.image('btn_cash_able2buy', 'images/btn_cash_able2buy.png');
     this.load.image('btn_cash_unable2buy', 'images/btn_cash_unable2buy.png');
+    this.load.image('ad_campaign', 'images/ad_campaign.png');
+    this.load.image('btn_watch_ad', 'images/btn_watch_ad.png');
   }
 
   create() {
-    this.state.start('Game');
-    // this.state.start('Test');
+    // this.state.start('Game');
+    this.state.start('Test');
 
     // console.log(formatBigNum(Big('123456789123456789')))
   }

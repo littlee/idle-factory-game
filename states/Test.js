@@ -1,7 +1,8 @@
 import Scroller from '../components/Scroller.js';
 // import ModalRaw from '../components/ModalRaw.js';
-import ModalLevel from '../components/ModalLevel.js';
-import ModalRescources from '../components/ModalResources.js';
+// import ModalLevel from '../components/ModalLevel.js';
+// import ModalRescources from '../components/ModalResources.js';
+import ModalAdCampagin from '../components/ModalAdCampagin.js';
 
 class Game extends window.Phaser.State {
   create() {
@@ -72,10 +73,9 @@ class Game extends window.Phaser.State {
     txtScroller.enableScroll();
 
     // modal
-    let modal = new ModalRescources({
+    let modal = new ModalAdCampagin({
       game: this.game,
       scrollable: true,
-      headingTxt: '进口生产原料',
     });
 
     // modal
