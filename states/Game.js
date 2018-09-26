@@ -152,6 +152,8 @@ class Game extends window.Phaser.State {
     this.bgGroup.addChild(this.marketManager);
     this.bgGroup.addChild(this.bellRed);
     this.bgGroup.addChild(this.bellYellow);
+    this.bgGroup.addChild(this.upBtnMarket);
+    this.bgGroup.addChild(this.upBtnWarehouse);
 
     this.bgGroup.addChild(this.workStation1);
     this.bgGroup.addChild(this.workStation2);
