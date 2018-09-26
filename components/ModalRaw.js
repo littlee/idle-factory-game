@@ -1,5 +1,4 @@
 import Scroller from './Scroller.js';
-
 window.PIXI = require('../js/libs/pixi.min');
 window.p2 = require('../js/libs/p2.min');
 window.Phaser = require('../js/libs/phaser-split.min');
@@ -30,15 +29,25 @@ const config = {
   FRAME_LINE_ALPHA: 0.7,
 };
 
+const FONT_STYLE = {
+  fontWeight: 'bold',
+  fontSize: '48px',
+  fill: '#3A0A00', // '#00FF00',
+  boundsAlignH: 'center',
+  boundsAlignV: 'middle',
+};
+
 class ModalRaw extends window.Phaser.Group {
   // new Group(game [, parent] [, name] [, addToStage] [, enableBody] [, physicsBodyType])
-  constructor(game, height = config.HEIGHT, width = config.WIDTH, scrollable = true, priority = 1000) {
+  constructor(game, headingTxt, height = config.HEIGHT, width = config.WIDTH, scrollable = true, cb, priority = 1000, headingH = 100) {
     // params
     super(game);
     this.h = height;
     this.w = width;
     this.scrollable = scrollable;
     this.priorityID = priority;
+    this.headingTxt = headingTxt || '标题';
+    this.headingH = headingH;
 
     // shortcuts
     this.cameraView = this.game.camera.view;
@@ -48,6 +57,9 @@ class ModalRaw extends window.Phaser.Group {
     this.scroller = null;
     this.x = 0;
     this.y = 0;
+
+    // 方法
+    this.getContextGroupInit = cb.bind(this) || null;
 
     // init
     this._getInit();
@@ -73,14 +85,15 @@ class ModalRaw extends window.Phaser.Group {
     this.setAllChildren('input.priorityID', this.priorityID);
     this.btnClose.input.priorityID = this.priorityID + 1;
 
-    // prep for scrolling
+    // prep for scrolling, let the inherit class call this instead
     this._getScrollWhenNeeded();
   }
 
   _getSubGroupInit = () => {
-    // frame -> sub-group
-    this._setMask4SubGroup();
+    /* frame, heading, btn_close, mask for contentGroup */
+    // this._setMask4SubGroup();
 
+    // frame
     this.frame = this.game.make.graphics(0, 0); // graphics( [x] [, y] )
     this.frame.beginFill(config.FRAME_RGB);
     this.frame.drawRect(0, 0, this.w, this.h);
@@ -93,16 +106,21 @@ class ModalRaw extends window.Phaser.Group {
     this.frame.lineTo(0, 0);
 
     /* real content goes here */
-    // this.DEVgetContextGroupInit();
+    this._setMask4SubGroup();
+    this.getContextGroupInit();
 
     // btn_close ...should be a sprite rather than img
     this.btnClose = this.game.make.button(this.w - 1, 0 + 1, 'btn_close', this._handleClose);
     this.btnClose.anchor.set(1, 0);
 
+    this.heading = this.game.make.text(0, 0, this.headingTxt, FONT_STYLE);
+    this.heading.setTextBounds(0, 0, this.w - this.btnClose.width, this.headingH);
+
     // the display object in the sub-group, from top down
     this.subGroup.addChild(this.frame);
-    this.subGroup.addChild(this.btnClose);
     this.subGroup.addChild(this.contentGroup);
+    this.subGroup.addChild(this.btnClose);
+    this.subGroup.addChild(this.heading);
   }
 
   _createVeil = () => {
@@ -122,6 +140,7 @@ class ModalRaw extends window.Phaser.Group {
     this.veil.events.onInputDown.add(this._handleClose);
   }
 
+  // for improve, not use yet
   _createVeilTop = () => {
     let x = -this.x;
     let y = -this.y;
@@ -146,10 +165,11 @@ class ModalRaw extends window.Phaser.Group {
   _setMask4SubGroup = () => {
     let mask = this.game.add.graphics(0, 0, this.subGroup); // graphics( [x] [, y] [, group] )
     mask.beginFill(0xFF0000, 0.5);
-    mask.drawRect(0, 0, this.w, this.h);
+    mask.drawRect(0, this.headingH, this.w, this.h - this.headingH);
     mask.endFill();
-    this.subGroup.mask = mask;
+    this.contentGroup.mask = mask;
   }
+
 
   _getScrollWhenNeeded = () => {
     if (this.scrollable === false) return false;
@@ -158,36 +178,18 @@ class ModalRaw extends window.Phaser.Group {
       priority: this.priorityID,
       mask: {
         width: this.w,
-        height: this.h
+        height: this.h - this.headingH
       },
-      heading: this.btnClose.height + 35,
+      heading: this.headingH,
+      margin: 0,
     });
     this.scroller.enableScroll();
   }
 
-  // try-out
-  DEVgetContextGroupInit = () => {
-    this.test = this.game.make.graphics(0, 0); // graphics( [x] [, y] )
-    this.test.beginFill(0xFF0000);
-    this.test.drawRect(80, 80, this.w - 160, this.h);
-    this.test.endFill();
-    this.test1 = this.game.make.graphics(0, 0); // graphics( [x] [, y] )
-    this.test1.beginFill(0x00FF00);
-    this.test1.drawRect(80, 80 + this.h, this.w - 160, this.h);
-    this.test1.endFill();
-    this.test2 = this.game.make.graphics(0, 0); // graphics( [x] [, y] )
-    this.test2.beginFill(0x0000FF);
-    this.test2.drawRect(80, 80 + this.h * 2, this.w - 160, this.h);
-    this.test2.endFill();
-    this.contentGroup.addChild(this.test);
-    this.contentGroup.addChild(this.test1);
-    this.contentGroup.addChild(this.test2);
-  }
-
+  // try-out 在继承的类那里直接调用这个方法来添加内容
   getContextGroupInit = () => {
-    // test
+    // empty
   }
-
 
 
 }

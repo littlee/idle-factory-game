@@ -11,7 +11,7 @@ bouncing写错，再来
 */
 
 export default class Scroller {
-  constructor({ mask = null, targetToScroll = null, direction = 'vertical', priority = 10, heading = 0 }) {
+  constructor({ mask = null, targetToScroll = null, direction = 'vertical', priority = 10, heading = 0, margin = 100 }) {
     // params
     this.mask = mask;
     this.targetToScroll = targetToScroll;
@@ -43,7 +43,7 @@ export default class Scroller {
     this.min = 0;
     this.config = {
       AUTO_SCROLL_THRESHOLD: 4,
-      MARGIN: 100, // increase the value of max
+      MARGIN: margin, // increase the value of max
       FACTOR: 0.7, // factor 0.6 is tweakable, fancy a 'heavy-scrolling-feel', reduce the value of factor.
       DELTA_STOP_THRESHOLD: 0.5, // when to stop auto-scrolling after release pointer
       DELTA_START_THRESHOLD: 5, // when to start scrolling when dragging
@@ -61,7 +61,7 @@ export default class Scroller {
     }
     let pointer = this.targetToScroll ? pointerObj : pointerGame;
     let initPos = pointer[this.axis];
-    console.log(`initPos: ${initPos}`);
+    // console.log(`initPos: ${initPos}`);
     this.game.input.addMoveCallback(this._dragOnScreen);
     this._initializeDataBehavior(initPos);
     return false;
@@ -89,14 +89,19 @@ export default class Scroller {
       this.direction === 'vertical'
         ? this.mask === null
           ? this.game.camera.view.height
-          : this.mask.height
+          : this.mask.height > targetSize
+            ? targetSize
+            : this.mask.height
         : this.mask === null
           ? this.game.camera.view.width
-          : this.mask.width;
+          : this.mask.width > targetSize
+            ? targetSize
+            : this.mask.width;
     this.max =
       this.mask === null
         ? targetSize - minosSize
         : targetSize - minosSize + this.config.MARGIN;
+
     return true;
   };
 
@@ -181,6 +186,7 @@ export default class Scroller {
 
   _getScrolling = delta2scroll => {
     if (this.bouncing) return false;
+    console.log('scrolling');
     this.offset =
       delta2scroll > this.max
         ? this.max
@@ -234,7 +240,7 @@ export default class Scroller {
     // veil 定位在heading之下
     this.veil = this.game.make.graphics(0, this.veilY);
     this.veil.fixedToCamera = true;
-    this.veil.beginFill(0x000000, 0.1);
+    this.veil.beginFill(0x000000, 0.01);
     this.veil.drawRect(0, 0, width, height);
     this.veil.endFill();
 
