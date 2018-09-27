@@ -49,11 +49,12 @@ function getFontStyle (fSize, color, align, weight) {
 
 class ModalRaw extends window.Phaser.Group {
   // new Group(game [, parent] [, name] [, addToStage] [, enableBody] [, physicsBodyType])
-  constructor(game, headingTxt, height = config.HEIGHT, width = config.WIDTH, scrollable = true, headingStyles = {}, priority = 1000, headingH = 100, subHeading = false) {
+  constructor(game, headingTxt, height = config.HEIGHT, width = config.WIDTH, scrollable = true, headingStyles = {}, priority = 1000, headingH = 100, subHeading = false, boost = true) {
     // params
     super(game);
     this.h = height;
     this.w = width;
+    this.boost = boost;
     this.scrollable = scrollable;
     this.priorityID = priority;
     this.headingTxt = headingTxt || '标题';
@@ -118,8 +119,10 @@ class ModalRaw extends window.Phaser.Group {
 
   _boostInputPriority4Children = () => {
     // prep for input
-    this.setAllChildren('inputEnabled', true);
-    this.setAllChildren('input.priorityID', this.priorityID + 1);
+    if (this.boost) {
+      this.setAllChildren('inputEnabled', true);
+      this.setAllChildren('input.priorityID', this.priorityID + 1);
+    }
   }
 
   _DrawSubGroupStuff = () => {

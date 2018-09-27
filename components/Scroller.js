@@ -61,7 +61,6 @@ export default class Scroller {
     }
     let pointer = this.targetToScroll ? pointerObj : pointerGame;
     let initPos = pointer[this.axis];
-    // console.log(`initPos: ${initPos}`);
     this.game.input.addMoveCallback(this._dragOnScreen);
     this._initializeDataBehavior(initPos);
     return false;
@@ -258,6 +257,7 @@ export default class Scroller {
     this.veil.events.onInputUp.add(this._releasePointer);
     this.veil.input.priorityID = this.veilPriorityID;
 
+    this._initializeDataBehavior();
   };
 
   scrollToTop = () => {
