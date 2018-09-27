@@ -1,8 +1,8 @@
 import Scroller from '../components/Scroller.js';
 // import ModalRaw from '../components/ModalRaw.js';
-// import ModalLevel from '../components/ModalLevel.js';
+import ModalLevel from '../components/ModalLevel.js';
 // import ModalRescources from '../components/ModalResources.js';
-import ModalAdCampaign from '../components/ModalAdCampaign';
+// import ModalAdCampaign from '../components/ModalAdCampaign';
 
 class Game extends window.Phaser.State {
   create() {
@@ -73,24 +73,24 @@ class Game extends window.Phaser.State {
     txtScroller.enableScroll();
 
     // modal
-    let modal = new ModalAdCampaign({
-      game: this.game,
-      scrollable: true,
-    });
-
-    // modal
-    // let modal = new ModalLevel({
+    // let modal = new ModalAdCampaign({
     //   game: this.game,
     //   scrollable: true,
-    //   headingTxt: '233级仓库',
-    //   opts: {
-    //     avatarImg: 'avatar_tran_warehose',
-    //     avatarHeading: '下一次大升级',
-    //     avatarDes: '将在等级333时获得额外的运输工人',
-    //     item1Icon: 'icon_max_resource',
-    //     item1Des: '已运输最大资源'
-    //   }
     // });
+
+    // modal
+    let modal = new ModalLevel({
+      game: this.game,
+      scrollable: true,
+      headingTxt: '233级仓库',
+      opts: {
+        avatarImg: 'avatar_tran_warehose',
+        avatarHeading: '下一次大升级',
+        avatarDes: '将在等级333时获得额外的运输工人',
+        item1Icon: 'icon_max_resource',
+        item1Des: '已运输最大资源'
+      }
+    });
 
     // btn-egg
     modal.visible = true;

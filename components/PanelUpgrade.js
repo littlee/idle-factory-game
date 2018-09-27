@@ -72,12 +72,8 @@ class PanelUpgrade extends window.Phaser.Group {
       {key: 'btnFifth', txt: 'fifth'},
       {key: 'btnMax', txt: 'max'}
     ];
-
-
     tmp.forEach(
       (item) => {
-        this[item.key].inputEnabled = true;
-        this[item.key].input.priorityID = 1001;
         this[item.key].events.onInputDown.add(() => {
           let curr = item.key;
           this[item.key].alpha = this[item.key].alpha === 1 ? 0 : 1;
@@ -88,9 +84,6 @@ class PanelUpgrade extends window.Phaser.Group {
             }
           );
         });
-
-        this[item.txt].inputEnabled = true;
-        this[item.txt].input.priorityID = 1001;
         this[item.txt].events.onInputDown.add(() => {
           let curr = item.key;
           this[item.key].alpha = this[item.key].alpha === 1 ? 0 : 1;

@@ -11,9 +11,9 @@ key:
 -7- 所以，应该在这里放多一个sub-group, mask才能正确function
 -8- group里头chidlren的priorityID要和Scroller的veil一样。否则veil收不到事件
 -9- 应该有个heading, 和btnClose的水平位置差不多，这样滑动的时候，才不会有overlay btnClose的可能。[未实现]
--10- this.contentGroup里头的值，以及heading的尺寸和具体高度，要可以传入。[未实现]
--11- mask和Scroller的veil的尺寸的位置要更加heading的尺寸做相应的调整。[为实现]
--12- modal 的scroll里头的对象如果要有自己的input事件，需要设置priority > 1000
+-10- this.contentGroup里头的值，以及heading的尺寸和具体高度，要可以传入。
+-11- mask和Scroller的veil的尺寸的位置要更加heading的尺寸做相应的调整。
+-12- modal 的scroll里头的对象如果要有自己的input事件，需要设置priority > 1000[在ModalRaw这里已经统一enable了所有的children的input和设置了对的priorityID]
 */
 const config = {
   HEIGHT: 935,
@@ -106,7 +106,6 @@ class ModalRaw extends window.Phaser.Group {
     // prep for input
     this.setAllChildren('inputEnabled', true);
     this.setAllChildren('input.priorityID', this.priorityID + 1);
-    // this.btnClose.input.priorityID = this.priorityID + 1;
   }
 
   _DrawSubGroupStuff = () => {
