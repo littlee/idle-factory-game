@@ -30,10 +30,11 @@ opts = {
 */
 
 class ModalLevel extends ModalRaw {
-  constructor({game, headingTxt, scrollable, opts}) {
+  constructor({game, headingTxt, scrollable, opts, worker = false}) {
     // parems
     super(game, headingTxt, undefined, undefined, scrollable);
     this.opts = opts;
+    this.worker = worker;
     this.currDollar = '59aa';
     this._getInit();
   }
@@ -98,65 +99,85 @@ class ModalLevel extends ModalRaw {
     this.avatarGroup.addChild(this.avatarBarGained);
     this.avatarGroup.addChild(this.avatarArrow);
 
-    this.desGroup = this.game.add.group();
-    // gap 16
-    let item1 = new UpgradeItem({
-      game: this.game,
-      parent: this.contentGroup,
-      key: this.opts.item1Icon,
-      txt: this.opts.item1Des,
-      x: (this.w - LEVEL.aWidth) / 2,
-      y: 290,
-      currTxt: '58aa/分',
-      futureTxt: '+55aa/分'
-    });
-    let item2 = new UpgradeItem({
-      game: this.game,
-      parent: this.contentGroup,
-      key: 'icon_transporter',
-      txt: '运输工',
-      x: (this.w - LEVEL.aWidth) / 2,
-      y: 290 + 85 + 17,
-      currTxt: '9',
-      futureTxt: '+0'
-    });
+    this.mainGroup = this.game.add.group();
+    if (!this.worker) {
+      // gap 17
+      let item1 = new UpgradeItem({
+        game: this.game,
+        parent: this.mainGroup,
+        key: this.opts.item1Icon,
+        txt: this.opts.item1Des,
+        x: (this.w - LEVEL.aWidth) / 2,
+        y: 290,
+        currTxt: '58aa/分',
+        futureTxt: '+55aa/分'
+      });
+      let item2 = new UpgradeItem({
+        game: this.game,
+        parent: this.mainGroup,
+        key: 'icon_transporter',
+        txt: '运输工',
+        x: (this.w - LEVEL.aWidth) / 2,
+        y: 290 + 85 + 17,
+        currTxt: '9',
+        futureTxt: '+0'
+      });
 
-    let item3 = new UpgradeItem({
-      game: this.game,
-      parent: this.contentGroup,
-      key: 'icon_transporter_capacity',
-      txt: '运输工能力',
-      x: (this.w - LEVEL.aWidth) / 2,
-      y: 290 + 85 * 2 + 17 * 2,
-      currTxt: '58aa',
-      futureTxt: '+55ac'
-    });
+      let item3 = new UpgradeItem({
+        game: this.game,
+        parent: this.mainGroup,
+        key: 'icon_transporter_capacity',
+        txt: '运输工能力',
+        x: (this.w - LEVEL.aWidth) / 2,
+        y: 290 + 85 * 2 + 17 * 2,
+        currTxt: '58aa',
+        futureTxt: '+55ac'
+      });
 
-    let item4 = new UpgradeItem({
-      game: this.game,
-      parent: this.contentGroup,
-      key: 'icon_loading_speed',
-      txt: '运输工载运能力',
-      x: (this.w - LEVEL.aWidth) / 2,
-      y: 290 + 85 * 3 + 17 * 3,
-      currTxt: '18.4aa/秒',
-      futureTxt: '+55aa/秒'
-    });
+      let item4 = new UpgradeItem({
+        game: this.game,
+        parent: this.mainGroup,
+        key: 'icon_loading_speed',
+        txt: '运输工载运能力',
+        x: (this.w - LEVEL.aWidth) / 2,
+        y: 290 + 85 * 3 + 17 * 3,
+        currTxt: '18.4aa/秒',
+        futureTxt: '+55aa/秒'
+      });
 
-    let item5 = new UpgradeItem({
-      game: this.game,
-      parent: this.contentGroup,
-      key: 'icon_walk_speed',
-      txt: '运输工行走速度',
-      x: (this.w - LEVEL.aWidth) / 2,
-      y: 290 + 85 * 4 + 17 * 4,
-      currTxt: '0.10米/分',
-      futureTxt: '+0.01米/分'
-    });
+      let item5 = new UpgradeItem({
+        game: this.game,
+        parent: this.mainGroup,
+        key: 'icon_walk_speed',
+        txt: '运输工行走速度',
+        x: (this.w - LEVEL.aWidth) / 2,
+        y: 290 + 85 * 4 + 17 * 4,
+        currTxt: '0.10米/分',
+        futureTxt: '+0.01米/分'
+      });
+    } else {
+
+      let item1 = new UpgradeItem({
+        game: this.game,
+        parent: this.mainGroup,
+        key: this.opts.item1Icon,
+        txt: this.opts.item1Des,
+        x: (this.w - LEVEL.aWidth) / 2,
+        y: 290,
+        currTxt: '58aa/分',
+        futureTxt: '+55aa/分'
+      });
+    }
+
+
+
 
     let upgradeBtns = new PanelUpgrade({
       game: this.game,
-      parent: this.contentGroup
+      parent: this.contentGroup,
+      x: 30,
+      y: 820,
+      adjacentGroup: this.mainGroup
     });
 
     this.btnUpgrade = this.game.make.image(0, 0, 'btn_level_upgrade');
@@ -166,6 +187,7 @@ class ModalLevel extends ModalRaw {
 
     this.contentGroup.addChild(this.avatarBg);
     this.contentGroup.addChild(this.avatarGroup);
+    this.contentGroup.addChild(this.mainGroup);
     this.contentGroup.addChild(this.btnUpgrade);
     this.contentGroup.addChild(this.txtCurrDollar);
   }

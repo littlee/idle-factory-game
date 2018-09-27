@@ -89,7 +89,8 @@ class Game extends window.Phaser.State {
         avatarDes: '将在等级333时获得额外的运输工人',
         item1Icon: 'icon_max_resource',
         item1Des: '已运输最大资源'
-      }
+      },
+      // worker: true
     });
 
     // btn-egg

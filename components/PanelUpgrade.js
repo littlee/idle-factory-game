@@ -10,8 +10,11 @@ function getFontStyle (fSize, color, align, weight) {
 }
 
 class PanelUpgrade extends window.Phaser.Group {
-  constructor({ game, parent}) {
+  constructor({ game, parent, x, y, adjacentGroup}) {
     super(game, parent);
+    this.adjacentGroup = adjacentGroup;
+    this.posX = x;
+    this.posY = y;
 
     this._getInit();
   }
@@ -21,7 +24,7 @@ class PanelUpgrade extends window.Phaser.Group {
     this.bg.beginFill(0x000000, 0.1);
     this.bg.drawRect(0, 0, 290, 85);
     this.bg.endFill();
-    this.bg.alignTo(this.parent, Phaser.TOP_LEFT, -30, -940);
+    this.bg.alignTo(this.adjacentGroup, Phaser.BOTTOM_LEFT, 0, 22);
 
     this.one = this.game.make.text(0, 0, 'x1', getFontStyle());
     this.one.setTextBounds(0, 0, 72, 85);
