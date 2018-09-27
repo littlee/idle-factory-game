@@ -66,7 +66,6 @@ class Game extends window.Phaser.State {
 
     this.modalWarehose = new ModalLevel({
       game: this.game,
-      scrollable: true,
       headingTxt: '233级仓库',
       opts: {
         avatarImg: 'avatar_tran_warehose',
@@ -79,7 +78,6 @@ class Game extends window.Phaser.State {
 
     this.modalMarket = new ModalLevel({
       game: this.game,
-      scrollable: true,
       headingTxt: '555级市场',
       opts: {
         avatarImg: 'avatar_tran_market',
@@ -92,8 +90,7 @@ class Game extends window.Phaser.State {
 
     this.modalRescources = new ModalRescources({
       game: this.game,
-      scrollable: true,
-      headingTxt: '进口生产原料'
+      headingTxt: '进口生产原料',
     });
 
     this.upBtnWarehouse = new BtnUpgrade(this.game, 0, 0);

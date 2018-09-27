@@ -49,12 +49,13 @@ function getFontStyle (fSize, color, align, weight) {
 
 class ModalRaw extends window.Phaser.Group {
   // new Group(game [, parent] [, name] [, addToStage] [, enableBody] [, physicsBodyType])
-  constructor(game, headingTxt, height = config.HEIGHT, width = config.WIDTH, scrollable = true, headingStyles = {}, priority = 1000, headingH = 100, subHeading = false, boost = true) {
+  constructor(game, headingTxt, height = config.HEIGHT, width = config.WIDTH, scrollable = true, headingStyles = {}, priority = 1000, headingH = 100, subHeading = false, boost = true, contentMargin = 0) {
     // params
     super(game);
     this.h = height;
     this.w = width;
     this.boost = boost;
+    this.margin = contentMargin;
     this.scrollable = scrollable;
     this.priorityID = priority;
     this.headingTxt = headingTxt || '标题';
@@ -215,7 +216,7 @@ class ModalRaw extends window.Phaser.Group {
         height: this.h - this.headingH
       },
       heading: this.headingH,
-      margin: 0,
+      margin: this.margin,
     });
     this.scroller.enableScroll();
   }
