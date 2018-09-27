@@ -47,7 +47,7 @@ class ModalRescources extends ModalRaw {
     let re1 = new ResourceItem({
       game: this.game,
       parent: this.contentGroup,
-      key: 'source_ore',
+      key: 'reso_ore',
       pWidth: this.w,
       y : OFFSET,
       bought: true

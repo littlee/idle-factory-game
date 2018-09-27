@@ -36,8 +36,8 @@ class Start extends window.Phaser.State {
     this.load.image('mgr_market', 'images/mgr_market.png');
     this.load.image('mgr_warehouse', 'images/mgr_warehouse.png');
     this.load.image('mgr_worker', 'images/mgr_worker.png');
-    this.load.image('source_ore', 'images/source_ore.png');
-    this.load.image('source_steel', 'images/source_steel.png');
+    this.load.image('reso_ore', 'images/source_ore.png');
+    this.load.image('prod_steel', 'images/source_steel.png');
     this.load.image('table_cover', 'images/table_cover.png');
     this.load.image('table_level_1', 'images/table_level_1.png');
     this.load.image('wall', 'images/wall.png');
