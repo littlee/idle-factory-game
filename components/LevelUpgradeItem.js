@@ -20,7 +20,7 @@ function getFontStyle (fSize, color, align, weight) {
   };
 }
 
-class UpgradeItem extends window.Phaser.Group {
+class LevelUpgradeItem extends window.Phaser.Group {
 
   constructor({game, parent, key, txt, x, y, currTxt, futureTxt}) {
     super(game, parent);
@@ -43,8 +43,8 @@ class UpgradeItem extends window.Phaser.Group {
     this.bg.drawRect(0, 0, CONFIG.width, CONFIG.height);
     this.bg.endFill();
 
-    this.icon = this.game.make.image(0, 80, this.key);
-    this.icon.alignTo(this.bg, Phaser.TOP_LEFT, -10, -81);
+    this.icon = this.game.make.image(0, CONFIG.height / 2, this.key);
+    this.icon.anchor.set(0, 0.5);
 
     this.txtDes = this.game.make.text(0, 0, this.txt, getFontStyle('30px'));
     this.txtDes.alignTo(this.icon, Phaser.RIGHT_BOTTOM, 10, -15);
@@ -70,4 +70,4 @@ class UpgradeItem extends window.Phaser.Group {
   }
 }
 
-export default UpgradeItem;
+export default LevelUpgradeItem;

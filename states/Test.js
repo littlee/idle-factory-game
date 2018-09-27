@@ -1,8 +1,9 @@
 import Scroller from '../components/Scroller.js';
 // import ModalRaw from '../components/ModalRaw.js';
-// import ModalLevel from '../components/ModalLevel.js';
+import ModalLevel from '../components/ModalLevel.js';
 // import ModalRescources from '../components/ModalResources.js';
-import ModalAdCampaign from '../components/ModalAdCampaign';
+// import ModalAdCampaign from '../components/ModalAdCampaign';
+import ModalProdUpgrade from '../components/ModalProdUpgrade';
 
 class Game extends window.Phaser.State {
   create() {
@@ -73,10 +74,10 @@ class Game extends window.Phaser.State {
     txtScroller.enableScroll();
 
     // modal
-    let modal = new ModalAdCampaign({
-      game: this.game,
-      scrollable: true,
-    });
+    // let modal = new ModalAdCampaign({
+    //   game: this.game,
+    //   scrollable: true,
+    // });
 
     // modal
     // let modal = new ModalLevel({
@@ -91,6 +92,25 @@ class Game extends window.Phaser.State {
     //     item1Des: '已运输最大资源'
     //   }
     // });
+
+    // let modal = new ModalLevel({
+    //   game: this.game,
+    //   scrollable: true,
+    //   headingTxt: '233级生产线',
+    //   opts: {
+    //     avatarImg: 'avatar_worker',
+    //     avatarHeading: '下一次大升级',
+    //     avatarDes: '在等级达到175时会有巨大生产力的提升',
+    //     item1Icon: 'icon_max_resource',
+    //     item1Des: '已运输最大资源'
+    //   },
+    //   worker: true
+    // });
+
+    let modal = new ModalProdUpgrade({
+      game: this.game,
+      headingTxt: '生产产品升级',
+    });
 
     // btn-egg
     modal.visible = true;

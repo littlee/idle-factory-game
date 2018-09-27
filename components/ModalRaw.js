@@ -11,9 +11,9 @@ key:
 -7- 所以，应该在这里放多一个sub-group, mask才能正确function
 -8- group里头chidlren的priorityID要和Scroller的veil一样。否则veil收不到事件
 -9- 应该有个heading, 和btnClose的水平位置差不多，这样滑动的时候，才不会有overlay btnClose的可能。[未实现]
--10- this.contentGroup里头的值，以及heading的尺寸和具体高度，要可以传入。[未实现]
--11- mask和Scroller的veil的尺寸的位置要更加heading的尺寸做相应的调整。[为实现]
--12- modal 的scroll里头的对象如果要有自己的input事件，需要设置priority > 1000
+-10- this.contentGroup里头的值，以及heading的尺寸和具体高度，要可以传入。
+-11- mask和Scroller的veil的尺寸的位置要更加heading的尺寸做相应的调整。
+-12- modal 的scroll里头的对象如果要有自己的input事件，需要设置priority > 1000[在ModalRaw这里已经统一enable了所有的children的input和设置了对的priorityID]
 */
 const config = {
   HEIGHT: 935,
@@ -24,7 +24,9 @@ const config = {
   FRAME_LINE_WIDTH: 1,
   FRAME_LINE_COLOR: 0x000000,
   FRAME_LINE_ALPHA: 0.7,
+  SUBHEADING: '升级你的产品从而提升销售价值，赚更多的钱',
 };
+
 
 const FONT_STYLE = {
   fontWeight: 'bold',
@@ -34,9 +36,20 @@ const FONT_STYLE = {
   boundsAlignV: 'middle',
 };
 
+function getFontStyle (fSize, color, align, weight) {
+  return {
+    fontWeight: weight || 'normal',
+    fontSize: fSize || '18px',
+    fill: color || '#3A0A00', // '#00FF00',
+    boundsAlignH: 'center',
+    boundsAlignV: 'middle',
+    align: align || 'center'
+  };
+}
+
 class ModalRaw extends window.Phaser.Group {
   // new Group(game [, parent] [, name] [, addToStage] [, enableBody] [, physicsBodyType])
-  constructor(game, headingTxt, height = config.HEIGHT, width = config.WIDTH, scrollable = true, headingStyles = {}, priority = 1000, headingH = 100) {
+  constructor(game, headingTxt, height = config.HEIGHT, width = config.WIDTH, scrollable = true, headingStyles = {}, priority = 1000, headingH = 100, subHeading = false) {
     // params
     super(game);
     this.h = height;
@@ -46,6 +59,7 @@ class ModalRaw extends window.Phaser.Group {
     this.headingTxt = headingTxt || '标题';
     this.headingH = headingH;
     this.headingStyles = Object.assign({}, FONT_STYLE, headingStyles);
+    this.subHeadingTxt = subHeading ? config.SUBHEADING : '';
 
     // shortcuts
     this.cameraView = this.game.camera.view;
@@ -106,7 +120,6 @@ class ModalRaw extends window.Phaser.Group {
     // prep for input
     this.setAllChildren('inputEnabled', true);
     this.setAllChildren('input.priorityID', this.priorityID + 1);
-    // this.btnClose.input.priorityID = this.priorityID + 1;
   }
 
   _DrawSubGroupStuff = () => {
@@ -127,8 +140,17 @@ class ModalRaw extends window.Phaser.Group {
     this.btnClose = this.game.make.button(this.w - 1, 0 + 1, 'btn_close', this._handleClose);
     this.btnClose.anchor.set(1, 0);
 
-    this.heading = this.game.make.text(0, 0, this.headingTxt, this.headingStyles);
-    this.heading.setTextBounds(0, 0, this.w - this.btnClose.width, this.headingH);
+
+    if (typeof this.subHeadingTxt === 'string' && this.subHeadingTxt.length > 0) {
+      // 20 写死的，subHeading bound的 高度
+      this.heading = this.game.make.text(0, 0, this.headingTxt, this.headingStyles);
+      this.heading.setTextBounds(0, 0, this.w - this.btnClose.width, this.headingH - 20);
+      this.subHeading = this.game.make.text(0, 0, this.subHeadingTxt, getFontStyle());
+      this.subHeading.setTextBounds(0, this.headingH - 20 * 2, this.w - this.btnClose.width, 20);
+    } else {
+      this.heading = this.game.make.text(0, 0, this.headingTxt, this.headingStyles);
+      this.heading.setTextBounds(0, 0, this.w - this.btnClose.width, this.headingH);
+    }
 
   }
 
@@ -138,7 +160,9 @@ class ModalRaw extends window.Phaser.Group {
     this.subGroup.addChild(this.contentGroup);
     this.subGroup.addChild(this.btnClose);
     this.subGroup.addChild(this.heading);
-
+    if (this.subHeading !== undefined) {
+      this.subGroup.addChild(this.subHeading);
+    }
   }
 
   _addStuff2Modal = () => {
@@ -196,6 +220,8 @@ class ModalRaw extends window.Phaser.Group {
   // try-out 在继承的类那里直接调用这个方法来添加内容
   getContextGroupInit = () => {
     // empty
+    // 添加的东西 y 要 >= this.headingH
+    // const OFFSET = this.headingH;
   }
 
 

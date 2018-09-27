@@ -36,8 +36,8 @@ class Start extends window.Phaser.State {
     this.load.image('mgr_market', 'images/mgr_market.png');
     this.load.image('mgr_warehouse', 'images/mgr_warehouse.png');
     this.load.image('mgr_worker', 'images/mgr_worker.png');
-    this.load.image('source_ore', 'images/source_ore.png');
-    this.load.image('source_steel', 'images/source_steel.png');
+    this.load.image('reso_ore', 'images/source_ore.png');
+    this.load.image('prod_steel', 'images/source_steel.png');
     this.load.image('table_cover', 'images/table_cover.png');
     this.load.image('table_level_1', 'images/table_level_1.png');
     this.load.image('wall', 'images/wall.png');
@@ -53,28 +53,34 @@ class Start extends window.Phaser.State {
     this.load.image('test_panel', 'test/act_rule_frame.png');
     this.load.image('test_txt', 'test/act_rule_text.png');
     // try
-    this.load.image('btn_close', 'images/btn_close.png');
-    this.load.image('avatar_tran_warehose', 'images/avatar_transporter.png');
+    this.load.image('ad_campaign', 'images/ad_campaign.png');
     this.load.image('arrow_levelUp', 'images/arrow_level_upgrade.png');
+    this.load.image('avatar_tran_market', 'images/avatar_market_transporter.png');
+    this.load.image('avatar_tran_warehose', 'images/avatar_transporter.png');
+    this.load.image('avatar_worker', 'images/avatar_worker.png');
+    this.load.image('btn_close', 'images/btn_close.png');
+    this.load.image('btn_cash_able2buy', 'images/btn_cash_able2buy.png');
+    this.load.image('btn_cash_unable2buy', 'images/btn_cash_unable2buy.png');
+    this.load.image('btn_watch_ad', 'images/btn_watch_ad.png');
+    this.load.image('btn_level_upgrade', 'images/btn_level_upgrade.png');
+    this.load.image('btn_pick_upgrade', 'images/btn_activated.png');
+    this.load.image('prod_can', 'images/prod_can.png');
+    this.load.image('prod_toaster', 'images/prod_toaster.png');
     this.load.image('icon_loading_speed', 'images/icon_loading_speed.png');
     this.load.image('icon_transporter', 'images/icon_transporter.png');
     this.load.image('icon_walk_speed', 'images/icon_walk_speed.png');
     this.load.image('icon_max_resource', 'images/icon_max_resource.png');
     this.load.image('icon_transporter_capacity', 'images/icon_transporter_capacity.png');
     this.load.image('icon_money_transported', 'images/icon_money_transported.png');
-    this.load.image('btn_level_upgrade', 'images/btn_level_upgrade.png');
-    this.load.image('btn_pick_upgrade', 'images/btn_activated.png');
-    this.load.image('avatar_tran_market', 'images/avatar_market_transporter.png');
+    this.load.image('icon_tick', 'images/icon_tick.png');
+    this.load.image('icon_ore', 'images/icon_ore.png');
+    this.load.image('icon_power', 'images/icon_power.png');
     this.load.image('reso_barrel', 'images/reso_barrel.png');
     this.load.image('reso_copper', 'images/reso_copper.png');
     this.load.image('reso_plug', 'images/reso_plug.png');
     this.load.image('reso_aluminium', 'images/reso_aluminium.png');
     this.load.image('reso_rubber', 'images/reso_rubber.png');
-    this.load.image('icon_tick', 'images/icon_tick.png');
-    this.load.image('btn_cash_able2buy', 'images/btn_cash_able2buy.png');
-    this.load.image('btn_cash_unable2buy', 'images/btn_cash_unable2buy.png');
-    this.load.image('ad_campaign', 'images/ad_campaign.png');
-    this.load.image('btn_watch_ad', 'images/btn_watch_ad.png');
+
   }
 
   create() {

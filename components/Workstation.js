@@ -120,11 +120,11 @@ class Workstation extends window.Phaser.Group {
     this.productBtn.events.onInputDown.add(() => {
       console.log('点击工作台产品按钮');
     });
-    this.productBtnItem = this.gameRef.make.sprite(0, 0, 'source_steel');
+    this.productBtnItem = this.gameRef.make.sprite(0, 0, 'prod_steel');
     this.productBtnItem.alignIn(this.productBtn, window.Phaser.CENTER, 0, -5);
 
     this.inputItems = this.gameRef.make.group();
-    this.inputItems.createMultiple(5, 'source_ore', null, true, (item, index) => {
+    this.inputItems.createMultiple(5, 'reso_ore', null, true, (item, index) => {
       item.y = index * 5;
     });
     this.inputItems.sort('z', window.Phaser.Group.SORT_DESCENDING);
@@ -139,7 +139,7 @@ class Workstation extends window.Phaser.Group {
     this.inputNum.alignIn(this.table, window.Phaser.TOP_LEFT, -30);
 
     this.outputItems = this.gameRef.make.group();
-    this.outputItems.createMultiple(5, 'source_steel', null, true, (item, index) => {
+    this.outputItems.createMultiple(5, 'prod_steel', null, true, (item, index) => {
       item.y = index * 5;
     });
     this.outputItems.sort('z', window.Phaser.Group.SORT_DESCENDING);
@@ -148,7 +148,7 @@ class Workstation extends window.Phaser.Group {
     this.inputItemsMoving = this.gameRef.make.group();
     this.inputItemsMovingTwns = [];
     range(3).forEach(index => {
-      let item = this.inputItemsMoving.create(0, 0, 'source_ore');
+      let item = this.inputItemsMoving.create(0, 0, 'reso_ore');
       item.scale.setTo(0.7);
 
       let itemTwn = this.gameRef.add.tween(item).to(
@@ -173,7 +173,7 @@ class Workstation extends window.Phaser.Group {
     this.outputItemsMovingLeft = this.gameRef.make.group();
     this.outputItemsMovingLeftTwns = [];
     range(3).forEach(index => {
-      let item = this.outputItemsMovingLeft.create(0, 0, 'source_steel');
+      let item = this.outputItemsMovingLeft.create(0, 0, 'prod_steel');
       item.scale.setTo(0.7);
       item.anchor.setTo(0.5);
       let itemTwn = this.gameRef.add.tween(item).to(
@@ -204,7 +204,7 @@ class Workstation extends window.Phaser.Group {
     this.outputItemsMovingRight = this.gameRef.make.group();
     this.outputItemsMovingRightTwns = [];
     range(3).forEach(index => {
-      let item = this.outputItemsMovingRight.create(0, 0, 'source_steel');
+      let item = this.outputItemsMovingRight.create(0, 0, 'prod_steel');
       item.scale.setTo(0.7);
       item.anchor.setTo(0.5);
       let itemTwn = this.gameRef.add.tween(item).to(

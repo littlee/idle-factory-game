@@ -64,7 +64,6 @@ class ModalAdCampagin extends ModalRaw {
 
     let btn = this.game.make.image(this.w / 2, 700, this.keyBtn);
     btn.anchor.setTo(0.5, 0);
-    btn.inputEnabled = true; // modal raw 里头没set这个吗？
     btn.events.onInputDown.add(() => {
       console.log('要去看广告: ', btn.input.priorityID);
     });
@@ -72,7 +71,6 @@ class ModalAdCampagin extends ModalRaw {
     this.contentGroup.addChild(img);
     this.contentGroup.addChild(bg);
     this.contentGroup.addChild(btn);
-
   }
 }
 
