@@ -2,7 +2,7 @@ import Scroller from '../components/Scroller.js';
 // import ModalRaw from '../components/ModalRaw.js';
 // import ModalLevel from '../components/ModalLevel.js';
 // import ModalRescources from '../components/ModalResources.js';
-import ModalAdCampagin from '../components/ModalAdCampagin.js';
+import ModalAdCampaign from '../components/ModalAdCampaign';
 
 class Game extends window.Phaser.State {
   create() {
@@ -73,7 +73,7 @@ class Game extends window.Phaser.State {
     txtScroller.enableScroll();
 
     // modal
-    let modal = new ModalAdCampagin({
+    let modal = new ModalAdCampaign({
       game: this.game,
       scrollable: true,
     });

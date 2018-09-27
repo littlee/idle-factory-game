@@ -41,12 +41,10 @@ class Workstation extends window.Phaser.Group {
     this.gameRef = game;
 
     this._data = {
-      canUpgrade: true,
       level: 1,
       collectType: 'cash'
     };
     this._dataReactions = {
-      canUpgrade: [this._setCanUpgrade],
       level: [this._setLevel],
       collectType: [this._setCollectType]
     };
