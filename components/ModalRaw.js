@@ -24,7 +24,9 @@ const config = {
   FRAME_LINE_WIDTH: 1,
   FRAME_LINE_COLOR: 0x000000,
   FRAME_LINE_ALPHA: 0.7,
+  SUBHEADING: '升级你的产品从而提升销售价值，赚更多的钱',
 };
+
 
 const FONT_STYLE = {
   fontWeight: 'bold',
@@ -34,9 +36,20 @@ const FONT_STYLE = {
   boundsAlignV: 'middle',
 };
 
+function getFontStyle (fSize, color, align, weight) {
+  return {
+    fontWeight: weight || 'normal',
+    fontSize: fSize || '18px',
+    fill: color || '#3A0A00', // '#00FF00',
+    boundsAlignH: 'center',
+    boundsAlignV: 'middle',
+    align: align || 'center'
+  };
+}
+
 class ModalRaw extends window.Phaser.Group {
   // new Group(game [, parent] [, name] [, addToStage] [, enableBody] [, physicsBodyType])
-  constructor(game, headingTxt, height = config.HEIGHT, width = config.WIDTH, scrollable = true, headingStyles = {}, priority = 1000, headingH = 100) {
+  constructor(game, headingTxt, height = config.HEIGHT, width = config.WIDTH, scrollable = true, headingStyles = {}, priority = 1000, headingH = 100, subHeading = false) {
     // params
     super(game);
     this.h = height;
@@ -46,6 +59,7 @@ class ModalRaw extends window.Phaser.Group {
     this.headingTxt = headingTxt || '标题';
     this.headingH = headingH;
     this.headingStyles = Object.assign({}, FONT_STYLE, headingStyles);
+    this.subHeadingTxt = subHeading ? config.SUBHEADING : '';
 
     // shortcuts
     this.cameraView = this.game.camera.view;
@@ -126,8 +140,17 @@ class ModalRaw extends window.Phaser.Group {
     this.btnClose = this.game.make.button(this.w - 1, 0 + 1, 'btn_close', this._handleClose);
     this.btnClose.anchor.set(1, 0);
 
-    this.heading = this.game.make.text(0, 0, this.headingTxt, this.headingStyles);
-    this.heading.setTextBounds(0, 0, this.w - this.btnClose.width, this.headingH);
+
+    if (typeof this.subHeadingTxt === 'string' && this.subHeadingTxt.length > 0) {
+      // 20 写死的，subHeading bound的 高度
+      this.heading = this.game.make.text(0, 0, this.headingTxt, this.headingStyles);
+      this.heading.setTextBounds(0, 0, this.w - this.btnClose.width, this.headingH - 20);
+      this.subHeading = this.game.make.text(0, 0, this.subHeadingTxt, getFontStyle());
+      this.subHeading.setTextBounds(0, this.headingH - 20 * 2, this.w - this.btnClose.width, 20);
+    } else {
+      this.heading = this.game.make.text(0, 0, this.headingTxt, this.headingStyles);
+      this.heading.setTextBounds(0, 0, this.w - this.btnClose.width, this.headingH);
+    }
 
   }
 
@@ -137,7 +160,9 @@ class ModalRaw extends window.Phaser.Group {
     this.subGroup.addChild(this.contentGroup);
     this.subGroup.addChild(this.btnClose);
     this.subGroup.addChild(this.heading);
-
+    if (this.subHeading !== undefined) {
+      this.subGroup.addChild(this.subHeading);
+    }
   }
 
   _addStuff2Modal = () => {
@@ -195,6 +220,8 @@ class ModalRaw extends window.Phaser.Group {
   // try-out 在继承的类那里直接调用这个方法来添加内容
   getContextGroupInit = () => {
     // empty
+    // 添加的东西 y 要 >= this.headingH
+    // const OFFSET = this.headingH;
   }
 
 
