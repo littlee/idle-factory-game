@@ -21,13 +21,13 @@ class PanelUpgrade extends window.Phaser.Group {
     this.bg.beginFill(0x000000, 0.1);
     this.bg.drawRect(0, 0, 290, 85);
     this.bg.endFill();
-    this.bg.alignTo(this.parent, Phaser.TOP_LEFT, -30, -910);
+    this.bg.alignTo(this.parent, Phaser.TOP_LEFT, -30, -940);
 
     this.one = this.game.make.text(0, 0, 'x1', getFontStyle());
     this.one.setTextBounds(0, 0, 72, 85);
     this.one.alignTo(this.bg, Phaser.TOP_LEFT, 0, -40);
     this.btnOne = this.game.make.image(0, 0, 'btn_pick_upgrade');
-    this.btnOne.alignTo(this.bg, Phaser.TOP_LEFT, -2, -90);
+    this.btnOne.alignTo(this.bg, Phaser.TOP_LEFT, 1, -90);
     this.btnOne.alpha = 1;
 
 

@@ -78,8 +78,8 @@ class Start extends window.Phaser.State {
   }
 
   create() {
-    // this.state.start('Game');
-    this.state.start('Test');
+    this.state.start('Game');
+    // this.state.start('Test');
 
     // console.log(formatBigNum(Big('123456789123456789')))
   }
