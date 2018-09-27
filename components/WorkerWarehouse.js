@@ -14,6 +14,7 @@ class WorkerWarehouse extends window.Phaser.Sprite {
 
     this._data = {
       carry: [],
+      onRoutine: false,
       speed: SPEED.normal
     };
 
@@ -21,6 +22,10 @@ class WorkerWarehouse extends window.Phaser.Sprite {
     this.animations.add('walk_box', [2, 3], 5, true);
     this.animations.add('back_box', [4, 5], 5, true);
     this.animations.add('back', [6, 7], 5, true);
+  }
+
+  getIsOnRoutine() {
+    return this._data.onRoutine;
   }
 
   getSpeed() {
@@ -56,8 +61,11 @@ class WorkerWarehouse extends window.Phaser.Sprite {
   }
 
   carryFromWarehouse(warehouse) {
+    this._data.onRoutine = true;
     this.walkWithBox();
-    return new Promise(resolve => {});
+    return new Promise(resolve => {
+      setTimeout(resolve, 1000);
+    });
   }
 
   moveToStation(station) {
@@ -65,13 +73,16 @@ class WorkerWarehouse extends window.Phaser.Sprite {
   }
 
   tradeWithStation(station) {
-    return new Promise(resolve => {});
+    return new Promise(resolve => {
+      setTimeout(resolve, 1000);
+    });
   }
 
   async backToWarehouse() {
     this.back();
     await this.move(this.startY);
     this.stand();
+    this._data.onRoutine = false;
   }
 
   stand() {

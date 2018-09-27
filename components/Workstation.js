@@ -5,6 +5,7 @@ import Big from '../js/libs/big.min';
 // import ModalLevel from './ModalLevel';
 import Worker from './Worker';
 import BtnUpgrade from './BtnUpgrade';
+import ResourceEmitter from './ResourceEmitter';
 
 const COLLECT_TYPES = {
   CASH: 'cash',
@@ -139,107 +140,53 @@ class Workstation extends window.Phaser.Group {
     this.inputNum.alignIn(this.table, window.Phaser.TOP_LEFT, -30);
 
     this.outputItems = this.gameRef.make.group();
-    this.outputItems.createMultiple(5, 'prod_steel', null, true, (item, index) => {
-      item.y = index * 5;
-    });
+    this.outputItems.createMultiple(
+      5,
+      'prod_steel',
+      null,
+      true,
+      (item, index) => {
+        item.y = index * 5;
+      }
+    );
     this.outputItems.sort('z', window.Phaser.Group.SORT_DESCENDING);
     this.outputItems.alignIn(this.table, window.Phaser.TOP_CENTER);
 
-    this.inputItemsMoving = this.gameRef.make.group();
-    this.inputItemsMovingTwns = [];
-    range(3).forEach(index => {
-      let item = this.inputItemsMoving.create(0, 0, 'reso_ore');
-      item.scale.setTo(0.7);
-
-      let itemTwn = this.gameRef.add.tween(item).to(
-        {
-          x: '+100'
-        },
-        1000,
-        null,
-        false,
-        index * 250,
-        -1
-      );
-      this.inputItemsMovingTwns.push(itemTwn);
-    });
-    this.inputItemsMoving.alignIn(this.table, window.Phaser.TOP_LEFT, -30, -30);
-
-    this.inputItemsMovingTwns.forEach(twn => {
-      // twn.start();
-    });
-    this.inputItemsMoving.visible = false;
-
-    this.outputItemsMovingLeft = this.gameRef.make.group();
-    this.outputItemsMovingLeftTwns = [];
-    range(3).forEach(index => {
-      let item = this.outputItemsMovingLeft.create(0, 0, 'prod_steel');
-      item.scale.setTo(0.7);
-      item.anchor.setTo(0.5);
-      let itemTwn = this.gameRef.add.tween(item).to(
-        {
-          x: '-100',
-          y: '+100'
-        },
-        1000,
-        null,
-        false,
-        index * 250,
-        -1
-      );
-      this.outputItemsMovingLeftTwns.push(itemTwn);
-    });
-    this.outputItemsMovingLeft.alignIn(
-      this.table,
-      window.Phaser.TOP_CENTER,
-      0,
-      -30
+    this.inputItemsAni = new ResourceEmitter(
+      this.game,
+      this.table.x + 50,
+      this.table.y + 50,
+      'reso_ore',
+      100,
+      0
     );
 
-    this.outputItemsMovingLeftTwns.forEach(twn => {
-      // twn.start();
-    });
-    this.outputItemsMovingLeft.visible = false;
-
-    this.outputItemsMovingRight = this.gameRef.make.group();
-    this.outputItemsMovingRightTwns = [];
-    range(3).forEach(index => {
-      let item = this.outputItemsMovingRight.create(0, 0, 'prod_steel');
-      item.scale.setTo(0.7);
-      item.anchor.setTo(0.5);
-      let itemTwn = this.gameRef.add.tween(item).to(
-        {
-          x: '+100',
-          y: '+100'
-        },
-        1000,
-        null,
-        false,
-        index * 250,
-        -1
-      );
-      this.outputItemsMovingRightTwns.push(itemTwn);
-    });
-    this.outputItemsMovingRight.alignIn(
-      this.table,
-      window.Phaser.TOP_CENTER,
-      0,
-      -30
+    this.outputItemsAniLeft = new ResourceEmitter(
+      this.game,
+      this.table.x + this.table.width / 2 - 30,
+      this.table.y + this.table.height / 2 - 20,
+      'prod_steel',
+      -100,
+      100
     );
 
-    this.outputItemsMovingRightTwns.forEach(twn => {
-      // twn.start();
-    });
-    this.outputItemsMovingRight.visible = false;
+    this.outputItemsAniRight = new ResourceEmitter(
+      this.game,
+      this.table.x + this.table.width / 2 + 30,
+      this.table.y + this.table.height / 2 - 20,
+      'prod_steel',
+      100,
+      100
+    );
 
     this.productGroup.add(this.productBtn);
     this.productGroup.add(this.productBtnItem);
     this.productGroup.add(this.inputItems);
     this.productGroup.add(this.inputNum);
     this.productGroup.add(this.outputItems);
-    this.productGroup.add(this.inputItemsMoving);
-    this.productGroup.add(this.outputItemsMovingLeft);
-    this.productGroup.add(this.outputItemsMovingRight);
+    this.productGroup.add(this.inputItemsAni);
+    this.productGroup.add(this.outputItemsAniLeft);
+    this.productGroup.add(this.outputItemsAniRight);
 
     this.worker = new Worker(this.game, 0, 0);
     this.worker.alignTo(this.table, window.Phaser.TOP_CENTER, 20, -10);
