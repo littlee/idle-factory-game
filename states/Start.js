@@ -68,7 +68,7 @@ class Start extends window.Phaser.State {
     this.load.image('btn_watch_ad', 'images/btn_watch_ad.png');
     this.load.image('btn_level_upgrade', 'images/btn_level_upgrade.png');
     this.load.image('btn_pick_upgrade', 'images/btn_activated.png');
-    this.load.image('btn_prod_update', 'images/btn_prod_update,png');
+    this.load.image('btn_prod_update', 'images/btn_prod_update.png');
     this.load.image('btn_prod_skip', 'images/btn_prod_skip.png');
     this.load.image('bubble_percentage', 'images/bubble_percentage.png');
     this.load.image('clock_yellow', 'images/clock_yellow.png');

@@ -1,7 +1,11 @@
+// eslint-disable-next-line
+import regeneratorRuntime from '../js/libs/regenerator-runtime';
+
 import BtnIdleCash from '../components/BtnIdleCash';
 import BtnCash from '../components/BtnCash';
 import BtnSuperCash from '../components/BtnSuperCash';
 
+import Warehouse from '../components/Warehouse';
 import Workstation from '../components/Workstation';
 
 import WorkerWarehouse from '../components/WorkerWarehouse';
@@ -17,6 +21,7 @@ import ModalRescources from '../components/ModalResources.js';
 
 import range from '../js/libs/_/range';
 
+
 /*
 关于priorityID:
 -1- 让整个屏幕滑动的veil是0，屏幕中其他有自己input事件的game object是999.
@@ -27,6 +32,7 @@ import range from '../js/libs/_/range';
 const PRIORITY_ID = 999;
 
 class Game extends window.Phaser.State {
+
   // create(): execution order inside MATTERS!!
   create() {
     // bg of warehouse of raw material
@@ -51,20 +57,6 @@ class Game extends window.Phaser.State {
     this.marketManager = this.add.sprite(0, 0, 'mgr_market');
     this.marketManager.alignIn(this.wall, window.Phaser.BOTTOM_CENTER, 80, 80);
     // group 1-5
-
-    const WORKSTATION_START_Y = 915;
-    const WORKSTATION_HEIGHT = 339;
-    this.workstationGroup = this.add.group();
-    range(5).forEach(index => {
-      let workstation = new Workstation(
-        this.game,
-        0,
-        WORKSTATION_START_Y + index * WORKSTATION_HEIGHT,
-        1,
-        index + 1
-      );
-      this.workstationGroup.add(workstation);
-    });
 
     this.bellRed = new BellRed(this.game, 80, 116);
     this.bellRed.unlock();
@@ -102,8 +94,6 @@ class Game extends window.Phaser.State {
       headingTxt: '进口生产原料',
     });
 
-    // this.modelWorkstation;
-
     this.upBtnWarehouse = new BtnUpgrade(this.game, 0, 0);
     this.upBtnWarehouse.alignIn(this.wall, window.Phaser.LEFT_CENTER, -60, -10);
     this.upBtnWarehouse.onClick(() => {
@@ -118,6 +108,21 @@ class Game extends window.Phaser.State {
       this.modalMarket.visible = true;
     });
 
+    const WORKSTATION_START_Y = 915;
+    const WORKSTATION_HEIGHT = 339;
+    this.workstationGroup = this.add.group();
+    range(5).forEach(index => {
+      let workstation = new Workstation(
+        this.game,
+        0,
+        WORKSTATION_START_Y + index * WORKSTATION_HEIGHT,
+        1,
+        index + 1
+      );
+      this.workstationGroup.add(workstation);
+    });
+    window.stg = this.workstationGroup;
+
     this.workerWarehouseGroup = this.add.group();
     range(5).forEach(index => {
       let worker = new WorkerWarehouse(this.game, 50 + index * 5, 600);
@@ -125,6 +130,16 @@ class Game extends window.Phaser.State {
       if (index > 0) {
         worker.kill();
       }
+    });
+    window.wg = this.workerWarehouseGroup;
+
+    this.workerWarehouseGroup.forEachAlive(async (worker) => {
+      worker.carryFromWarehouse(this.warehouse);
+      let workstations = this.workstationGroup.children;
+      for (let i = 0; i < workstations.length; i++) {
+        await worker.moveToStation(workstations[i]);
+      }
+      worker.backToWarehouse(this.warehouse);
     });
 
     this.workerMarketGroup = this.add.group();
@@ -175,7 +190,7 @@ class Game extends window.Phaser.State {
   _addAllRelatedStuff2Bg = () => {
     this.bgGroup.addChild(this.exitGround);
     this.bgGroup.addChild(this.warehouseGround);
-    this.bgGroup.addChild(this.warehouseTable);
+    this.bgGroup.addChild(this.warehouse);
     this.bgGroup.addChild(this.marketGround);
     this.bgGroup.addChild(this.marketTruck);
     this.bgGroup.addChild(this.wall);
@@ -198,12 +213,8 @@ class Game extends window.Phaser.State {
     this.warehouseGround.drawRect(0, 0, this.world.width / 2, 674);
     this.warehouseGround.endFill();
 
-    this.warehouseTable = this.add.sprite(100, 650, 'warehouse_table');
-    this.warehouseTable.anchor.setTo(0, 1);
-    this.warehouseTable.inputEnabled = true;
-    this.warehouseTable.input.priorityID = PRIORITY_ID;
-    // console.log('check: ',this.warehouseTable.input);
-    this.warehouseTable.events.onInputDown.add(() => {
+    this.warehouse = new Warehouse(this.game, 100, 450);
+    this.warehouse.onClick(() => {
       this.modalRescources.visible = true;
     });
 
