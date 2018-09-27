@@ -195,13 +195,10 @@ class ModalLevel extends ModalRaw {
       this.mainGroup.addChild(this.prodTxt);
     }
 
-
-
-    // console.log('modal height: ', this.h - this.headingH);
     let upgradeBtns = new PanelUpgrade({
       game: this.game,
       parent: this.contentGroup,
-      adjacentGroup: this.mainGroup
+      veilHeight: this.h - this.headingH
     });
 
     this.btnUpgrade = this.game.make.image(0, 0, 'btn_level_upgrade');
