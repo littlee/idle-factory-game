@@ -29,6 +29,7 @@ opts = {
 }
 */
 
+// 这里默认都给children boost priority到1001，所以scroll的input是听不到的。这里不需要滑动，所以没关系。
 class ModalLevel extends ModalRaw {
   constructor({game, headingTxt, scrollable, opts, worker = false}) {
     // parems
