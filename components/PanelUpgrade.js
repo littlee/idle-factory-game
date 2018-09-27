@@ -10,11 +10,9 @@ function getFontStyle (fSize, color, align, weight) {
 }
 
 class PanelUpgrade extends window.Phaser.Group {
-  constructor({ game, parent, x, y, adjacentGroup}) {
+  constructor({ game, parent, adjacentGroup}) {
     super(game, parent);
     this.adjacentGroup = adjacentGroup;
-    this.posX = x;
-    this.posY = y;
 
     this._getInit();
   }

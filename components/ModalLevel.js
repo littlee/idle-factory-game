@@ -156,27 +156,51 @@ class ModalLevel extends ModalRaw {
         futureTxt: '+0.01米/分'
       });
     } else {
-
-      let item1 = new UpgradeItem({
+      this.needTxt = this.game.make.text((this.w - LEVEL.aWidth) / 2, 290, '需要', getFontStyle('30px'));
+      let need1 = new UpgradeItem({
         game: this.game,
         parent: this.mainGroup,
-        key: this.opts.item1Icon,
-        txt: this.opts.item1Des,
+        key: 'icon_ore',
+        txt: '铁矿',
         x: (this.w - LEVEL.aWidth) / 2,
-        y: 290,
+        y: 330,
         currTxt: '58aa/分',
         futureTxt: '+55aa/分'
       });
+
+      this.prodTxt = this.game.make.text((this.w - LEVEL.aWidth) / 2, 330 + 85 + 27, '生产', getFontStyle('30px'));
+      let prod = new UpgradeItem({
+        game: this.game,
+        parent: this.mainGroup,
+        key: 'icon_ore',
+        txt: '铁矿',
+        x: (this.w - LEVEL.aWidth) / 2,
+        y: 330 + 27 + 40 + 85,
+        currTxt: '58aa/分',
+        futureTxt: '+55aa/分'
+      });
+      let iconPower = new UpgradeItem({
+        game: this.game,
+        parent: this.mainGroup,
+        key: 'icon_power',
+        txt: '生产力',
+        x: (this.w - LEVEL.aWidth) / 2,
+        y: 330 + 27 + 40 + 85 * 2 + 20,
+        currTxt: '58aa/分',
+        futureTxt: '+55aa/分'
+      });
+
+
+      this.mainGroup.addChild(this.needTxt);
+      this.mainGroup.addChild(this.prodTxt);
     }
 
 
 
-
+    // console.log('modal height: ', this.h - this.headingH);
     let upgradeBtns = new PanelUpgrade({
       game: this.game,
       parent: this.contentGroup,
-      x: 30,
-      y: 820,
       adjacentGroup: this.mainGroup
     });
 

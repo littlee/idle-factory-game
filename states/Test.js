@@ -79,18 +79,31 @@ class Game extends window.Phaser.State {
     // });
 
     // modal
+    // let modal = new ModalLevel({
+    //   game: this.game,
+    //   scrollable: true,
+    //   headingTxt: '233级仓库',
+    //   opts: {
+    //     avatarImg: 'avatar_tran_warehose',
+    //     avatarHeading: '下一次大升级',
+    //     avatarDes: '将在等级333时获得额外的运输工人',
+    //     item1Icon: 'icon_max_resource',
+    //     item1Des: '已运输最大资源'
+    //   }
+    // });
+
     let modal = new ModalLevel({
       game: this.game,
       scrollable: true,
-      headingTxt: '233级仓库',
+      headingTxt: '233级生产线',
       opts: {
-        avatarImg: 'avatar_tran_warehose',
+        avatarImg: 'avatar_worker',
         avatarHeading: '下一次大升级',
-        avatarDes: '将在等级333时获得额外的运输工人',
+        avatarDes: '在等级达到175时会有巨大生产力的提升',
         item1Icon: 'icon_max_resource',
         item1Des: '已运输最大资源'
       },
-      // worker: true
+      worker: true
     });
 
     // btn-egg
