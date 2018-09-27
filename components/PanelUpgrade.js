@@ -18,7 +18,6 @@ class PanelUpgrade extends window.Phaser.Group {
   }
 
   _getInit = () => {
-    console.log('veilHeight: ', this.veilHeight);
     this.bg = this.game.make.graphics(0, 0);
     this.bg.beginFill(0x000000, 0.1);
     this.bg.drawRect(0, 0, 290, 85);

@@ -1,5 +1,5 @@
 import ModalRaw from './ModalRaw.js';
-import UpgradeItem from './UpgradeItem.js';
+import LevelUpgradeItem from './LevelUpgradeItem.js';
 import PanelUpgrade from './PanelUpgrade.js';
 
 const LEVEL = {
@@ -102,7 +102,7 @@ class ModalLevel extends ModalRaw {
     this.mainGroup = this.game.add.group();
     if (!this.worker) {
       // gap 17
-      let item1 = new UpgradeItem({
+      let item1 = new LevelUpgradeItem({
         game: this.game,
         parent: this.mainGroup,
         key: this.opts.item1Icon,
@@ -112,7 +112,7 @@ class ModalLevel extends ModalRaw {
         currTxt: '58aa/分',
         futureTxt: '+55aa/分'
       });
-      let item2 = new UpgradeItem({
+      let item2 = new LevelUpgradeItem({
         game: this.game,
         parent: this.mainGroup,
         key: 'icon_transporter',
@@ -123,7 +123,7 @@ class ModalLevel extends ModalRaw {
         futureTxt: '+0'
       });
 
-      let item3 = new UpgradeItem({
+      let item3 = new LevelUpgradeItem({
         game: this.game,
         parent: this.mainGroup,
         key: 'icon_transporter_capacity',
@@ -134,7 +134,7 @@ class ModalLevel extends ModalRaw {
         futureTxt: '+55ac'
       });
 
-      let item4 = new UpgradeItem({
+      let item4 = new LevelUpgradeItem({
         game: this.game,
         parent: this.mainGroup,
         key: 'icon_loading_speed',
@@ -145,7 +145,7 @@ class ModalLevel extends ModalRaw {
         futureTxt: '+55aa/秒'
       });
 
-      let item5 = new UpgradeItem({
+      let item5 = new LevelUpgradeItem({
         game: this.game,
         parent: this.mainGroup,
         key: 'icon_walk_speed',
@@ -157,7 +157,7 @@ class ModalLevel extends ModalRaw {
       });
     } else {
       this.needTxt = this.game.make.text((this.w - LEVEL.aWidth) / 2, 290, '需要', getFontStyle('30px'));
-      let need1 = new UpgradeItem({
+      let need1 = new LevelUpgradeItem({
         game: this.game,
         parent: this.mainGroup,
         key: 'icon_ore',
@@ -169,7 +169,7 @@ class ModalLevel extends ModalRaw {
       });
 
       this.prodTxt = this.game.make.text((this.w - LEVEL.aWidth) / 2, 330 + 85 + 27, '生产', getFontStyle('30px'));
-      let prod = new UpgradeItem({
+      let prod = new LevelUpgradeItem({
         game: this.game,
         parent: this.mainGroup,
         key: 'icon_ore',
@@ -179,7 +179,7 @@ class ModalLevel extends ModalRaw {
         currTxt: '58aa/分',
         futureTxt: '+55aa/分'
       });
-      let iconPower = new UpgradeItem({
+      let iconPower = new LevelUpgradeItem({
         game: this.game,
         parent: this.mainGroup,
         key: 'icon_power',

@@ -20,7 +20,7 @@ function getFontStyle (fSize, color, align, weight) {
   };
 }
 
-class UpgradeItem extends window.Phaser.Group {
+class LevelUpgradeItem extends window.Phaser.Group {
 
   constructor({game, parent, key, txt, x, y, currTxt, futureTxt}) {
     super(game, parent);
@@ -70,4 +70,4 @@ class UpgradeItem extends window.Phaser.Group {
   }
 }
 
-export default UpgradeItem;
+export default LevelUpgradeItem;
