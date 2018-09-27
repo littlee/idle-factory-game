@@ -1,3 +1,6 @@
+// eslint-disable-next-line
+import regeneratorRuntime from '../js/libs/regenerator-runtime';
+
 import BtnIdleCash from '../components/BtnIdleCash';
 import BtnCash from '../components/BtnCash';
 import BtnSuperCash from '../components/BtnSuperCash';
@@ -17,6 +20,7 @@ import ModalRescources from '../components/ModalResources.js';
 
 import range from '../js/libs/_/range';
 
+
 /*
 关于priorityID:
 -1- 让整个屏幕滑动的veil是0，屏幕中其他有自己input事件的game object是999.
@@ -27,6 +31,10 @@ import range from '../js/libs/_/range';
 const PRIORITY_ID = 999;
 
 class Game extends window.Phaser.State {
+  _data = {
+    workerSpeed: 0.5
+  }
+
   // create(): execution order inside MATTERS!!
   create() {
     // bg of warehouse of raw material
@@ -51,20 +59,6 @@ class Game extends window.Phaser.State {
     this.marketManager = this.add.sprite(0, 0, 'mgr_market');
     this.marketManager.alignIn(this.wall, window.Phaser.BOTTOM_CENTER, 80, 80);
     // group 1-5
-
-    const WORKSTATION_START_Y = 915;
-    const WORKSTATION_HEIGHT = 339;
-    this.workstationGroup = this.add.group();
-    range(5).forEach(index => {
-      let workstation = new Workstation(
-        this.game,
-        0,
-        WORKSTATION_START_Y + index * WORKSTATION_HEIGHT,
-        1,
-        index + 1
-      );
-      this.workstationGroup.add(workstation);
-    });
 
     this.bellRed = new BellRed(this.game, 80, 116);
     this.bellRed.unlock();
@@ -102,10 +96,8 @@ class Game extends window.Phaser.State {
     this.modalRescources = new ModalRescources({
       game: this.game,
       scrollable: true,
-      headingTxt: '进口生产原料',
+      headingTxt: '进口生产原料'
     });
-
-    // this.modelWorkstation;
 
     this.upBtnWarehouse = new BtnUpgrade(this.game, 0, 0);
     this.upBtnWarehouse.alignIn(this.wall, window.Phaser.LEFT_CENTER, -60, -10);
@@ -121,12 +113,36 @@ class Game extends window.Phaser.State {
       this.modalMarket.visible = true;
     });
 
+    const WORKSTATION_START_Y = 915;
+    const WORKSTATION_HEIGHT = 339;
+    this.workstationGroup = this.add.group();
+    range(5).forEach(index => {
+      let workstation = new Workstation(
+        this.game,
+        0,
+        WORKSTATION_START_Y + index * WORKSTATION_HEIGHT,
+        1,
+        index + 1
+      );
+      this.workstationGroup.add(workstation);
+    });
+    window.stg = this.workstationGroup;
+
     this.workerWarehouseGroup = this.add.group();
     range(5).forEach(index => {
       let worker = new WorkerWarehouse(this.game, 50 + index * 5, 600);
       this.workerWarehouseGroup.add(worker);
       if (index > 0) {
         worker.kill();
+      }
+    });
+    window.wg = this.workerWarehouseGroup;
+
+    this.workerWarehouseGroup.forEachAlive(async (worker) => {
+      worker.walkWithBox();
+      let workstations = this.workstationGroup.children;
+      for (let i = 0; i < workstations.length; i++) {
+        await worker.move(workstations[i].y, this._data.workerSpeed);
       }
     });
 

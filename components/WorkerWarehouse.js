@@ -10,6 +10,27 @@ class WorkerWarehouse extends window.Phaser.Sprite {
     this.animations.add('back', [6, 7], 5, true);
   }
 
+  move(y, speed = 0.5, cb = () => {}) {
+    return new Promise(resolve => {
+      let prevY = this.y;
+      let duration = (y - prevY) / speed;
+      this.game.add
+        .tween(this)
+        .to(
+          {
+            y
+          },
+          duration,
+          null,
+          true
+        )
+        .onComplete.add(() => {
+          cb && cb();
+          resolve();
+        });
+    });
+  }
+
   stand() {
     this.animations.stop(null, true);
   }

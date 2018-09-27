@@ -1,7 +1,6 @@
 import './js/libs/weapp-adapter';
 import './js/libs/symbol';
 import './js/libs/stub';
-
 import './js/phaserGlobals';
 
 import StartState from './states/Start.js';
