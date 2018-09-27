@@ -5,6 +5,7 @@ import BtnIdleCash from '../components/BtnIdleCash';
 import BtnCash from '../components/BtnCash';
 import BtnSuperCash from '../components/BtnSuperCash';
 
+import Warehouse from '../components/Warehouse';
 import Workstation from '../components/Workstation';
 
 import WorkerWarehouse from '../components/WorkerWarehouse';
@@ -31,9 +32,6 @@ import range from '../js/libs/_/range';
 const PRIORITY_ID = 999;
 
 class Game extends window.Phaser.State {
-  _data = {
-    workerSpeed: 0.5
-  }
 
   // create(): execution order inside MATTERS!!
   create() {
@@ -139,11 +137,12 @@ class Game extends window.Phaser.State {
     window.wg = this.workerWarehouseGroup;
 
     this.workerWarehouseGroup.forEachAlive(async (worker) => {
-      worker.walkWithBox();
+      worker.carryFromWarehouse(this.warehouse);
       let workstations = this.workstationGroup.children;
       for (let i = 0; i < workstations.length; i++) {
-        await worker.move(workstations[i].y, this._data.workerSpeed);
+        await worker.moveToStation(workstations[i]);
       }
+      worker.backToWarehouse(this.warehouse);
     });
 
     this.workerMarketGroup = this.add.group();
@@ -194,7 +193,7 @@ class Game extends window.Phaser.State {
   _addAllRelatedStuff2Bg = () => {
     this.bgGroup.addChild(this.exitGround);
     this.bgGroup.addChild(this.warehouseGround);
-    this.bgGroup.addChild(this.warehouseTable);
+    this.bgGroup.addChild(this.warehouse);
     this.bgGroup.addChild(this.marketGround);
     this.bgGroup.addChild(this.marketTruck);
     this.bgGroup.addChild(this.wall);
@@ -217,12 +216,8 @@ class Game extends window.Phaser.State {
     this.warehouseGround.drawRect(0, 0, this.world.width / 2, 674);
     this.warehouseGround.endFill();
 
-    this.warehouseTable = this.add.sprite(100, 650, 'warehouse_table');
-    this.warehouseTable.anchor.setTo(0, 1);
-    this.warehouseTable.inputEnabled = true;
-    this.warehouseTable.input.priorityID = PRIORITY_ID;
-    // console.log('check: ',this.warehouseTable.input);
-    this.warehouseTable.events.onInputDown.add(() => {
+    this.warehouse = new Warehouse(this.game, 100, 450);
+    this.warehouse.onClick(() => {
       this.modalRescources.visible = true;
     });
 
