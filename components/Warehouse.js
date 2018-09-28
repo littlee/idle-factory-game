@@ -1,3 +1,5 @@
+import ResourceEmitter from './ResourceEmitter';
+
 const GOODS_MAP = {
   ore: {
     key: 'reso_ore',
@@ -58,8 +60,27 @@ class Warehouse extends window.Phaser.Group {
       this.goods.create(item.x, item.y, item.key, null, false);
     });
 
+    this.goodsOutputs = this.game.add.group();
+    Object.keys(GOODS_MAP).forEach(goodKey => {
+      let output = new ResourceEmitter(
+        this.game,
+        0,
+        0,
+        GOODS_MAP[goodKey].key,
+        [-80, -120],
+        [80, 120],
+        1000,
+        this.game.rnd.between(300, 500)
+      );
+      output.alignIn(this.table, window.Phaser.CENTER);
+      this.goodsOutputs.add(output);
+    });
+
     this.add(this.table);
     this.add(this.goods);
+    this.add(this.goodsOutputs);
+
+    // this.outputGoods(['ore', 'copper', 'rubber']);
 
     this.addGood('ore');
   }
@@ -75,6 +96,20 @@ class Warehouse extends window.Phaser.Group {
 
   getCurrentGoods() {
     return this._data.currentGoods;
+  }
+
+  // 根据现有工作台的需求来确定输出，传入 keys
+  outputGoods(keys) {
+    keys = keys.map(k => `reso_${k}`);
+    this.goodsOutputs.forEach(output => {
+      if (keys.indexOf(output.particleKey) !== -1) {
+        output.start();
+      }
+    });
+  }
+
+  stopOutout() {
+    this.goodsOutputs.forEach(output => output.stop());
   }
 
   onClick(func, context) {

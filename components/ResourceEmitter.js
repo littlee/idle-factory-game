@@ -11,12 +11,21 @@ class ResourceEmitter extends window.Phaser.Particles.Arcade.Emitter {
   ) {
     super(game, x, y, 5);
     this.makeParticles(key);
-    this.setXSpeed(xSpeed, xSpeed);
-    this.setYSpeed(ySpeed, ySpeed);
+    if (Array.isArray(xSpeed)) {
+      this.setXSpeed(xSpeed[0], xSpeed[1]);
+    } else {
+      this.setXSpeed(xSpeed, xSpeed);
+    }
+    if (Array.isArray(ySpeed)) {
+      this.setYSpeed(ySpeed[0], ySpeed[1]);
+    } else {
+      this.setYSpeed(ySpeed, ySpeed);
+    }
     this.setRotation(0, 0);
     this.setScale(0.7, 0.7, 0.7, 0.7);
     this.gravity = 0;
 
+    this.particleKey = key;
     this.inLifespan = lifespan;
     this.inFrequency = frequency;
 
@@ -24,6 +33,7 @@ class ResourceEmitter extends window.Phaser.Particles.Arcade.Emitter {
   }
 
   changeTexture(key) {
+    this.particleKey = key;
     this.forEach(p => p.loadTexture(key));
   }
 
