@@ -27,6 +27,21 @@ const GROUND_NUM_STYLE = {
 
 const PRIORITY_ID = 999;
 
+const OUTPUT_REQ_MAP = {
+  steel: ['ore'],
+  can: ['ore'],
+  drill: ['steel'],
+  toaster: ['steel', 'can']
+};
+
+const SOURCE_IMG_MAP = {
+  ore: 'reso_ore',
+  steel: 'prod_steel',
+  can: 'prod_can',
+  drill: 'prod_drill',
+  toaster: 'prod_toaster'
+};
+
 class Workstation extends window.Phaser.Group {
   constructor(game, x, y, stationLevel = 1, index = 1) {
     super(game);
@@ -35,8 +50,10 @@ class Workstation extends window.Phaser.Group {
     this.gameRef = game;
 
     this._data = {
-      input: [],
-      output: '',
+      input: OUTPUT_REQ_MAP['steel'],
+      inputAmount: [123, 456],
+      output: 'steel',
+      outputAmount: [789],
       level: 1,
       collectType: 'cash'
     };
@@ -115,7 +132,6 @@ class Workstation extends window.Phaser.Group {
     this.productBtnItem = this.gameRef.make.sprite(0, 0, 'prod_steel');
     this.productBtnItem.alignIn(this.productBtn, window.Phaser.CENTER, 0, -5);
 
-
     this.inputItems = new ResourecePile(this.game, 'reso_ore', true);
     this.inputItems.alignIn(this.table, window.Phaser.TOP_LEFT, -20);
     this.inputItems.setNum(formatBigNum(Big('123456789')));
@@ -127,7 +143,7 @@ class Workstation extends window.Phaser.Group {
       this.game,
       this.table.x + 50,
       this.table.y + 50,
-      'reso_ore',
+      this._data.input.map(item => SOURCE_IMG_MAP[item]),
       100,
       0
     );
@@ -165,7 +181,6 @@ class Workstation extends window.Phaser.Group {
 
     this.manager = this.gameRef.make.sprite(0, 0, 'mgr_worker');
     this.manager.alignIn(this.table, window.Phaser.TOP_LEFT, -15, 100);
-
 
     this.boxCollect = new BoxCollect(this.game);
 

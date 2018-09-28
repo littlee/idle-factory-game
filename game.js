@@ -18,6 +18,8 @@ var game = new Phaser.Game({
   canvas: canvas
 });
 
+window.game = game;
+
 game.state.add('Start', StartState, false);
 game.state.add('Game', GameState, false);
 game.state.add('Test', TestState, false);
