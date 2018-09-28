@@ -47,7 +47,6 @@ class Workstation extends window.Phaser.Group {
     super(game);
     this.x = x;
     this.y = y;
-    this.gameRef = game;
 
     this._data = {
       input: OUTPUT_REQ_MAP['steel'],
@@ -58,26 +57,22 @@ class Workstation extends window.Phaser.Group {
       collectType: 'cash'
     };
 
-    this.ground = this.gameRef.make.image(0, 0, `ground_level_${stationLevel}`);
+    this.ground = this.game.make.image(0, 0, `ground_level_${stationLevel}`);
 
-    this.groundNum = this.gameRef.make.text(0, 0, `${index}`, GROUND_NUM_STYLE);
+    this.groundNum = this.game.make.text(0, 0, `${index}`, GROUND_NUM_STYLE);
     this.groundNum.alignIn(this.ground, window.Phaser.LEFT_CENTER, -70, -30);
 
-    this.table = this.gameRef.make.image(0, 0, `table_level_${stationLevel}`);
+    this.table = this.game.make.image(0, 0, `table_level_${stationLevel}`);
     this.table.alignIn(this.ground, window.Phaser.TOP_CENTER);
 
-    this.tableCover = this.gameRef.make.sprite(0, 0, 'table_cover');
+    this.tableCover = this.game.make.sprite(0, 0, 'table_cover');
     this.tableCover.alignIn(this.table, window.Phaser.TOP_LEFT, 5, 0);
     this.tableCover.visible = false;
 
     // 购买按钮
-    this.buyBtnGroup = this.gameRef.make.group();
+    this.buyBtnGroup = this.game.make.group();
 
-    this.buyBtnSuperCash = this.gameRef.make.sprite(
-      0,
-      0,
-      'btn_buy_ws_super_cash'
-    );
+    this.buyBtnSuperCash = this.game.make.sprite(0, 0, 'btn_buy_ws_super_cash');
     this.buyBtnSuperCash.alignIn(this.table, window.Phaser.TOP_LEFT, -5, -5);
     this.buyBtnSuperCash.inputEnabled = true;
     this.buyBtnSuperCash.input.priorityID = PRIORITY_ID;
@@ -85,12 +80,7 @@ class Workstation extends window.Phaser.Group {
       console.log('点击超级现金购买');
     });
 
-    this.buyBtnSuperCashText = this.gameRef.make.text(
-      0,
-      0,
-      '123',
-      BTN_TEXT_STYLE
-    );
+    this.buyBtnSuperCashText = this.game.make.text(0, 0, '123', BTN_TEXT_STYLE);
     this.buyBtnSuperCashText.alignIn(
       this.buyBtnSuperCash,
       window.Phaser.TOP_LEFT,
@@ -98,7 +88,7 @@ class Workstation extends window.Phaser.Group {
       -5
     );
 
-    this.buyBtnCash = this.gameRef.make.sprite(0, 0, 'btn_buy_ws_cash');
+    this.buyBtnCash = this.game.make.sprite(0, 0, 'btn_buy_ws_cash');
     this.buyBtnCash.alignIn(this.table, window.Phaser.TOP_RIGHT, -10, -5);
     this.buyBtnCash.inputEnabled = true;
     this.buyBtnCash.input.priorityID = PRIORITY_ID;
@@ -106,7 +96,7 @@ class Workstation extends window.Phaser.Group {
       console.log('点击现金购买');
     });
 
-    this.buyBtnCashText = this.gameRef.make.text(0, 0, '123', BTN_TEXT_STYLE);
+    this.buyBtnCashText = this.game.make.text(0, 0, '123', BTN_TEXT_STYLE);
     this.buyBtnCashText.alignIn(
       this.buyBtnCash,
       window.Phaser.TOP_LEFT,
@@ -121,20 +111,29 @@ class Workstation extends window.Phaser.Group {
     this.buyBtnGroup.visible = false;
 
     // 生产相关
-    this.productGroup = this.gameRef.make.group();
-    this.productBtn = this.gameRef.make.sprite(0, 0, 'btn_product_holder');
+    this.productGroup = this.game.make.group();
+    this.productBtn = this.game.make.sprite(0, 0, 'btn_product_holder');
     this.productBtn.alignIn(this.table, window.Phaser.TOP_RIGHT, -15, -15);
     this.productBtn.inputEnabled = true;
     this.productBtn.input.priorityID = PRIORITY_ID;
     this.productBtn.events.onInputDown.add(() => {
       console.log('点击工作台产品按钮');
     });
-    this.productBtnItem = this.gameRef.make.sprite(0, 0, 'prod_steel');
+    this.productBtnItem = this.game.make.sprite(0, 0, 'prod_steel');
     this.productBtnItem.alignIn(this.productBtn, window.Phaser.CENTER, 0, -5);
 
-    this.inputItems = new ResourecePile(this.game, 'reso_ore', true);
-    this.inputItems.alignIn(this.table, window.Phaser.TOP_LEFT, -20);
-    this.inputItems.setNum(formatBigNum(Big('123456789')));
+    this.inputItemGroup = this.game.make.group();
+    this._data.input.forEach((inputKey, index) => {
+      let inputItem = new ResourecePile(
+        this.game,
+        SOURCE_IMG_MAP[inputKey],
+        true
+      );
+      inputItem.x = this.table.x + 20 + index * 40;
+      inputItem.y = index * 10;
+      inputItem.setNum(formatBigNum(Big(this._data.inputAmount[index])));
+      this.inputItemGroup.add(inputItem);
+    });
 
     this.outputItems = new ResourecePile(this.game, 'prod_steel');
     this.outputItems.alignIn(this.table, window.Phaser.TOP_CENTER);
@@ -169,7 +168,7 @@ class Workstation extends window.Phaser.Group {
 
     this.productGroup.add(this.productBtn);
     this.productGroup.add(this.productBtnItem);
-    this.productGroup.add(this.inputItems);
+    this.productGroup.add(this.inputItemGroup);
     this.productGroup.add(this.outputItems);
     this.productGroup.add(this.inputItemsAni);
     this.productGroup.add(this.outputItemsAniLeft);
@@ -179,12 +178,13 @@ class Workstation extends window.Phaser.Group {
     this.worker.alignTo(this.table, window.Phaser.TOP_CENTER, 20, -10);
     this.worker.work();
 
-    this.manager = this.gameRef.make.sprite(0, 0, 'mgr_worker');
+    this.manager = this.game.make.sprite(0, 0, 'mgr_worker');
     this.manager.alignIn(this.table, window.Phaser.TOP_LEFT, -15, 100);
 
     this.boxCollect = new BoxCollect(this.game);
+    this.boxCollect.setNum(formatBigNum(Big(this._data.outputAmount)));
 
-    this.boxHolderProd = this.gameRef.make.sprite(0, 0, 'box_collect_holder');
+    this.boxHolderProd = this.game.make.sprite(0, 0, 'box_collect_holder');
     this.boxHolderProd.alignTo(this.table, window.Phaser.BOTTOM_LEFT, -20, -5);
     this.boxHolderProd.inputEnabled = true;
     this.boxHolderProd.input.priorityID = PRIORITY_ID;
@@ -192,7 +192,7 @@ class Workstation extends window.Phaser.Group {
       this.setCollectType.bind(this, COLLECT_TYPES.PROD)
     );
 
-    this.boxHolderCash = this.gameRef.make.sprite(0, 0, 'box_collect_holder');
+    this.boxHolderCash = this.game.make.sprite(0, 0, 'box_collect_holder');
     this.boxHolderCash.alignTo(this.table, window.Phaser.BOTTOM_RIGHT, -20, -5);
     this.boxHolderCash.inputEnabled = true;
     this.boxHolderCash.input.priorityID = PRIORITY_ID;
