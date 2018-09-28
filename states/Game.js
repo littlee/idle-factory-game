@@ -130,7 +130,7 @@ class Game extends window.Phaser.State {
         600 + this.rnd.between(0, 20)
       );
       this.workerWarehouseGroup.add(worker);
-      if (index > 1) {
+      if (index > 0) {
         worker.kill();
       }
     });
@@ -144,10 +144,6 @@ class Game extends window.Phaser.State {
     //   }
     //   await worker.backToWarehouse(this.warehouse);
     // });
-
-    setTimeout(() => {
-      this.workerWarehouseGroup.children[2].revive();
-    }, 2000);
 
     this.workerMarketGroup = this.add.group();
     range(5).forEach(index => {
@@ -187,17 +183,17 @@ class Game extends window.Phaser.State {
   }
 
   update() {
-    this.workerWarehouseGroup.forEachAlive(async worker => {
-      if (!worker.getIsOnRoutine()) {
-        await worker.carryFromWarehouse(this.warehouse);
-        let workstations = this.workstationGroup.children;
-        for (let i = 0; i < workstations.length; i++) {
-          await worker.moveToStation(workstations[i]);
-          await worker.tradeWithStation(workstations[i]);
-        }
-        await worker.backToWarehouse(this.warehouse);
-      }
-    });
+    // this.workerWarehouseGroup.forEachAlive(async worker => {
+    //   if (!worker.getIsOnRoutine()) {
+    //     await worker.carryFromWarehouse(this.warehouse);
+    //     let workstations = this.workstationGroup.children;
+    //     for (let i = 0; i < workstations.length; i++) {
+    //       await worker.moveToStation(workstations[i]);
+    //       await worker.tradeWithStation(workstations[i]);
+    //     }
+    //     await worker.backToWarehouse(this.warehouse);
+    //   }
+    // });
   }
 
   _createMenus = () => {

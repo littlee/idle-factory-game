@@ -42,12 +42,10 @@ class Workstation extends window.Phaser.Group {
     this.gameRef = game;
 
     this._data = {
+      input: [],
+      output: '',
       level: 1,
       collectType: 'cash'
-    };
-    this._dataReactions = {
-      level: [this._setLevel],
-      collectType: [this._setCollectType]
     };
 
     this.ground = this.gameRef.make.image(0, 0, `ground_level_${stationLevel}`);
@@ -202,7 +200,7 @@ class Workstation extends window.Phaser.Group {
     this.boxHolderProd.inputEnabled = true;
     this.boxHolderProd.input.priorityID = PRIORITY_ID;
     this.boxHolderProd.events.onInputDown.add(
-      this._setData.bind(this, { collectType: COLLECT_TYPES.PROD })
+      this.setCollectType.bind(this, COLLECT_TYPES.PROD)
     );
 
     this.boxHolderCash = this.gameRef.make.sprite(0, 0, 'box_collect_holder');
@@ -210,7 +208,7 @@ class Workstation extends window.Phaser.Group {
     this.boxHolderCash.inputEnabled = true;
     this.boxHolderCash.input.priorityID = PRIORITY_ID;
     this.boxHolderCash.events.onInputDown.add(
-      this._setData.bind(this, { collectType: COLLECT_TYPES.CASH })
+      this.setCollectType.bind(this, COLLECT_TYPES.CASH)
     );
 
     this.upBtn = new BtnUpgrade(this.game, 0, 0);
@@ -241,27 +239,12 @@ class Workstation extends window.Phaser.Group {
   }
 
   _init() {
-    this._setCollectType();
+    this.setCollectType(COLLECT_TYPES.CASH);
   }
 
-  _setData(data) {
-    this._data = {
-      ...this._data,
-      ...data
-    };
-
-    Object.keys(data).forEach(key => {
-      let reaction = this._dataReactions[key];
-      if (reaction) {
-        reaction.forEach(re => {
-          re.apply(this);
-        });
-      }
-    });
-  }
-
-  _setCollectType() {
-    const { collectType } = this._data;
+  // public methods
+  setCollectType(collectType) {
+    this._data.collectType = collectType;
     if (collectType === COLLECT_TYPES.CASH) {
       this.boxCollect.alignIn(this.boxHolderCash, window.Phaser.CENTER, 0, -5);
       this.boxHolderCash.frame = 1;
@@ -273,12 +256,11 @@ class Workstation extends window.Phaser.Group {
     }
   }
 
-  _setLevel() {
-    const { level } = this._data;
+  setLevel(level) {
+    this._data.level = level;
     this.levelText.setText(level);
   }
 
-  // public methods
   getData() {
     return this._data;
   }
