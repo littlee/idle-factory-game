@@ -20,7 +20,7 @@ class ResourceEmitter extends window.Phaser.Particles.Arcade.Emitter {
     this.inLifespan = lifespan;
     this.inFrequency = frequency;
 
-    this.start();
+    // this.start();
   }
 
   changeTexture(key) {

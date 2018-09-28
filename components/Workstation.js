@@ -1,4 +1,3 @@
-import range from '../js/libs/_/range';
 import { formatBigNum } from '../utils';
 import Big from '../js/libs/big.min';
 
@@ -6,6 +5,8 @@ import Big from '../js/libs/big.min';
 import Worker from './Worker';
 import BtnUpgrade from './BtnUpgrade';
 import ResourceEmitter from './ResourceEmitter';
+import ResourecePile from './ResourcePile';
+import BoxCollect from './BoxCollect';
 
 const COLLECT_TYPES = {
   CASH: 'cash',
@@ -22,14 +23,6 @@ const GROUND_NUM_STYLE = {
   font: 'Arial',
   fontSize: 30,
   fill: '#7a6a67'
-};
-
-const INPUT_NUM_STYLE = {
-  font: 'Arail',
-  fontSize: 24,
-  fill: '#fff',
-  stroke: '#000',
-  strokeThickness: 5
 };
 
 const PRIORITY_ID = 999;
@@ -122,32 +115,12 @@ class Workstation extends window.Phaser.Group {
     this.productBtnItem = this.gameRef.make.sprite(0, 0, 'prod_steel');
     this.productBtnItem.alignIn(this.productBtn, window.Phaser.CENTER, 0, -5);
 
-    this.inputItems = this.gameRef.make.group();
-    this.inputItems.createMultiple(5, 'reso_ore', null, true, (item, index) => {
-      item.y = index * 5;
-    });
-    this.inputItems.sort('z', window.Phaser.Group.SORT_DESCENDING);
-    this.inputItems.alignIn(this.table, window.Phaser.TOP_LEFT, -30);
 
-    this.inputNum = this.gameRef.make.text(
-      0,
-      0,
-      formatBigNum(Big('123456789')),
-      INPUT_NUM_STYLE
-    );
-    this.inputNum.alignIn(this.table, window.Phaser.TOP_LEFT, -30);
+    this.inputItems = new ResourecePile(this.game, 'reso_ore', true);
+    this.inputItems.alignIn(this.table, window.Phaser.TOP_LEFT, -20);
+    this.inputItems.setNum(formatBigNum(Big('123456789')));
 
-    this.outputItems = this.gameRef.make.group();
-    this.outputItems.createMultiple(
-      5,
-      'prod_steel',
-      null,
-      true,
-      (item, index) => {
-        item.y = index * 5;
-      }
-    );
-    this.outputItems.sort('z', window.Phaser.Group.SORT_DESCENDING);
+    this.outputItems = new ResourecePile(this.game, 'prod_steel');
     this.outputItems.alignIn(this.table, window.Phaser.TOP_CENTER);
 
     this.inputItemsAni = new ResourceEmitter(
@@ -158,6 +131,7 @@ class Workstation extends window.Phaser.Group {
       100,
       0
     );
+    this.inputItemsAni.start();
 
     this.outputItemsAniLeft = new ResourceEmitter(
       this.game,
@@ -180,7 +154,6 @@ class Workstation extends window.Phaser.Group {
     this.productGroup.add(this.productBtn);
     this.productGroup.add(this.productBtnItem);
     this.productGroup.add(this.inputItems);
-    this.productGroup.add(this.inputNum);
     this.productGroup.add(this.outputItems);
     this.productGroup.add(this.inputItemsAni);
     this.productGroup.add(this.outputItemsAniLeft);
@@ -193,7 +166,8 @@ class Workstation extends window.Phaser.Group {
     this.manager = this.gameRef.make.sprite(0, 0, 'mgr_worker');
     this.manager.alignIn(this.table, window.Phaser.TOP_LEFT, -15, 100);
 
-    this.boxCollect = this.gameRef.make.sprite(0, 0, 'box_collect');
+
+    this.boxCollect = new BoxCollect(this.game);
 
     this.boxHolderProd = this.gameRef.make.sprite(0, 0, 'box_collect_holder');
     this.boxHolderProd.alignTo(this.table, window.Phaser.BOTTOM_LEFT, -20, -5);
@@ -249,10 +223,14 @@ class Workstation extends window.Phaser.Group {
       this.boxCollect.alignIn(this.boxHolderCash, window.Phaser.CENTER, 0, -5);
       this.boxHolderCash.frame = 1;
       this.boxHolderProd.frame = 0;
+      this.outputItemsAniLeft.stop();
+      this.outputItemsAniRight.start();
     } else if (collectType === COLLECT_TYPES.PROD) {
       this.boxCollect.alignIn(this.boxHolderProd, window.Phaser.CENTER, 0, -5);
       this.boxHolderProd.frame = 1;
       this.boxHolderCash.frame = 0;
+      this.outputItemsAniLeft.start();
+      this.outputItemsAniRight.stop();
     }
   }
 
