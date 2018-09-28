@@ -5,6 +5,7 @@ import Big from '../js/libs/big.min';
 // import ModalLevel from './ModalLevel';
 import Worker from './Worker';
 import BtnUpgrade from './BtnUpgrade';
+import ResourceEmitter from './ResourceEmitter';
 
 const COLLECT_TYPES = {
   CASH: 'cash',
@@ -41,12 +42,10 @@ class Workstation extends window.Phaser.Group {
     this.gameRef = game;
 
     this._data = {
+      input: [],
+      output: '',
       level: 1,
       collectType: 'cash'
-    };
-    this._dataReactions = {
-      level: [this._setLevel],
-      collectType: [this._setCollectType]
     };
 
     this.ground = this.gameRef.make.image(0, 0, `ground_level_${stationLevel}`);
@@ -139,107 +138,53 @@ class Workstation extends window.Phaser.Group {
     this.inputNum.alignIn(this.table, window.Phaser.TOP_LEFT, -30);
 
     this.outputItems = this.gameRef.make.group();
-    this.outputItems.createMultiple(5, 'prod_steel', null, true, (item, index) => {
-      item.y = index * 5;
-    });
+    this.outputItems.createMultiple(
+      5,
+      'prod_steel',
+      null,
+      true,
+      (item, index) => {
+        item.y = index * 5;
+      }
+    );
     this.outputItems.sort('z', window.Phaser.Group.SORT_DESCENDING);
     this.outputItems.alignIn(this.table, window.Phaser.TOP_CENTER);
 
-    this.inputItemsMoving = this.gameRef.make.group();
-    this.inputItemsMovingTwns = [];
-    range(3).forEach(index => {
-      let item = this.inputItemsMoving.create(0, 0, 'reso_ore');
-      item.scale.setTo(0.7);
-
-      let itemTwn = this.gameRef.add.tween(item).to(
-        {
-          x: '+100'
-        },
-        1000,
-        null,
-        false,
-        index * 250,
-        -1
-      );
-      this.inputItemsMovingTwns.push(itemTwn);
-    });
-    this.inputItemsMoving.alignIn(this.table, window.Phaser.TOP_LEFT, -30, -30);
-
-    this.inputItemsMovingTwns.forEach(twn => {
-      // twn.start();
-    });
-    this.inputItemsMoving.visible = false;
-
-    this.outputItemsMovingLeft = this.gameRef.make.group();
-    this.outputItemsMovingLeftTwns = [];
-    range(3).forEach(index => {
-      let item = this.outputItemsMovingLeft.create(0, 0, 'prod_steel');
-      item.scale.setTo(0.7);
-      item.anchor.setTo(0.5);
-      let itemTwn = this.gameRef.add.tween(item).to(
-        {
-          x: '-100',
-          y: '+100'
-        },
-        1000,
-        null,
-        false,
-        index * 250,
-        -1
-      );
-      this.outputItemsMovingLeftTwns.push(itemTwn);
-    });
-    this.outputItemsMovingLeft.alignIn(
-      this.table,
-      window.Phaser.TOP_CENTER,
-      0,
-      -30
+    this.inputItemsAni = new ResourceEmitter(
+      this.game,
+      this.table.x + 50,
+      this.table.y + 50,
+      'reso_ore',
+      100,
+      0
     );
 
-    this.outputItemsMovingLeftTwns.forEach(twn => {
-      // twn.start();
-    });
-    this.outputItemsMovingLeft.visible = false;
-
-    this.outputItemsMovingRight = this.gameRef.make.group();
-    this.outputItemsMovingRightTwns = [];
-    range(3).forEach(index => {
-      let item = this.outputItemsMovingRight.create(0, 0, 'prod_steel');
-      item.scale.setTo(0.7);
-      item.anchor.setTo(0.5);
-      let itemTwn = this.gameRef.add.tween(item).to(
-        {
-          x: '+100',
-          y: '+100'
-        },
-        1000,
-        null,
-        false,
-        index * 250,
-        -1
-      );
-      this.outputItemsMovingRightTwns.push(itemTwn);
-    });
-    this.outputItemsMovingRight.alignIn(
-      this.table,
-      window.Phaser.TOP_CENTER,
-      0,
-      -30
+    this.outputItemsAniLeft = new ResourceEmitter(
+      this.game,
+      this.table.x + this.table.width / 2 - 30,
+      this.table.y + this.table.height / 2 - 20,
+      'prod_steel',
+      -100,
+      100
     );
 
-    this.outputItemsMovingRightTwns.forEach(twn => {
-      // twn.start();
-    });
-    this.outputItemsMovingRight.visible = false;
+    this.outputItemsAniRight = new ResourceEmitter(
+      this.game,
+      this.table.x + this.table.width / 2 + 30,
+      this.table.y + this.table.height / 2 - 20,
+      'prod_steel',
+      100,
+      100
+    );
 
     this.productGroup.add(this.productBtn);
     this.productGroup.add(this.productBtnItem);
     this.productGroup.add(this.inputItems);
     this.productGroup.add(this.inputNum);
     this.productGroup.add(this.outputItems);
-    this.productGroup.add(this.inputItemsMoving);
-    this.productGroup.add(this.outputItemsMovingLeft);
-    this.productGroup.add(this.outputItemsMovingRight);
+    this.productGroup.add(this.inputItemsAni);
+    this.productGroup.add(this.outputItemsAniLeft);
+    this.productGroup.add(this.outputItemsAniRight);
 
     this.worker = new Worker(this.game, 0, 0);
     this.worker.alignTo(this.table, window.Phaser.TOP_CENTER, 20, -10);
@@ -255,7 +200,7 @@ class Workstation extends window.Phaser.Group {
     this.boxHolderProd.inputEnabled = true;
     this.boxHolderProd.input.priorityID = PRIORITY_ID;
     this.boxHolderProd.events.onInputDown.add(
-      this._setData.bind(this, { collectType: COLLECT_TYPES.PROD })
+      this.setCollectType.bind(this, COLLECT_TYPES.PROD)
     );
 
     this.boxHolderCash = this.gameRef.make.sprite(0, 0, 'box_collect_holder');
@@ -263,7 +208,7 @@ class Workstation extends window.Phaser.Group {
     this.boxHolderCash.inputEnabled = true;
     this.boxHolderCash.input.priorityID = PRIORITY_ID;
     this.boxHolderCash.events.onInputDown.add(
-      this._setData.bind(this, { collectType: COLLECT_TYPES.CASH })
+      this.setCollectType.bind(this, COLLECT_TYPES.CASH)
     );
 
     this.upBtn = new BtnUpgrade(this.game, 0, 0);
@@ -294,27 +239,12 @@ class Workstation extends window.Phaser.Group {
   }
 
   _init() {
-    this._setCollectType();
+    this.setCollectType(COLLECT_TYPES.CASH);
   }
 
-  _setData(data) {
-    this._data = {
-      ...this._data,
-      ...data
-    };
-
-    Object.keys(data).forEach(key => {
-      let reaction = this._dataReactions[key];
-      if (reaction) {
-        reaction.forEach(re => {
-          re.apply(this);
-        });
-      }
-    });
-  }
-
-  _setCollectType() {
-    const { collectType } = this._data;
+  // public methods
+  setCollectType(collectType) {
+    this._data.collectType = collectType;
     if (collectType === COLLECT_TYPES.CASH) {
       this.boxCollect.alignIn(this.boxHolderCash, window.Phaser.CENTER, 0, -5);
       this.boxHolderCash.frame = 1;
@@ -326,12 +256,11 @@ class Workstation extends window.Phaser.Group {
     }
   }
 
-  _setLevel() {
-    const { level } = this._data;
+  setLevel(level) {
+    this._data.level = level;
     this.levelText.setText(level);
   }
 
-  // public methods
   getData() {
     return this._data;
   }

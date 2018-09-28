@@ -21,7 +21,6 @@ import ModalRescources from '../components/ModalResources.js';
 
 import range from '../js/libs/_/range';
 
-
 /*
 关于priorityID:
 -1- 让整个屏幕滑动的veil是0，屏幕中其他有自己input事件的game object是999.
@@ -32,9 +31,9 @@ import range from '../js/libs/_/range';
 const PRIORITY_ID = 999;
 
 class Game extends window.Phaser.State {
-
   // create(): execution order inside MATTERS!!
   create() {
+    this.physics.startSystem(window.Phaser.Physics.ARCADE);
     // bg of warehouse of raw material
     this.bgGroup = this.game.add.group();
     // create the wall and 2 markets
@@ -111,7 +110,7 @@ class Game extends window.Phaser.State {
     const WORKSTATION_START_Y = 915;
     const WORKSTATION_HEIGHT = 339;
     this.workstationGroup = this.add.group();
-    range(5).forEach(index => {
+    range(2).forEach(index => {
       let workstation = new Workstation(
         this.game,
         0,
@@ -125,7 +124,11 @@ class Game extends window.Phaser.State {
 
     this.workerWarehouseGroup = this.add.group();
     range(5).forEach(index => {
-      let worker = new WorkerWarehouse(this.game, 50 + index * 5, 600);
+      let worker = new WorkerWarehouse(
+        this.game,
+        50 + index * 5,
+        600 + this.rnd.between(0, 20)
+      );
       this.workerWarehouseGroup.add(worker);
       if (index > 0) {
         worker.kill();
@@ -133,14 +136,14 @@ class Game extends window.Phaser.State {
     });
     window.wg = this.workerWarehouseGroup;
 
-    this.workerWarehouseGroup.forEachAlive(async (worker) => {
-      worker.carryFromWarehouse(this.warehouse);
-      let workstations = this.workstationGroup.children;
-      for (let i = 0; i < workstations.length; i++) {
-        await worker.moveToStation(workstations[i]);
-      }
-      worker.backToWarehouse(this.warehouse);
-    });
+    // this.workerWarehouseGroup.forEachAlive(async worker => {
+    //   worker.carryFromWarehouse(this.warehouse);
+    //   let workstations = this.workstationGroup.children;
+    //   for (let i = 0; i < workstations.length; i++) {
+    //     await worker.moveToStation(workstations[i]);
+    //   }
+    //   await worker.backToWarehouse(this.warehouse);
+    // });
 
     this.workerMarketGroup = this.add.group();
     range(5).forEach(index => {
@@ -168,6 +171,29 @@ class Game extends window.Phaser.State {
     wholeGameScroller.enableScroll();
 
     this._createFastScrollArrow(wholeGameScroller);
+
+    // this.emt = this.add.emitter(200, 200, 10);
+    // this.emt.makeParticles('reso_ore');
+    // this.emt.setXSpeed(100, 100);
+    // this.emt.setYSpeed(0, 0);
+    // this.emt.setRotation(0, 0);
+    // this.emt.gravity = 0;
+    // this.emt.start(false, 2000, 500);
+    // window.emt = this.emt;
+  }
+
+  update() {
+    // this.workerWarehouseGroup.forEachAlive(async worker => {
+    //   if (!worker.getIsOnRoutine()) {
+    //     await worker.carryFromWarehouse(this.warehouse);
+    //     let workstations = this.workstationGroup.children;
+    //     for (let i = 0; i < workstations.length; i++) {
+    //       await worker.moveToStation(workstations[i]);
+    //       await worker.tradeWithStation(workstations[i]);
+    //     }
+    //     await worker.backToWarehouse(this.warehouse);
+    //   }
+    // });
   }
 
   _createMenus = () => {
