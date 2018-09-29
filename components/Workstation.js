@@ -52,7 +52,14 @@ class Workstation extends window.Phaser.Group {
       input: OUTPUT_REQ_MAP['steel'],
       inputAmount: [123, 456],
       output: 'steel',
-      outputAmount: [789],
+      outputAmount: {
+        cash: 789,
+        prod: 999
+      },
+      price: {
+        cash: 123,
+        superCash: 456
+      },
       level: 1,
       collectType: 'cash'
     };
@@ -118,10 +125,12 @@ class Workstation extends window.Phaser.Group {
     this.productBtn.input.priorityID = PRIORITY_ID;
     this.productBtn.events.onInputDown.add(() => {
       console.log('点击工作台产品按钮');
+      this.setOutput('drill');
     });
-    this.productBtnItem = this.game.make.sprite(0, 0, 'prod_steel');
+    this.productBtnItem = this.game.make.sprite(0, 0, SOURCE_IMG_MAP[this._data.output]);
     this.productBtnItem.alignIn(this.productBtn, window.Phaser.CENTER, 0, -5);
 
+    // FIX ME 需要考虑一个变成两个的情况
     this.inputItemGroup = this.game.make.group();
     this._data.input.forEach((inputKey, index) => {
       let inputItem = new ResourecePile(
@@ -182,7 +191,8 @@ class Workstation extends window.Phaser.Group {
     this.manager.alignIn(this.table, window.Phaser.TOP_LEFT, -15, 100);
 
     this.boxCollect = new BoxCollect(this.game);
-    this.boxCollect.setNum(formatBigNum(Big(this._data.outputAmount)));
+    let { collectType, outputAmount } = this._data;
+    this.boxCollect.setNum(formatBigNum(Big(outputAmount[collectType])));
 
     this.boxHolderProd = this.game.make.sprite(0, 0, 'box_collect_holder');
     this.boxHolderProd.alignTo(this.table, window.Phaser.BOTTOM_LEFT, -20, -5);
@@ -252,6 +262,34 @@ class Workstation extends window.Phaser.Group {
   setLevel(level) {
     this._data.level = level;
     this.levelText.setText(level);
+  }
+
+  setOutput(outputKey) {
+    if (outputKey === this._data.output) {
+      return;
+    }
+    this._data.output = outputKey;
+    this._data.input = OUTPUT_REQ_MAP[outputKey];
+
+    let outputTexture = SOURCE_IMG_MAP[outputKey];
+    this.outputItems.changeTexture(outputTexture);
+    this.outputItemsAniLeft.changeTexture(outputTexture);
+    this.outputItemsAniRight.changeTexture(outputTexture);
+
+    this.productBtnItem.loadTexture(outputTexture);
+
+    this.inputItemGroup.forEach((item) => {
+      let index = this.inputItemGroup.getChildIndex(item);
+      item.changeTexture(SOURCE_IMG_MAP[this._data.input[index]]);
+    });
+  }
+
+  setOutputAmount(amout) {
+
+  }
+
+  setInputAmount(amount) {
+
   }
 
   getData() {

@@ -1,6 +1,6 @@
 const INPUT_NUM_STYLE = {
   font: 'Arail',
-  fontSize: 30,
+  fontSize: 28,
   fill: '#fff',
   stroke: '#000',
   strokeThickness: 5
