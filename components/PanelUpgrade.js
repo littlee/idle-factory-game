@@ -16,11 +16,13 @@ NOTE: 被toggle inputEnabled之后的object的priorityID会变成0.
 
  */
 class PanelUpgrade extends window.Phaser.Group {
-  constructor({ game, parent, veilHeight, levelType }) {
+  constructor({ game, parent, veilHeight, levelType, cb = null, cb4btns = null }) {
     super(game, parent);
     this.veilHeight = veilHeight;
     this.propsCoin = this.game.share.coin;
     this.levelType = levelType;
+    this.cb = cb;
+    this.cb4btns = cb4btns;
     this.base = 100;
 
     this._getInit();
@@ -70,9 +72,16 @@ class PanelUpgrade extends window.Phaser.Group {
     this.txtUpgradeCoinNeeded.alignTo(this.bg, Phaser.RIGHT_TOP, 140, -5);
     this.btnUpgradeGroup.addChild(this.btnUpgrade);
     this.btnUpgradeGroup.addChild(this.txtUpgradeCoinNeeded);
+
     this.btnUpgradeGroup.onChildInputDown.add(() => {
+      // 点击升级：保存当前multiplier的值，更新game.share.coin的值，改变heading和外部btn的等级数
       this.game.share[this.levelType].level += this.game.share[this.levelType].multiplier;
       this.game.share.coin -= Number(this.txtUpgradeCoinNeeded.text);
+      try {
+        this.cb();
+      } catch(err) {
+        console.log('this.coupledBtn shoule be an object: ', err);
+      }
     });
 
     // 66 89
@@ -108,7 +117,9 @@ class PanelUpgrade extends window.Phaser.Group {
               this[entry.key].alpha = 0;
             }
           );
-          this._updateBtnUpgradePanel(this.game.share[this.levelType].multiplier);
+          this._updateCoinNeeded4Upgrade(this.game.share[this.levelType].multiplier);
+          this.cb4btns();
+
         });
         this[item.txt].events.onInputDown.add(() => {
           let curr = item.key;
@@ -120,13 +131,14 @@ class PanelUpgrade extends window.Phaser.Group {
               this[entry.key].alpha = 0;
             }
           );
-          this._updateBtnUpgradePanel(this.game.share[this.levelType].multiplier);
+          this._updateCoinNeeded4Upgrade(this.game.share[this.levelType].multiplier);
+          this.cb4btns();
         });
       }
     );
   }
 
-  _updateBtnUpgradePanel = (multiplier) => {
+  _updateCoinNeeded4Upgrade = (multiplier) => {
     let map = {
       '1': 1,
       '10': 9.5,

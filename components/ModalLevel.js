@@ -63,7 +63,7 @@ updatePanel有bug
 
 // 这里默认都给children boost priority到1001，所以scroll的input是听不到的。这里不需要滑动，所以没关系。
 class ModalLevel extends ModalRaw {
-  constructor({game, scrollable, opts, worker = false, type = 'market', propsCoin}) {
+  constructor({game, scrollable, opts, worker = false, type = 'market', coupledBtn = null}) {
     // parems
     // super(game, headingTxt, undefined, undefined, scrollable);
     super(game, undefined, undefined, scrollable);
@@ -71,7 +71,7 @@ class ModalLevel extends ModalRaw {
     this.headingPart = type === 'market' ? '级市场' : type === 'warehouse' ? '级仓库' : '工人';
     this.worker = worker;
     this.type = type;
-    this.propsCoin = propsCoin || 0;
+    this.coupledBtn = coupledBtn;
 
 
     this._getInit();
@@ -259,7 +259,9 @@ class ModalLevel extends ModalRaw {
       game: this.game,
       parent: this.contentGroup,
       veilHeight: this.h - this.headingH,
-      levelType: this.type
+      levelType: this.type,
+      cb: this._handleUpgradation,
+      cb4btns: this._handleLevelBtnsChoosing,
     });
 
     this.contentGroup.addChild(this.avatarBg);
@@ -267,24 +269,34 @@ class ModalLevel extends ModalRaw {
     this.contentGroup.addChild(this.mainGroup);
   }
 
+  // 点击level升级之后所有要处理的更新
+  _handleUpgradation = () => {
+    let currLevel = this.game.share[this.type].level;
+    this.coupledBtn.setLevel(currLevel.toString());
+    this.heading.setText(currLevel + this.headingPart, true);
+    this._handleLevelBtnsChoosing();
+  }
+
+  // 点击 x1 x10 ... btns时候, 需要一起更新的东西【需要的coin数值不归在这里更新】
+  _handleLevelBtnsChoosing = () => {
+    if (this.type === 'market' || this.type === 'warehouse') {
+      this.item1.getDesUpdated();
+      this.item2.getDesUpdated();
+      this.item3.getDesUpdated();
+      this.item4.getDesUpdated();
+      this.item5.getDesUpdated();
+    }
+  }
+
   getUpdated = () => {
     try {
       this.upgradePanel.updateLevelUpgradeBtnUI();
-      this.heading.setText(this.game.share[this.type].level + this.headingPart, true);
-      if (this.type === 'market' || this.type === 'warehouse') {
-        this.item1.getDesUpdated();
-        this.item2.getDesUpdated();
-        this.item3.getDesUpdated();
-        this.item4.getDesUpdated();
-        this.item5.getDesUpdated();
-      }
       return true;
     } catch(ex) {
       console.log('game state update() err');
       console.log(ex);
       return false;
     }
-
   }
 }
 

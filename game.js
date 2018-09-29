@@ -23,7 +23,7 @@ game.share = {
   coin: 0,
   cash: 0,
   market: {
-    level: 0,
+    level: 1,
     multiplier: 1,
     maxTransported: 0,
     transportCount: 1,
@@ -32,7 +32,7 @@ game.share = {
     walkSpeed: 1
   },
   warehouse: {
-    level: 0,
+    level: 1,
     multiplier: 1,
     maxTransported: 0,
     transportCount: 1,

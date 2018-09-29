@@ -68,20 +68,6 @@ class Game extends window.Phaser.State {
     this.bellYellow = new BellYellow(this.game, 550, 116);
     this.bellYellow.unlock();
 
-    this.modalWarehose = new ModalLevel({
-      game: this.game,
-      type: 'warehouse',
-    });
-
-    this.modalMarket = new ModalLevel({
-      game: this.game,
-    });
-
-    this.modalRescources = new ModalRescources({
-      game: this.game,
-      headingTxt: '进口生产原料',
-    });
-
     this.upBtnWarehouse = new BtnUpgrade(this.game, 0, 0);
     this.upBtnWarehouse.alignIn(this.wall, window.Phaser.LEFT_CENTER, -60, -10);
     this.upBtnWarehouse.onClick(() => {
@@ -96,6 +82,22 @@ class Game extends window.Phaser.State {
     this.upBtnMarket.onClick(() => {
       console.log('市场升级按钮');
       this.modalMarket.visible = true;
+    });
+
+    this.modalWarehose = new ModalLevel({
+      game: this.game,
+      type: 'warehouse',
+      coupledBtn: this.upBtnWarehouse
+    });
+
+    this.modalMarket = new ModalLevel({
+      game: this.game,
+      coupledBtn: this.upBtnMarket
+    });
+
+    this.modalRescources = new ModalRescources({
+      game: this.game,
+      headingTxt: '进口生产原料'
     });
 
     const WORKSTATION_START_Y = 915;
@@ -188,8 +190,6 @@ class Game extends window.Phaser.State {
     if (this.result) {
       this.result = this.modalWarehose.getUpdated();
       this.result = this.modalMarket.getUpdated();
-      this.upBtnMarket.setLevel(this.game.share.market.level);
-      this.upBtnWarehouse.setLevel(this.game.share.warehouse.level);
     }
   }
 
