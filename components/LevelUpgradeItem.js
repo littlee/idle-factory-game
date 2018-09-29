@@ -14,9 +14,10 @@ function getFontStyle (fSize, color, align, weight) {
     fontWeight: weight || 'bold',
     fontSize: fSize,
     fill: color || '#3A0A00', // '#00FF00',
-    boundsAlignH: 'center',
+    boundsAlignH: 'right',
     boundsAlignV: 'middle',
-    align: align || 'left'
+    align: align || 'left',
+    backgroundColor: '#CCCCCC'
   };
 }
 
@@ -57,12 +58,14 @@ class LevelUpgradeItem extends window.Phaser.Group {
     this.block.endFill();
     this.block.alignTo(this.bg, Phaser.TOP_RIGHT, -10, -85);
 
-    // 要变化的
-    this.txtCurr = this.game.make.text(0, 0, '0.00', getFontStyle('24px', 'white', 'center', 'normal'));
-    this.txtCurr.alignTo(this.block, Phaser.TOP_RIGHT, -5, -45);
+    // 要变化的 setTextBounds( [x] [, y] [, width] [, height])
+    this.txtCurr = this.game.make.text(0, 0, this.game.share[this.levelType][this.itemName].toString(), getFontStyle('24px', 'white', 'center', 'normal'));
+    this.txtCurr.setTextBounds(0, 0, this.block.width - 10, 28);
+    this.txtCurr.alignTo(this.block, Phaser.TOP_LEFT, -5, -45);
 
-    this.txtFuture = this.game.make.text(0, 0, '00.0', getFontStyle('24px', '#38ec43', 'center', 'normal'));
-    this.txtFuture.alignTo(this.block, Phaser.TOP_RIGHT, -5, -80);
+    this.txtFuture = this.game.make.text(0, 0, this.game.share[this.levelType][this.itemName].toString(), getFontStyle('24px', '#38ec43', 'center', 'normal'));
+    this.txtFuture.setTextBounds(0, 0, this.block.width - 10, 28);
+    this.txtFuture.alignTo(this.block, Phaser.TOP_LEFT, -5, -80);
 
     this.addChild(this.bg);
     this.addChild(this.icon);

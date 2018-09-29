@@ -25,20 +25,20 @@ game.share = {
   market: {
     level: 1,
     multiplier: 1,
-    maxTransported: 0,
-    transportCount: 1,
-    transCapacity: 1,
-    loadingSpeed: 1,
-    walkSpeed: 1
+    maxTransported: 0.1,
+    transportCount: 1.1,
+    transCapacity: 1.1,
+    loadingSpeed: 1.1,
+    walkSpeed: 1.1
   },
   warehouse: {
     level: 1,
     multiplier: 1,
-    maxTransported: 0,
-    transportCount: 1,
-    transCapacity: 1,
-    loadingSpeed: 1,
-    walkSpeed: 1
+    maxTransported: 0.10,
+    transportCount: 1.10,
+    transCapacity: 1.10,
+    loadingSpeed: 1.10,
+    walkSpeed: 1.10
   }
 };
 

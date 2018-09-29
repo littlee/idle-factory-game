@@ -63,13 +63,12 @@ updatePanel有bug
 
 // 这里默认都给children boost priority到1001，所以scroll的input是听不到的。这里不需要滑动，所以没关系。
 class ModalLevel extends ModalRaw {
-  constructor({game, scrollable, opts, worker = false, type = 'market', coupledBtn = null}) {
+  constructor({game, scrollable, opts, type = 'market', coupledBtn = null}) {
     // parems
     // super(game, headingTxt, undefined, undefined, scrollable);
     super(game, undefined, undefined, scrollable);
     this.opts = type === 'market' ? config.OPTS_M : config.OPTS_W;
     this.headingPart = type === 'market' ? '级市场' : type === 'warehouse' ? '级仓库' : '工人';
-    this.worker = worker;
     this.type = type;
     this.coupledBtn = coupledBtn;
 
@@ -160,7 +159,7 @@ class ModalLevel extends ModalRaw {
     this.avatarGroup.addChild(this.avatarArrow);
 
     this.mainGroup = this.game.add.group();
-    if (!this.worker) {
+    if (this.type === 'market' || this.type === 'warehouse') {
       // gap 17
       this.item1 = new LevelUpgradeItem({
         game: this.game,
