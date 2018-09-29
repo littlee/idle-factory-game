@@ -14,7 +14,7 @@ class BtnCash extends window.Phaser.Group {
     this.img = this.gameRef.make.image(0, 0, 'btn_cash');
     this.add(this.img);
 
-    this.text = this.gameRef.make.text(55, 45, '123', TEXT_STYLE);
+    this.text = this.gameRef.make.text(55, 45, '666', TEXT_STYLE);
     this.add(this.text);
 
     this.setAllChildren('inputEnabled', true);

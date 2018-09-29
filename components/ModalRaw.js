@@ -123,6 +123,7 @@ class ModalRaw extends window.Phaser.Group {
     if (this.boost) {
       this.setAllChildren('inputEnabled', true);
       this.setAllChildren('input.priorityID', this.priorityID + 1);
+      // console.log('all boost');
     }
   }
 

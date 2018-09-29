@@ -8,6 +8,27 @@ const LEVEL = {
   desHeight: 85
 };
 
+const config = {
+  FRAME_RGB: 0xE1D6CC,
+  FRAME_LINE_WIDTH: 1,
+  FRAME_LINE_COLOR: 0x000000,
+  FRAME_LINE_ALPHA: 0.7,
+  OPTS_W: {
+    avatarImg: 'avatar_tran_warehose',
+    avatarHeading: '下一次大升级',
+    avatarDes: '将在等级333时获得额外的运输工人',
+    item1Icon: 'icon_max_resource',
+    item1Des: '已运输最大资源'
+  },
+  OPTS_M: {
+    avatarImg: 'avatar_tran_market',
+    avatarHeading: '下一次大升级',
+    avatarDes: '将在等级666时获得额外的运输工人',
+    item1Icon: 'icon_money_transported',
+    item1Des: '已运输最高现金'
+  }
+};
+
 function getFontStyle (fSize, color, align, weight) {
   return {
     fontWeight: weight || 'bold',
@@ -29,21 +50,37 @@ opts = {
 }
 */
 
+/*
+key:
+heading是变动的，具体等级数字需要显示在外部等级btn上。
+【思路一：点击时候，吧btn上面的等级传入，在关闭panel的时候，传出等级重写btn的text】
+【思路二：btn上的text和heading的等级text用同一个state下的属性，然后在state的update函数中，一直去重设这两个text】
+组件要进行再一次的封装，减少实例化时候的传入值。
+updatePanel有bug
+同时需要点击updatePanel btn的时候，items需要作出相应的变化。
+确定升级按钮需要有grey out的状态，实例需要实时拿到当前的总金额【如何实现？】
+*/
+
 // 这里默认都给children boost priority到1001，所以scroll的input是听不到的。这里不需要滑动，所以没关系。
 class ModalLevel extends ModalRaw {
-  constructor({game, headingTxt, scrollable, opts, worker = false}) {
+  constructor({game, scrollable, opts, worker = false, type = 'market', propsCoin}) {
     // parems
-    super(game, headingTxt, undefined, undefined, scrollable);
-    this.opts = opts;
+    // super(game, headingTxt, undefined, undefined, scrollable);
+    super(game, undefined, undefined, scrollable);
+    this.opts = type === 'market' ? config.OPTS_M : config.OPTS_W;
+    this.headingPart = type === 'market' ? '级市场' : type === 'warehouse' ? '级仓库' : '工人';
     this.worker = worker;
-    this.currDollar = '59aa';
+    this.type = type;
+    this.propsCoin = propsCoin || 0;
+
+
     this._getInit();
   }
 
   _getInit = () => {
     this._positionModal();
     this._createOuterVeil();
-    this._DrawSubGroupStuff();
+    this.DrawSubGroupStuff();
 
     this._setMask4ContentGroup();
     /* real content goes here */
@@ -55,6 +92,28 @@ class ModalLevel extends ModalRaw {
     this._boostInputPriority4Children();
     // prep for scrolling, should be called after contentGroup is all set
     this._getScrollWhenNeeded();
+  }
+
+  DrawSubGroupStuff = () => {
+    /* frame, heading, btn_close*/
+    // frame
+    this.frame = this.game.make.graphics(0, 0); // graphics( [x] [, y] )
+    this.frame.beginFill(config.FRAME_RGB);
+    this.frame.drawRect(0, 0, this.w, this.h);
+    this.frame.endFill();
+    this.frame.lineStyle(config.FRAME_LINE_WIDTH, config.FRAME_LINE_COLOR, config.FRAME_LINE_ALPHA);
+    this.frame.moveTo(0, 0);
+    this.frame.lineTo(this.w, 0);
+    this.frame.lineTo(this.w, this.h);
+    this.frame.lineTo(0, this.h);
+    this.frame.lineTo(0, 0);
+
+    // btn_close ...should be a sprite rather than img
+    this.btnClose = this.game.make.button(this.w - 1, 0 + 1, 'btn_close', this._handleClose);
+    this.btnClose.anchor.set(1, 0);
+
+    this.heading = this.game.make.text(0, 0, this.game.share[this.type].level + this.headingPart, this.headingStyles);
+    this.heading.setTextBounds(0, 0, this.w - this.btnClose.width, this.headingH);
   }
 
   getContextGroupInit = () => {
@@ -103,117 +162,130 @@ class ModalLevel extends ModalRaw {
     this.mainGroup = this.game.add.group();
     if (!this.worker) {
       // gap 17
-      let item1 = new LevelUpgradeItem({
+      this.item1 = new LevelUpgradeItem({
         game: this.game,
         parent: this.mainGroup,
         key: this.opts.item1Icon,
         txt: this.opts.item1Des,
         x: (this.w - LEVEL.aWidth) / 2,
         y: 290,
-        currTxt: '58aa/分',
-        futureTxt: '+55aa/分'
+        levelType: this.type,
+        itemName: 'maxTransported'
       });
-      let item2 = new LevelUpgradeItem({
+      this.item2 = new LevelUpgradeItem({
         game: this.game,
         parent: this.mainGroup,
         key: 'icon_transporter',
         txt: '运输工',
         x: (this.w - LEVEL.aWidth) / 2,
         y: 290 + 85 + 17,
-        currTxt: '9',
-        futureTxt: '+0'
+        levelType: this.type,
+        itemName: 'transportCount'
       });
 
-      let item3 = new LevelUpgradeItem({
+      this.item3 = new LevelUpgradeItem({
         game: this.game,
         parent: this.mainGroup,
         key: 'icon_transporter_capacity',
         txt: '运输工能力',
         x: (this.w - LEVEL.aWidth) / 2,
         y: 290 + 85 * 2 + 17 * 2,
-        currTxt: '58aa',
-        futureTxt: '+55ac'
+        levelType: this.type,
+        itemName: 'transCapacity'
       });
 
-      let item4 = new LevelUpgradeItem({
+      this.item4 = new LevelUpgradeItem({
         game: this.game,
         parent: this.mainGroup,
         key: 'icon_loading_speed',
         txt: '运输工载运能力',
         x: (this.w - LEVEL.aWidth) / 2,
         y: 290 + 85 * 3 + 17 * 3,
-        currTxt: '18.4aa/秒',
-        futureTxt: '+55aa/秒'
+        levelType: this.type,
+        itemName: 'loadingSpeed'
       });
 
-      let item5 = new LevelUpgradeItem({
+      this.item5 = new LevelUpgradeItem({
         game: this.game,
         parent: this.mainGroup,
         key: 'icon_walk_speed',
         txt: '运输工行走速度',
         x: (this.w - LEVEL.aWidth) / 2,
         y: 290 + 85 * 4 + 17 * 4,
-        currTxt: '0.10米/分',
-        futureTxt: '+0.01米/分'
+        levelType: this.type,
+        itemName: 'walkSpeed'
       });
     } else {
-      this.needTxt = this.game.make.text((this.w - LEVEL.aWidth) / 2, 290, '需要', getFontStyle('30px'));
-      let need1 = new LevelUpgradeItem({
-        game: this.game,
-        parent: this.mainGroup,
-        key: 'icon_ore',
-        txt: '铁矿',
-        x: (this.w - LEVEL.aWidth) / 2,
-        y: 330,
-        currTxt: '58aa/分',
-        futureTxt: '+55aa/分'
-      });
+      // this.needTxt = this.game.make.text((this.w - LEVEL.aWidth) / 2, 290, '需要', getFontStyle('30px'));
+      // let need1 = new LevelUpgradeItem({
+      //   game: this.game,
+      //   parent: this.mainGroup,
+      //   key: 'icon_ore',
+      //   txt: '铁矿',
+      //   x: (this.w - LEVEL.aWidth) / 2,
+      //   y: 330,
+      //   currTxt: '58aa',
+      //   futureTxt: '+55aa'
+      // });
 
-      this.prodTxt = this.game.make.text((this.w - LEVEL.aWidth) / 2, 330 + 85 + 27, '生产', getFontStyle('30px'));
-      let prod = new LevelUpgradeItem({
-        game: this.game,
-        parent: this.mainGroup,
-        key: 'icon_ore',
-        txt: '铁矿',
-        x: (this.w - LEVEL.aWidth) / 2,
-        y: 330 + 27 + 40 + 85,
-        currTxt: '58aa/分',
-        futureTxt: '+55aa/分'
-      });
-      let iconPower = new LevelUpgradeItem({
-        game: this.game,
-        parent: this.mainGroup,
-        key: 'icon_power',
-        txt: '生产力',
-        x: (this.w - LEVEL.aWidth) / 2,
-        y: 330 + 27 + 40 + 85 * 2 + 20,
-        currTxt: '58aa/分',
-        futureTxt: '+55aa/分'
-      });
+      // this.prodTxt = this.game.make.text((this.w - LEVEL.aWidth) / 2, 330 + 85 + 27, '生产', getFontStyle('30px'));
+      // let prod = new LevelUpgradeItem({
+      //   game: this.game,
+      //   parent: this.mainGroup,
+      //   key: 'icon_ore',
+      //   txt: '铁矿',
+      //   x: (this.w - LEVEL.aWidth) / 2,
+      //   y: 330 + 27 + 40 + 85,
+      //   currTxt: '58aa/分',
+      //   futureTxt: '+55aa/分'
+      // });
+      // let iconPower = new LevelUpgradeItem({
+      //   game: this.game,
+      //   parent: this.mainGroup,
+      //   key: 'icon_power',
+      //   txt: '生产力',
+      //   x: (this.w - LEVEL.aWidth) / 2,
+      //   y: 330 + 27 + 40 + 85 * 2 + 20,
+      //   currTxt: '58aa/分',
+      //   futureTxt: '+55aa/分'
+      // });
 
 
-      this.mainGroup.addChild(this.needTxt);
-      this.mainGroup.addChild(this.prodTxt);
+      // this.mainGroup.addChild(this.needTxt);
+      // this.mainGroup.addChild(this.prodTxt);
     }
 
-    let upgradeBtns = new PanelUpgrade({
+    this.upgradePanel = new PanelUpgrade({
       game: this.game,
       parent: this.contentGroup,
-      veilHeight: this.h - this.headingH
+      veilHeight: this.h - this.headingH,
+      levelType: this.type
     });
-
-    this.btnUpgrade = this.game.make.image(0, 0, 'btn_level_upgrade');
-    this.btnUpgrade.alignTo(upgradeBtns, Phaser.RIGHT_BOTTOM, 75);
-    this.txtCurrDollar = this.game.make.text(0, 0, this.currDollar, getFontStyle('24px', 'white', 'center', 'normal'));
-    this.txtCurrDollar.alignTo(upgradeBtns, Phaser.RIGHT_TOP, 140, -7);
 
     this.contentGroup.addChild(this.avatarBg);
     this.contentGroup.addChild(this.avatarGroup);
     this.contentGroup.addChild(this.mainGroup);
-    this.contentGroup.addChild(this.btnUpgrade);
-    this.contentGroup.addChild(this.txtCurrDollar);
   }
 
+  getUpdated = () => {
+    try {
+      this.upgradePanel.updateLevelUpgradeBtnUI();
+      this.heading.setText(this.game.share[this.type].level + this.headingPart, true);
+      if (this.type === 'market' || this.type === 'warehouse') {
+        this.item1.getDesUpdated();
+        this.item2.getDesUpdated();
+        this.item3.getDesUpdated();
+        this.item4.getDesUpdated();
+        this.item5.getDesUpdated();
+      }
+      return true;
+    } catch(ex) {
+      console.log('game state update() err');
+      console.log(ex);
+      return false;
+    }
+
+  }
 }
 
 export default ModalLevel;

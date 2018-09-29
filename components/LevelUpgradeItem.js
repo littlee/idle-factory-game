@@ -6,7 +6,7 @@ const CONFIG = {
   bgColor: 0x000000,
   bgAlpha: 0.1,
   subColor: 0x3A0A00,
-  subAlpha: 0.8
+  subAlpha: 0.8,
 };
 
 function getFontStyle (fSize, color, align, weight) {
@@ -22,14 +22,16 @@ function getFontStyle (fSize, color, align, weight) {
 
 class LevelUpgradeItem extends window.Phaser.Group {
 
-  constructor({game, parent, key, txt, x, y, currTxt, futureTxt}) {
+  constructor({game, parent, key, txt, x, y, levelType, itemName}) {
     super(game, parent);
     this.key = key;
     this.txt = txt;
     this.posX = x;
     this.posY = y;
-    this.plainTxtCurr = currTxt;
-    this.plainTxtFuture = futureTxt;
+    // this.plainTxtCurr = currTxt;
+    // this.plainTxtFuture = futureTxt;
+    this.levelType = levelType;
+    this.itemName = itemName;
 
     this._getInit();
   }
@@ -55,10 +57,11 @@ class LevelUpgradeItem extends window.Phaser.Group {
     this.block.endFill();
     this.block.alignTo(this.bg, Phaser.TOP_RIGHT, -10, -85);
 
-    this.txtCurr = this.game.make.text(0, 0, this.plainTxtCurr, getFontStyle('24px', 'white', 'center', 'normal'));
+    // 要变化的
+    this.txtCurr = this.game.make.text(0, 0, '0.00', getFontStyle('24px', 'white', 'center', 'normal'));
     this.txtCurr.alignTo(this.block, Phaser.TOP_RIGHT, -5, -45);
 
-    this.txtFuture = this.game.make.text(0, 0, this.plainTxtFuture, getFontStyle('24px', '#38ec43', 'center', 'normal'));
+    this.txtFuture = this.game.make.text(0, 0, '00.0', getFontStyle('24px', '#38ec43', 'center', 'normal'));
     this.txtFuture.alignTo(this.block, Phaser.TOP_RIGHT, -5, -80);
 
     this.addChild(this.bg);
@@ -67,6 +70,27 @@ class LevelUpgradeItem extends window.Phaser.Group {
     this.addChild(this.block);
     this.addChild(this.txtCurr);
     this.addChild(this.txtFuture);
+  }
+
+  getDesUpdated = () => {
+    let map = {
+      '1': 0.01,
+      '10': 0.1,
+      '50': 0.5,
+    };
+    let itemValue = this.game.share[this.levelType][this.itemName];
+    let multiplier = this.game.share[this.levelType].multiplier;
+    if (Object.is(multiplier, NaN)) {
+      console.log('max 选中...');
+    } else {
+      let resolvedItemValue = itemValue * (map[multiplier.toString()] + 1);
+      if (this.txtCurr.text !== itemValue) {
+        this.txtCurr.setText(itemValue);
+      }
+      if (this.txtFuture.text !== resolvedItemValue) {
+        this.txtFuture.setText(resolvedItemValue);
+      }
+    }
   }
 }
 

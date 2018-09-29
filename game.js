@@ -18,6 +18,30 @@ var game = new Phaser.Game({
   canvas: canvas
 });
 
+// realtime-update-related data
+game.share = {
+  coin: 0,
+  cash: 0,
+  market: {
+    level: 0,
+    multiplier: 1,
+    maxTransported: 0,
+    transportCount: 1,
+    transCapacity: 1,
+    loadingSpeed: 1,
+    walkSpeed: 1
+  },
+  warehouse: {
+    level: 0,
+    multiplier: 1,
+    maxTransported: 0,
+    transportCount: 1,
+    transCapacity: 1,
+    loadingSpeed: 1,
+    walkSpeed: 1
+  }
+};
+
 window.game = game;
 
 game.state.add('Start', StartState, false);

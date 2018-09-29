@@ -31,8 +31,12 @@ import range from '../js/libs/_/range';
 const PRIORITY_ID = 999;
 
 class Game extends window.Phaser.State {
+  // test state data management
+
   // create(): execution order inside MATTERS!!
   create() {
+    this.result = true;
+
     this.physics.startSystem(window.Phaser.Physics.ARCADE);
     // bg of warehouse of raw material
     this.bgGroup = this.game.add.group();
@@ -66,26 +70,11 @@ class Game extends window.Phaser.State {
 
     this.modalWarehose = new ModalLevel({
       game: this.game,
-      headingTxt: '233级仓库',
-      opts: {
-        avatarImg: 'avatar_tran_warehose',
-        avatarHeading: '下一次大升级',
-        avatarDes: '将在等级333时获得额外的运输工人',
-        item1Icon: 'icon_max_resource',
-        item1Des: '已运输最大资源'
-      }
+      type: 'warehouse',
     });
 
     this.modalMarket = new ModalLevel({
       game: this.game,
-      headingTxt: '555级市场',
-      opts: {
-        avatarImg: 'avatar_tran_market',
-        avatarHeading: '下一次大升级',
-        avatarDes: '将在等级666时获得额外的运输工人',
-        item1Icon: 'icon_money_transported',
-        item1Des: '已运输最高现金'
-      }
     });
 
     this.modalRescources = new ModalRescources({
@@ -97,6 +86,8 @@ class Game extends window.Phaser.State {
     this.upBtnWarehouse.alignIn(this.wall, window.Phaser.LEFT_CENTER, -60, -10);
     this.upBtnWarehouse.onClick(() => {
       console.log('仓库升级按钮');
+      this.game.share.coin += 100; // dev
+      console.log('new coin: ', this.game.share.coin);
       this.modalWarehose.visible = true;
     });
 
@@ -194,6 +185,12 @@ class Game extends window.Phaser.State {
     //     await worker.backToWarehouse(this.warehouse);
     //   }
     // });
+    if (this.result) {
+      this.result = this.modalWarehose.getUpdated();
+      this.result = this.modalMarket.getUpdated();
+      this.upBtnMarket.setLevel(this.game.share.market.level);
+      this.upBtnWarehouse.setLevel(this.game.share.warehouse.level);
+    }
   }
 
   _createMenus = () => {
