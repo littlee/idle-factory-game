@@ -1,6 +1,6 @@
 const INPUT_NUM_STYLE = {
   font: 'Arail',
-  fontSize: 24,
+  fontSize: 28,
   fill: '#fff',
   stroke: '#000',
   strokeThickness: 5
@@ -12,23 +12,30 @@ class ResourecePile extends window.Phaser.Group {
 
     this.pileWidth = 0;
 
-    this.createMultiple(5, key, null, true, (item, index) => {
+    this.pile = this.game.add.group();
+    this.pile.createMultiple(5, key, null, true, (item, index) => {
       if (index === 0) {
         this.pileWidth = item.width;
       }
       return (item.y = index * 5);
     });
-    this.sort('z', window.Phaser.Group.SORT_DESCENDING);
+    this.pile.sort('z', window.Phaser.Group.SORT_DESCENDING);
+    this.add(this.pile);
 
     if (hasNumber) {
       this.number = this.game.make.text(0, -10, '0', INPUT_NUM_STYLE);
       this.centerNumText();
       this.add(this.number);
     }
+
+    // this.changeTexture('reso_copper');
+
   }
 
   centerNumText() {
-    this.number.x = (this.pileWidth - this.number.width)/ 2;
+    if (this.number) {
+      this.number.x = (this.pileWidth - this.number.width) / 2;
+    }
   }
 
   setNum(text) {
@@ -37,12 +44,13 @@ class ResourecePile extends window.Phaser.Group {
   }
 
   changeTexture(key) {
-    this.forEach((item, index) => {
+    this.pile.forEach((item) => {
       item.loadTexture(key);
-      if (index === 0) {
+      if (this.pile.getChildIndex(item) === 0) {
         this.pileWidth = item.width;
       }
     });
+    this.centerNumText();
   }
 }
 
