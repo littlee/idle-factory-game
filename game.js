@@ -22,24 +22,24 @@ var game = new Phaser.Game({
 game.share = {
   coin: 0,
   cash: 0,
-  market: {
-    level: 1,
-    multiplier: 1,
-    maxTransported: 0.1,
-    transportCount: 1.1,
-    transCapacity: 1.1,
-    loadingSpeed: 1.1,
-    walkSpeed: 1.1
-  },
-  warehouse: {
-    level: 1,
-    multiplier: 1,
-    maxTransported: 0.10,
-    transportCount: 1.10,
-    transCapacity: 1.10,
-    loadingSpeed: 1.10,
-    walkSpeed: 1.10
-  }
+  // market: {
+  //   level: 1,
+  //   multiplier: 1,
+  //   maxTransported: 0.1111,
+  //   transportCount: 1.111,
+  //   transCapacity: 1.111,
+  //   loadingSpeed: 1.111,
+  //   walkSpeed: 1.1111
+  // },
+  // warehouse: {
+  //   level: 1,
+  //   multiplier: 1,
+  //   maxTransported: 0.10,
+  //   transportCount: 1.10,
+  //   transCapacity: 1.10,
+  //   loadingSpeed: 1.10,
+  //   walkSpeed: 1.10
+  // }
 };
 
 window.game = game;

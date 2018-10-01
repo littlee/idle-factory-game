@@ -2,7 +2,7 @@ import { formatBigNum } from '../utils';
 import Big from '../js/libs/big.min';
 import range from '../js/libs/_/range';
 
-// import ModalLevel from './ModalLevel';
+import ModalLevel from './ModalLevel';
 import Worker from './Worker';
 import BtnUpgrade from './BtnUpgrade';
 import ResourceEmitter from './ResourceEmitter';
@@ -229,6 +229,14 @@ class Workstation extends window.Phaser.Group {
     this.upBtn.alignIn(this.table, window.Phaser.BOTTOM_CENTER, 0, 30);
     this.upBtn.onClick(() => {
       console.log('点击工作台升级按钮');
+      this.workestationLevelModal.visible = true;
+    });
+
+    // modal
+    this.workestationLevelModal = new ModalLevel({
+      game: this.game,
+      type: 'workstation',
+      coupledBtn: this.upBtn
     });
 
     // for simple z-depth

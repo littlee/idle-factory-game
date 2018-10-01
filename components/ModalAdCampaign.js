@@ -36,7 +36,7 @@ class ModalAdCampagin extends ModalRaw {
   _getInit = () => {
     this._positionModal();
     this._createOuterVeil();
-    this._DrawSubGroupStuff();
+    this._drawSubGroupStuff();
 
     this._setMask4ContentGroup();
     /* real content goes here */
