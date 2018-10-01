@@ -128,23 +128,23 @@ class Workstation extends window.Phaser.Group {
     this.productBtn.input.priorityID = PRIORITY_ID;
     this.productBtn.events.onInputDown.add(() => {
       console.log('点击工作台产品按钮');
-      this.setOutput('drill');
     });
     this.productBtnItem = this.game.make.sprite(0, 0, SOURCE_IMG_MAP[this._data.output]);
     this.productBtnItem.alignIn(this.productBtn, window.Phaser.CENTER, 0, -5);
 
-    // FIX ME 需要考虑一个变成两个的情况
     this.inputItemGroup = this.game.make.group();
     range(2).forEach(index => {
       let { input } = this._data;
+      let inputTexture = SOURCE_IMG_MAP[input[index]];
       let inputItem = new ResourecePile(
         this.game,
-        'reso_ore',
+        inputTexture,
         true
       );
       inputItem.x = this.table.x + 20 + index * 40;
       inputItem.y = index * 10;
       inputItem.setNum(formatBigNum(Big(this._data.inputAmount[index])));
+      inputItem.visible = Boolean(inputTexture);
       this.inputItemGroup.add(inputItem);
     });
     // this._data.input.forEach((inputKey, index) => {
@@ -267,6 +267,8 @@ class Workstation extends window.Phaser.Group {
   // public methods
   setCollectType(collectType) {
     this._data.collectType = collectType;
+    let { outputAmount } = this._data;
+    this.boxCollect.setNum(formatBigNum(Big(outputAmount[collectType])));
     if (collectType === COLLECT_TYPES.CASH) {
       this.boxCollect.alignIn(this.boxHolderCash, window.Phaser.CENTER, 0, -5);
       this.boxHolderCash.frame = 1;
@@ -304,7 +306,13 @@ class Workstation extends window.Phaser.Group {
     let inputTexture = this._data.input.map(item => SOURCE_IMG_MAP[item]);
     this.inputItemGroup.forEach((item) => {
       let index = this.inputItemGroup.getChildIndex(item);
-      item.changeTexture(inputTexture[index]);
+      if (inputTexture[index]) {
+        item.changeTexture(inputTexture[index]);
+        item.visible = true;
+      }
+      else {
+        item.visible = false;
+      }
     });
     this.inputItemsAni.changeTexture(inputTexture);
     
