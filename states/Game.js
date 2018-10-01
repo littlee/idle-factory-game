@@ -237,6 +237,7 @@ class Game extends window.Phaser.State {
     this.warehouse = new Warehouse(this.game, 100, 450);
     this.warehouse.onClick(() => {
       this.modalRescources.visible = true;
+      // console.log('this.modalRescources信息：available', this.modalRescources.getAvailableResources());
     });
 
     // bg of selling

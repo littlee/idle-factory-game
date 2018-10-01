@@ -82,15 +82,16 @@ class ModalLevel extends ModalRaw {
           ? '级仓库'
           : '级生产线';
     this.coupledBtn = coupledBtn;
-    this.desLevel = desLevel === null ? INIT.desLevel : desLevel;
     // specific to workstation level UI, for fetching needed(input) & production(output)
     this.workstation = workstation;
-    this.workstationNeed = null;
-    this.workstationProduction = null;
+    this.workstationNeed = null; // 希望是可以从this.workstation拿到一个array
+    this.workstationProduction = null; // 同上
+    this.workstationNum = null;
 
     this._data = {
       type,
-      currLevel: currLevel === null ? INIT.currLevel : currLevel
+      currLevel: currLevel === null ? INIT.currLevel : currLevel,
+      desLevel: desLevel === null ? INIT.desLevel : desLevel
     };
 
     this._getInit();
@@ -146,7 +147,7 @@ class ModalLevel extends ModalRaw {
     this.avatarDesTxt = this.game.make.text(
       0,
       0,
-      `将在${this.desLevel}${this.opts.avatarDes}`,
+      `将在${this._data.desLevel}${this.opts.avatarDes}`,
       getFontStyle('18px', 'white')
     );
     this.avatarDesTxt.setTextBounds(0, 0, 339, 30); // 同上
@@ -250,12 +251,11 @@ class ModalLevel extends ModalRaw {
       this.need1 = new LevelUpgradeItem({
         game: this.game,
         parent: this.mainGroup,
-        key: 'icon_ore',
+        key: 'icon_ore', // 改，下同
         txt: '铁矿',
         x: (this.w - LEVEL.aWidth) / 2,
         y: 330,
-        currTxt: '58aa',
-        futureTxt: '+55aa'
+        panelUpgradeInstance: this.upgradePanel
       });
       this.need2 = new LevelUpgradeItem({
         game: this.game,
@@ -264,8 +264,7 @@ class ModalLevel extends ModalRaw {
         txt: '铁矿',
         x: (this.w - LEVEL.aWidth) / 2,
         y: 330 + 85 + 17,
-        currTxt: '58aa',
-        futureTxt: '+55aa'
+        panelUpgradeInstance: this.upgradePanel
       });
 
 
@@ -277,8 +276,7 @@ class ModalLevel extends ModalRaw {
         txt: '铁矿',
         x: (this.w - LEVEL.aWidth) / 2,
         y: 330 + 44 + 40 + 85 * 2,
-        currTxt: '58aa/分',
-        futureTxt: '+55aa/分'
+        panelUpgradeInstance: this.upgradePanel
       });
       this.iconPower = new LevelUpgradeItem({
         game: this.game,
@@ -287,8 +285,7 @@ class ModalLevel extends ModalRaw {
         txt: '生产力',
         x: (this.w - LEVEL.aWidth) / 2,
         y: 330 + 44 + 40 + 85 * 3 + 20,
-        currTxt: '58aa/分',
-        futureTxt: '+55aa/分'
+        panelUpgradeInstance: this.upgradePanel
       });
       this.mainGroup.addChild(this.needTxt);
       this.mainGroup.addChild(this.prodTxt);
@@ -315,6 +312,11 @@ class ModalLevel extends ModalRaw {
       this.item3.getDesUpdated(upgraded);
       this.item4.getDesUpdated(upgraded);
       this.item5.getDesUpdated(upgraded);
+    } else if (this._data.type === 'workstation') {
+      this.need1.getDesUpdated(upgraded);
+      this.need2.getDesUpdated(upgraded);
+      this.prod.getDesUpdated(upgraded);
+      this.iconPower.getDesUpdated(upgraded);
     }
   }
 
@@ -339,6 +341,30 @@ class ModalLevel extends ModalRaw {
 
   getData = () => {
     return this._data;
+  }
+
+  // untested
+  getInfo2Stored = () => {
+    // 如果是warehouse || market, 要存的是，当前的1）级数，2）箭头那里的级数，3）5个item中各自的数额，4）x1时候要升级的coin数目
+    let info = null;
+    if (this._data.type === 'market' || this._data.type === 'warehouse') {
+      info = Object.assign({}, this._data);
+      info.item1 = this.item1.getData();
+      info.item2 = this.item2.getData();
+      info.item3 = this.item3.getData();
+      info.item4 = this.item4.getData();
+      info.item5 = this.item5.getData();
+      info.upgradePanel = this.upgradePanel.getData();
+    } else if (this._data.type === 'workstation') {
+      info = Object.assign({}, this._data);
+      info.workstationNum = null; // unassigned
+      info.need1 = this.need1.getData();
+      info.need2 = this.need2.getData();
+      info.iconPower = this.iconPower.getData();;
+      info.prod = this.prod.getData();
+      info.upgradePanel = this.upgradePanel.getData();
+    }
+    return info;
   }
 
   setCurrLevel = (level) => {

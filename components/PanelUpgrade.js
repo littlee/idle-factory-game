@@ -18,7 +18,7 @@ key:
 NOTE: 被toggle inputEnabled之后的object的priorityID会变成0.
 -2- 点击确定购买升级，coin会被扣，所以item的值都要更新，base变化，级数变化，即modal和coupledBtn的text都要变
 -3- 点击确定购买升级是灰色还是绿色，要能实时变化调整
-
+-4- max点击的逻辑【未实现】
  */
 class PanelUpgrade extends window.Phaser.Group {
   constructor({ game, parent, veilHeight, modal = null, base = null}) {
@@ -85,11 +85,11 @@ class PanelUpgrade extends window.Phaser.Group {
     this.btnUpgradeGroup.onChildInputDown.add(() => {
       // 点击升级：保存当前multiplier的值，更新game.share.coin的值，改变heading和外部btn的等级数
       this.modal.setCurrLevel(this._data.multiplier);
-      this.game.share.coin -= Number(this.txtUpgradeCoinNeeded.text);
+      this.game.share.coin -= Number(this.txtUpgradeCoinNeeded.text); // 后面要改
       try {
         this.modal.handleUpgradation(true);
       } catch(err) {
-        console.log('this.coupledBtn shoule be an object: ', err);
+        console.log('this.modal.handleUpgradation() err: ', err);
       }
     });
 
@@ -158,14 +158,13 @@ class PanelUpgrade extends window.Phaser.Group {
       // 要根据当前game的coin去计算可以升的最高级别，然后除了要改变升级要用的coin之外，能升多少级也要显示
     } else {
       this._data.coinNeeded = this._data.base * map[multiplier.toString()];
-      console.log('this._data.coinNeeded: ', this._data.coinNeeded);
+      // console.log('this._data.coinNeeded: ', this._data.coinNeeded);
       this.txtUpgradeCoinNeeded.setText(this._data.coinNeeded.toString());
     }
   }
 
   updateLevelUpgradeBtnUI = () => {
-    // 判断当前coin是不是 > UI上显示的数字，是：绿；否：灰
-    // setTexture(texture [, destroy])
+    // 判断当前coin是不是 > UI上显示的数字，是：绿；否：灰, 要让最外面coin的组件来调用
     let parsedCoin = parseFloat(this.game.share.coin);
     let parsedNeeded = parseFloat(this.txtUpgradeCoinNeeded.text);
     if (Object.is(parsedCoin, NaN) || Object.is(parsedNeeded, NaN)) {
