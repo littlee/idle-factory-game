@@ -8,28 +8,33 @@ const LEVEL = {
   desHeight: 85
 };
 
-const config = {
-  FRAME_RGB: 0xE1D6CC,
-  FRAME_LINE_WIDTH: 1,
-  FRAME_LINE_COLOR: 0x000000,
-  FRAME_LINE_ALPHA: 0.7,
-  OPTS_W: {
+const INIT = {
+  currLevel: 1,
+  desLevel: 10
+};
+
+const CONFIG = {
+  frame_rgb: 0xe1d6cc,
+  frame_line_width: 1,
+  frame_line_color: 0x000000,
+  frame_line_alpha: 0.7,
+  opts_w: {
     avatarImg: 'avatar_tran_warehose',
     avatarHeading: '下一次大升级',
-    avatarDes: '将在等级333时获得额外的运输工人',
+    avatarDes: '等级时获得额外的运输工人',
     item1Icon: 'icon_max_resource',
     item1Des: '已运输最大资源'
   },
-  OPTS_M: {
+  opts_m: {
     avatarImg: 'avatar_tran_market',
     avatarHeading: '下一次大升级',
-    avatarDes: '将在等级666时获得额外的运输工人',
+    avatarDes: '等级时获得额外的运输工人',
     item1Icon: 'icon_money_transported',
     item1Des: '已运输最高现金'
   }
 };
 
-function getFontStyle (fSize, color, align, weight) {
+function getFontStyle(fSize, color, align, weight) {
   return {
     fontWeight: weight || 'bold',
     fontSize: fSize,
@@ -39,16 +44,6 @@ function getFontStyle (fSize, color, align, weight) {
     align: align || 'left'
   };
 }
-
-/*
-opts = {
-  avatarImg: <key>,
-  avatarHeading: string,
-  avatarDes: string,
-  item1Icon: <key>,
-  item1Des: string
-}
-*/
 
 /*
 key:
@@ -63,15 +58,32 @@ updatePanel有bug
 
 // 这里默认都给children boost priority到1001，所以scroll的input是听不到的。这里不需要滑动，所以没关系。
 class ModalLevel extends ModalRaw {
-  constructor({game, scrollable, opts, type = 'market', coupledBtn = null}) {
+  constructor({
+    game,
+    scrollable,
+    opts,
+    type = 'market',
+    coupledBtn = null,
+    currLevel = null,
+    desLevel = null
+  }) {
     // parems
     // super(game, headingTxt, undefined, undefined, scrollable);
     super(game, undefined, undefined, scrollable);
-    this.opts = type === 'market' ? config.OPTS_M : config.OPTS_W;
-    this.headingPart = type === 'market' ? '级市场' : type === 'warehouse' ? '级仓库' : '工人';
-    this.type = type;
+    this.opts = type === 'market' ? CONFIG.opts_m : CONFIG.opts_w;
+    this.headingPart =
+      type === 'market'
+        ? '级市场'
+        : type === 'warehouse'
+          ? '级仓库'
+          : '级生产线';
     this.coupledBtn = coupledBtn;
+    this.desLevel = desLevel === null ? INIT.desLevel : desLevel;
 
+    this._data = {
+      type,
+      currLevel: currLevel === null ? INIT.currLevel : currLevel
+    };
 
     this._getInit();
   }
@@ -79,7 +91,8 @@ class ModalLevel extends ModalRaw {
   _getInit = () => {
     this._positionModal();
     this._createOuterVeil();
-    this.DrawSubGroupStuff();
+    this._drawSubGroupStuff();
+    this._overwriteHeadingTxt();
 
     this._setMask4ContentGroup();
     /* real content goes here */
@@ -93,50 +106,46 @@ class ModalLevel extends ModalRaw {
     this._getScrollWhenNeeded();
   }
 
-  DrawSubGroupStuff = () => {
-    /* frame, heading, btn_close*/
-    // frame
-    this.frame = this.game.make.graphics(0, 0); // graphics( [x] [, y] )
-    this.frame.beginFill(config.FRAME_RGB);
-    this.frame.drawRect(0, 0, this.w, this.h);
-    this.frame.endFill();
-    this.frame.lineStyle(config.FRAME_LINE_WIDTH, config.FRAME_LINE_COLOR, config.FRAME_LINE_ALPHA);
-    this.frame.moveTo(0, 0);
-    this.frame.lineTo(this.w, 0);
-    this.frame.lineTo(this.w, this.h);
-    this.frame.lineTo(0, this.h);
-    this.frame.lineTo(0, 0);
 
-    // btn_close ...should be a sprite rather than img
-    this.btnClose = this.game.make.button(this.w - 1, 0 + 1, 'btn_close', this._handleClose);
-    this.btnClose.anchor.set(1, 0);
-
-    this.heading = this.game.make.text(0, 0, this.game.share[this.type].level + this.headingPart, this.headingStyles);
-    this.heading.setTextBounds(0, 0, this.w - this.btnClose.width, this.headingH);
+  _overwriteHeadingTxt = () => {
+    this.heading.setText(this._data.currLevel + this.headingPart, true);
   }
 
   getContextGroupInit = () => {
     // 添加的东西 y 要 >= this.headingH
     const OFFSET = this.headingH;
-    this.avatarBg = this.game.make.graphics((this.w - LEVEL.aWidth) / 2, OFFSET); // graphics( [x] [, y] )
+    this.avatarBg = this.game.make.graphics(
+      (this.w - LEVEL.aWidth) / 2,
+      OFFSET
+    ); // graphics( [x] [, y] )
     this.avatarBg.beginFill(0x000000, 0.1);
     this.avatarBg.drawRect(0, 0, LEVEL.aWidth, LEVEL.aHeight);
     this.avatarBg.endFill();
 
     this.avatarGroup = this.game.add.group(this.avatarBg);
     this.avatar = this.game.make.image(40, 110, this.opts.avatarImg);
-    this.avatarHeading = this.game.make.text(60 + this.avatar.width, 120, this.opts.avatarHeading, getFontStyle('24px'));
+    this.avatarHeading = this.game.make.text(
+      60 + this.avatar.width,
+      120,
+      this.opts.avatarHeading,
+      getFontStyle('24px')
+    );
     this.avatarDesBg = this.game.make.graphics(0, 0);
     this.avatarDesBg.beginFill(0x000000, 0.1);
     this.avatarDesBg.drawRect(0, 0, 339, 30);
     this.avatarDesBg.endFill();
     this.avatarDesBg.alignTo(this.avatarHeading, Phaser.BOTTOM_LEFT, 0, 10);
-    this.avatarDesTxt = this.game.make.text(0, 0, this.opts.avatarDes, getFontStyle('18px', 'white'));
+    this.avatarDesTxt = this.game.make.text(
+      0,
+      0,
+      `将在${this.desLevel}${this.opts.avatarDes}`,
+      getFontStyle('18px', 'white')
+    );
     this.avatarDesTxt.setTextBounds(0, 0, 339, 30); // 同上
     this.avatarDesTxt.alignTo(this.avatarDesBg, Phaser.Phaser.TOP_LEFT, 0, -28);
 
     this.avatarBar = this.game.make.graphics(0, 0);
-    this.avatarBar.beginFill(0x3A0A00, 0.8);
+    this.avatarBar.beginFill(0x3a0a00, 0.8);
     this.avatarBar.drawRect(0, 0, 339, 30);
     this.avatarBar.endFill();
     this.avatarBar.alignTo(this.avatarHeading, Phaser.BOTTOM_LEFT, 0, 70);
@@ -159,7 +168,15 @@ class ModalLevel extends ModalRaw {
     this.avatarGroup.addChild(this.avatarArrow);
 
     this.mainGroup = this.game.add.group();
-    if (this.type === 'market' || this.type === 'warehouse') {
+
+    this.upgradePanel = new PanelUpgrade({
+      game: this.game,
+      parent: this.contentGroup,
+      veilHeight: this.h - this.headingH,
+      modal: this
+    });
+
+    if (this._data.type === 'market' || this._data.type === 'warehouse') {
       // gap 17
       this.item1 = new LevelUpgradeItem({
         game: this.game,
@@ -168,8 +185,9 @@ class ModalLevel extends ModalRaw {
         txt: this.opts.item1Des,
         x: (this.w - LEVEL.aWidth) / 2,
         y: 290,
-        levelType: this.type,
-        itemName: 'maxTransported'
+        levelType: this._data.type,
+        itemName: 'maxTransported',
+        panelUpgradeInstance: this.upgradePanel
       });
       this.item2 = new LevelUpgradeItem({
         game: this.game,
@@ -178,8 +196,9 @@ class ModalLevel extends ModalRaw {
         txt: '运输工',
         x: (this.w - LEVEL.aWidth) / 2,
         y: 290 + 85 + 17,
-        levelType: this.type,
-        itemName: 'transportCount'
+        levelType: this._data.type,
+        itemName: 'transportCount',
+        panelUpgradeInstance: this.upgradePanel
       });
 
       this.item3 = new LevelUpgradeItem({
@@ -189,8 +208,9 @@ class ModalLevel extends ModalRaw {
         txt: '运输工能力',
         x: (this.w - LEVEL.aWidth) / 2,
         y: 290 + 85 * 2 + 17 * 2,
-        levelType: this.type,
-        itemName: 'transCapacity'
+        levelType: this._data.type,
+        itemName: 'transCapacity',
+        panelUpgradeInstance: this.upgradePanel
       });
 
       this.item4 = new LevelUpgradeItem({
@@ -200,8 +220,9 @@ class ModalLevel extends ModalRaw {
         txt: '运输工载运能力',
         x: (this.w - LEVEL.aWidth) / 2,
         y: 290 + 85 * 3 + 17 * 3,
-        levelType: this.type,
-        itemName: 'loadingSpeed'
+        levelType: this._data.type,
+        itemName: 'loadingSpeed',
+        panelUpgradeInstance: this.upgradePanel
       });
 
       this.item5 = new LevelUpgradeItem({
@@ -211,8 +232,9 @@ class ModalLevel extends ModalRaw {
         txt: '运输工行走速度',
         x: (this.w - LEVEL.aWidth) / 2,
         y: 290 + 85 * 4 + 17 * 4,
-        levelType: this.type,
-        itemName: 'walkSpeed'
+        levelType: this._data.type,
+        itemName: 'walkSpeed',
+        panelUpgradeInstance: this.upgradePanel
       });
     } else {
       // this.needTxt = this.game.make.text((this.w - LEVEL.aWidth) / 2, 290, '需要', getFontStyle('30px'));
@@ -226,7 +248,6 @@ class ModalLevel extends ModalRaw {
       //   currTxt: '58aa',
       //   futureTxt: '+55aa'
       // });
-
       // this.prodTxt = this.game.make.text((this.w - LEVEL.aWidth) / 2, 330 + 85 + 27, '生产', getFontStyle('30px'));
       // let prod = new LevelUpgradeItem({
       //   game: this.game,
@@ -248,20 +269,9 @@ class ModalLevel extends ModalRaw {
       //   currTxt: '58aa/分',
       //   futureTxt: '+55aa/分'
       // });
-
-
       // this.mainGroup.addChild(this.needTxt);
       // this.mainGroup.addChild(this.prodTxt);
     }
-
-    this.upgradePanel = new PanelUpgrade({
-      game: this.game,
-      parent: this.contentGroup,
-      veilHeight: this.h - this.headingH,
-      levelType: this.type,
-      cb: this._handleUpgradation,
-      cb4btns: this._handleLevelBtnsChoosing,
-    });
 
     this.contentGroup.addChild(this.avatarBg);
     this.contentGroup.addChild(this.avatarGroup);
@@ -269,21 +279,21 @@ class ModalLevel extends ModalRaw {
   }
 
   // 点击level升级之后所有要处理的更新
-  _handleUpgradation = () => {
-    let currLevel = this.game.share[this.type].level;
-    this.coupledBtn.setLevel(currLevel.toString());
-    this.heading.setText(currLevel + this.headingPart, true);
-    this._handleLevelBtnsChoosing();
+  handleUpgradation = (upgraded = false) => {
+    this.coupledBtn.setLevel(this._data.currLevel);
+    this.heading.setText(this._data.currLevel + this.headingPart, true);
+    // this.avatarDesTxt.setText();
+    this.handleLevelBtnsChoosing(upgraded);
   }
 
   // 点击 x1 x10 ... btns时候, 需要一起更新的东西【需要的coin数值不归在这里更新】
-  _handleLevelBtnsChoosing = () => {
-    if (this.type === 'market' || this.type === 'warehouse') {
-      this.item1.getDesUpdated();
-      this.item2.getDesUpdated();
-      this.item3.getDesUpdated();
-      this.item4.getDesUpdated();
-      this.item5.getDesUpdated();
+  handleLevelBtnsChoosing = upgraded => {
+    if (this._data.type === 'market' || this._data.type === 'warehouse') {
+      this.item1.getDesUpdated(upgraded);
+      this.item2.getDesUpdated(upgraded);
+      this.item3.getDesUpdated(upgraded);
+      this.item4.getDesUpdated(upgraded);
+      this.item5.getDesUpdated(upgraded);
     }
   }
 
@@ -291,11 +301,27 @@ class ModalLevel extends ModalRaw {
     try {
       this.upgradePanel.updateLevelUpgradeBtnUI();
       return true;
-    } catch(ex) {
+    } catch (ex) {
       console.log('game state update() err');
       console.log(ex);
       return false;
     }
+  }
+
+  getLevelType = () => {
+    return this._data.type;
+  }
+
+  getCurrLevel = () => {
+    return this._data.currLevel;
+  }
+
+  getData = () => {
+    return this._data;
+  }
+
+  setCurrLevel = (level) => {
+    this._data.currLevel += level;
   }
 }
 

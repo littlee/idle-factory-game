@@ -15,28 +15,27 @@ key:
 -11- mask和Scroller的veil的尺寸的位置要更加heading的尺寸做相应的调整。
 -12- modal 的scroll里头的对象如果要有自己的input事件，需要设置priority > 1000[在ModalRaw这里已经统一enable了所有的children的input和设置了对的priorityID]
 */
-const config = {
-  HEIGHT: 935,
-  WIDTH: 589,
-  VEIL_RGB: 0x000000,
-  VEIL_ALPHA: 0.5,
-  FRAME_RGB: 0xE1D6CC,
-  FRAME_LINE_WIDTH: 1,
-  FRAME_LINE_COLOR: 0x000000,
-  FRAME_LINE_ALPHA: 0.7,
-  SUBHEADING: '升级你的产品从而提升销售价值，赚更多的钱',
+const CONFIG = {
+  height: 935,
+  width: 589,
+  veil_rgb: 0x000000,
+  veil_alpha: 0.5,
+  frame_rgb: 0xe1d6cc,
+  frame_line_width: 1,
+  frame_line_color: 0x000000,
+  frame_line_alpha: 0.7,
+  subheading: '升级你的产品从而提升销售价值，赚更多的钱'
 };
-
 
 const FONT_STYLE = {
   fontWeight: 'bold',
   fontSize: '48px',
   fill: '#3A0A00', // '#00FF00',
   boundsAlignH: 'center',
-  boundsAlignV: 'middle',
+  boundsAlignV: 'middle'
 };
 
-function getFontStyle (fSize, color, align, weight) {
+function getFontStyle(fSize, color, align, weight) {
   return {
     fontWeight: weight || 'normal',
     fontSize: fSize || '18px',
@@ -49,7 +48,19 @@ function getFontStyle (fSize, color, align, weight) {
 
 class ModalRaw extends window.Phaser.Group {
   // new Group(game [, parent] [, name] [, addToStage] [, enableBody] [, physicsBodyType])
-  constructor(game, headingTxt, height = config.HEIGHT, width = config.WIDTH, scrollable = true, headingStyles = {}, priority = 1000, headingH = 100, subHeading = false, boost = true, contentMargin = 0) {
+  constructor(
+    game,
+    headingTxt,
+    height = CONFIG.height,
+    width = CONFIG.width,
+    scrollable = true,
+    headingStyles = {},
+    priority = 1000,
+    headingH = 100,
+    subHeading = false,
+    boost = true,
+    contentMargin = 0
+  ) {
     // params
     super(game);
     this.h = height;
@@ -61,7 +72,7 @@ class ModalRaw extends window.Phaser.Group {
     this.headingTxt = headingTxt || '标题';
     this.headingH = headingH;
     this.headingStyles = Object.assign({}, FONT_STYLE, headingStyles);
-    this.subHeadingTxt = subHeading ? config.SUBHEADING : '';
+    this.subHeadingTxt = subHeading ? CONFIG.subHeading : '';
 
     // shortcuts
     this.cameraView = this.game.camera.view;
@@ -78,9 +89,9 @@ class ModalRaw extends window.Phaser.Group {
     this.x = (this.cameraView.width - this.w) / 2;
     this.y = (this.cameraView.height - this.h) / 2;
     this.visible = false;
-  }
+  };
 
-   _createOuterVeil = () => {
+  _createOuterVeil = () => {
     // veil beginFill(color, alpha)
     let x = -this.x;
     let y = -this.y;
@@ -89,24 +100,24 @@ class ModalRaw extends window.Phaser.Group {
 
     this.veil = this.game.make.graphics(x, y);
     this.veil.fixedToCamera = true;
-    this.veil.beginFill(config.VEIL_RGB, config.VEIL_ALPHA);
+    this.veil.beginFill(CONFIG.veil_rgb, CONFIG.veil_alpha);
     this.veil.drawRect(x, y, w, h);
     this.veil.endFill();
 
     this.veil.inputEnabled = true;
     this.veil.events.onInputDown.add(this._handleClose);
-  }
+  };
 
   // how inherited class should be inited
   _getInit = () => {
     this._positionModal();
     this._createOuterVeil();
     // frame, btn, heading
-    this._DrawSubGroupStuff();
+    this._drawSubGroupStuff();
     // mask for contentGroup
     this._setMask4ContentGroup();
     /* real content goes here */
-    this.getContextGroupInit();
+    this._getContextGroupInit();
     // add frame, contentGroup, heading, btn to subGroup
     this._addStuff2SubGroup();
     // add outerveil, subGroup to modal
@@ -116,7 +127,7 @@ class ModalRaw extends window.Phaser.Group {
     this._boostInputPriority4Children();
     // prep for scrolling, should be called after contentGroup is all set
     this._getScrollWhenNeeded();
-  }
+  };
 
   _boostInputPriority4Children = () => {
     // prep for input
@@ -125,16 +136,20 @@ class ModalRaw extends window.Phaser.Group {
       this.setAllChildren('input.priorityID', this.priorityID + 1);
       // console.log('all boost');
     }
-  }
+  };
 
-  _DrawSubGroupStuff = () => {
+  _drawSubGroupStuff = () => {
     /* frame, heading, btn_close*/
     // frame
     this.frame = this.game.make.graphics(0, 0); // graphics( [x] [, y] )
-    this.frame.beginFill(config.FRAME_RGB);
+    this.frame.beginFill(CONFIG.frame_rgb);
     this.frame.drawRect(0, 0, this.w, this.h);
     this.frame.endFill();
-    this.frame.lineStyle(config.FRAME_LINE_WIDTH, config.FRAME_LINE_COLOR, config.FRAME_LINE_ALPHA);
+    this.frame.lineStyle(
+      CONFIG.frame_line_width,
+      CONFIG.frame_line_color,
+      CONFIG.frame_line_alpha
+    );
     this.frame.moveTo(0, 0);
     this.frame.lineTo(this.w, 0);
     this.frame.lineTo(this.w, this.h);
@@ -142,22 +157,58 @@ class ModalRaw extends window.Phaser.Group {
     this.frame.lineTo(0, 0);
 
     // btn_close ...should be a sprite rather than img
-    this.btnClose = this.game.make.button(this.w - 1, 0 + 1, 'btn_close', this._handleClose);
+    this.btnClose = this.game.make.button(
+      this.w - 1,
+      0 + 1,
+      'btn_close',
+      this._handleClose
+    );
     this.btnClose.anchor.set(1, 0);
 
-
-    if (typeof this.subHeadingTxt === 'string' && this.subHeadingTxt.length > 0) {
+    if (
+      typeof this.subHeadingTxt === 'string' &&
+      this.subHeadingTxt.length > 0
+    ) {
       // 20 写死的，subHeading bound的 高度
-      this.heading = this.game.make.text(0, 0, this.headingTxt, this.headingStyles);
-      this.heading.setTextBounds(0, 0, this.w - this.btnClose.width, this.headingH - 20);
-      this.subHeading = this.game.make.text(0, 0, this.subHeadingTxt, getFontStyle());
-      this.subHeading.setTextBounds(0, this.headingH - 20 * 2, this.w - this.btnClose.width, 20);
+      this.heading = this.game.make.text(
+        0,
+        0,
+        this.headingTxt,
+        this.headingStyles
+      );
+      this.heading.setTextBounds(
+        0,
+        0,
+        this.w - this.btnClose.width,
+        this.headingH - 20
+      );
+      this.subHeading = this.game.make.text(
+        0,
+        0,
+        this.subHeadingTxt,
+        getFontStyle()
+      );
+      this.subHeading.setTextBounds(
+        0,
+        this.headingH - 20 * 2,
+        this.w - this.btnClose.width,
+        20
+      );
     } else {
-      this.heading = this.game.make.text(0, 0, this.headingTxt, this.headingStyles);
-      this.heading.setTextBounds(0, 0, this.w - this.btnClose.width, this.headingH);
+      this.heading = this.game.make.text(
+        0,
+        0,
+        this.headingTxt,
+        this.headingStyles
+      );
+      this.heading.setTextBounds(
+        0,
+        0,
+        this.w - this.btnClose.width,
+        this.headingH
+      );
     }
-
-  }
+  };
 
   _addStuff2SubGroup = () => {
     // the display object in the sub-group, from top down
@@ -168,13 +219,13 @@ class ModalRaw extends window.Phaser.Group {
     if (this.subHeading !== undefined) {
       this.subGroup.addChild(this.subHeading);
     }
-  }
+  };
 
   _addStuff2Modal = () => {
-     // the display object in this group, from top down
+    // the display object in this group, from top down
     this.addChild(this.veil);
     this.addChild(this.subGroup);
-  }
+  };
 
   // for improve, not use yet
   _createVeilTop = () => {
@@ -185,27 +236,26 @@ class ModalRaw extends window.Phaser.Group {
 
     this.veilTop = this.game.make.graphics(x, y);
     this.veilTop.fixedToCamera = true;
-    this.veilTop.beginFill(0xFF0000, 0.7);
+    this.veilTop.beginFill(0xff0000, 0.7);
     this.veilTop.drawRect(x, y, w, h);
     this.veilTop.endFill();
 
     this.veilTop.inputEnabled = true;
     this.veilTop.events.onInputDown.add(this._handleClose);
-  }
+  };
 
   _handleClose = () => {
     console.log('close modal');
     this.visible = false;
-  }
+  };
 
   _setMask4ContentGroup = () => {
     let mask = this.game.add.graphics(0, 0, this.subGroup); // graphics( [x] [, y] [, group] )
-    mask.beginFill(0xFF0000, 0.5);
+    mask.beginFill(0xff0000, 0.5);
     mask.drawRect(0, this.headingH, this.w, this.h - this.headingH);
     mask.endFill();
     this.contentGroup.mask = mask;
-  }
-
+  };
 
   _getScrollWhenNeeded = () => {
     if (this.scrollable === false) return false;
@@ -217,19 +267,17 @@ class ModalRaw extends window.Phaser.Group {
         height: this.h - this.headingH
       },
       heading: this.headingH,
-      margin: this.margin,
+      margin: this.margin
     });
     this.scroller.enableScroll();
-  }
+  };
 
   // try-out 在继承的类那里直接调用这个方法来添加内容
-  getContextGroupInit = () => {
+  _getContextGroupInit = () => {
     // empty
     // 添加的东西 y 要 >= this.headingH
     // const OFFSET = this.headingH;
-  }
-
-
+  };
 }
 
 export default ModalRaw;
