@@ -18,7 +18,7 @@ const CONFIG = {
   frame_line_width: 1,
   frame_line_color: 0x000000,
   frame_line_alpha: 0.7,
-  opts_w: {
+  opts_wh: {
     avatarImg: 'avatar_tran_warehose',
     avatarHeading: '下一次大升级',
     avatarDes: '等级时获得额外的运输工人',
@@ -31,6 +31,11 @@ const CONFIG = {
     avatarDes: '等级时获得额外的运输工人',
     item1Icon: 'icon_money_transported',
     item1Des: '已运输最高现金'
+  },
+  opts_ws: {
+    avatarImg: 'avatar_worker',
+    avatarHeading: '下一次大升级',
+    avatarDes: '等级时获得巨大生产力的提升',
   }
 };
 
@@ -65,12 +70,11 @@ class ModalLevel extends ModalRaw {
     type = 'market',
     coupledBtn = null,
     currLevel = null,
-    desLevel = null
+    desLevel = null,
+    workstation = null,
   }) {
-    // parems
-    // super(game, headingTxt, undefined, undefined, scrollable);
     super(game, undefined, undefined, scrollable);
-    this.opts = type === 'market' ? CONFIG.opts_m : CONFIG.opts_w;
+    this.opts = type === 'market' ? CONFIG.opts_m : type === 'warehouse' ? CONFIG.opts_wh : CONFIG.opts_ws;
     this.headingPart =
       type === 'market'
         ? '级市场'
@@ -79,6 +83,10 @@ class ModalLevel extends ModalRaw {
           : '级生产线';
     this.coupledBtn = coupledBtn;
     this.desLevel = desLevel === null ? INIT.desLevel : desLevel;
+    // specific to workstation level UI, for fetching needed(input) & production(output)
+    this.workstation = workstation;
+    this.workstationNeed = null;
+    this.workstationProduction = null;
 
     this._data = {
       type,
@@ -237,40 +245,53 @@ class ModalLevel extends ModalRaw {
         panelUpgradeInstance: this.upgradePanel
       });
     } else {
-      // this.needTxt = this.game.make.text((this.w - LEVEL.aWidth) / 2, 290, '需要', getFontStyle('30px'));
-      // let need1 = new LevelUpgradeItem({
-      //   game: this.game,
-      //   parent: this.mainGroup,
-      //   key: 'icon_ore',
-      //   txt: '铁矿',
-      //   x: (this.w - LEVEL.aWidth) / 2,
-      //   y: 330,
-      //   currTxt: '58aa',
-      //   futureTxt: '+55aa'
-      // });
-      // this.prodTxt = this.game.make.text((this.w - LEVEL.aWidth) / 2, 330 + 85 + 27, '生产', getFontStyle('30px'));
-      // let prod = new LevelUpgradeItem({
-      //   game: this.game,
-      //   parent: this.mainGroup,
-      //   key: 'icon_ore',
-      //   txt: '铁矿',
-      //   x: (this.w - LEVEL.aWidth) / 2,
-      //   y: 330 + 27 + 40 + 85,
-      //   currTxt: '58aa/分',
-      //   futureTxt: '+55aa/分'
-      // });
-      // let iconPower = new LevelUpgradeItem({
-      //   game: this.game,
-      //   parent: this.mainGroup,
-      //   key: 'icon_power',
-      //   txt: '生产力',
-      //   x: (this.w - LEVEL.aWidth) / 2,
-      //   y: 330 + 27 + 40 + 85 * 2 + 20,
-      //   currTxt: '58aa/分',
-      //   futureTxt: '+55aa/分'
-      // });
-      // this.mainGroup.addChild(this.needTxt);
-      // this.mainGroup.addChild(this.prodTxt);
+      // workstation要根据生产台的生产改变need和production的UI，而且need的数量会有变化，都未实现，点击x1时候也未实现item连动。
+      this.needTxt = this.game.make.text((this.w - LEVEL.aWidth) / 2, 290, '需要', getFontStyle('30px'));
+      this.need1 = new LevelUpgradeItem({
+        game: this.game,
+        parent: this.mainGroup,
+        key: 'icon_ore',
+        txt: '铁矿',
+        x: (this.w - LEVEL.aWidth) / 2,
+        y: 330,
+        currTxt: '58aa',
+        futureTxt: '+55aa'
+      });
+      this.need2 = new LevelUpgradeItem({
+        game: this.game,
+        parent: this.mainGroup,
+        key: 'icon_ore',
+        txt: '铁矿',
+        x: (this.w - LEVEL.aWidth) / 2,
+        y: 330 + 85 + 17,
+        currTxt: '58aa',
+        futureTxt: '+55aa'
+      });
+
+
+      this.prodTxt = this.game.make.text((this.w - LEVEL.aWidth) / 2, 330 + 85 * 2 + 44, '生产', getFontStyle('30px'));
+      this.prod = new LevelUpgradeItem({
+        game: this.game,
+        parent: this.mainGroup,
+        key: 'icon_ore',
+        txt: '铁矿',
+        x: (this.w - LEVEL.aWidth) / 2,
+        y: 330 + 44 + 40 + 85 * 2,
+        currTxt: '58aa/分',
+        futureTxt: '+55aa/分'
+      });
+      this.iconPower = new LevelUpgradeItem({
+        game: this.game,
+        parent: this.mainGroup,
+        key: 'icon_power',
+        txt: '生产力',
+        x: (this.w - LEVEL.aWidth) / 2,
+        y: 330 + 44 + 40 + 85 * 3 + 20,
+        currTxt: '58aa/分',
+        futureTxt: '+55aa/分'
+      });
+      this.mainGroup.addChild(this.needTxt);
+      this.mainGroup.addChild(this.prodTxt);
     }
 
     this.contentGroup.addChild(this.avatarBg);

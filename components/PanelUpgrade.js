@@ -24,7 +24,7 @@ class PanelUpgrade extends window.Phaser.Group {
   constructor({ game, parent, veilHeight, modal = null, base = null}) {
     super(game, parent);
     this.veilHeight = veilHeight;
-    this.propsCoin = this.game.share.coin;
+    this.propsCoin = this.game.share.coin; // 要改，但是coin的哪里没写好，暂时这样
     this.modal = modal;
     this.levelType = modal.getLevelType();
     // 从parent拿级数
@@ -193,6 +193,7 @@ class PanelUpgrade extends window.Phaser.Group {
   }
 
   getCoinNeeded = () => {
+    // 判断是不是可以购买升级
     return this._data.coinNeeded;
   }
 
