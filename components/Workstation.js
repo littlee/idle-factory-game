@@ -1,5 +1,6 @@
 import { formatBigNum } from '../utils';
 import Big from '../js/libs/big.min';
+import range from '../js/libs/_/range';
 
 // import ModalLevel from './ModalLevel';
 import Worker from './Worker';
@@ -7,6 +8,8 @@ import BtnUpgrade from './BtnUpgrade';
 import ResourceEmitter from './ResourceEmitter';
 import ResourecePile from './ResourcePile';
 import BoxCollect from './BoxCollect';
+
+const MAX_INPUT_PILE = 2;
 
 const COLLECT_TYPES = {
   CASH: 'cash',
@@ -132,10 +135,11 @@ class Workstation extends window.Phaser.Group {
 
     // FIX ME 需要考虑一个变成两个的情况
     this.inputItemGroup = this.game.make.group();
-    this._data.input.forEach((inputKey, index) => {
+    range(2).forEach(index => {
+      let { input } = this._data;
       let inputItem = new ResourecePile(
         this.game,
-        SOURCE_IMG_MAP[inputKey],
+        'reso_ore',
         true
       );
       inputItem.x = this.table.x + 20 + index * 40;
@@ -143,6 +147,17 @@ class Workstation extends window.Phaser.Group {
       inputItem.setNum(formatBigNum(Big(this._data.inputAmount[index])));
       this.inputItemGroup.add(inputItem);
     });
+    // this._data.input.forEach((inputKey, index) => {
+    //   let inputItem = new ResourecePile(
+    //     this.game,
+    //     SOURCE_IMG_MAP[inputKey],
+    //     true
+    //   );
+    //   inputItem.x = this.table.x + 20 + index * 40;
+    //   inputItem.y = index * 10;
+    //   inputItem.setNum(formatBigNum(Big(this._data.inputAmount[index])));
+    //   this.inputItemGroup.add(inputItem);
+    // });
 
     this.outputItems = new ResourecePile(this.game, 'prod_steel');
     this.outputItems.alignIn(this.table, window.Phaser.TOP_CENTER);
@@ -278,10 +293,13 @@ class Workstation extends window.Phaser.Group {
 
     this.productBtnItem.loadTexture(outputTexture);
 
+    let inputTexture = this._data.input.map(item => SOURCE_IMG_MAP[item]);
     this.inputItemGroup.forEach((item) => {
       let index = this.inputItemGroup.getChildIndex(item);
-      item.changeTexture(SOURCE_IMG_MAP[this._data.input[index]]);
+      item.changeTexture(inputTexture[index]);
     });
+    this.inputItemsAni.changeTexture(inputTexture);
+    
   }
 
   setOutputAmount(amout) {
