@@ -103,7 +103,7 @@ class LevelUpgradeItem extends window.Phaser.Group {
     this.txtFuture = this.game.make.text(
       0,
       0,
-      formatTo3digits(this.increment),
+      `+${formatTo3digits(this.increment)}`,
       getFontStyle('24px', '#38ec43', 'center', 'normal')
     );
     this.txtFuture.setTextBounds(0, 0, this.block.width - 10, 28);
@@ -133,7 +133,7 @@ class LevelUpgradeItem extends window.Phaser.Group {
     } else {
       this.increment = this._data.value * map[this.panelUpgradeInstance.getMultiplier().toString()];
       this.txtCurr.setText(formatTo3digits(this._data.value));
-      this.txtFuture.setText(`+ ${formatTo3digits(this.increment)}`);
+      this.txtFuture.setText(`+${formatTo3digits(this.increment)}`);
       if (upgraded === true) {
         this._data.value = formatTo3digits(
           this.increment + this._data.value

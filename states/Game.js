@@ -187,10 +187,8 @@ class Game extends window.Phaser.State {
     //     await worker.backToWarehouse(this.warehouse);
     //   }
     // });
-    // if (this.result) {
-    //   this.result = this.modalWarehose.getUpdated();
-    //   this.result = this.modalMarket.getUpdated();
-    // }
+    // this.modalWarehose.getUpdated();
+    // this.modalMarket.getUpdated();
   }
 
   _createMenus = () => {
