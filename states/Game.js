@@ -196,7 +196,6 @@ class Game extends window.Phaser.State {
     //       let workerGiveKeys = arrayIntersect(worker.getCarryKeys(), workstations[i].getInput());
     //       if (workerGiveKeys.length) {
     //         worker.giveToStation(workerGiveKeys);
-
     //         await worker.stayInStation(workstations[i]);
     //         worker.stopGiveToStation();
     //       }
@@ -238,6 +237,50 @@ class Game extends window.Phaser.State {
     this.menuBottom.beginFill(0x282c30);
     this.menuBottom.drawRect(0, this.world.height - 81, this.world.width, 81);
     this.menuBottom.endFill();
+
+    this.btnShop = this.add.sprite(10, this.world.height, 'btn_shop');
+    this.btnShop.anchor.setTo(0, 1);
+    this.btnShop.inputEnabled = true;
+    this.btnShop.input.priorityID = PRIORITY_ID;
+    this.btnShop.events.onInputDown.add(() => {
+      console.log('click btn shop');
+    });
+
+    this.btnBlueprint = this.add.sprite(
+      130,
+      this.world.height,
+      'btn_blueprint'
+    );
+    this.btnBlueprint.anchor.setTo(0, 1);
+    this.btnBlueprint.inputEnabled = true;
+    this.btnBlueprint.input.priorityID = PRIORITY_ID;
+    this.btnBlueprint.events.onInputDown.add(() => {
+      console.log('click btn blueprint');
+    });
+
+    this.btnXCash = this.add.sprite(
+      this.world.centerX,
+      this.world.height - 10,
+      'btn_x_cash'
+    );
+    this.btnXCash.anchor.setTo(0.5, 1);
+    this.btnXCash.inputEnabled = true;
+    this.btnXCash.input.priorityID = PRIORITY_ID;
+    this.btnXCash.events.onInputDown.add(() => {
+      console.log('click btn x cash');
+    });
+
+    this.btnWheelCoin = this.add.sprite(
+      this.world.width - 10,
+      this.world.height - 10,
+      'btn_wheel_coin'
+    );
+    this.btnWheelCoin.anchor.setTo(1);
+    this.btnWheelCoin.inputEnabled = true;
+    this.btnWheelCoin.input.priorityID = PRIORITY_ID;
+    this.btnWheelCoin.events.onInputDown.add(() => {
+      console.log('click btn wheel coin');
+    });
   };
 
   _addAllRelatedStuff2Bg = () => {
