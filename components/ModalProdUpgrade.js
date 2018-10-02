@@ -82,8 +82,12 @@ class ModalProdUpgrade extends ModalRaw {
     const OFFSET = this.headingH * 1.5;
     const LEFT = (this.w - CONFIG.frameWidth) / 2;
 
+    // fix me: 每个原料的frame改成一个组件
     // draw frame for each resource
-    let frameOre = this.game.make.graphics(LEFT, OFFSET);
+    let frameOre = this.game.make.graphics(
+      LEFT,
+      OFFSET
+    );
     frameOre.beginFill(CONFIG.frameColor);
     frameOre.drawRect(0, 0, CONFIG.frameWidth, CONFIG.frameHeight);
     frameOre.endFill();
@@ -143,7 +147,12 @@ class ModalProdUpgrade extends ModalRaw {
 
     tagOre.alignTo(frameOre, Phaser.TOP_LEFT, -10, -15);
 
-    let tagOreName = this.game.make.text(0, 0, '铁矿', getFontStyle('28px', '', '', 'bold')); // fSize, color, align, weight
+    let tagOreName = this.game.make.text(
+      0,
+      0,
+      '铁矿',
+      getFontStyle('28px', '', '', 'bold')
+    ); // fSize, color, align, weight
     tagOreName.alignTo(tagOre, Phaser.BOTTOM_LEFT, -20, -CONFIG.frameTagH);
     let tagOreImg = this.game.make.image(0, 0, 'reso_ore');
     tagOreImg.scale.x = 0.65;
@@ -164,8 +173,18 @@ class ModalProdUpgrade extends ModalRaw {
 
     tagCopper.alignTo(frameCopper, Phaser.TOP_LEFT, -10, -15);
 
-    let tagCopperName = this.game.make.text(0, 0, '铁矿', getFontStyle('28px', '', '', 'bold')); // fSize, color, align, weight
-    tagCopperName.alignTo(tagCopper, Phaser.BOTTOM_LEFT, -20, -CONFIG.frameTagH);
+    let tagCopperName = this.game.make.text(
+      0,
+      0,
+      '铁矿',
+      getFontStyle('28px', '', '', 'bold')
+    ); // fSize, color, align, weight
+    tagCopperName.alignTo(
+      tagCopper,
+      Phaser.BOTTOM_LEFT,
+      -20,
+      -CONFIG.frameTagH
+    );
     let tagCopperImg = this.game.make.image(0, 0, 'reso_ore');
     tagCopperImg.scale.x = 0.65;
     tagCopperImg.scale.y = 0.65;

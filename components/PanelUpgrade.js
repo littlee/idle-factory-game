@@ -158,7 +158,6 @@ class PanelUpgrade extends window.Phaser.Group {
       // 要根据当前game的coin去计算可以升的最高级别，然后除了要改变升级要用的coin之外，能升多少级也要显示
     } else {
       this._data.coinNeeded = this._data.base * map[multiplier.toString()];
-      // console.log('this._data.coinNeeded: ', this._data.coinNeeded);
       this.txtUpgradeCoinNeeded.setText(this._data.coinNeeded.toString());
     }
   }
@@ -195,7 +194,6 @@ class PanelUpgrade extends window.Phaser.Group {
     // 判断是不是可以购买升级
     return this._data.coinNeeded;
   }
-
 }
 
 export default PanelUpgrade;

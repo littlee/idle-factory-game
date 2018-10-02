@@ -11,7 +11,8 @@ const FONT_STYLE = {
 
 const CONFIG = {
   width: 500,
-  height: 717
+  height: 717,
+  priceTags: {},
 };
 
 class ModalRescources extends ModalRaw {

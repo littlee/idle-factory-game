@@ -246,7 +246,7 @@ class ModalLevel extends ModalRaw {
         panelUpgradeInstance: this.upgradePanel
       });
     } else {
-      // workstation要根据生产台的生产改变need和production的UI，而且need的数量会有变化，都未实现，点击x1时候也未实现item连动。
+      // workstation要根据生产台的生产改变need和production的UI，而且need的数量会有变化，都未实现。
       this.needTxt = this.game.make.text((this.w - LEVEL.aWidth) / 2, 290, '需要', getFontStyle('30px'));
       this.need1 = new LevelUpgradeItem({
         game: this.game,

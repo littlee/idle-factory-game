@@ -236,7 +236,8 @@ class Workstation extends window.Phaser.Group {
     this.workestationLevelModal = new ModalLevel({
       game: this.game,
       type: 'workstation',
-      coupledBtn: this.upBtn
+      coupledBtn: this.upBtn,
+      workstation: this, // more to go
     });
 
     // for simple z-depth
@@ -307,7 +308,7 @@ class Workstation extends window.Phaser.Group {
       item.changeTexture(inputTexture[index]);
     });
     this.inputItemsAni.changeTexture(inputTexture);
-    
+
   }
 
   setOutputAmount(amout) {

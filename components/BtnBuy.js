@@ -101,7 +101,7 @@ class BtnBuy extends window.Phaser.Group {
     // let currCoin = 0; // fetch
     console.log('点击resouce modal购买按钮');
     if (this.can === true) {
-      console.log('减coin，update当前btnUI，变成tick');
+      console.log('减coin，update当前btnUI，变成tick，最外面的原料桌子上要有新的resource');
       this._setBoughtFlagTrue();
       return true;
     }

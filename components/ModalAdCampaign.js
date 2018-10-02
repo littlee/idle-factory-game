@@ -5,7 +5,7 @@ const FONT_STYLE = {
   fontSize: '34px',
   fill: '#3A0A00', // '#00FF00',
   boundsAlignH: 'center',
-  boundsAlignV: 'middle',
+  boundsAlignV: 'middle'
 };
 
 const CONFIG = {
@@ -21,7 +21,14 @@ const CONFIG = {
 };
 
 class ModalAdCampagin extends ModalRaw {
-  constructor({game, height = CONFIG.height, width = CONFIG.width, headingTxt = CONFIG.headingTxt, headingStyles = FONT_STYLE, scrollable}) {
+  constructor({
+    game,
+    height = CONFIG.height,
+    width = CONFIG.width,
+    headingTxt = CONFIG.headingTxt,
+    headingStyles = FONT_STYLE,
+    scrollable
+  }) {
     // parems
     super(game, headingTxt, height, width, scrollable, headingStyles);
     this.w = width;
@@ -48,7 +55,7 @@ class ModalAdCampagin extends ModalRaw {
     this._boostInputPriority4Children();
     // prep for scrolling, should be called after contentGroup is all set
     this._getScrollWhenNeeded();
-  }
+  };
 
   getContextGroupInit = () => {
     // 添加的东西 y 要 >= this.headingH
@@ -71,7 +78,7 @@ class ModalAdCampagin extends ModalRaw {
     this.contentGroup.addChild(img);
     this.contentGroup.addChild(bg);
     this.contentGroup.addChild(btn);
-  }
+  };
 }
 
 export default ModalAdCampagin;
