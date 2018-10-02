@@ -20,6 +20,7 @@ import ModalLevel from '../components/ModalLevel.js';
 import ModalRescources from '../components/ModalResources.js';
 
 import range from '../js/libs/_/range';
+import { arrayIntersect } from '../utils';
 
 /*
 关于priorityID:
@@ -103,7 +104,7 @@ class Game extends window.Phaser.State {
     const WORKSTATION_START_Y = 915;
     const WORKSTATION_HEIGHT = 339;
     this.workstationGroup = this.add.group();
-    range(2).forEach(index => {
+    range(3).forEach(index => {
       let workstation = new Workstation(
         this.game,
         0,
@@ -113,6 +114,13 @@ class Game extends window.Phaser.State {
       );
       this.workstationGroup.add(workstation);
     });
+    this.workstationGroup.children[0].beAbleToBuy();
+    this.workstationGroup.children[0].buy('cash');
+    this.workstationGroup.children[1].beAbleToBuy();
+    this.workstationGroup.children[1].buy('cash');
+    this.workstationGroup.children[1].setOutput('drill');
+    this.workstationGroup.children[2].beAbleToBuy();
+
     window.stg = this.workstationGroup;
 
     this.workerWarehouseGroup = this.add.group();
@@ -178,19 +186,41 @@ class Game extends window.Phaser.State {
   update() {
     // this.workerWarehouseGroup.forEachAlive(async worker => {
     //   if (!worker.getIsOnRoutine()) {
-    //     await worker.carryFromWarehouse(this.warehouse);
-    //     let workstations = this.workstationGroup.children;
+    //     let workstations = this._getBoughtStations();
+    //     let neededKeys = this._getStationsNeededKeys(workstations);
+    //     this.warehouse.outputGoods(neededKeys);
+    //     await worker.carryFromWarehouse(neededKeys);
+    //     this.warehouse.stopOutput();
     //     for (let i = 0; i < workstations.length; i++) {
     //       await worker.moveToStation(workstations[i]);
-    //       await worker.tradeWithStation(workstations[i]);
+    //       let workerGiveKeys = arrayIntersect(worker.getCarryKeys(), workstations[i].getInput());
+    //       if (workerGiveKeys.length) {
+    //         worker.giveToStation(workerGiveKeys);
+
+    //         await worker.stayInStation(workstations[i]);
+    //         worker.stopGiveToStation();
+    //       }
     //     }
     //     await worker.backToWarehouse(this.warehouse);
     //   }
     // });
-    // if (this.result) {
-    //   this.result = this.modalWarehose.getUpdated();
-    //   this.result = this.modalMarket.getUpdated();
-    // }
+  }
+
+  _getBoughtStations() {
+    return this.workstationGroup.children.filter(item => item.getIsBought());
+  }
+
+  _getStationsNeededKeys(stations) {
+    let neededKeys = [];
+    stations.forEach(sta => {
+      let staInput = sta.getInput();
+      staInput.forEach(input => {
+        if (neededKeys.indexOf(input) === -1) {
+          neededKeys.push(input);
+        }
+      });
+    });
+    return arrayIntersect(neededKeys, Warehouse.RESOURCE);
   }
 
   _createMenus = () => {

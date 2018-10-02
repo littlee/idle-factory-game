@@ -8,6 +8,7 @@ import BtnUpgrade from './BtnUpgrade';
 import ResourceEmitter from './ResourceEmitter';
 import ResourecePile from './ResourcePile';
 import BoxCollect from './BoxCollect';
+import SOURCE_IMG_MAP from '../constants/SourceImgMap';
 
 const MAX_INPUT_PILE = 2;
 const A_MINUTE = 60000;
@@ -42,14 +43,6 @@ const OUTPUT_REQ_MAP = {
   toaster: ['steel', 'can']
 };
 
-const SOURCE_IMG_MAP = {
-  ore: 'reso_ore',
-  steel: 'prod_steel',
-  can: 'prod_can',
-  drill: 'prod_drill',
-  toaster: 'prod_toaster'
-};
-
 class Workstation extends window.Phaser.Group {
   constructor(game, x, y, stationLevel = 1, index = 1) {
     super(game);
@@ -57,17 +50,18 @@ class Workstation extends window.Phaser.Group {
     this.y = y;
 
     this._data = {
+      isBought: false,
       input: OUTPUT_REQ_MAP['steel'],
-      inputAmount: [Big(100), Big(0)],
-      inputComsumePerMin: [Big(500), Big(200)],
+      inputAmount: [Big(0), Big(0)],
+      inputComsumePerMin: [Big(0), Big(0)],
       output: 'steel',
       outputAmount: {
         cash: Big(0),
         prod: Big(0)
       },
       outputAmountPerMin: {
-        cash: Big(100),
-        prod: Big(200)
+        cash: Big(0),
+        prod: Big(0)
       },
       outputDelay: 'normal',
       price: {
@@ -176,7 +170,7 @@ class Workstation extends window.Phaser.Group {
       this.game,
       this.table.x + this.table.width / 2 - 30,
       this.table.y + this.table.height / 2 - 20,
-      'prod_steel',
+      SOURCE_IMG_MAP[this._data.output],
       -100,
       100
     );
@@ -185,7 +179,7 @@ class Workstation extends window.Phaser.Group {
       this.game,
       this.table.x + this.table.width / 2 + 30,
       this.table.y + this.table.height / 2 - 20,
-      'prod_steel',
+      SOURCE_IMG_MAP[this._data.output],
       100,
       100
     );
@@ -208,6 +202,15 @@ class Workstation extends window.Phaser.Group {
     this.boxHolderProd.input.priorityID = PRIORITY_ID;
     this.boxHolderProd.events.onInputDown.add(
       this.setCollectType.bind(this, COLLECT_TYPES.PROD)
+    );
+
+    this.outputTradeAni = new ResourceEmitter(
+      this.game,
+      this.boxHolderProd.x,
+      this.boxHolderProd.y,
+      SOURCE_IMG_MAP[this._data.output],
+      -100,
+      -30
     );
 
     this.boxHolderCash = this.game.make.sprite(0, 0, 'box_collect_holder');
@@ -235,6 +238,7 @@ class Workstation extends window.Phaser.Group {
     this.productGroup.add(this.boxHolderProd);
     this.productGroup.add(this.boxHolderCash);
     this.productGroup.add(this.boxCollect);
+    this.productGroup.add(this.outputTradeAni);
     this.productGroup.add(this.upBtn);
     this.productGroup.visible = false;
 
@@ -262,11 +266,15 @@ class Workstation extends window.Phaser.Group {
   }
 
   _init() {
-    this.beAbleToBuy();
+    // this.beAbleToBuy();
+    // this.buy('cash');
     // this.setCollectType(COLLECT_TYPES.CASH);
   }
 
   _outputLoop() {
+    if (this._getHasNoInput()) {
+      this.stopWork();
+    }
     let {
       collectType,
       inputAmount,
@@ -295,10 +303,6 @@ class Workstation extends window.Phaser.Group {
       let index = this.inputItemGroup.getChildIndex(item);
       item.setNum(formatBigNum(this._data.inputAmount[index]));
     });
-
-    if (this._getHasNoInput()) {
-      this.stopWork();
-    }
   }
 
   _getHasNoInput() {
@@ -319,6 +323,8 @@ class Workstation extends window.Phaser.Group {
   buy(type) {
     // 计算消耗金币
     console.log('this buy: ', type);
+    this._data.isBought = true;
+
     this.buyBtnGroup.visible = false;
     this.tableCover.visible = false;
 
@@ -329,14 +335,22 @@ class Workstation extends window.Phaser.Group {
     this.startWork();
   }
 
+  getIsBought() {
+    return this._data.isBought;
+  }
+
   startWork() {
+    if (this.outputTimer) {
+      this.game.time.events.remove(this.outputTimer);
+    }
+    this.worker.work();
+    this.setCollectType(COLLECT_TYPES.CASH);
+    this._outputLoop();
     this.outputTimer = this.game.time.events.loop(
       OUTPUT_DELAY[this._data.outputDelay],
       this._outputLoop,
       this
     );
-    this.worker.work();
-    this.setCollectType(COLLECT_TYPES.CASH);
   }
 
   stopWork() {
@@ -349,29 +363,42 @@ class Workstation extends window.Phaser.Group {
     }
   }
 
+  takeFromWorker() {
+    
+  }
+
   setCollectType(collectType) {
     this._data.collectType = collectType;
     let { outputAmount } = this._data;
     this.boxCollect.setNum(formatBigNum(outputAmount[collectType]));
-    this.inputItemsAni.start();
     if (collectType === COLLECT_TYPES.CASH) {
       this.boxCollect.alignIn(this.boxHolderCash, window.Phaser.CENTER, 0, -5);
       this.boxHolderCash.frame = 1;
       this.boxHolderProd.frame = 0;
       this.outputItemsAniLeft.stop();
-      this.outputItemsAniRight.start();
+      if (!this._getHasNoInput()) {
+        this.inputItemsAni.start();
+        this.outputItemsAniRight.start();
+      }
     } else if (collectType === COLLECT_TYPES.PROD) {
       this.boxCollect.alignIn(this.boxHolderProd, window.Phaser.CENTER, 0, -5);
       this.boxHolderProd.frame = 1;
       this.boxHolderCash.frame = 0;
-      this.outputItemsAniLeft.start();
       this.outputItemsAniRight.stop();
+      if (!this._getHasNoInput()) {
+        this.inputItemsAni.start();
+        this.outputItemsAniLeft.start();
+      }
     }
   }
 
   setLevel(level) {
     this._data.level = level;
     this.levelText.setText(level);
+  }
+
+  getInput() {
+    return this._data.input;
   }
 
   setOutput(outputKey) {
@@ -385,6 +412,7 @@ class Workstation extends window.Phaser.Group {
     this.outputItems.changeTexture(outputTexture);
     this.outputItemsAniLeft.changeTexture(outputTexture);
     this.outputItemsAniRight.changeTexture(outputTexture);
+    this.outputTradeAni.changeTexture(outputTexture);
 
     this.productBtnItem.loadTexture(outputTexture);
 
@@ -400,10 +428,6 @@ class Workstation extends window.Phaser.Group {
     });
     this.inputItemsAni.changeTexture(inputTexture);
   }
-
-  setOutputAmount(amout) {}
-
-  setInputAmount(amount) {}
 
   getData() {
     return this._data;
