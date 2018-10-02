@@ -163,7 +163,7 @@ class PanelUpgrade extends window.Phaser.Group {
   }
 
   updateLevelUpgradeBtnUI = () => {
-    // 判断当前coin是不是 > UI上显示的数字，是：绿；否：灰, 要让最外面coin的组件来调用
+    // 1)判断当前coin是不是 > UI上显示的数字，是：绿；否：灰, 2)同理判断要不要显示箭头，多少个箭头。要让最外面coin的组件来调用
     let parsedCoin = parseFloat(this.game.share.coin);
     let parsedNeeded = parseFloat(this.txtUpgradeCoinNeeded.text);
     if (Object.is(parsedCoin, NaN) || Object.is(parsedNeeded, NaN)) {
