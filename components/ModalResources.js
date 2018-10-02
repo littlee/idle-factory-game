@@ -33,20 +33,11 @@ class ModalRescources extends ModalRaw {
   }
 
   _getInit = () => {
-    this._positionModal();
-    this._createOuterVeil();
-    this._drawSubGroupStuff();
-
-    this._setMask4ContentGroup();
+    this._prepBeforeContentGroup();
     /* real content goes here */
     this.getContextGroupInit();
 
-    this._addStuff2SubGroup();
-    this._addStuff2Modal();
-
-    this._boostInputPriority4Children();
-    // prep for scrolling, should be called after contentGroup is all set
-    this._getScrollWhenNeeded();
+    this._prepAfterContentGroup();
   };
 
   getContextGroupInit = () => {

@@ -11,6 +11,8 @@ function getFontStyle (fSize, color, align, weight) {
 
 const INIT = {
   base: 100,
+  deficitColor: '#ff0000',
+  surplursColor: '#ffffff',
 };
 /*
 key:
@@ -77,7 +79,7 @@ class PanelUpgrade extends window.Phaser.Group {
     this.btnUpgradeGroup = this.game.make.group();
     this.btnUpgrade = this.game.make.image(0, 0, 'btn_level_upgrade');
     this.btnUpgrade.alignTo(this.bg, Phaser.RIGHT_BOTTOM, 75);
-    this.txtUpgradeCoinNeeded = this.game.make.text(0, 0, this._data.coinNeeded.toString(), getFontStyle('24px', 'white', 'center', 'normal'));
+    this.txtUpgradeCoinNeeded = this.game.make.text(0, 0, this._data.coinNeeded.toString(), getFontStyle('24px', 'white', 'center', 'bold'));
     this.txtUpgradeCoinNeeded.alignTo(this.bg, Phaser.RIGHT_TOP, 140, -5);
     this.btnUpgradeGroup.addChild(this.btnUpgrade);
     this.btnUpgradeGroup.addChild(this.txtUpgradeCoinNeeded);
@@ -163,7 +165,7 @@ class PanelUpgrade extends window.Phaser.Group {
   }
 
   updateLevelUpgradeBtnUI = () => {
-    // 判断当前coin是不是 > UI上显示的数字，是：绿；否：灰, 要让最外面coin的组件来调用
+    // 1)判断当前coin是不是 > UI上显示的数字，是：绿；否：灰, 2)同理判断要不要显示箭头，多少个箭头。要让最外面coin的组件来调用
     let parsedCoin = parseFloat(this.game.share.coin);
     let parsedNeeded = parseFloat(this.txtUpgradeCoinNeeded.text);
     if (Object.is(parsedCoin, NaN) || Object.is(parsedNeeded, NaN)) {
@@ -172,9 +174,11 @@ class PanelUpgrade extends window.Phaser.Group {
     if ( parsedCoin < parsedNeeded) {
       this.btnUpgrade.loadTexture('btn_level_upgrade_unable');
       this.btnUpgradeGroup.setAllChildren('inputEnabled', false);
+      this.txtUpgradeCoinNeeded.addColor(INIT.deficitColor, 0);
     } else {
       // console.log('可以买');
       this.btnUpgrade.loadTexture('btn_level_upgrade');
+      this.txtUpgradeCoinNeeded.addColor(INIT.surplursColor, 0);
       this.btnUpgradeGroup.setAllChildren('inputEnabled', true);
       this.btnUpgradeGroup.setAllChildren('input.priorityID', 1000 + 1);
     }

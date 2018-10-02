@@ -20,6 +20,7 @@ const CONFIG = {
   width: 589,
   veil_rgb: 0x000000,
   veil_alpha: 0.5,
+  veil_part_alpha: 0.01,
   frame_rgb: 0xe1d6cc,
   frame_line_width: 1,
   frame_line_color: 0x000000,
@@ -110,24 +111,35 @@ class ModalRaw extends window.Phaser.Group {
 
   // how inherited class should be inited
   _getInit = () => {
+    this._prepBeforeContentGroup();
+    /* real content goes here */
+    this._getContextGroupInit();
+    // add frame, contentGroup, heading, btn to subGroup
+    this._prepAfterContentGroup();
+  };
+
+  _prepBeforeContentGroup = () => {
     this._positionModal();
     this._createOuterVeil();
     // frame, btn, heading
     this._drawSubGroupStuff();
     // mask for contentGroup
     this._setMask4ContentGroup();
-    /* real content goes here */
-    this._getContextGroupInit();
+  }
+
+  _prepAfterContentGroup = () => {
     // add frame, contentGroup, heading, btn to subGroup
     this._addStuff2SubGroup();
-    // add outerveil, subGroup to modal
+    // draw veil parts
+    this._createVeilTop();
+    this._createVeilDown();
+    // add outerveil, subGroup, veilparts to modal
     this._addStuff2Modal();
-
     // make sure children object inside have higher priority then scroller's veil
     this._boostInputPriority4Children();
     // prep for scrolling, should be called after contentGroup is all set
     this._getScrollWhenNeeded();
-  };
+  }
 
   _boostInputPriority4Children = () => {
     // prep for input
@@ -225,24 +237,43 @@ class ModalRaw extends window.Phaser.Group {
     // the display object in this group, from top down
     this.addChild(this.veil);
     this.addChild(this.subGroup);
+    this.addChild(this.veilTop);
+    this.addChild(this.veilDown);
+
   };
 
   // for improve, not use yet
   _createVeilTop = () => {
-    let x = -this.x;
-    let y = -this.y;
-    let w = this.cameraView.width + this.x;
+    let x = 0;
+    let y = -this.y / 2;
+    let w = this.w;
     let h = this.y;
 
     this.veilTop = this.game.make.graphics(x, y);
     this.veilTop.fixedToCamera = true;
-    this.veilTop.beginFill(0xff0000, 0.7);
+    this.veilTop.beginFill(CONFIG.veil_rgb, CONFIG.veil_part_alpha);
     this.veilTop.drawRect(x, y, w, h);
     this.veilTop.endFill();
 
     this.veilTop.inputEnabled = true;
-    this.veilTop.events.onInputDown.add(this._handleClose);
+    this.veilTop.events.onInputDown.add(this._handleClose);;
   };
+
+  _createVeilDown = () => {
+    let x = 0;
+    let y = this.h / 2;
+    let w = this.w;
+    let h = this.y;
+
+    this.veilDown = this.game.make.graphics(x, y);
+    this.veilDown.fixedToCamera = true;
+    this.veilDown.beginFill(CONFIG.veil_rgb, CONFIG.veil_part_alpha);
+    this.veilDown.drawRect(x, y, w, h);
+    this.veilDown.endFill();
+
+    this.veilDown.inputEnabled = true;
+    this.veilDown.events.onInputDown.add(this._handleClose);
+  }
 
   _handleClose = () => {
     console.log('close modal');
@@ -272,11 +303,10 @@ class ModalRaw extends window.Phaser.Group {
     this.scroller.enableScroll();
   };
 
-  // try-out 在继承的类那里直接调用这个方法来添加内容
   _getContextGroupInit = () => {
-    // empty
-    // 添加的东西 y 要 >= this.headingH
-    // const OFFSET = this.headingH;
+    /*empty
+    添加的东西 y 要 >= this.headingH
+    const OFFSET = this.headingH;*/
   };
 }
 
