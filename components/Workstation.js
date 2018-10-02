@@ -10,6 +10,11 @@ import ResourecePile from './ResourcePile';
 import BoxCollect from './BoxCollect';
 
 const MAX_INPUT_PILE = 2;
+const A_MINUTE = 60000;
+const OUTPUT_DELAY = {
+  normal: 3000,
+  fast: 1000
+};
 
 const COLLECT_TYPES = {
   CASH: 'cash',
@@ -53,19 +58,27 @@ class Workstation extends window.Phaser.Group {
 
     this._data = {
       input: OUTPUT_REQ_MAP['steel'],
-      inputAmount: [123, 456],
+      inputAmount: [Big(100), Big(0)],
+      inputComsumePerMin: [Big(500), Big(200)],
       output: 'steel',
       outputAmount: {
-        cash: 789,
-        prod: 999
+        cash: Big(0),
+        prod: Big(0)
       },
+      outputAmountPerMin: {
+        cash: Big(100),
+        prod: Big(200)
+      },
+      outputDelay: 'normal',
       price: {
-        cash: 123,
-        superCash: 456
+        cash: Big(123),
+        superCash: Big(456)
       },
       level: 1,
       collectType: 'cash'
     };
+    this.outputTimer = null;
+    // this.outputTimer = this.game.time.events.loop(1000, this.incOutput, this);
 
     this.ground = this.game.make.image(0, 0, `ground_level_${stationLevel}`);
 
@@ -77,7 +90,6 @@ class Workstation extends window.Phaser.Group {
 
     this.tableCover = this.game.make.sprite(0, 0, 'table_cover');
     this.tableCover.alignIn(this.table, window.Phaser.TOP_LEFT, 5, 0);
-    this.tableCover.visible = false;
 
     // 购买按钮
     this.buyBtnGroup = this.game.make.group();
@@ -86,9 +98,9 @@ class Workstation extends window.Phaser.Group {
     this.buyBtnSuperCash.alignIn(this.table, window.Phaser.TOP_LEFT, -5, -5);
     this.buyBtnSuperCash.inputEnabled = true;
     this.buyBtnSuperCash.input.priorityID = PRIORITY_ID;
-    this.buyBtnSuperCash.events.onInputDown.add(() => {
-      console.log('点击超级现金购买');
-    });
+    this.buyBtnSuperCash.events.onInputDown.add(
+      this.buy.bind(this, 'super_cash')
+    );
 
     this.buyBtnSuperCashText = this.game.make.text(0, 0, '123', BTN_TEXT_STYLE);
     this.buyBtnSuperCashText.alignIn(
@@ -102,9 +114,7 @@ class Workstation extends window.Phaser.Group {
     this.buyBtnCash.alignIn(this.table, window.Phaser.TOP_RIGHT, -10, -5);
     this.buyBtnCash.inputEnabled = true;
     this.buyBtnCash.input.priorityID = PRIORITY_ID;
-    this.buyBtnCash.events.onInputDown.add(() => {
-      console.log('点击现金购买');
-    });
+    this.buyBtnCash.events.onInputDown.add(this.buy.bind(this, 'cash'));
 
     this.buyBtnCashText = this.game.make.text(0, 0, '123', BTN_TEXT_STYLE);
     this.buyBtnCashText.alignIn(
@@ -128,36 +138,27 @@ class Workstation extends window.Phaser.Group {
     this.productBtn.input.priorityID = PRIORITY_ID;
     this.productBtn.events.onInputDown.add(() => {
       console.log('点击工作台产品按钮');
-      this.setOutput('drill');
+      // this.game.state.start('Test');
+      // this.outputTimer.delay = 100;
     });
-    this.productBtnItem = this.game.make.sprite(0, 0, SOURCE_IMG_MAP[this._data.output]);
+    this.productBtnItem = this.game.make.sprite(
+      0,
+      0,
+      SOURCE_IMG_MAP[this._data.output]
+    );
     this.productBtnItem.alignIn(this.productBtn, window.Phaser.CENTER, 0, -5);
 
-    // FIX ME 需要考虑一个变成两个的情况
     this.inputItemGroup = this.game.make.group();
-    range(2).forEach(index => {
+    range(MAX_INPUT_PILE).forEach(index => {
       let { input } = this._data;
-      let inputItem = new ResourecePile(
-        this.game,
-        'reso_ore',
-        true
-      );
+      let inputTexture = SOURCE_IMG_MAP[input[index]];
+      let inputItem = new ResourecePile(this.game, inputTexture, true);
       inputItem.x = this.table.x + 20 + index * 40;
       inputItem.y = index * 10;
-      inputItem.setNum(formatBigNum(Big(this._data.inputAmount[index])));
+      inputItem.setNum(formatBigNum(this._data.inputAmount[index]));
+      inputItem.visible = Boolean(inputTexture);
       this.inputItemGroup.add(inputItem);
     });
-    // this._data.input.forEach((inputKey, index) => {
-    //   let inputItem = new ResourecePile(
-    //     this.game,
-    //     SOURCE_IMG_MAP[inputKey],
-    //     true
-    //   );
-    //   inputItem.x = this.table.x + 20 + index * 40;
-    //   inputItem.y = index * 10;
-    //   inputItem.setNum(formatBigNum(Big(this._data.inputAmount[index])));
-    //   this.inputItemGroup.add(inputItem);
-    // });
 
     this.outputItems = new ResourecePile(this.game, 'prod_steel');
     this.outputItems.alignIn(this.table, window.Phaser.TOP_CENTER);
@@ -170,7 +171,6 @@ class Workstation extends window.Phaser.Group {
       100,
       0
     );
-    this.inputItemsAni.start();
 
     this.outputItemsAniLeft = new ResourceEmitter(
       this.game,
@@ -190,24 +190,17 @@ class Workstation extends window.Phaser.Group {
       100
     );
 
-    this.productGroup.add(this.productBtn);
-    this.productGroup.add(this.productBtnItem);
-    this.productGroup.add(this.inputItemGroup);
-    this.productGroup.add(this.outputItems);
-    this.productGroup.add(this.inputItemsAni);
-    this.productGroup.add(this.outputItemsAniLeft);
-    this.productGroup.add(this.outputItemsAniRight);
-
     this.worker = new Worker(this.game, 0, 0);
     this.worker.alignTo(this.table, window.Phaser.TOP_CENTER, 20, -10);
-    this.worker.work();
+    this.worker.visible = false;
 
     this.manager = this.game.make.sprite(0, 0, 'mgr_worker');
     this.manager.alignIn(this.table, window.Phaser.TOP_LEFT, -15, 100);
+    this.manager.visible = false;
 
     this.boxCollect = new BoxCollect(this.game);
     let { collectType, outputAmount } = this._data;
-    this.boxCollect.setNum(formatBigNum(Big(outputAmount[collectType])));
+    this.boxCollect.setNum(formatBigNum(outputAmount[collectType]));
 
     this.boxHolderProd = this.game.make.sprite(0, 0, 'box_collect_holder');
     this.boxHolderProd.alignTo(this.table, window.Phaser.BOTTOM_LEFT, -20, -5);
@@ -232,6 +225,19 @@ class Workstation extends window.Phaser.Group {
       this.workestationLevelModal.visible = true;
     });
 
+    this.productGroup.add(this.productBtn);
+    this.productGroup.add(this.productBtnItem);
+    this.productGroup.add(this.inputItemGroup);
+    this.productGroup.add(this.outputItems);
+    this.productGroup.add(this.inputItemsAni);
+    this.productGroup.add(this.outputItemsAniLeft);
+    this.productGroup.add(this.outputItemsAniRight);
+    this.productGroup.add(this.boxHolderProd);
+    this.productGroup.add(this.boxHolderCash);
+    this.productGroup.add(this.boxCollect);
+    this.productGroup.add(this.upBtn);
+    this.productGroup.visible = false;
+
     // modal
     this.workestationLevelModal = new ModalLevel({
       game: this.game,
@@ -252,22 +258,102 @@ class Workstation extends window.Phaser.Group {
 
     this.add(this.productGroup);
 
-    this.add(this.boxHolderProd);
-    this.add(this.boxHolderCash);
-    this.add(this.boxCollect);
-
-    this.add(this.upBtn);
-
     this._init();
   }
 
   _init() {
-    this.setCollectType(COLLECT_TYPES.CASH);
+    this.beAbleToBuy();
+    // this.setCollectType(COLLECT_TYPES.CASH);
+  }
+
+  _outputLoop() {
+    let {
+      collectType,
+      inputAmount,
+      inputComsumePerMin,
+      outputAmount,
+      outputAmountPerMin,
+      outputDelay
+    } = this._data;
+    this._data.outputAmount[collectType] = outputAmount[collectType].plus(
+      outputAmountPerMin[collectType].div(
+        Big(A_MINUTE / OUTPUT_DELAY[outputDelay])
+      )
+    );
+    this.boxCollect.setNum(formatBigNum(outputAmount[collectType]));
+
+    this._data.inputAmount = inputAmount.map((amount, index) => {
+      let nextAmount = amount.minus(
+        inputComsumePerMin[index].div(Big(A_MINUTE / OUTPUT_DELAY[outputDelay]))
+      );
+      if (nextAmount.lt(0)) {
+        nextAmount = Big(0);
+      }
+      return nextAmount;
+    });
+    this.inputItemGroup.forEach(item => {
+      let index = this.inputItemGroup.getChildIndex(item);
+      item.setNum(formatBigNum(this._data.inputAmount[index]));
+    });
+
+    if (this._getHasNoInput()) {
+      this.stopWork();
+    }
+  }
+
+  _getHasNoInput() {
+    let neededInputAmount = this._data.inputAmount.slice(
+      0,
+      this._data.input.length
+    );
+    return neededInputAmount.some(amount => {
+      return amount.lte(0);
+    });
   }
 
   // public methods
+  beAbleToBuy() {
+    this.buyBtnGroup.visible = true;
+  }
+
+  buy(type) {
+    // 计算消耗金币
+    console.log('this buy: ', type);
+    this.buyBtnGroup.visible = false;
+    this.tableCover.visible = false;
+
+    this.manager.visible = true;
+    this.worker.visible = true;
+    this.productGroup.visible = true;
+
+    this.startWork();
+  }
+
+  startWork() {
+    this.outputTimer = this.game.time.events.loop(
+      OUTPUT_DELAY[this._data.outputDelay],
+      this._outputLoop,
+      this
+    );
+    this.worker.work();
+    this.setCollectType(COLLECT_TYPES.CASH);
+  }
+
+  stopWork() {
+    this.inputItemsAni.stop();
+    this.outputItemsAniLeft.stop();
+    this.outputItemsAniRight.stop();
+    this.worker.stop();
+    if (this.outputTimer) {
+      this.game.time.events.remove(this.outputTimer);
+    }
+  }
+
   setCollectType(collectType) {
     this._data.collectType = collectType;
+    let { outputAmount } = this._data;
+    this.boxCollect.setNum(formatBigNum(outputAmount[collectType]));
+    this.inputItemsAni.start();
     if (collectType === COLLECT_TYPES.CASH) {
       this.boxCollect.alignIn(this.boxHolderCash, window.Phaser.CENTER, 0, -5);
       this.boxHolderCash.frame = 1;
@@ -303,21 +389,21 @@ class Workstation extends window.Phaser.Group {
     this.productBtnItem.loadTexture(outputTexture);
 
     let inputTexture = this._data.input.map(item => SOURCE_IMG_MAP[item]);
-    this.inputItemGroup.forEach((item) => {
+    this.inputItemGroup.forEach(item => {
       let index = this.inputItemGroup.getChildIndex(item);
-      item.changeTexture(inputTexture[index]);
+      if (inputTexture[index]) {
+        item.changeTexture(inputTexture[index]);
+        item.visible = true;
+      } else {
+        item.visible = false;
+      }
     });
     this.inputItemsAni.changeTexture(inputTexture);
-
   }
 
-  setOutputAmount(amout) {
+  setOutputAmount(amout) {}
 
-  }
-
-  setInputAmount(amount) {
-
-  }
+  setInputAmount(amount) {}
 
   getData() {
     return this._data;

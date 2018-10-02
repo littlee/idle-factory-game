@@ -7,7 +7,7 @@ const INPUT_NUM_STYLE = {
 };
 
 class ResourecePile extends window.Phaser.Group {
-  constructor(game, key, hasNumber) {
+  constructor(game, key = 'reso_ore', hasNumber) {
     super(game);
 
     this.pileWidth = 0;
