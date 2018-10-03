@@ -97,11 +97,6 @@ class Game extends window.Phaser.State {
       coupledBtn: this.upBtnMarket
     });
 
-    this.modalRescources = new ModalRescources({
-      game: this.game,
-      headingTxt: '进口生产原料'
-    });
-
     this.modalAdCampaign = new ModalAdCampaign({
       game: this.game,
     });
@@ -318,7 +313,12 @@ class Game extends window.Phaser.State {
     this.warehouse = new Warehouse(this.game, 100, 450);
     this.warehouse.onClick(() => {
       this.modalRescources.visible = true;
-      // console.log('this.modalRescources信息：available', this.modalRescources.getAvailableResources());
+    });
+
+    this.modalRescources = new ModalRescources({
+      game: this.game,
+      headingTxt: '进口生产原料',
+      resourcesTable: this.warehouse
     });
 
     // bg of selling
