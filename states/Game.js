@@ -18,6 +18,7 @@ import BellYellow from '../components/BellYellow';
 import BtnUpgrade from '../components/BtnUpgrade';
 import ModalLevel from '../components/ModalLevel.js';
 import ModalRescources from '../components/ModalResources.js';
+import ModalAdCampaign from '../components/ModalAdCampaign';
 
 import range from '../js/libs/_/range';
 import { arrayIntersect } from '../utils';
@@ -99,6 +100,10 @@ class Game extends window.Phaser.State {
     this.modalRescources = new ModalRescources({
       game: this.game,
       headingTxt: '进口生产原料'
+    });
+
+    this.modalAdCampaign = new ModalAdCampaign({
+      game: this.game,
     });
 
     const WORKSTATION_START_Y = 915;
@@ -268,6 +273,7 @@ class Game extends window.Phaser.State {
     this.btnXCash.input.priorityID = PRIORITY_ID;
     this.btnXCash.events.onInputDown.add(() => {
       console.log('click btn x cash');
+      this.modalAdCampaign.visible = true;
     });
 
     this.btnWheelCoin = this.add.sprite(

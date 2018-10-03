@@ -87,6 +87,7 @@ class Start extends window.Phaser.State {
     this.load.image('prod_steel_jade', 'images/prod_steel_jade.png');
     this.load.image('prod_steel_rubber', 'images/prod_steel_rubber.png');
     this.load.image('prod_steel_silver', 'images/prod_steel_silver.png');
+    this.load.image('progressBarSaleBoost', 'images/progressBarSaleBoost.png');
     this.load.image('icon_loading_speed', 'images/icon_loading_speed.png');
     this.load.image('icon_transporter', 'images/icon_transporter.png');
     this.load.image('icon_walk_speed', 'images/icon_walk_speed.png');
