@@ -175,7 +175,7 @@ class WorkerWarehouse extends window.Phaser.Group {
     return new Promise(resolve => {
       setTimeout(() => {
         this.stopGiveToStation();
-        this.setCarryNum(totalRest.toString());
+        this.setCarryNum(formatBigNum(totalRest));
         resolve(giveMap);
       }, stayDuration);
     });
