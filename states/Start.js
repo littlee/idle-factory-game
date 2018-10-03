@@ -59,6 +59,8 @@ class Start extends window.Phaser.State {
     this.load.image('avatar_tran_market', 'images/avatar_market_transporter.png');
     this.load.image('avatar_tran_warehose', 'images/avatar_transporter.png');
     this.load.image('avatar_worker', 'images/avatar_worker.png');
+    this.load.image('bg_base', 'images/background_base.png');
+    this.load.image('bg_copper', 'images/background_copper.png');
     this.load.image('bg_gold', 'images/background_gold.png');
     this.load.image('bg_jade', 'images/background_jade.png');
     this.load.image('bg_rubber', 'images/background_rubber.png');
@@ -70,8 +72,8 @@ class Start extends window.Phaser.State {
     this.load.image('btn_level_upgrade', 'images/btn_level_upgrade.png');
     this.load.image('btn_level_upgrade_unable', 'images/btn_level_upgrade_unable.png');
     this.load.image('btn_pick_upgrade', 'images/btn_activated.png');
-    this.load.image('btn_prod_update', 'images/btn_prod_update.png');
-    this.load.image('btn_prod_skip', 'images/btn_prod_skip.png');
+    this.load.image('btn_research_update', 'images/btn_research_update.png');
+    this.load.image('btn_research_skip', 'images/btn_research_skip.png');
     this.load.image('bubble_percentage', 'images/bubble_percentage.png');
     this.load.image('clock_yellow', 'images/clock_yellow.png');
     this.load.image('prod_can', 'images/prod_can.png');

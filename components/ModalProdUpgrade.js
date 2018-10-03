@@ -1,9 +1,10 @@
 import ModalRaw from './ModalRaw.js';
+import ProductUpgradeItem from './ProductUpgradeItem.js';
 
 function getFontStyle(fSize, color, align, weight) {
   return {
     fontWeight: weight || 'normal',
-    fontSize: fSize || '16px',
+    fontSize: fSize || '18px',
     fill: color || '#3A0A00', // '#00FF00', 3a0a00
     boundsAlignH: 'center',
     boundsAlignV: 'middle',
@@ -21,11 +22,11 @@ const CONFIG = {
   frameTagH: 58,
   frameTagColor: 0xcb6000,
   frameVeilH: 174,
+  prodStrokeWidth: 4,
+  prodRegularStrokeColor: 0x03832e,  // 0x03832e
+  prodHighlightedStrokeColor: 0X39ec43,
+  bubbleColor: 0x004818,
   gap: 100,
-  prodWidth: 84,
-  prodHeight: 84,
-  prodStrokeColor: 0x006e0c,
-  prodStrokeWidth: 1,
   connectlineH: 4,
   clockScaleFactor: 0.4
 };
@@ -181,8 +182,21 @@ class ModalProdUpgrade extends ModalRaw {
     tagCopperImg.alignTo(tagCopperName, Phaser.RIGHT_BOTTOM, 5, -5);
 
     // production update chain
-    // let connectLine = this.game.make.graphics(0, 0);
-    this.prod = this.game.make.image(100, 200, 'prod_steel_jade');
+    this.steelGroup = new ProductUpgradeItem({
+      game: this.game,
+      x: LEFT + 60,
+      y: OFFSET + 120,
+      product: 'steel',
+      bought: true
+    });
+
+    this.drillGroup = new ProductUpgradeItem({
+      game: this.game,
+      x: LEFT + 60,
+      y: OFFSET + 120,
+      product: 'steel',
+      bought: true
+    });
 
     this.contentGroup.addChild(frameOre);
     this.contentGroup.addChild(frameCopper);
@@ -198,7 +212,8 @@ class ModalProdUpgrade extends ModalRaw {
     this.contentGroup.addChild(tagCopperImg);
 
     // test
-    this.contentGroup.addChild(this.prod);
+    this.contentGroup.addChild(this.steelGroup);
+    this.contentGroup.addChild(this.drillGroup);
   };
 }
 
