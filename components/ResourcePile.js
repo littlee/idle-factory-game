@@ -39,7 +39,7 @@ class ResourecePile extends window.Phaser.Group {
   }
 
   setNum(text) {
-    this.number && this.number.setText(text);
+    this.number && this.number.setText(`${text}`);
     this.centerNumText();
   }
 

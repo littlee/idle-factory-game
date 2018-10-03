@@ -44,7 +44,13 @@ const OUTPUT_INPUT_MAP = {
 };
 
 function getInitInput(output) {
-  return OUTPUT_INPUT_MAP[output];
+  return OUTPUT_INPUT_MAP[output].reduce((input, key) => {
+    input[key] = {
+      amount: Big(0),
+      amountHu: '0'
+    };
+    return input;
+  }, {});
 }
 
 class Workstation extends window.Phaser.Group {
@@ -53,20 +59,20 @@ class Workstation extends window.Phaser.Group {
     this.x = x;
     this.y = y;
 
-    // todo: input 改成 map
     this._data = {
       isBought: false,
       input: getInitInput('steel'),
-      inputAmount: [Big(0), Big(0)],
-      inputConsumePerMin: [Big(0), Big(0)],
       output: 'steel',
       outputAmount: {
         cash: Big(0),
         prod: Big(0)
       },
+      // 合并成 producePermin ??
+      inputConsumePerMin: Big(1000), // ?? 可能是算出来的数字
       outputAmountPerMin: {
-        cash: Big(0),
-        prod: Big(0)
+        // ?? 可能是算出来的数字
+        cash: Big(10),
+        prod: Big(10)
       },
       outputDelay: 'normal',
       price: {
@@ -150,11 +156,17 @@ class Workstation extends window.Phaser.Group {
     this.inputItemGroup = this.game.make.group();
     range(MAX_INPUT_PILE).forEach(index => {
       let { input } = this._data;
-      let inputTexture = SOURCE_IMG_MAP[input[index]];
+      let inputKeys = Object.keys(input);
+      let inputTexture = SOURCE_IMG_MAP[inputKeys[index]];
       let inputItem = new ResourecePile(this.game, inputTexture, true);
       inputItem.x = this.table.x + 20 + index * 40;
       inputItem.y = index * 10;
-      inputItem.setNum(formatBigNum(this._data.inputAmount[index]));
+      if (inputKeys[index]) {
+        inputItem.setNum(formatBigNum(input[inputKeys[index]].amount));
+      }
+      else {
+        inputItem.setNum(0);
+      }
       inputItem.visible = Boolean(inputTexture);
       this.inputItemGroup.add(inputItem);
     });
@@ -166,7 +178,7 @@ class Workstation extends window.Phaser.Group {
       this.game,
       this.table.x + 50,
       this.table.y + 50,
-      this._data.input.map(item => SOURCE_IMG_MAP[item]),
+      Object.keys(this._data.input).map(item => SOURCE_IMG_MAP[item]),
       100,
       0
     );
@@ -252,7 +264,7 @@ class Workstation extends window.Phaser.Group {
       game: this.game,
       type: 'workstation',
       coupledBtn: this.upBtn,
-      workstation: this, // more to go
+      workstation: this // more to go
     });
 
     // for simple z-depth
@@ -282,7 +294,7 @@ class Workstation extends window.Phaser.Group {
     }
     let {
       collectType,
-      inputAmount,
+      input,
       inputConsumePerMin,
       outputAmount,
       outputAmountPerMin,
@@ -295,27 +307,46 @@ class Workstation extends window.Phaser.Group {
     );
     this.boxCollect.setNum(formatBigNum(outputAmount[collectType]));
 
-    this._data.inputAmount = inputAmount.map((amount, index) => {
-      let nextAmount = amount.minus(
-        inputConsumePerMin[index].div(Big(A_MINUTE / OUTPUT_DELAY[outputDelay]))
-      );
-      if (nextAmount.lt(0)) {
-        nextAmount = Big(0);
-      }
-      return nextAmount;
-    });
+    let inputKeys = Object.keys(this._data.input);
+    this._data.input = inputKeys
+      .map(key => {
+        let nextAmount = input[key].amount.minus(
+          inputConsumePerMin.div(Big(A_MINUTE / OUTPUT_DELAY[outputDelay]))
+        );
+        if (nextAmount.lt(0)) {
+          nextAmount = Big(0);
+        }
+        return {
+          key,
+          amount: nextAmount,
+          amountHu: nextAmount.toString()
+        };
+      })
+      .reduce((map, item) => {
+        let { key, amount, amountHu } = item;
+        map[key] = {
+          amount,
+          amountHu
+        };
+        return map;
+      }, {});
     this.inputItemGroup.forEach(item => {
       let index = this.inputItemGroup.getChildIndex(item);
-      item.setNum(formatBigNum(this._data.inputAmount[index]));
+      if (inputKeys[index]) {
+        item.setNum(formatBigNum(this._data.input[inputKeys[index]].amount));
+      }
+      else {
+        item.setNum(0);
+      }
     });
   }
 
   _getHasNoInput() {
-    let neededInputAmount = this._data.inputAmount.slice(
-      0,
-      this._data.input.length
-    );
-    return neededInputAmount.some(amount => {
+    let { input } = this._data;
+    let inputAmt = Object.keys(input).map(key => {
+      return input[key].amount;
+    });
+    return inputAmt.some(amount => {
       return amount.lte(0);
     });
   }
@@ -368,9 +399,7 @@ class Workstation extends window.Phaser.Group {
     }
   }
 
-  takeFromWorker(amountMap) {
-    
-  }
+  takeFromWorker(amountMap) {}
 
   setCollectType(collectType) {
     this._data.collectType = collectType;
@@ -404,6 +433,10 @@ class Workstation extends window.Phaser.Group {
 
   getInput() {
     return this._data.input;
+  }
+
+  getInputKeys() {
+    return Object.keys(this._data.input);
   }
 
   setOutput(outputKey) {

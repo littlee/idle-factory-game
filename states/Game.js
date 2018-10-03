@@ -187,7 +187,7 @@ class Game extends window.Phaser.State {
           await worker.moveToStation(workstations[i]);
           let workerGiveKeys = arrayIntersect(
             worker.getCarryKeys(),
-            workstations[i].getInput()
+            workstations[i].getInputKeys()
           );
           if (workerGiveKeys.length) {
             let giveAmountMap = await worker.giveToStation(workerGiveKeys);
@@ -205,7 +205,7 @@ class Game extends window.Phaser.State {
   _getStationsNeededKeys(stations) {
     let neededKeys = [];
     stations.forEach(sta => {
-      let staInput = sta.getInput();
+      let staInput = sta.getInputKeys();
       staInput.forEach(input => {
         if (neededKeys.indexOf(input) === -1) {
           neededKeys.push(input);
@@ -216,7 +216,7 @@ class Game extends window.Phaser.State {
   }
 
   _getStationAmountKeyMap(keys, stations) {
-    let stationsInputs = stations.map(sta => sta.getInput());
+    let stationsInputs = stations.map(sta => sta.getInputKeys());
 
     return keys.reduce((keyMap, key) => {
       let stationNeedThisKey = stationsInputs.reduce((acc, input) => {
