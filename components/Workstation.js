@@ -36,12 +36,16 @@ const GROUND_NUM_STYLE = {
 
 const PRIORITY_ID = 999;
 
-const OUTPUT_REQ_MAP = {
+const OUTPUT_INPUT_MAP = {
   steel: ['ore'],
   can: ['ore'],
   drill: ['steel'],
   toaster: ['steel', 'can']
 };
+
+function getInitInput(output) {
+  return OUTPUT_INPUT_MAP[output];
+}
 
 class Workstation extends window.Phaser.Group {
   constructor(game, x, y, stationLevel = 1, index = 1) {
@@ -49,11 +53,12 @@ class Workstation extends window.Phaser.Group {
     this.x = x;
     this.y = y;
 
+    // todo: input 改成 map
     this._data = {
       isBought: false,
-      input: OUTPUT_REQ_MAP['steel'],
+      input: getInitInput('steel'),
       inputAmount: [Big(0), Big(0)],
-      inputComsumePerMin: [Big(0), Big(0)],
+      inputConsumePerMin: [Big(0), Big(0)],
       output: 'steel',
       outputAmount: {
         cash: Big(0),
@@ -278,7 +283,7 @@ class Workstation extends window.Phaser.Group {
     let {
       collectType,
       inputAmount,
-      inputComsumePerMin,
+      inputConsumePerMin,
       outputAmount,
       outputAmountPerMin,
       outputDelay
@@ -292,7 +297,7 @@ class Workstation extends window.Phaser.Group {
 
     this._data.inputAmount = inputAmount.map((amount, index) => {
       let nextAmount = amount.minus(
-        inputComsumePerMin[index].div(Big(A_MINUTE / OUTPUT_DELAY[outputDelay]))
+        inputConsumePerMin[index].div(Big(A_MINUTE / OUTPUT_DELAY[outputDelay]))
       );
       if (nextAmount.lt(0)) {
         nextAmount = Big(0);
@@ -363,7 +368,7 @@ class Workstation extends window.Phaser.Group {
     }
   }
 
-  takeFromWorker() {
+  takeFromWorker(amountMap) {
     
   }
 
@@ -406,7 +411,8 @@ class Workstation extends window.Phaser.Group {
       return;
     }
     this._data.output = outputKey;
-    this._data.input = OUTPUT_REQ_MAP[outputKey];
+    this._data.outputAmount.prod = Big(0);
+    this._data.input = OUTPUT_INPUT_MAP[outputKey];
 
     let outputTexture = SOURCE_IMG_MAP[outputKey];
     this.outputItems.changeTexture(outputTexture);

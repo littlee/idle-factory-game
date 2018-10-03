@@ -25,14 +25,24 @@ const SPEED = {
   fast: 0.5
 };
 
+/*
+- Max Resource Transported ??? 计算出来的数字 x/min
+- Transporters
+- Transporter Capacity
+- Transporter Loading Speed
+- Transporter Walk Speed
+ */
+
 class WorkerWarehouse extends window.Phaser.Group {
   constructor(game, x, y) {
     super(game);
     this._data = {
-      carry: [],
-      maxCarry: Big(1000),
+      carry: {},
       onRoutine: false,
-      speed: SPEED.normal
+      speed: SPEED.normal,
+      capacity: Big(2000),
+      loadingSpeed: Big(1000),
+      walkSpeed: 0.2
     };
 
     this.x = x;
@@ -70,8 +80,8 @@ class WorkerWarehouse extends window.Phaser.Group {
     return this._data.onRoutine;
   }
 
-  getSpeed() {
-    return this._data.speed;
+  getCapacity() {
+    return this._data.capacity;
   }
 
   goFast() {
@@ -84,8 +94,9 @@ class WorkerWarehouse extends window.Phaser.Group {
 
   move(y) {
     return new Promise(resolve => {
+      let { walkSpeed } = this._data;
       let prevY = this.y;
-      let duration = Math.abs(y - prevY) / this.getSpeed();
+      let duration = Math.abs(y - prevY) / walkSpeed;
       this.game.add
         .tween(this)
         .to(
@@ -102,23 +113,26 @@ class WorkerWarehouse extends window.Phaser.Group {
     });
   }
 
-  carryFromWarehouse(neededKeys) {
-    this._data.onRoutine = true;
-    this._data.carry = neededKeys.map(key => {
-      return {
-        key,
-        amount: Big(100)
-      };
-    });
-    this.setCarryNum(formatBigNum(this._data.maxCarry));
-    this.walkWithBox();
+  carryFromWarehouse(carry) {
     return new Promise(resolve => {
-      setTimeout(resolve, 1500);
+      this._data.onRoutine = true;
+      this.walkWithBox();
+      let { capacity, loadingSpeed } = this._data;
+      let carryDuration = parseInt(capacity.div(loadingSpeed).times(1000), 10);
+      this.setCarry(carry);
+      setTimeout(() => {
+        this.setCarryNum(formatBigNum(capacity));
+        resolve();
+      }, carryDuration);
     });
   }
 
+  setCarry(carry) {
+    this._data.carry = carry;
+  }
+
   setCarryNum(num) {
-    this.carryNum.setText(num);
+    this.carryNum.setText(`${num}`);
     this.carryNum.alignIn(this.man, window.Phaser.CENTER, 0, 20);
   }
 
@@ -126,29 +140,59 @@ class WorkerWarehouse extends window.Phaser.Group {
     return this.move(station.y + 50);
   }
 
-  stayInStation() {
-    return new Promise(resolve => {
-      setTimeout(resolve, 1000);
-    });
-  }
-
   getCarryKeys() {
-    return this._data.carry.map(c => c.key);
+    return Object.keys(this._data.carry);
   }
 
   giveToStation(keys) {
-    keys = keys.map(k => SOURCE_IMG_MAP[k]);
-    this.emt.changeTexture(keys);
+    let emtKeys = keys.map(k => SOURCE_IMG_MAP[k]);
+    this.emt.changeTexture(emtKeys);
     this.emt.start();
+
+    let totalGive = Big(0);
+    let giveMap = {};
+    keys.forEach(key => {
+      let { carry } = this._data;
+      let decAmount = carry[key].amount.div(carry[key].stationAmount);
+
+      carry[key].amount = carry[key].amount.minus(decAmount);
+      carry[key].amountHu = carry[key].amount.toString();
+      carry[key].stationAmount -= 1;
+
+      totalGive = totalGive.plus(decAmount);
+      giveMap[key] = {
+        amount: decAmount,
+        amountHu: decAmount.toString()
+      };
+    });
+    let { carry, loadingSpeed } = this._data;
+    let stayDuration = parseInt(totalGive.div(loadingSpeed).times(1000), 10);
+
+    let totalRest = Object.keys(carry).reduce((total, key) => {
+      return total.plus(carry[key].amount);
+    }, Big(0));
+
+    return new Promise(resolve => {
+      setTimeout(() => {
+        this.stopGiveToStation();
+        this.setCarryNum(totalRest.toString());
+        resolve(giveMap);
+      }, stayDuration);
+    });
   }
 
   stopGiveToStation() {
     this.emt.stop();
   }
 
-  takeProdFromStation(station) {}
+  takeProdFromStation(station) {
+    return new Promise(resolve => {
+      setTimeout(resolve, 1000);
+    });
+  }
 
   async backToWarehouse() {
+    this.setCarryNum(0);
     this.back();
     await this.move(this.startY);
     this.stand();

@@ -118,7 +118,7 @@ class Game extends window.Phaser.State {
     this.workstationGroup.children[0].buy('cash');
     this.workstationGroup.children[1].beAbleToBuy();
     this.workstationGroup.children[1].buy('cash');
-    this.workstationGroup.children[1].setOutput('drill');
+    // this.workstationGroup.children[1].setOutput('drill');
     this.workstationGroup.children[2].beAbleToBuy();
 
     window.stg = this.workstationGroup;
@@ -136,15 +136,6 @@ class Game extends window.Phaser.State {
       }
     });
     window.wg = this.workerWarehouseGroup;
-
-    // this.workerWarehouseGroup.forEachAlive(async worker => {
-    //   worker.carryFromWarehouse(this.warehouse);
-    //   let workstations = this.workstationGroup.children;
-    //   for (let i = 0; i < workstations.length; i++) {
-    //     await worker.moveToStation(workstations[i]);
-    //   }
-    //   await worker.backToWarehouse(this.warehouse);
-    // });
 
     this.workerMarketGroup = this.add.group();
     range(5).forEach(index => {
@@ -173,36 +164,38 @@ class Game extends window.Phaser.State {
 
     this._createFastScrollArrow(wholeGameScroller);
 
-    // this.emt = this.add.emitter(200, 200, 10);
-    // this.emt.makeParticles('reso_ore');
-    // this.emt.setXSpeed(100, 100);
-    // this.emt.setYSpeed(0, 0);
-    // this.emt.setRotation(0, 0);
-    // this.emt.gravity = 0;
-    // this.emt.start(false, 2000, 500);
-    // window.emt = this.emt;
   }
 
   update() {
-    // this.workerWarehouseGroup.forEachAlive(async worker => {
-    //   if (!worker.getIsOnRoutine()) {
-    //     let workstations = this._getBoughtStations();
-    //     let neededKeys = this._getStationsNeededKeys(workstations);
-    //     this.warehouse.outputGoods(neededKeys);
-    //     await worker.carryFromWarehouse(neededKeys);
-    //     this.warehouse.stopOutput();
-    //     for (let i = 0; i < workstations.length; i++) {
-    //       await worker.moveToStation(workstations[i]);
-    //       let workerGiveKeys = arrayIntersect(worker.getCarryKeys(), workstations[i].getInput());
-    //       if (workerGiveKeys.length) {
-    //         worker.giveToStation(workerGiveKeys);
-    //         await worker.stayInStation(workstations[i]);
-    //         worker.stopGiveToStation();
-    //       }
-    //     }
-    //     await worker.backToWarehouse(this.warehouse);
-    //   }
-    // });
+    this.workerWarehouseGroup.forEachAlive(async worker => {
+      if (!worker.getIsOnRoutine()) {
+        let workstations = this._getBoughtStations();
+        let neededKeys = this._getStationsNeededKeys(workstations);
+        this.warehouse.outputGoods(neededKeys);
+
+        let stationAmountKeyMap = this._getStationAmountKeyMap(neededKeys, workstations);
+
+        let warehouseCarry = this._getWorkerWarehouseCarry(
+          neededKeys,
+          worker.getCapacity(),
+          stationAmountKeyMap
+        );
+        await worker.carryFromWarehouse(warehouseCarry);
+        this.warehouse.stopOutput();
+
+        for (let i = 0; i < workstations.length; i++) {
+          await worker.moveToStation(workstations[i]);
+          let workerGiveKeys = arrayIntersect(
+            worker.getCarryKeys(),
+            workstations[i].getInput()
+          );
+          if (workerGiveKeys.length) {
+            let giveAmountMap = await worker.giveToStation(workerGiveKeys);
+          }
+        }
+        await worker.backToWarehouse(this.warehouse);
+      }
+    });
   }
 
   _getBoughtStations() {
@@ -220,6 +213,35 @@ class Game extends window.Phaser.State {
       });
     });
     return arrayIntersect(neededKeys, Warehouse.RESOURCE);
+  }
+
+  _getStationAmountKeyMap(keys, stations) {
+    let stationsInputs = stations.map(sta => sta.getInput());
+
+    return keys.reduce((keyMap, key) => {
+      let stationNeedThisKey = stationsInputs.reduce((acc, input) => {
+        if (input.indexOf(key) !== -1) {
+          acc = acc + 1;
+        }
+        return acc;
+      }, 0);
+      keyMap[key] = stationNeedThisKey;
+
+      return keyMap;
+    }, {});
+  }
+
+  _getWorkerWarehouseCarry(neededKeys, capacity, staAmtKeyMap) {
+    let amountPerKey = capacity.div(neededKeys.length);
+    let carry = neededKeys.reduce((acc, key) => {
+      acc[key] = {
+        amount: amountPerKey,
+        amountHu: amountPerKey.toString(),
+        stationAmount: staAmtKeyMap[key]
+      };
+      return acc;
+    }, {});
+    return carry;
   }
 
   _createMenus = () => {

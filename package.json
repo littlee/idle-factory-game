@@ -25,5 +25,8 @@
     "eslint-plugin-import": "^2.14.0",
     "prettier": "^1.14.3",
     "shelljs": "^0.8.2"
+  },
+  "dependencies": {
+    "big.js": "^5.1.2"
   }
 }
