@@ -230,7 +230,7 @@ class Game extends window.Phaser.State {
   _createMenus = () => {
     // top and bottom menu bar
     this.menuTop = this.add.graphics();
-    this.menuTop.beginFill(0x282c30);
+    this.menuTop.beginFill(0x5a5858);
     this.menuTop.drawRect(0, 0, this.world.width, 81);
     this.menuTop.endFill();
 
@@ -239,7 +239,7 @@ class Game extends window.Phaser.State {
     this.btnSuperCash = new BtnSuperCash(this.game, 186 * 2, 0);
 
     this.menuBottom = this.add.graphics();
-    this.menuBottom.beginFill(0x282c30);
+    this.menuBottom.beginFill(0x5a5858);
     this.menuBottom.drawRect(0, this.world.height - 81, this.world.width, 81);
     this.menuBottom.endFill();
 
