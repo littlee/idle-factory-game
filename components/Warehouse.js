@@ -43,6 +43,8 @@ export const GOODS = {
 };
 
 class Warehouse extends window.Phaser.Group {
+  static RESOURCE = ['ore', 'copper', 'barrel', 'plug', 'aluminium', 'rubber'];
+
   constructor(game, x, y) {
     super(game);
     this.x = x;
@@ -108,7 +110,7 @@ class Warehouse extends window.Phaser.Group {
     });
   }
 
-  stopOutout() {
+  stopOutput() {
     this.goodsOutputs.forEach(output => output.stop());
   }
 

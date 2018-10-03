@@ -35,3 +35,7 @@ export function formatSec(sec) {
 
   return `${padZero(min)}:${padZero(sec)}`;
 }
+
+export function arrayIntersect(a, b) {
+  return a.filter(item => b.indexOf(item) !== -1);
+}

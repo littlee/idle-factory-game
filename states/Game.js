@@ -20,6 +20,7 @@ import ModalLevel from '../components/ModalLevel.js';
 import ModalRescources from '../components/ModalResources.js';
 
 import range from '../js/libs/_/range';
+import { arrayIntersect } from '../utils';
 
 /*
 关于priorityID:
@@ -103,7 +104,7 @@ class Game extends window.Phaser.State {
     const WORKSTATION_START_Y = 915;
     const WORKSTATION_HEIGHT = 339;
     this.workstationGroup = this.add.group();
-    range(2).forEach(index => {
+    range(3).forEach(index => {
       let workstation = new Workstation(
         this.game,
         0,
@@ -113,6 +114,13 @@ class Game extends window.Phaser.State {
       );
       this.workstationGroup.add(workstation);
     });
+    this.workstationGroup.children[0].beAbleToBuy();
+    this.workstationGroup.children[0].buy('cash');
+    this.workstationGroup.children[1].beAbleToBuy();
+    this.workstationGroup.children[1].buy('cash');
+    this.workstationGroup.children[1].setOutput('drill');
+    this.workstationGroup.children[2].beAbleToBuy();
+
     window.stg = this.workstationGroup;
 
     this.workerWarehouseGroup = this.add.group();
@@ -178,17 +186,40 @@ class Game extends window.Phaser.State {
   update() {
     // this.workerWarehouseGroup.forEachAlive(async worker => {
     //   if (!worker.getIsOnRoutine()) {
-    //     await worker.carryFromWarehouse(this.warehouse);
-    //     let workstations = this.workstationGroup.children;
+    //     let workstations = this._getBoughtStations();
+    //     let neededKeys = this._getStationsNeededKeys(workstations);
+    //     this.warehouse.outputGoods(neededKeys);
+    //     await worker.carryFromWarehouse(neededKeys);
+    //     this.warehouse.stopOutput();
     //     for (let i = 0; i < workstations.length; i++) {
     //       await worker.moveToStation(workstations[i]);
-    //       await worker.tradeWithStation(workstations[i]);
+    //       let workerGiveKeys = arrayIntersect(worker.getCarryKeys(), workstations[i].getInput());
+    //       if (workerGiveKeys.length) {
+    //         worker.giveToStation(workerGiveKeys);
+    //         await worker.stayInStation(workstations[i]);
+    //         worker.stopGiveToStation();
+    //       }
     //     }
     //     await worker.backToWarehouse(this.warehouse);
     //   }
     // });
-    // this.modalWarehose.getUpdated();
-    // this.modalMarket.getUpdated();
+  }
+
+  _getBoughtStations() {
+    return this.workstationGroup.children.filter(item => item.getIsBought());
+  }
+
+  _getStationsNeededKeys(stations) {
+    let neededKeys = [];
+    stations.forEach(sta => {
+      let staInput = sta.getInput();
+      staInput.forEach(input => {
+        if (neededKeys.indexOf(input) === -1) {
+          neededKeys.push(input);
+        }
+      });
+    });
+    return arrayIntersect(neededKeys, Warehouse.RESOURCE);
   }
 
   _createMenus = () => {
@@ -206,6 +237,50 @@ class Game extends window.Phaser.State {
     this.menuBottom.beginFill(0x282c30);
     this.menuBottom.drawRect(0, this.world.height - 81, this.world.width, 81);
     this.menuBottom.endFill();
+
+    this.btnShop = this.add.sprite(10, this.world.height, 'btn_shop');
+    this.btnShop.anchor.setTo(0, 1);
+    this.btnShop.inputEnabled = true;
+    this.btnShop.input.priorityID = PRIORITY_ID;
+    this.btnShop.events.onInputDown.add(() => {
+      console.log('click btn shop');
+    });
+
+    this.btnBlueprint = this.add.sprite(
+      130,
+      this.world.height,
+      'btn_blueprint'
+    );
+    this.btnBlueprint.anchor.setTo(0, 1);
+    this.btnBlueprint.inputEnabled = true;
+    this.btnBlueprint.input.priorityID = PRIORITY_ID;
+    this.btnBlueprint.events.onInputDown.add(() => {
+      console.log('click btn blueprint');
+    });
+
+    this.btnXCash = this.add.sprite(
+      this.world.centerX,
+      this.world.height - 10,
+      'btn_x_cash'
+    );
+    this.btnXCash.anchor.setTo(0.5, 1);
+    this.btnXCash.inputEnabled = true;
+    this.btnXCash.input.priorityID = PRIORITY_ID;
+    this.btnXCash.events.onInputDown.add(() => {
+      console.log('click btn x cash');
+    });
+
+    this.btnWheelCoin = this.add.sprite(
+      this.world.width - 10,
+      this.world.height - 10,
+      'btn_wheel_coin'
+    );
+    this.btnWheelCoin.anchor.setTo(1);
+    this.btnWheelCoin.inputEnabled = true;
+    this.btnWheelCoin.input.priorityID = PRIORITY_ID;
+    this.btnWheelCoin.events.onInputDown.add(() => {
+      console.log('click btn wheel coin');
+    });
   };
 
   _addAllRelatedStuff2Bg = () => {

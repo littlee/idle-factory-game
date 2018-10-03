@@ -23,13 +23,17 @@ class Start extends window.Phaser.State {
     this.load.image('bell_timer', 'images/bell_timer.png');
     this.load.spritesheet('box_collect_holder', 'images/box_collect_holder.png', 75, 75);
     this.load.image('box_collect', 'images/box_collect.png');
+    this.load.image('btn_blueprint', 'images/btn_blueprint.png');
     this.load.image('btn_buy_ws_cash', 'images/btn_buy_ws_cash.png');
     this.load.image('btn_buy_ws_super_cash', 'images/btn_buy_ws_super_cash.png');
     this.load.image('btn_cash', 'images/btn_cash.png');
     this.load.image('btn_idle_cash', 'images/btn_idle_cash.png');
     this.load.image('btn_level', 'images/btn_level.png');
     this.load.image('btn_product_holder', 'images/btn_product_holder.png');
+    this.load.image('btn_shop', 'images/btn_shop.png');
     this.load.image('btn_super_cash', 'images/btn_super_cash.png');
+    this.load.image('btn_wheel_coin', 'images/btn_wheel_coin.png');
+    this.load.image('btn_x_cash', 'images/btn_x_cash.png');
     this.load.image('ground_level_1', 'images/ground_level_1.png');
     this.load.image('icon_level_up', 'images/icon_level_up.png');
     this.load.image('market_truck', 'images/market_truck.png');
