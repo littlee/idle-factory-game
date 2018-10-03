@@ -26,13 +26,19 @@ class BtnBuy extends window.Phaser.Group {
     game,
     alignToObj = null,
     target2buy = null,
-    coinNeeded = null,
-    cashNeeded = null,
-    boughtFlag = null
+    coinNeeded = INIT.coinNeeded,
+    cashNeeded = INIT.cashNeeded,
+    boughtFlag = INIT.boughtFlag,
+    resourcesTable  = null,
+    upperLayer = null
+
   }) {
-    super(game);
+    super(game, undefined);
     this.alignToObj = alignToObj;
+    this.resourcesTable = resourcesTable;
     this.can = false;
+    this.target2buy = target2buy;
+    this.upperLayer = upperLayer;
 
     this.keyCoinAble = 'btn_cash_able2buy';
     this.keyCoinUnable = 'btn_cash_unable2buy';
@@ -40,9 +46,9 @@ class BtnBuy extends window.Phaser.Group {
     this.keyBought = 'icon_tick';
 
     this._data = {
-      coinNeeded: coinNeeded === null ? INIT.coinNeeded : coinNeeded,
-      cashNeeded: cashNeeded === null ? INIT.cashNeeded : cashNeeded,
-      boughtFlag: boughtFlag === null ? INIT.boughtFlag : boughtFlag
+      coinNeeded: coinNeeded,
+      cashNeeded: cashNeeded,
+      boughtFlag: boughtFlag
     };
 
     this._getInit();
@@ -90,6 +96,7 @@ class BtnBuy extends window.Phaser.Group {
     } else {
       this.can = true;
       this.btn.loadTexture(this.keyCoinAble);
+      this.upperLayer.rmBgVeil();
     }
   }
 
@@ -101,7 +108,9 @@ class BtnBuy extends window.Phaser.Group {
     // let currCoin = 0; // fetch
     console.log('点击resouce modal购买按钮');
     if (this.can === true) {
-      console.log('减coin，update当前btnUI，变成tick，最外面的原料桌子上要有新的resource');
+      console.log('减coin，update当前btnUI，变成tick，最外面的原料桌子上要有新的resource', this.target2buy);
+      this.resourcesTable.addGood(this.target2buy);
+      // this.upperLayer.rmBgVeil();
       this._setBoughtFlagTrue();
       return true;
     }

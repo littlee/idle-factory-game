@@ -2,7 +2,7 @@ import Scroller from '../components/Scroller.js';
 // import ModalRaw from '../components/ModalRaw.js';
 import ModalLevel from '../components/ModalLevel.js';
 // import ModalRescources from '../components/ModalResources.js';
-// import ModalAdCampaign from '../components/ModalAdCampaign';
+import ModalAdCampaign from '../components/ModalAdCampaign';
 import ModalProdUpgrade from '../components/ModalProdUpgrade';
 
 class Game extends window.Phaser.State {
@@ -74,10 +74,10 @@ class Game extends window.Phaser.State {
     txtScroller.enableScroll();
 
     // modal
-    // let modal = new ModalAdCampaign({
-    //   game: this.game,
-    //   scrollable: true,
-    // });
+    let modal = new ModalAdCampaign({
+      game: this.game,
+      scrollable: true,
+    });
 
     // modal
     // let modal = new ModalLevel({
@@ -107,10 +107,10 @@ class Game extends window.Phaser.State {
     //   worker: true
     // });
 
-    let modal = new ModalProdUpgrade({
-      game: this.game,
-      headingTxt: '生产产品升级',
-    });
+    // let modal = new ModalProdUpgrade({
+    //   game: this.game,
+    //   headingTxt: '生产产品升级',
+    // });
 
     // btn-egg
     modal.visible = true;

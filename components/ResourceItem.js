@@ -10,23 +10,26 @@ const CONFIG = {
 
 const KEY_TARGET_MAP = {
   'reso_ore': 'ore',
-  'reso_copper': 'coppoer',
+  'reso_copper': 'copper',
   'reso_barrel': 'barrel',
   'reso_plug': 'plug',
-  'reso_aluminium': 'aluminium'
+  'reso_aluminium': 'aluminium',
+  'reso_rubber': 'rubber'
 };
 
 class ResourceItem extends window.Phaser.Group {
 
-  constructor({game, parent, key, pWidth, y, coinNeeded, cashNeeded, bought = false}) {
+  constructor({game, parent, key, pWidth, y, coinNeeded, cashNeeded, resourcesTable = null}) {
     super(game, parent);
     this.key = key;
     this.posX = (pWidth - CONFIG.width) / 2;
     this.posY = y;
+    this.resourcesTable = resourcesTable;
+    this.resourcesList = this.resourcesTable.getCurrentGoods();
 
     this._data = {
       target2buy: KEY_TARGET_MAP[key],
-      boughtFlag: bought || false,
+      boughtFlag: this.resourcesList.indexOf(KEY_TARGET_MAP[key]) > -1,
       coinNeeded,
       cashNeeded,
     };
@@ -37,35 +40,48 @@ class ResourceItem extends window.Phaser.Group {
   _getInit = () => {
     this.x = this.posX;
     this.y = this.posY;
-    let bgAlpha = this.boughtFlag ? CONFIG.bgAlpha : CONFIG.bgUnableAlpha;
 
     this.bg = this.game.make.graphics(0, 0);
-    this.bg.beginFill(CONFIG.bgColor, bgAlpha);
+    this.bg.beginFill(CONFIG.bgColor, CONFIG.bgAlpha);
     this.bg.drawRect(0, 0, CONFIG.width, CONFIG.height);
     this.bg.endFill();
 
     this.icon = this.game.make.image(20, 42, this.key);
     this.icon.anchor.setTo(0, 0.5);
 
+
+    this.bgVeil = this.game.make.graphics(0, 0);
+    this.bgVeil.beginFill(CONFIG.bgColor, CONFIG.bgUnableAlpha);
+    this.bgVeil.drawRect(0, 0, CONFIG.width, CONFIG.height);
+    this.bgVeil.endFill();
+    this.bgVeil.visible = !this._data.boughtFlag;
+
     // btn_*buy
     this.btnBuyGroup = new BtnBuy({
       game: this.game,
       alignToObj: this.bg,
-      target2buy: this.key, // should map to a unified name
+      target2buy: KEY_TARGET_MAP[this.key], // should map to a unified name
       coinNeeded: this._data.coinNeeded,
       cashNeeded: this._data.cashNeeded,
-      boughtFlag: this._data.boughtFlag
+      boughtFlag: this._data.boughtFlag,
+      resourcesTable: this.resourcesTable,
+      upperLayer: this
     });
 
     this.addChild(this.bg);
     this.addChild(this.icon);
     this.addChild(this.btnBuyGroup);
+    this.addChild(this.bgVeil);
   }
 
   getData = () => {
     let data = null;
     data = Object.assign({}, this._data, this.btnBuyGroup.getData());
     return data;
+  }
+
+  rmBgVeil = () => {
+    this.bgVeil.visible = false;
   }
 
   isBought = () => {

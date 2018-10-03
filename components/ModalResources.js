@@ -22,6 +22,7 @@ class ModalRescources extends ModalRaw {
     width = CONFIG.width,
     headingTxt,
     headingStyles = FONT_STYLE,
+    resourcesTable = null,
     scrollable
   }) {
     // parems
@@ -29,6 +30,7 @@ class ModalRescources extends ModalRaw {
     this.w = width;
     this.h = height;
 
+    this.resourcesTable = resourcesTable;
     this._getInit();
   }
 
@@ -49,7 +51,7 @@ class ModalRescources extends ModalRaw {
       key: 'reso_ore',
       pWidth: this.w,
       y: OFFSET,
-      bought: true,
+      resourcesTable: this.resourcesTable,
       coinNeeded: null,
       cashNeeded: null
     });
@@ -60,7 +62,7 @@ class ModalRescources extends ModalRaw {
       key: 'reso_copper',
       pWidth: this.w,
       y: OFFSET + 85 + 17,
-      bought: true,
+      resourcesTable: this.resourcesTable,
       coinNeeded: null,
       cashNeeded: null
     });
@@ -71,7 +73,7 @@ class ModalRescources extends ModalRaw {
       key: 'reso_barrel',
       pWidth: this.w,
       y: OFFSET + 85 * 2 + 17 * 2,
-      bought: true,
+      resourcesTable: this.resourcesTable,
       coinNeeded: null,
       cashNeeded: null
     });
@@ -82,7 +84,7 @@ class ModalRescources extends ModalRaw {
       key: 'reso_plug',
       pWidth: this.w,
       y: OFFSET + 85 * 3 + 17 * 3,
-      // bought: true,
+      resourcesTable: this.resourcesTable,
       coinNeeded: null,
       cashNeeded: null
     });
@@ -93,7 +95,7 @@ class ModalRescources extends ModalRaw {
       key: 'reso_aluminium',
       pWidth: this.w,
       y: OFFSET + 85 * 4 + 17 * 4,
-      // bought: true,
+      resourcesTable: this.resourcesTable,
       coinNeeded: null,
       cashNeeded: null
     });
@@ -104,12 +106,13 @@ class ModalRescources extends ModalRaw {
       key: 'reso_rubber',
       pWidth: this.w,
       y: OFFSET + 85 * 5 + 17 * 5,
-      // bought: true,
+      resourcesTable: this.resourcesTable,
       coinNeeded: null,
       cashNeeded: null
     });
   }
 
+  // 不用
   getAvailableResources = () => {
     let availableResourcesList = [];
     for (let i=1; i<7; i++) {
@@ -120,6 +123,7 @@ class ModalRescources extends ModalRaw {
     return availableResourcesList;
   }
 
+  // 不用
   getInfo2Stored = () => {
     let info = {};
     info.re1 = this.re1.getData();

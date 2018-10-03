@@ -18,6 +18,7 @@ import BellYellow from '../components/BellYellow';
 import BtnUpgrade from '../components/BtnUpgrade';
 import ModalLevel from '../components/ModalLevel.js';
 import ModalRescources from '../components/ModalResources.js';
+import ModalAdCampaign from '../components/ModalAdCampaign';
 
 import range from '../js/libs/_/range';
 import { arrayIntersect } from '../utils';
@@ -96,9 +97,8 @@ class Game extends window.Phaser.State {
       coupledBtn: this.upBtnMarket
     });
 
-    this.modalRescources = new ModalRescources({
+    this.modalAdCampaign = new ModalAdCampaign({
       game: this.game,
-      headingTxt: '进口生产原料'
     });
 
     const WORKSTATION_START_Y = 915;
@@ -247,7 +247,7 @@ class Game extends window.Phaser.State {
   _createMenus = () => {
     // top and bottom menu bar
     this.menuTop = this.add.graphics();
-    this.menuTop.beginFill(0x282c30);
+    this.menuTop.beginFill(0x5a5858);
     this.menuTop.drawRect(0, 0, this.world.width, 81);
     this.menuTop.endFill();
 
@@ -256,7 +256,7 @@ class Game extends window.Phaser.State {
     this.btnSuperCash = new BtnSuperCash(this.game, 186 * 2, 0);
 
     this.menuBottom = this.add.graphics();
-    this.menuBottom.beginFill(0x282c30);
+    this.menuBottom.beginFill(0x5a5858);
     this.menuBottom.drawRect(0, this.world.height - 81, this.world.width, 81);
     this.menuBottom.endFill();
 
@@ -290,6 +290,7 @@ class Game extends window.Phaser.State {
     this.btnXCash.input.priorityID = PRIORITY_ID;
     this.btnXCash.events.onInputDown.add(() => {
       console.log('click btn x cash');
+      this.modalAdCampaign.visible = true;
     });
 
     this.btnWheelCoin = this.add.sprite(
@@ -334,7 +335,12 @@ class Game extends window.Phaser.State {
     this.warehouse = new Warehouse(this.game, 100, 450);
     this.warehouse.onClick(() => {
       this.modalRescources.visible = true;
-      // console.log('this.modalRescources信息：available', this.modalRescources.getAvailableResources());
+    });
+
+    this.modalRescources = new ModalRescources({
+      game: this.game,
+      headingTxt: '进口生产原料',
+      resourcesTable: this.warehouse
     });
 
     // bg of selling
