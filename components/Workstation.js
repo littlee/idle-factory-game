@@ -6,7 +6,7 @@ import ModalLevel from './ModalLevel';
 import Worker from './Worker';
 import BtnUpgrade from './BtnUpgrade';
 import ResourceEmitter from './ResourceEmitter';
-import ResourecePile from './ResourcePile';
+import ResourcePile from './ResourcePile';
 import BoxCollect from './BoxCollect';
 import SOURCE_IMG_MAP from '../constants/SourceImgMap';
 
@@ -67,7 +67,7 @@ class Workstation extends window.Phaser.Group {
         cash: Big(0),
         prod: Big(0)
       },
-      // 合并成 producePermin ??
+      // 合并成 producePerMin ??
       inputConsumePerMin: Big(1000), // ?? 可能是算出来的数字
       outputAmountPerMin: {
         // ?? 可能是算出来的数字
@@ -157,21 +157,20 @@ class Workstation extends window.Phaser.Group {
     range(MAX_INPUT_PILE).forEach(index => {
       let { input } = this._data;
       let inputKeys = Object.keys(input);
-      let inputTexture = SOURCE_IMG_MAP[inputKeys[index]];
-      let inputItem = new ResourecePile(this.game, inputTexture, true);
+      let inputItem = new ResourcePile(this.game, inputKeys[index], true);
       inputItem.x = this.table.x + 20 + index * 40;
       inputItem.y = index * 10;
       if (inputKeys[index]) {
         inputItem.setNum(formatBigNum(input[inputKeys[index]].amount));
-      }
-      else {
+      } else {
         inputItem.setNum(0);
       }
-      inputItem.visible = Boolean(inputTexture);
+      inputItem.visible = Boolean(inputKeys[index]);
       this.inputItemGroup.add(inputItem);
     });
 
-    this.outputItems = new ResourecePile(this.game, 'prod_steel');
+    let { output } = this._data;
+    this.outputItems = new ResourcePile(this.game, output);
     this.outputItems.alignIn(this.table, window.Phaser.TOP_CENTER);
 
     this.inputItemsAni = new ResourceEmitter(
@@ -283,9 +282,7 @@ class Workstation extends window.Phaser.Group {
   }
 
   _init() {
-    // this.beAbleToBuy();
-    // this.buy('cash');
-    // this.setCollectType(COLLECT_TYPES.CASH);
+    this.setCollectType(COLLECT_TYPES.CASH);
   }
 
   _outputLoop() {
@@ -334,8 +331,7 @@ class Workstation extends window.Phaser.Group {
       let index = this.inputItemGroup.getChildIndex(item);
       if (inputKeys[index]) {
         item.setNum(formatBigNum(this._data.input[inputKeys[index]].amount));
-      }
-      else {
+      } else {
         item.setNum(0);
       }
     });
@@ -380,7 +376,6 @@ class Workstation extends window.Phaser.Group {
       this.game.time.events.remove(this.outputTimer);
     }
     this.worker.work();
-    this.setCollectType(COLLECT_TYPES.CASH);
     this._outputLoop();
     this.outputTimer = this.game.time.events.loop(
       OUTPUT_DELAY[this._data.outputDelay],
@@ -445,26 +440,32 @@ class Workstation extends window.Phaser.Group {
     }
     this._data.output = outputKey;
     this._data.outputAmount.prod = Big(0);
-    this._data.input = OUTPUT_INPUT_MAP[outputKey];
+    // 需要合并原有的材料
+    this._data.input = getInitInput(this._data.output);
 
     let outputTexture = SOURCE_IMG_MAP[outputKey];
-    this.outputItems.changeTexture(outputTexture);
+    this.outputItems.changeTexture(outputKey);
     this.outputItemsAniLeft.changeTexture(outputTexture);
     this.outputItemsAniRight.changeTexture(outputTexture);
     this.outputTradeAni.changeTexture(outputTexture);
 
     this.productBtnItem.loadTexture(outputTexture);
 
-    let inputTexture = this._data.input.map(item => SOURCE_IMG_MAP[item]);
-    this.inputItemGroup.forEach(item => {
-      let index = this.inputItemGroup.getChildIndex(item);
-      if (inputTexture[index]) {
-        item.changeTexture(inputTexture[index]);
-        item.visible = true;
+    let { input } = this._data;
+    let inputKeys = Object.keys(input);
+    this.inputItemGroup.forEach(inItem => {
+      let index = this.inputItemGroup.getChildIndex(inItem);
+      if (inputKeys[index]) {
+        inItem.changeTexture(inputKeys[index]);
+        inItem.setNum(formatBigNum(input[inputKeys[index]].amount));
+        inItem.visible = true;
       } else {
-        item.visible = false;
+        inItem.setNum(0);
+        inItem.visible = false;
       }
     });
+
+    let inputTexture = inputKeys.map(item => SOURCE_IMG_MAP[item]);
     this.inputItemsAni.changeTexture(inputTexture);
   }
 

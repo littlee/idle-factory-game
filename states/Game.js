@@ -118,7 +118,7 @@ class Game extends window.Phaser.State {
     this.workstationGroup.children[0].buy('cash');
     this.workstationGroup.children[1].beAbleToBuy();
     this.workstationGroup.children[1].buy('cash');
-    // this.workstationGroup.children[1].setOutput('drill');
+    this.workstationGroup.children[1].setOutput('drill');
     this.workstationGroup.children[2].beAbleToBuy();
 
     window.stg = this.workstationGroup;
