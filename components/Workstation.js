@@ -17,7 +17,7 @@ const OUTPUT_DELAY = {
   fast: 1000
 };
 
-const COLLECT_TYPES = {
+export const COLLECT_TYPES = {
   CASH: 'cash',
   PROD: 'prod'
 };
@@ -68,7 +68,7 @@ class Workstation extends window.Phaser.Group {
         cash: Big(0),
         prod: Big(0)
       },
-      producePerMin: Big(1000),
+      producePerMin: Big(10000),
       outputDelay: 'normal',
       price: {
         cash: Big(123),
@@ -215,7 +215,7 @@ class Workstation extends window.Phaser.Group {
       this.setCollectType.bind(this, COLLECT_TYPES.PROD)
     );
 
-    this.outputTradeAni = new ResourceEmitter(
+    this.outputGiveAni = new ResourceEmitter(
       this.game,
       this.boxHolderProd.x,
       this.boxHolderProd.y,
@@ -249,7 +249,7 @@ class Workstation extends window.Phaser.Group {
     this.productGroup.add(this.boxHolderProd);
     this.productGroup.add(this.boxHolderCash);
     this.productGroup.add(this.boxCollect);
-    this.productGroup.add(this.outputTradeAni);
+    this.productGroup.add(this.outputGiveAni);
     this.productGroup.add(this.upBtn);
     this.productGroup.visible = false;
 
@@ -369,6 +369,24 @@ class Workstation extends window.Phaser.Group {
     return this._data.isWorking;
   }
 
+  getOutputKey() {
+    return this._data.output;
+  }
+
+  getHasProdOutput() {
+    let isProdType = this.getCollectType() === COLLECT_TYPES.PROD;
+    let hasProd = this.getProdOutput().gt(0);
+    return isProdType && hasProd;
+  }
+
+  getProdOutput() {
+    return this._data.outputAmount.prod;
+  }
+
+  getCashOutput() {
+    return this._data.outputAmount.cash;
+  }
+
   startWork() {
     this._data.isWorking = true;
     if (this.outputTimer) {
@@ -417,6 +435,16 @@ class Workstation extends window.Phaser.Group {
     if (!this.getIsWorking()) {
       this.startWork();
     }
+  }
+
+  giveToWorker() {
+    this.outputGiveAni.start();
+    return new Promise(resolve => {
+      setTimeout(() => {
+        this.outputGiveAni.stop();
+        resolve();
+      }, 1000);
+    });
   }
 
   getCollectType() {
@@ -474,7 +502,7 @@ class Workstation extends window.Phaser.Group {
     this.outputItems.changeTexture(outputKey);
     this.outputItemsAniLeft.changeTexture(outputTexture);
     this.outputItemsAniRight.changeTexture(outputTexture);
-    this.outputTradeAni.changeTexture(outputTexture);
+    this.outputGiveAni.changeTexture(outputTexture);
 
     this.productBtnItem.loadTexture(outputTexture);
 
@@ -496,9 +524,6 @@ class Workstation extends window.Phaser.Group {
     this.inputItemsAni.changeTexture(inputTexture);
   }
 
-  getData() {
-    return this._data;
-  }
 }
 
 export default Workstation;

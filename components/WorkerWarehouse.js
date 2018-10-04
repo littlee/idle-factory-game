@@ -76,12 +76,33 @@ class WorkerWarehouse extends window.Phaser.Group {
     this.add(this.carryNum);
   }
 
+  _getTotalCarry() {
+    let { carry } = this._data;
+    return Object.keys(carry)
+      .map(key => carry[key].amount)
+      .reduce((total, amount) => {
+        return total.plus(amount);
+      }, Big(0));
+  }
+
   getIsOnRoutine() {
     return this._data.onRoutine;
   }
 
   getCapacity() {
     return this._data.capacity;
+  }
+
+  getHasFreeCapacity() {
+    let { capacity } = this._data;
+    let totalCarry = this._getTotalCarry();
+    return capacity.gt(totalCarry);
+  }
+
+  getFreeCapacity() {
+    let { capacity } = this._data;
+    let totalCarry = this._getTotalCarry();
+    return capacity.minus(totalCarry);
   }
 
   goFast() {
@@ -144,7 +165,7 @@ class WorkerWarehouse extends window.Phaser.Group {
     return Object.keys(this._data.carry);
   }
 
-  giveToStation(keys) {
+  giveToStation(keys, onStart) {
     let emtKeys = keys.map(k => SOURCE_IMG_MAP[k]);
     this.emt.changeTexture(emtKeys);
     this.emt.start();
@@ -172,6 +193,8 @@ class WorkerWarehouse extends window.Phaser.Group {
       return total.plus(carry[key].amount);
     }, Big(0));
 
+    onStart && onStart();
+
     return new Promise(resolve => {
       setTimeout(() => {
         this.stopGiveToStation();
@@ -185,7 +208,7 @@ class WorkerWarehouse extends window.Phaser.Group {
     this.emt.stop();
   }
 
-  takeProdFromStation(station) {
+  takeFromStation(station) {
     return new Promise(resolve => {
       setTimeout(resolve, 1000);
     });

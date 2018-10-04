@@ -6,7 +6,7 @@ import BtnCash from '../components/BtnCash';
 import BtnSuperCash from '../components/BtnSuperCash';
 
 import Warehouse from '../components/Warehouse';
-import Workstation from '../components/Workstation';
+import Workstation, { COLLECT_TYPES } from '../components/Workstation';
 
 import WorkerWarehouse from '../components/WorkerWarehouse';
 import WorkerMarket from '../components/WorkerMarket';
@@ -98,7 +98,7 @@ class Game extends window.Phaser.State {
     });
 
     this.modalAdCampaign = new ModalAdCampaign({
-      game: this.game,
+      game: this.game
     });
 
     const WORKSTATION_START_Y = 915;
@@ -116,6 +116,7 @@ class Game extends window.Phaser.State {
     });
     this.workstationGroup.children[0].beAbleToBuy();
     this.workstationGroup.children[0].buy('cash');
+    this.workstationGroup.children[0].setCollectType(COLLECT_TYPES.PROD);
     this.workstationGroup.children[1].beAbleToBuy();
     this.workstationGroup.children[1].buy('cash');
     this.workstationGroup.children[1].setOutput('drill');
@@ -163,7 +164,6 @@ class Game extends window.Phaser.State {
     wholeGameScroller.enableScroll();
 
     this._createFastScrollArrow(wholeGameScroller);
-
   }
 
   update() {
@@ -173,7 +173,10 @@ class Game extends window.Phaser.State {
         let neededKeys = this._getStationsNeededKeys(workstations);
         this.warehouse.outputGoods(neededKeys);
 
-        let stationAmountKeyMap = this._getStationAmountKeyMap(neededKeys, workstations);
+        let stationAmountKeyMap = this._getStationAmountKeyMap(
+          neededKeys,
+          workstations
+        );
 
         let warehouseCarry = this._getWorkerWarehouseCarry(
           neededKeys,
@@ -185,18 +188,65 @@ class Game extends window.Phaser.State {
 
         for (let i = 0; i < workstations.length; i++) {
           await worker.moveToStation(workstations[i]);
-          let workerGiveKeys = arrayIntersect(
-            worker.getCarryKeys(),
-            workstations[i].getInputKeys()
+          let workerGiveRes = this._getShouldWorkerGiveAndKeys(
+            worker,
+            workstations[i]
           );
-          if (workerGiveKeys.length) {
-            let giveAmountMap = await worker.giveToStation(workerGiveKeys);
+          if (workerGiveRes.result) {
+            let giveAmountMap = await worker.giveToStation(
+              workerGiveRes.keys,
+              () => {
+                let shouldTakeFromStation = this._getShouldTakeFromStation(
+                  worker,
+                  workstations,
+                  i
+                );
+                if (shouldTakeFromStation) {
+                  // worker.takeFromStation();
+                  // stations[i].giveToWorker();
+                  // console.log(i);
+                  // console.log(this._getWorkerStationCarry(worker, workstations, i));
+                }
+              }
+            );
             workstations[i].takeFromWorker(giveAmountMap);
           }
+
         }
         await worker.backToWarehouse(this.warehouse);
       }
     });
+  }
+
+  _getShouldWorkerGiveAndKeys(worker, station) {
+    let keys = arrayIntersect(worker.getCarryKeys(), station.getInputKeys());
+    return {
+      result: keys.length > 0,
+      keys
+    };
+  }
+
+  _getShouldTakeFromStation(worker, stations, index) {
+    let workerHasFreeCapacity = worker.getHasFreeCapacity();
+    if (!workerHasFreeCapacity) {
+      return false;
+    }
+
+    let currStation = stations[index];
+    let stationHasOutput = currStation.getHasProdOutput();
+    if (!stationHasOutput) {
+      return false;
+    }
+
+    let stationOutputKey = currStation.getOutputKey();
+    let stationOutputIsNeeded = false;
+    for (let i = index + 1; i < stations.length; i++) {
+      if (stations[i].getInputKeys().indexOf(stationOutputKey) !== -1) {
+        stationOutputIsNeeded = true;
+        break;
+      }
+    }
+    return stationOutputIsNeeded;
   }
 
   _getBoughtStations() {
@@ -243,6 +293,33 @@ class Game extends window.Phaser.State {
       return acc;
     }, {});
     return carry;
+  }
+
+  _getWorkerStationCarry(worker, stations, index) {
+    let currStation = stations[index];
+    let key = currStation.getOutputKey();
+    let stationProdOutput = currStation.getProdOutput();
+    let workerFreeCapacity = worker.getFreeCapacity();
+    let amount = stationProdOutput;
+    if (stationProdOutput.gt(workerFreeCapacity)) {
+      amount = workerFreeCapacity;
+    }
+    let amountHu = amount.toString();
+
+    let stationAmount = 0;
+    for (let i = index + 1; i < stations.length; i++) {
+      if (stations[i].getInputKeys().indexOf(key) !== -1) {
+        stationAmount++;
+      }
+    }
+
+    return {
+      [key]: {
+        amount,
+        amountHu,
+        stationAmount
+      }
+    };
   }
 
   _createMenus = () => {
