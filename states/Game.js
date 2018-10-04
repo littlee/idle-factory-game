@@ -191,6 +191,7 @@ class Game extends window.Phaser.State {
           );
           if (workerGiveKeys.length) {
             let giveAmountMap = await worker.giveToStation(workerGiveKeys);
+            workstations[i].takeFromWorker(giveAmountMap);
           }
         }
         await worker.backToWarehouse(this.warehouse);

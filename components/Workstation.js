@@ -61,19 +61,14 @@ class Workstation extends window.Phaser.Group {
 
     this._data = {
       isBought: false,
+      isWorking: false,
       input: getInitInput('steel'),
       output: 'steel',
       outputAmount: {
         cash: Big(0),
         prod: Big(0)
       },
-      // 合并成 producePerMin ??
-      inputConsumePerMin: Big(1000), // ?? 可能是算出来的数字
-      outputAmountPerMin: {
-        // ?? 可能是算出来的数字
-        cash: Big(10),
-        prod: Big(10)
-      },
+      producePerMin: Big(1000),
       outputDelay: 'normal',
       price: {
         cash: Big(123),
@@ -288,19 +283,17 @@ class Workstation extends window.Phaser.Group {
   _outputLoop() {
     if (this._getHasNoInput()) {
       this.stopWork();
+      return false;
     }
     let {
       collectType,
       input,
-      inputConsumePerMin,
+      producePerMin,
       outputAmount,
-      outputAmountPerMin,
       outputDelay
     } = this._data;
     this._data.outputAmount[collectType] = outputAmount[collectType].plus(
-      outputAmountPerMin[collectType].div(
-        Big(A_MINUTE / OUTPUT_DELAY[outputDelay])
-      )
+      producePerMin.div(Big(A_MINUTE / OUTPUT_DELAY[outputDelay]))
     );
     this.boxCollect.setNum(formatBigNum(outputAmount[collectType]));
 
@@ -308,7 +301,7 @@ class Workstation extends window.Phaser.Group {
     this._data.input = inputKeys
       .map(key => {
         let nextAmount = input[key].amount.minus(
-          inputConsumePerMin.div(Big(A_MINUTE / OUTPUT_DELAY[outputDelay]))
+          producePerMin.div(Big(A_MINUTE / OUTPUT_DELAY[outputDelay]))
         );
         if (nextAmount.lt(0)) {
           nextAmount = Big(0);
@@ -335,6 +328,7 @@ class Workstation extends window.Phaser.Group {
         item.setNum(0);
       }
     });
+    return true;
   }
 
   _getHasNoInput() {
@@ -364,19 +358,30 @@ class Workstation extends window.Phaser.Group {
     this.worker.visible = true;
     this.productGroup.visible = true;
 
-    this.startWork();
+    // this.startWork();
   }
 
   getIsBought() {
     return this._data.isBought;
   }
 
+  getIsWorking() {
+    return this._data.isWorking;
+  }
+
   startWork() {
+    this._data.isWorking = true;
     if (this.outputTimer) {
       this.game.time.events.remove(this.outputTimer);
     }
+    this.inputItemsAni.start();
+    if (this.getCollectType() === COLLECT_TYPES.PROD) {
+      this.outputItemsAniLeft.start();
+    } else {
+      this.outputItemsAniRight.start();
+    }
     this.worker.work();
-    this._outputLoop();
+    
     this.outputTimer = this.game.time.events.loop(
       OUTPUT_DELAY[this._data.outputDelay],
       this._outputLoop,
@@ -385,6 +390,7 @@ class Workstation extends window.Phaser.Group {
   }
 
   stopWork() {
+    this._data.isWorking = false;
     this.inputItemsAni.stop();
     this.outputItemsAniLeft.stop();
     this.outputItemsAniRight.stop();
@@ -394,7 +400,28 @@ class Workstation extends window.Phaser.Group {
     }
   }
 
-  takeFromWorker(amountMap) {}
+  takeFromWorker(amountMap) {
+    let { input } = this._data;
+    Object.keys(amountMap).forEach(key => {
+      input[key].amount = input[key].amount.plus(amountMap[key].amount);
+      input[key].amountHu = input[key].amount.toString();
+    });
+
+    Object.keys(input).forEach(key => {
+      this.inputItemGroup.forEach(inItem => {
+        if (inItem.getKey() === key) {
+          inItem.setNum(formatBigNum(input[key].amount));
+        }
+      });
+    });
+    if (!this.getIsWorking()) {
+      this.startWork();
+    }
+  }
+
+  getCollectType() {
+    return this._data.collectType;
+  }
 
   setCollectType(collectType) {
     this._data.collectType = collectType;
