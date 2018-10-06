@@ -1,6 +1,5 @@
 // eslint-disable-next-line
 import regeneratorRuntime from '../js/libs/regenerator-runtime';
-import ResourceEmitter from './ResourceEmitter';
 import SOURCE_IMG_MAP from '../constants/SourceImgMap';
 import Big from '../js/libs/big.min';
 import { formatBigNum } from '../utils';
@@ -12,7 +11,6 @@ const CARRY_NUM_STYLE = {
   stroke: '#000',
   strokeThickness: 5
 };
-
 
 class WorkerMarket extends window.Phaser.Group {
   constructor(game, x, y) {
@@ -31,7 +29,7 @@ class WorkerMarket extends window.Phaser.Group {
     this.startX = x;
     this.startY = y;
 
-    this.man = this.game.make.sprite(0,0,'worker_market');
+    this.man = this.game.make.sprite(0, 0, 'worker_market');
 
     this.man.animations.add('walk', [0, 1], 5, true);
     this.man.animations.add('walk_box', [2, 3], 5, true);
@@ -52,6 +50,31 @@ class WorkerMarket extends window.Phaser.Group {
 
   setIsOnRoutine(onRoutine) {
     this._data.onRoutine = onRoutine;
+  }
+
+  getHasCarry() {
+    return this._data.carry.gt(0);
+  }
+
+  getHasFreeCapacity() {
+    let { carry, capacity } = this._data;
+    return capacity.gt(carry);
+  }
+
+  getFreeCapacity() {
+    let { carry, capacity } = this._data;
+    return capacity.minus(carry);
+  }
+
+  setCarryNum(num) {
+    this.carryNum.setText(`${num}`);
+    this.carryNum.alignIn(this.man, window.Phaser.CENTER, 0, 20);
+    if (this.getHasCarry()) {
+      this.carryNum.visible = true;
+    }
+    else {
+      this.carryNum.visible = false;
+    }
   }
 
   move(y) {
@@ -84,11 +107,24 @@ class WorkerMarket extends window.Phaser.Group {
     return this.move(station.y + 50);
   }
 
-  takeFromStation() {
+  takeFromStation(amount) {
+    this._data.carry = this._data.carry.plus(amount);
+    let stayDuration = parseInt(
+      amount.div(this._data.loadingSpeed).times(1000),
+      10
+    );
+
+    return {
+      stayDuration
+    };
+  }
+
+  takeFromStationLoading(stayDuration) {
     return new Promise(resolve => {
       setTimeout(() => {
+        this.setCarryNum(formatBigNum(this._data.carry));
         resolve();
-      }, 1000);
+      }, stayDuration);
     });
   }
 
@@ -99,11 +135,19 @@ class WorkerMarket extends window.Phaser.Group {
 
   sellProd() {
     return new Promise(resolve => {
+      let oldCarry = Big(this._data.carry);
+      let stayDuration = parseInt(
+        this._data.carry.div(this._data.loadingSpeed).times(1000),
+        10
+      );
+      this._data.carry = Big(0);
       this.walkWithBox();
+
       setTimeout(() => {
+        this.setCarryNum(formatBigNum(this._data.carry));
         this.setIsOnRoutine(false);
-        resolve();
-      }, 1000);
+        resolve({ amount: oldCarry });
+      }, stayDuration);
     });
   }
 
@@ -113,18 +157,30 @@ class WorkerMarket extends window.Phaser.Group {
   }
 
   walk() {
+    if (this.getHasCarry()) {
+      this.carryNum.visible = true;
+    }
     this.man.animations.play('walk');
   }
 
   walkWithBox() {
+    if (this.getHasCarry()) {
+      this.carryNum.visible = true;
+    }
     this.man.animations.play('walk_box');
   }
 
   back() {
+    if (!this.getHasCarry()) {
+      this.carryNum.visible = false;
+    }
     this.man.animations.play('back');
   }
 
   backWithBox() {
+    if (!this.getHasCarry()) {
+      this.carryNum.visible = false;
+    }
     this.man.animations.play('back_box');
   }
 }

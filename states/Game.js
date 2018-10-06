@@ -1,11 +1,12 @@
 // eslint-disable-next-line
-import regeneratorRuntime, { async } from '../js/libs/regenerator-runtime';
+import regeneratorRuntime from '../js/libs/regenerator-runtime';
 
 import BtnIdleCash from '../components/BtnIdleCash';
 import BtnCash from '../components/BtnCash';
 import BtnSuperCash from '../components/BtnSuperCash';
 
 import Warehouse from '../components/Warehouse';
+import Market from '../components/Market';
 import Workstation, { COLLECT_TYPES } from '../components/Workstation';
 
 import WorkerWarehouse from '../components/WorkerWarehouse';
@@ -101,6 +102,7 @@ class Game extends window.Phaser.State {
       game: this.game
     });
 
+    // TODO: make 30 workstations
     const WORKSTATION_START_Y = 915;
     const WORKSTATION_HEIGHT = 339;
     this.workstationGroup = this.add.group();
@@ -116,13 +118,11 @@ class Game extends window.Phaser.State {
     });
     this.workstationGroup.children[0].beAbleToBuy();
     this.workstationGroup.children[0].buy('cash');
-    this.workstationGroup.children[0].setCollectType(COLLECT_TYPES.PROD);
+    // this.workstationGroup.children[0].setCollectType(COLLECT_TYPES.PROD);
     this.workstationGroup.children[1].beAbleToBuy();
     this.workstationGroup.children[1].buy('cash');
-    this.workstationGroup.children[1].setOutput('drill');
+    // this.workstationGroup.children[1].setOutput('drill');
     this.workstationGroup.children[2].beAbleToBuy();
-
-    window.stg = this.workstationGroup;
 
     this.workerWarehouseGroup = this.add.group();
     range(5).forEach(index => {
@@ -136,7 +136,6 @@ class Game extends window.Phaser.State {
         worker.kill();
       }
     });
-    window.wg = this.workerWarehouseGroup;
 
     this.workerMarketGroup = this.add.group();
     range(5).forEach(index => {
@@ -239,12 +238,46 @@ class Game extends window.Phaser.State {
         worker.goOutFromMarket();
         for (let i = 0; i < workstations.length; i++) {
           await worker.moveToStation(workstations[i]);
-          await worker.takeFromStation();
+          let shouldWorkerMarketTake = this._getShouldWorkerMarketTake(
+            worker,
+            workstations[i]
+          );
+          if (shouldWorkerMarketTake) {
+            let takeAmount = null;
+            let stationCash = workstations[i].getCashOutput();
+            let workerFreeCapacity = worker.getFreeCapacity();
+            if (stationCash.gt(workerFreeCapacity)) {
+              takeAmount = workerFreeCapacity;
+            } else {
+              takeAmount = stationCash;
+            }
+            let tfsRes = worker.takeFromStation(takeAmount);
+            workstations[i].giveToWorkerMarket(takeAmount);
+            await worker.takeFromStationLoading(tfsRes.stayDuration);
+          }
         }
         await worker.backToMarket();
-        await worker.sellProd();
+        if (worker.getHasCarry()) {
+          let sellRes = await worker.sellProd();
+          this.market.sell(sellRes.amount);
+        } else {
+          worker.setIsOnRoutine(false);
+        }
       }
     });
+  }
+
+  _getShouldWorkerMarketTake(worker, station) {
+    let workerHasFreeCapacity = worker.getHasFreeCapacity();
+    if (!workerHasFreeCapacity) {
+      return false;
+    }
+
+    let stationHasOutputCash = station.getHasCashOutput();
+    if (!stationHasOutputCash) {
+      return false;
+    }
+    return true;
   }
 
   _getShouldWorkerGiveAndKeys(worker, station) {
@@ -418,7 +451,7 @@ class Game extends window.Phaser.State {
     this.bgGroup.addChild(this.warehouseGround);
     this.bgGroup.addChild(this.warehouse);
     this.bgGroup.addChild(this.marketGround);
-    this.bgGroup.addChild(this.marketTruck);
+    this.bgGroup.addChild(this.market);
     this.bgGroup.addChild(this.wall);
     this.bgGroup.addChild(this.warehouseManager);
     this.bgGroup.addChild(this.marketManager);
@@ -461,12 +494,10 @@ class Game extends window.Phaser.State {
     );
     this.marketGround.endFill();
 
-    this.marketTruck = this.add.sprite(
-      this.world.width - 30,
-      700,
-      'market_truck'
-    );
-    this.marketTruck.anchor.setTo(1);
+    this.market = new Market(this.game, 400, 400);
+    this.market.onSell(amount => {
+      console.log('market sell:', amount.toString());
+    });
 
     // wall behind the above two
     this.wall = this.add.sprite(this.world.centerX, 81, 'wall');

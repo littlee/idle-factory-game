@@ -379,6 +379,12 @@ class Workstation extends window.Phaser.Group {
     return isProdType && hasProd;
   }
 
+  getHasCashOutput() {
+    let isCashType = this.getCollectType() === COLLECT_TYPES.CASH;
+    let hasCash = this.getCashOutput().gt(0);
+    return isCashType && hasCash;
+  }
+
   getProdOutput() {
     return this._data.outputAmount.prod;
   }
@@ -454,6 +460,12 @@ class Workstation extends window.Phaser.Group {
         resolve();
       }, stayDuration);
     });
+  }
+
+  giveToWorkerMarket(amount) {
+    let { outputAmount, collectType } = this._data;
+    outputAmount.cash = outputAmount.cash.minus(amount);
+    this.boxCollect.setNum(formatBigNum(outputAmount[collectType]));
   }
 
   getCollectType() {
