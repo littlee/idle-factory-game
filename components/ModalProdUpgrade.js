@@ -1,6 +1,7 @@
 import ModalRaw from './ModalRaw.js';
 // import ProductUpgradeItem from './ProductUpgradeItem.js';
-import ProductUpgradeLine from './ProductUpgradeLine.js';
+// import ProductUpgradeLine from './ProductUpgradeLine.js';
+import ProductUpgradeFrame from './ProductUpgradeFrame.js';
 
 function getFontStyle(fSize, color, align, weight) {
   return {
@@ -16,7 +17,7 @@ function getFontStyle(fSize, color, align, weight) {
 const CONFIG = {
   frameTagStroke: 6,
   frameTagStrokeC: 0xffc131,
-  frameHeight: 792,
+  frameHeight: 830,
   frameWidth: 638,
   frameColor: 0xb4a59d,
   frameTagW: 134,
@@ -71,14 +72,14 @@ class ModalProdUpgrade extends ModalRaw {
 
     // fix me: 每个原料的frame改成一个组件
     // draw frame for each resource
-    this.frameOre = this.game.make.group();
-    let frameOre = this.game.make.graphics(
-      LEFT,
-      OFFSET
-    );
-    frameOre.beginFill(CONFIG.frameColor);
-    frameOre.drawRect(0, 0, CONFIG.frameWidth, CONFIG.frameHeight);
-    frameOre.endFill();
+    // this.frameOre = this.game.make.group();
+    // let frameOre = this.game.make.graphics(
+    //   LEFT,
+    //   OFFSET
+    // );
+    // frameOre.beginFill(CONFIG.frameColor);
+    // frameOre.drawRect(0, 0, CONFIG.frameWidth, CONFIG.frameHeight);
+    // frameOre.endFill();
 
     let frameCopper = this.game.make.graphics(
       LEFT,
@@ -121,31 +122,31 @@ class ModalProdUpgrade extends ModalRaw {
     frameRubber.endFill();
 
     // draw tag for each frame
-    let tagOre = this.game.make.graphics(0, 0);
-    tagOre.beginFill(CONFIG.frameTagColor);
-    tagOre.drawRect(0, 0, CONFIG.frameTagW, CONFIG.frameTagH);
-    tagOre.endFill();
+    // let tagOre = this.game.make.graphics(0, 0);
+    // tagOre.beginFill(CONFIG.frameTagColor);
+    // tagOre.drawRect(0, 0, CONFIG.frameTagW, CONFIG.frameTagH);
+    // tagOre.endFill();
 
-    tagOre.lineStyle(CONFIG.frameTagStroke, CONFIG.frameTagStrokeC);
-    tagOre.moveTo(0, 0);
-    tagOre.lineTo(CONFIG.frameTagW, 0);
-    tagOre.lineTo(CONFIG.frameTagW, CONFIG.frameTagH);
-    tagOre.lineTo(0, CONFIG.frameTagH);
-    tagOre.lineTo(0, 0);
+    // tagOre.lineStyle(CONFIG.frameTagStroke, CONFIG.frameTagStrokeC);
+    // tagOre.moveTo(0, 0);
+    // tagOre.lineTo(CONFIG.frameTagW, 0);
+    // tagOre.lineTo(CONFIG.frameTagW, CONFIG.frameTagH);
+    // tagOre.lineTo(0, CONFIG.frameTagH);
+    // tagOre.lineTo(0, 0);
 
-    tagOre.alignTo(frameOre, Phaser.TOP_LEFT, -10, -15);
+    // tagOre.alignTo(frameOre, Phaser.TOP_LEFT, -10, -15);
 
-    let tagOreName = this.game.make.text(
-      0,
-      0,
-      '铁矿',
-      getFontStyle('28px', '', '', 'bold')
-    ); // fSize, color, align, weight
-    tagOreName.alignTo(tagOre, Phaser.BOTTOM_LEFT, -20, -CONFIG.frameTagH);
-    let tagOreImg = this.game.make.image(0, 0, 'reso_ore');
-    tagOreImg.scale.x = 0.65;
-    tagOreImg.scale.y = 0.65;
-    tagOreImg.alignTo(tagOreName, Phaser.RIGHT_BOTTOM, 5, -5);
+    // let tagOreName = this.game.make.text(
+    //   0,
+    //   0,
+    //   '铁矿',
+    //   getFontStyle('28px', '', '', 'bold')
+    // ); // fSize, color, align, weight
+    // tagOreName.alignTo(tagOre, Phaser.BOTTOM_LEFT, -20, -CONFIG.frameTagH);
+    // let tagOreImg = this.game.make.image(0, 0, 'reso_ore');
+    // tagOreImg.scale.x = 0.65;
+    // tagOreImg.scale.y = 0.65;
+    // tagOreImg.alignTo(tagOreName, Phaser.RIGHT_BOTTOM, 5, -5);
 
     let tagCopper = this.game.make.graphics(0, 0);
     tagCopper.beginFill(CONFIG.frameTagColor);
@@ -188,15 +189,15 @@ class ModalProdUpgrade extends ModalRaw {
     //   bought: true
     // });
 
-    this.steel = new ProductUpgradeLine({
-      game: this.game,
-      offsetTop: OFFSET,
-      offsetLeft: LEFT,
-      product: 'steel',
-    });
-    this.frameOre.addChild(frameOre);
-    this.frameOre.addChild(tagOre);
-    this.frameOre.addChild(this.steel);
+    // this.steel = new ProductUpgradeLine({
+    //   game: this.game,
+    //   offsetTop: OFFSET,
+    //   offsetLeft: LEFT,
+    //   product: 'steel',
+    // });
+    // this.frameOre.addChild(frameOre);
+    // this.frameOre.addChild(tagOre);
+    // this.frameOre.addChild(this.steel);
 
 
 
@@ -205,6 +206,13 @@ class ModalProdUpgrade extends ModalRaw {
     // arcTo(x1, y1, x2, y2, radius)
     // http://jsfiddle.net/lewster32/0yvemxnw/
 
+    // TEST.....
+    this.frameOre = new ProductUpgradeFrame({
+      game: this.game,
+      parent: this.contentGroup,
+      offsetTop: OFFSET,
+      offsetLeft: LEFT,
+    });
 
     this.contentGroup.addChild(this.frameOre);
     this.contentGroup.addChild(frameCopper);
@@ -212,8 +220,8 @@ class ModalProdUpgrade extends ModalRaw {
     this.contentGroup.addChild(framePlug);
     this.contentGroup.addChild(frameAlBar);
     this.contentGroup.addChild(frameRubber);
-    this.contentGroup.addChild(tagOreName);
-    this.contentGroup.addChild(tagOreImg);
+    // this.contentGroup.addChild(tagOreName);
+    // this.contentGroup.addChild(tagOreImg);
     this.contentGroup.addChild(tagCopper);
     this.contentGroup.addChild(tagCopperName);
     this.contentGroup.addChild(tagCopperImg);

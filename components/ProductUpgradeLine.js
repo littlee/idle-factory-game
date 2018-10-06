@@ -7,12 +7,13 @@ const CONFIG = {
 
 // 控制同类product之间hightlight的变化和btns的显示
 class ProductUpgradeLine extends window.Phaser.Group {
-  constructor({game, offsetTop, offsetLeft, product}) {
-    super(game);
+  constructor({game, parent, offsetTop, offsetLeft, product}) {
+    super(game, parent);
     this.offsetTop = offsetTop + CONFIG.halfItemLineHeight;
     this.offsetLeft = offsetLeft;
     this.product = product;
     this.highlightedIndex = null;
+    this.active = false;
 
     this._getInit();
     this._addAllChildren();
@@ -131,6 +132,14 @@ class ProductUpgradeLine extends window.Phaser.Group {
     let children = [this.base, this.copper, this.silver, this.gold, this.jade, this.rubber];
     let targetIndex = this.highlightedIndex + 1;
     children[targetIndex].reopenBtns();
+  }
+
+  getActiveValue = () => {
+    return this.active;
+  }
+
+  setActive = (value) => {
+    this.active = value;
   }
 }
 

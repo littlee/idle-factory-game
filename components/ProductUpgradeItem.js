@@ -253,6 +253,8 @@ class ProductUpgradeItem extends window.Phaser.Group {
     this._reDrawPie();
     this.timer = setInterval(this._reDrawPie, this._data.step * 1000);
     this._addAllBigVeils();
+
+    this.parent.setActive(true);
     console.log('coin减少相应的值, 调用parent group方法让其他upgraded同类items的stroke regular');
   }
 
