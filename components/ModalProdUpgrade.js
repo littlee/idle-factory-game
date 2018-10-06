@@ -22,13 +22,8 @@ const CONFIG = {
   frameTagH: 58,
   frameTagColor: 0xcb6000,
   frameVeilH: 174,
-  prodStrokeWidth: 4,
-  prodRegularStrokeColor: 0x03832e,  // 0x03832e
-  prodHighlightedStrokeColor: 0X39ec43,
-  bubbleColor: 0x004818,
   gap: 100,
   connectlineH: 4,
-  clockScaleFactor: 0.4
 };
 
 /*
@@ -187,16 +182,22 @@ class ModalProdUpgrade extends ModalRaw {
       x: LEFT + 60,
       y: OFFSET + 120,
       product: 'steel',
+      prodTexture: 'gold',
       bought: true
     });
 
-    this.drillGroup = new ProductUpgradeItem({
-      game: this.game,
-      x: LEFT + 60,
-      y: OFFSET + 120,
-      product: 'steel',
-      bought: true
-    });
+    // this.drillGroup = new ProductUpgradeItem({
+    //   game: this.game,
+    //   x: LEFT + 60 + 110,
+    //   y: OFFSET + 120,
+    //   product: 'steel',
+    //   bought: true
+    // });
+
+    // arc arc(cx, cy, radius, startAngle, endAngle, anticlockwise, segments)
+    // arcTo(x1, y1, x2, y2, radius)
+    // http://jsfiddle.net/lewster32/0yvemxnw/
+
 
     this.contentGroup.addChild(frameOre);
     this.contentGroup.addChild(frameCopper);
@@ -213,7 +214,6 @@ class ModalProdUpgrade extends ModalRaw {
 
     // test
     this.contentGroup.addChild(this.steelGroup);
-    this.contentGroup.addChild(this.drillGroup);
   };
 }
 
