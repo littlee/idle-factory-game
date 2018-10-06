@@ -188,30 +188,46 @@ class Game extends window.Phaser.State {
 
         for (let i = 0; i < workstations.length; i++) {
           await worker.moveToStation(workstations[i]);
+          let loadingPromises = [];
           let workerGiveRes = this._getShouldWorkerGiveAndKeys(
             worker,
             workstations[i]
           );
+          let gtsRes = null;
           if (workerGiveRes.result) {
-            let giveAmountMap = await worker.giveToStation(
-              workerGiveRes.keys,
-              () => {
-                let shouldTakeFromStation = this._getShouldTakeFromStation(
-                  worker,
-                  workstations,
-                  i
-                );
-                if (shouldTakeFromStation) {
-                  // worker.takeFromStation();
-                  // stations[i].giveToWorker();
-                  // console.log(i);
-                  // console.log(this._getWorkerStationCarry(worker, workstations, i));
-                }
-              }
+            gtsRes = worker.giveToStation(workerGiveRes.keys);
+            loadingPromises.push(
+              worker.giveToStationLoading(gtsRes.stayDuration)
             );
-            workstations[i].takeFromWorker(giveAmountMap);
           }
 
+          let tfsRes = null;
+          let shouldTakeFromStation = this._getShouldTakeFromStation(
+            worker,
+            workstations,
+            i
+          );
+          if (shouldTakeFromStation) {
+            let workerStationCarry = this._getWorkerStationCarry(
+              worker,
+              workstations,
+              i
+            );
+            tfsRes = worker.takeFromStation(workerStationCarry);
+            workstations[i].giveToWorker(workerStationCarry.amount);
+            loadingPromises.push(
+              workstations[i].giveToWorkerLoading(tfsRes.stayDuration)
+            );
+          }
+
+          await Promise.all(loadingPromises);
+
+          if (gtsRes) {
+            workstations[i].takeFromWorker(gtsRes.giveMap);
+          }
+          if (tfsRes) {
+            worker.updateCarryNum();
+          }
         }
         await worker.backToWarehouse(this.warehouse);
       }
@@ -295,6 +311,7 @@ class Game extends window.Phaser.State {
     return carry;
   }
 
+  // 每次只会拿一种，所以不用 map
   _getWorkerStationCarry(worker, stations, index) {
     let currStation = stations[index];
     let key = currStation.getOutputKey();
@@ -314,11 +331,10 @@ class Game extends window.Phaser.State {
     }
 
     return {
-      [key]: {
-        amount,
-        amountHu,
-        stationAmount
-      }
+      key,
+      amount,
+      amountHu,
+      stationAmount
     };
   }
 

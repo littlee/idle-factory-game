@@ -399,7 +399,7 @@ class Workstation extends window.Phaser.Group {
       this.outputItemsAniRight.start();
     }
     this.worker.work();
-    
+
     this.outputTimer = this.game.time.events.loop(
       OUTPUT_DELAY[this._data.outputDelay],
       this._outputLoop,
@@ -420,11 +420,13 @@ class Workstation extends window.Phaser.Group {
 
   takeFromWorker(amountMap) {
     let { input } = this._data;
+    // update _data;
     Object.keys(amountMap).forEach(key => {
       input[key].amount = input[key].amount.plus(amountMap[key].amount);
       input[key].amountHu = input[key].amount.toString();
     });
 
+    // update visual
     Object.keys(input).forEach(key => {
       this.inputItemGroup.forEach(inItem => {
         if (inItem.getKey() === key) {
@@ -437,13 +439,20 @@ class Workstation extends window.Phaser.Group {
     }
   }
 
-  giveToWorker() {
+  giveToWorker(amount) {
     this.outputGiveAni.start();
+    let { outputAmount } = this._data;
+    outputAmount.prod = outputAmount.prod.minus(amount);
+  }
+
+  giveToWorkerLoading(stayDuration) {
     return new Promise(resolve => {
       setTimeout(() => {
         this.outputGiveAni.stop();
+        let { outputAmount, collectType } = this._data;
+        this.boxCollect.setNum(formatBigNum(outputAmount[collectType]));
         resolve();
-      }, 1000);
+      }, stayDuration);
     });
   }
 
@@ -523,7 +532,6 @@ class Workstation extends window.Phaser.Group {
     let inputTexture = inputKeys.map(item => SOURCE_IMG_MAP[item]);
     this.inputItemsAni.changeTexture(inputTexture);
   }
-
 }
 
 export default Workstation;

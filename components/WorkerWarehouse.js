@@ -20,11 +20,6 @@ const CARRY_NUM_STYLE = {
   strokeThickness: 5
 };
 
-const SPEED = {
-  normal: 0.3,
-  fast: 0.5
-};
-
 /*
 - Max Resource Transported ??? 计算出来的数字 x/min
 - Transporters
@@ -39,7 +34,6 @@ class WorkerWarehouse extends window.Phaser.Group {
     this._data = {
       carry: {},
       onRoutine: false,
-      speed: SPEED.normal,
       capacity: Big(2000),
       loadingSpeed: Big(1000),
       walkSpeed: 0.2
@@ -105,14 +99,6 @@ class WorkerWarehouse extends window.Phaser.Group {
     return capacity.minus(totalCarry);
   }
 
-  goFast() {
-    this._data.speed = SPEED.fast;
-  }
-
-  goNormal() {
-    this._data.speed = SPEED.normal;
-  }
-
   move(y) {
     return new Promise(resolve => {
       let { walkSpeed } = this._data;
@@ -157,6 +143,14 @@ class WorkerWarehouse extends window.Phaser.Group {
     this.carryNum.alignIn(this.man, window.Phaser.CENTER, 0, 20);
   }
 
+  updateCarryNum() {
+    let { carry } = this._data;
+    let totalRest = Object.keys(carry).reduce((total, key) => {
+      return total.plus(carry[key].amount);
+    }, Big(0));
+    this.setCarryNum(formatBigNum(totalRest));
+  }
+
   moveToStation(station) {
     return this.move(station.y + 50);
   }
@@ -165,7 +159,7 @@ class WorkerWarehouse extends window.Phaser.Group {
     return Object.keys(this._data.carry);
   }
 
-  giveToStation(keys, onStart) {
+  giveToStation(keys) {
     let emtKeys = keys.map(k => SOURCE_IMG_MAP[k]);
     this.emt.changeTexture(emtKeys);
     this.emt.start();
@@ -186,20 +180,22 @@ class WorkerWarehouse extends window.Phaser.Group {
         amountHu: decAmount.toString()
       };
     });
-    let { carry, loadingSpeed } = this._data;
+
+    let { loadingSpeed } = this._data;
     let stayDuration = parseInt(totalGive.div(loadingSpeed).times(1000), 10);
 
-    let totalRest = Object.keys(carry).reduce((total, key) => {
-      return total.plus(carry[key].amount);
-    }, Big(0));
+    return {
+      giveMap,
+      stayDuration
+    };
+  }
 
-    onStart && onStart();
-
+  giveToStationLoading(stayDuration) {
     return new Promise(resolve => {
       setTimeout(() => {
         this.stopGiveToStation();
-        this.setCarryNum(formatBigNum(totalRest));
-        resolve(giveMap);
+        this.updateCarryNum();
+        resolve();
       }, stayDuration);
     });
   }
@@ -208,10 +204,32 @@ class WorkerWarehouse extends window.Phaser.Group {
     this.emt.stop();
   }
 
-  takeFromStation(station) {
-    return new Promise(resolve => {
-      setTimeout(resolve, 1000);
-    });
+  takeFromStation(workerCarry) {
+    let { carry } = this._data;
+    if (carry[workerCarry.key]) {
+      carry[workerCarry.key].amount = carry[workerCarry.key].amount.plus(
+        workerCarry.amount
+      );
+      carry[workerCarry.key].amountHu = carry[
+        workerCarry.key
+      ].amount.toString();
+      // should update stationAmount ??
+    } else {
+      carry[workerCarry.key] = {
+        amount: workerCarry.amount,
+        amountHu: workerCarry.amountHu,
+        stationAmount: workerCarry.stationAmount
+      };
+    }
+
+    let stayDuration = parseInt(
+      workerCarry.amount.div(this._data.loadingSpeed).times(1000),
+      10
+    );
+
+    return {
+      stayDuration
+    };
   }
 
   async backToWarehouse() {
