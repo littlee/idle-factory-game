@@ -83,6 +83,10 @@ class WorkerWarehouse extends window.Phaser.Group {
     return this._data.onRoutine;
   }
 
+  setIsOnRoutine(onRoutine) {
+    this._data.onRoutine = onRoutine;
+  }
+
   getCapacity() {
     return this._data.capacity;
   }
@@ -122,7 +126,7 @@ class WorkerWarehouse extends window.Phaser.Group {
 
   carryFromWarehouse(carry) {
     return new Promise(resolve => {
-      this._data.onRoutine = true;
+      this.setIsOnRoutine(true);
       this.walkWithBox();
       let { capacity, loadingSpeed } = this._data;
       let carryDuration = parseInt(capacity.div(loadingSpeed).times(1000), 10);
@@ -237,7 +241,17 @@ class WorkerWarehouse extends window.Phaser.Group {
     this.back();
     await this.move(this.startY);
     this.stand();
-    this._data.onRoutine = false;
+    this.setIsOnRoutine(false);
+  }
+
+  doubleSpeed() {
+    this._data.loadingSpeed = this._data.loadingSpeed.times(2);
+    this._data.walkSpeed = this._data.walkSpeed * 2;
+  }
+
+  halfSpeed() {
+    this._data.loadingSpeed = this._data.loadingSpeed.div(2);
+    this._data.walkSpeed = this._data.walkSpeed / 2;
   }
 
   stand() {

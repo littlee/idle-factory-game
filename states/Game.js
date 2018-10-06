@@ -1,5 +1,5 @@
 // eslint-disable-next-line
-import regeneratorRuntime from '../js/libs/regenerator-runtime';
+import regeneratorRuntime, { async } from '../js/libs/regenerator-runtime';
 
 import BtnIdleCash from '../components/BtnIdleCash';
 import BtnCash from '../components/BtnCash';
@@ -230,6 +230,19 @@ class Game extends window.Phaser.State {
           }
         }
         await worker.backToWarehouse(this.warehouse);
+      }
+    });
+
+    this.workerMarketGroup.forEachAlive(async worker => {
+      if (!worker.getIsOnRoutine()) {
+        let workstations = this._getBoughtStations();
+        worker.goOutFromMarket();
+        for (let i = 0; i < workstations.length; i++) {
+          await worker.moveToStation(workstations[i]);
+          await worker.takeFromStation();
+        }
+        await worker.backToMarket();
+        await worker.sellProd();
       }
     });
   }
