@@ -6,8 +6,8 @@ const CONFIG = {
   prodHighlightedStrokeColor: 0x39ec43,
   bubbleColor: 0x004818,
   clockScaleFactor: 0.4,
-  pieActivatedTimestamp: 1538820968140, // null
-  countDownDuration: '21m30s',
+  pieActivatedTimestamp: null, // null 升级过1538820968140
+  countDownDuration: '30s',
   pieColor: 0x000000,
   pieAlpha: 0.7,
   incrementPercentage: '40%',
@@ -72,6 +72,7 @@ btns的显示&countdown信息&stroke的显示会随之根据this.pieActivatedTim
 class ProductUpgradeItem extends window.Phaser.Group {
   constructor({
     game,
+    parent,
     x,
     y,
     product,
@@ -80,7 +81,7 @@ class ProductUpgradeItem extends window.Phaser.Group {
     pieActivatedTimestamp = CONFIG.pieActivatedTimestamp,
     incrementPercentage = CONFIG.incrementPercentage,
   }) {
-    super(game);
+    super(game, parent);
 
     this.prodTexture = prodTexture;
     this.product = product;
@@ -167,8 +168,8 @@ class ProductUpgradeItem extends window.Phaser.Group {
       this._data.countDownDuration,
       getFontStyle('20px', 'white')
     );
-    this.countDownTxt.alignTo(this.clock, Phaser.BOTTOM_LEFT, 28, 5);
-    this.countDownTxt.setTextBounds(0, 0, this.bg.width - 5, 25);
+    this.countDownTxt.alignTo(this.clock, Phaser.BOTTOM_LEFT, this.bg.width * 0.3, 5);
+    this.countDownTxt.setTextBounds(0, 0, this.bg.width, 25);
 
     this.countDownGroup.addChild(mask);
     this.countDownGroup.addChild(this.countDownPie);
@@ -189,7 +190,8 @@ class ProductUpgradeItem extends window.Phaser.Group {
     // btn*buy
     this.btnBuyGroup = this.game.make.group();
     this.btnBuy = this.game.make.image(0, 0, 'btn_research_update');
-    this.btnBuy.alignTo(this.bg, Phaser.BOTTOM_LEFT, 2, 0);
+    // this.btnBuy.alignTo(this.bg, Phaser.BOTTOM_LEFT, 2, 0);
+    this.btnBuy.alignTo(this.bg, Phaser.BOTTOM_CENTER, 0, 0);
     this.btnBuyTxt = this.game.make.text(
       0,
       0,
@@ -206,7 +208,8 @@ class ProductUpgradeItem extends window.Phaser.Group {
     // btn*skip
     this.btnSkipGroup = this.game.make.group();
     this.btnSkip = this.game.make.image(0, 0, 'btn_research_skip');
-    this.btnSkip.alignTo(this.bg, Phaser.BOTTOM_LEFT, 2, 0);
+    // this.btnSkip.alignTo(this.bg, Phaser.BOTTOM_LEFT, 2, 0);
+    this.btnSkip.alignTo(this.bg, Phaser.BOTTOM_CENTER, 0, 0);
     this.btnSkipTxt = this.game.make.text(
       0,
       0,
@@ -237,9 +240,13 @@ class ProductUpgradeItem extends window.Phaser.Group {
   };
 
   _handleBtnBuyClicked = () => {
-    this.makeStrokeHighlighted();
+    this.makeStrokeHighlightedOnly();
     this.btnBuyGroup.visible = false;
     this.btnSkipGroup.visible = true;
+
+    // 外加让parent去掉原本是hightlighted的item的stroke
+    this.parent.setProperHighlightedChild();
+
     this._data.pieActivatedTimestamp = moment.utc().format('x');
     this._updateDurationTxtUI();
     this.txtTimer = setInterval(this._updateDurationTxtUI, 990);
@@ -250,14 +257,24 @@ class ProductUpgradeItem extends window.Phaser.Group {
   }
 
   _handleBtnSkipClicked = () => {
-    // 1）其他的大蒙层消失，自己的小蒙层也消失，倒计时也消失。2）workstation上面的product UI变化，外加卖出价格变化
+    /*
+    1）其他的大蒙层消失，自己的小蒙层也消失，倒计时也消失。
+    2) 下一个item的btns出现
+    3）workstation上面的product UI变化，外加卖出价格变化
+    */
     this.btnSkipGroup.visible = false;
     this.countDownGroup.visible = false;
     this.upgraded = true;
     clearInterval(this.timer);
     clearInterval(this.txtTimer);
+    this._enableBtnsOfNextItem();
     this._rmAllBigVeils();
     this.updateProdUIAndValue();
+    this.parent.makeNextItemBtnsShowUp();
+  }
+
+  _enableBtnsOfNextItem = () => {
+    console.log('让parent设置下一个item的btns可见');
   }
 
   _rmAllBigVeils = () => {
@@ -275,6 +292,7 @@ class ProductUpgradeItem extends window.Phaser.Group {
       let now = moment.utc().format('x');
       let diff = now - this._data.pieActivatedTimestamp;
       if (diff > this.durationInMiliSeconds) {
+        // NOTE: 这里不会自动highlight
         this.upgraded = true;
         this.btnSkipGroup.visible = false;
         this.btnBuyGroup.visible = false;
@@ -326,7 +344,7 @@ class ProductUpgradeItem extends window.Phaser.Group {
     }
     this._data.step = seconds / 360;
     this.durationInMiliSeconds = seconds * 1000;
-    console.log('this.durationInMiliSeconds: ', this.durationInMiliSeconds);
+    // console.log('this.durationInMiliSeconds: ', this.durationInMiliSeconds);
   };
 
   _reDrawPie = () => {
@@ -355,6 +373,7 @@ class ProductUpgradeItem extends window.Phaser.Group {
   };
 
   _updateDurationTxtUI = () => {
+    console.log('_updateDurationTxtUI进行中');
     this.remainedMiliSeconds = this.remainedMiliSeconds === null ? this.durationInMiliSeconds : this.remainedMiliSeconds;
     this.remainedMiliSeconds -= 1000;
     if (this.remainedMiliSeconds < 1000) {
@@ -364,7 +383,6 @@ class ProductUpgradeItem extends window.Phaser.Group {
     this.countDownTxt.setText(formatRemainedSecond(Math.round(this.remainedMiliSeconds / 1000)));
   }
 
-  // 未用到
   _decideStrokeColor = () => {
     // 3 个状态：透明 || regular || highlighted
     let color = null;
@@ -393,12 +411,20 @@ class ProductUpgradeItem extends window.Phaser.Group {
     return this._data.incrementPercentage;
   }
 
-  isHighlighted = () => {
-    return this._data.highlighted();
+  getHighlightedValue = () => {
+    return this.highlighted;
   }
 
-  makeStrokeHighlighted = () => {
-    this._data.highlighted = true;
+  getUpgradedValue = () => {
+    return this.upgraded;
+  }
+
+  setHighlighted = (param) => {
+    this.highlighted = param;
+  }
+
+  makeStrokeHighlightedOnly = () => {
+    this.highlighted = true;
 
     this.stroke.clear();
     this.stroke.lineStyle(
@@ -409,10 +435,11 @@ class ProductUpgradeItem extends window.Phaser.Group {
     this.stroke.lineTo(this.bg.width, this.bg.height);
     this.stroke.lineTo(0, this.bg.height);
     this.stroke.lineTo(0, 0);
+    console.log('make高亮');
   }
 
   makeStrokeRegularAndStuff = () => {
-    this._data.highlighted = false;
+    this.highlighted = false;
     this.upgraded = true;
 
     this.stroke.clear();
@@ -426,10 +453,21 @@ class ProductUpgradeItem extends window.Phaser.Group {
     this.stroke.lineTo(0, 0);
   }
 
-
   updateProdUIAndValue = () => {
     console.log('upgraded is done, UI and value should be changed');
   }
+
+  closeBtns = () => {
+    this.btnBuyGroup.visible = false;
+    this.btnSkipGroup.visible = false;
+  }
+
+  reopenBtns = () => {
+    console.log('reopen');
+    this.btnBuyGroup.visible = true;
+    this.btnSkipGroup.visible = false;
+  }
+
 }
 
 export default ProductUpgradeItem;

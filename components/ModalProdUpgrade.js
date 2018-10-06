@@ -1,5 +1,6 @@
 import ModalRaw from './ModalRaw.js';
-import ProductUpgradeItem from './ProductUpgradeItem.js';
+// import ProductUpgradeItem from './ProductUpgradeItem.js';
+import ProductUpgradeLine from './ProductUpgradeLine.js';
 
 function getFontStyle(fSize, color, align, weight) {
   return {
@@ -70,6 +71,7 @@ class ModalProdUpgrade extends ModalRaw {
 
     // fix me: 每个原料的frame改成一个组件
     // draw frame for each resource
+    this.frameOre = this.game.make.group();
     let frameOre = this.game.make.graphics(
       LEFT,
       OFFSET
@@ -177,35 +179,39 @@ class ModalProdUpgrade extends ModalRaw {
     tagCopperImg.alignTo(tagCopperName, Phaser.RIGHT_BOTTOM, 5, -5);
 
     // production update chain
-    this.steelGroup = new ProductUpgradeItem({
-      game: this.game,
-      x: LEFT + 60,
-      y: OFFSET + 120,
-      product: 'steel',
-      prodTexture: 'gold',
-      bought: true
-    });
-
-    // this.drillGroup = new ProductUpgradeItem({
+    // this.steelGroup = new ProductUpgradeItem({
     //   game: this.game,
-    //   x: LEFT + 60 + 110,
+    //   x: LEFT + 60,
     //   y: OFFSET + 120,
     //   product: 'steel',
+    //   prodTexture: 'gold',
     //   bought: true
     // });
+
+    this.steel = new ProductUpgradeLine({
+      game: this.game,
+      offsetTop: OFFSET,
+      offsetLeft: LEFT,
+      product: 'steel',
+    });
+    this.frameOre.addChild(frameOre);
+    this.frameOre.addChild(tagOre);
+    this.frameOre.addChild(this.steel);
+
+
+
 
     // arc arc(cx, cy, radius, startAngle, endAngle, anticlockwise, segments)
     // arcTo(x1, y1, x2, y2, radius)
     // http://jsfiddle.net/lewster32/0yvemxnw/
 
 
-    this.contentGroup.addChild(frameOre);
+    this.contentGroup.addChild(this.frameOre);
     this.contentGroup.addChild(frameCopper);
     this.contentGroup.addChild(frameOilBarrel);
     this.contentGroup.addChild(framePlug);
     this.contentGroup.addChild(frameAlBar);
     this.contentGroup.addChild(frameRubber);
-    this.contentGroup.addChild(tagOre);
     this.contentGroup.addChild(tagOreName);
     this.contentGroup.addChild(tagOreImg);
     this.contentGroup.addChild(tagCopper);
@@ -213,7 +219,7 @@ class ModalProdUpgrade extends ModalRaw {
     this.contentGroup.addChild(tagCopperImg);
 
     // test
-    this.contentGroup.addChild(this.steelGroup);
+    // this.contentGroup.addChild(this.steelGroup);
   };
 }
 
