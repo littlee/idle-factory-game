@@ -20,7 +20,7 @@ const CONFIG = {
   width: 589,
   veil_rgb: 0x000000,
   veil_alpha: 0.5,
-  veil_part_alpha: 0.01,
+  veil_part_alpha: 0.01, // 0.01
   frame_rgb: 0xe1d6cc,
   frame_line_width: 1,
   frame_line_color: 0x000000,
@@ -105,7 +105,6 @@ class ModalRaw extends window.Phaser.Group {
     this.veil.drawRect(x, y, w, h);
     this.veil.endFill();
 
-    this.veil.inputEnabled = true;
     this.veil.events.onInputDown.add(this._handleClose);
   };
 
@@ -144,9 +143,20 @@ class ModalRaw extends window.Phaser.Group {
   _boostInputPriority4Children = () => {
     // prep for input
     if (this.boost) {
+      // bug-prone but won't show when modal cannot be scrolled
       this.setAllChildren('inputEnabled', true);
       this.setAllChildren('input.priorityID', this.priorityID + 1);
-      // console.log('all boost');
+    } else {
+      this.btnClose.inputEnabled = true;
+      this.btnClose.input.priorityID = this.priorityID + 1;
+      this.frame.inputEnabled = true;
+      this.frame.input.priorityID = this.priorityID; // scroller是1000
+      this.veilTop.inputEnabled = true;
+      this.veilTop.input.priorityID = this.priorityID + 1; // 主页背景最多是999，这里 +1 可有可无
+      this.veilDown.inputEnabled = true;
+      this.veilDown.input.priorityID = this.priorityID + 1; // 同上
+      this.veil.inputEnabled = true;
+      this.veil.input.priorityID = this.priorityID; // z-index在frame之下，不会被触发
     }
   };
 
@@ -255,7 +265,6 @@ class ModalRaw extends window.Phaser.Group {
     this.veilTop.drawRect(x, y, w, h);
     this.veilTop.endFill();
 
-    this.veilTop.inputEnabled = true;
     this.veilTop.events.onInputDown.add(this._handleClose);;
   };
 
@@ -271,7 +280,6 @@ class ModalRaw extends window.Phaser.Group {
     this.veilDown.drawRect(x, y, w, h);
     this.veilDown.endFill();
 
-    this.veilDown.inputEnabled = true;
     this.veilDown.events.onInputDown.add(this._handleClose);
   }
 

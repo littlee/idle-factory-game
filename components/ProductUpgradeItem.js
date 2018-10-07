@@ -42,7 +42,7 @@ function getCenter(x, y, squareLength) {
 }
 
 function formatRemainedSecond(secs) {
-  console.log('remained secs: ', secs);
+  // console.log('remained secs: ', secs);
   let hours = Math.floor(secs / 3600);
   secs = secs % 3600;
   let minutes = Math.floor(secs / 60);
@@ -253,10 +253,8 @@ class ProductUpgradeItem extends window.Phaser.Group {
     this.txtTimer = setInterval(this._updateDurationTxtUI, 990);
     this._reDrawPie();
     this.timer = setInterval(this._reDrawPie, this._data.step * 1000);
-    this._addAllBigVeils();
 
-    // this.parent.handleOwnItemBeingActivated();
-    console.log('coin减少相应的值, 调用parent group方法让其他upgraded同类items的stroke regular');
+    console.log('coin减少相应的值');
   }
 
   _handleBtnSkipClicked = () => {
@@ -270,25 +268,12 @@ class ProductUpgradeItem extends window.Phaser.Group {
     this.upgraded = true;
     clearInterval(this.timer);
     clearInterval(this.txtTimer);
-    this._enableBtnsOfNextItem();
-    this._rmAllBigVeils();
     this.updateProdUIAndValue();
     this.parent.makeNextItemBtnsShowUp();
 
     this.parent.handleNoneActivatedItem();
   }
 
-  _enableBtnsOfNextItem = () => {
-    console.log('让parent设置下一个item的btns可见');
-  }
-
-  _rmAllBigVeils = () => {
-    console.log('timer结束，big veils都消失');
-  }
-
-  _addAllBigVeils = () => {
-    console.log('timer开始tick, big veils出现，吸掉input events');
-  }
 
   _check2ShowPieDisappearingProcess = () => {
     if (this._data.pieActivatedTimestamp === null) {
@@ -355,7 +340,7 @@ class ProductUpgradeItem extends window.Phaser.Group {
   _reDrawPie = () => {
     // 在画完之后，停掉两timer，更新prod UI&value
     this.drawCount++;
-    console.log('drawCount:', this.drawCount);
+    // console.log('drawCount:', this.drawCount);
     let startedDeg = -90; // -90
     let endDeg = -90 + this.drawCount;
     let pieCenter = getCenter(0, 0, this.bg.width);
@@ -386,20 +371,20 @@ class ProductUpgradeItem extends window.Phaser.Group {
     }
     let timeString = formatRemainedSecond(Math.round(this.remainedMiliSeconds / 1000));
     this.countDownTxt.setText(timeString);
-    this.parent.parent.syncCountdown4relatedChildren(timeString);
+    this.parent.parent.modal.handleCountdown4AllFrames(timeString);
   }
 
   _decideStrokeColor = () => {
     // 3 个状态：透明 || regular || highlighted
     let color = null;
     if (this.highlighted === false && this.upgraded === false) {
-      console.log('未升级');
+      // console.log('未升级');
       return false;
     } else if (this.highlighted === true) {
       color = CONFIG.prodHighlightedStrokeColor;
-      console.log('升级中或者处于最新升级状态');
+      // console.log('升级中或者处于最新升级状态');
     } else if (this.upgraded === true) {
-      console.log('升级过');
+      // console.log('升级过');
       color = CONFIG.prodRegularStrokeColor;
     }
     this.stroke.clear();
@@ -473,7 +458,6 @@ class ProductUpgradeItem extends window.Phaser.Group {
   }
 
   makeBtnsPriorityZero = () => {
-    console.log('make zero');
     this.btnSkipGroup.setAllChildren('input.priorityID', -1);
     this.btnBuyGroup.setAllChildren('input.priorityID', -1);
   }

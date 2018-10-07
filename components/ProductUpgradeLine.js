@@ -150,7 +150,6 @@ class ProductUpgradeLine extends window.Phaser.Group {
     if (highlightedChild.length === 0) {
       // 当前不会有active的pie || base是active
       this.highlightedIndex = upgradedChildren.length - 1;
-      console.log('index: ', this.highlightedIndex);
       children[this.highlightedIndex].makeStrokeHighlightedOnly();
     } else if (highlightedChild.length === 2) {
       // 在本有高亮时候，点击升级
@@ -211,13 +210,15 @@ class ProductUpgradeLine extends window.Phaser.Group {
   handleOwnItemBeingActivated = () => {
     this.becomeActive();
     this.makeBigVeilInvisible();
+    // 需要，否则当升级非首个frame的item时，该frame之上的frames因为没有this.modal.getActivatedProduct()非null的值而变成无big veils
     this.parent.setBigVeil4Children();
-    // this.parent.syncCountdown4relatedChildren();
+    this.parent.modal.handleBigVeils4AllFrames();
   }
 
   handleNoneActivatedItem = () => {
     this.becomeInactive();
-    this.parent.setBigVeil4Children();
+    this.parent.modal.setActivatedProduct(null);
+    this.parent.modal.handleBigVeils4AllFrames();
   }
 
   resetBigCountdownTxt = (timeString, prod) => {

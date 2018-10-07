@@ -20,6 +20,7 @@ import BtnUpgrade from '../components/BtnUpgrade';
 import ModalLevel from '../components/ModalLevel.js';
 import ModalRescources from '../components/ModalResources.js';
 import ModalAdCampaign from '../components/ModalAdCampaign';
+import ModalProdUpgrade from '../components/ModalProdUpgrade';
 
 import range from '../js/libs/_/range';
 import { arrayIntersect } from '../utils';
@@ -87,6 +88,7 @@ class Game extends window.Phaser.State {
       this.modalMarket.visible = true;
     });
 
+    // modals
     this.modalWarehose = new ModalLevel({
       game: this.game,
       type: 'warehouse',
@@ -100,6 +102,11 @@ class Game extends window.Phaser.State {
 
     this.modalAdCampaign = new ModalAdCampaign({
       game: this.game
+    });
+
+    this.modalProdUpgrade = new ModalProdUpgrade({
+      game: this.game,
+      headingTxt: '生产产品升级',
     });
 
     // TODO: make 30 workstations
@@ -155,6 +162,8 @@ class Game extends window.Phaser.State {
 
     // add stuff to bg to enable scroll
     this._addAllRelatedStuff2Bg();
+
+
     // with bg fills with stull, scrolling now is all set
     let wholeGameScroller = new Scroller({
       targetToScroll: this.bgGroup,
@@ -418,6 +427,7 @@ class Game extends window.Phaser.State {
     this.btnBlueprint.input.priorityID = PRIORITY_ID;
     this.btnBlueprint.events.onInputDown.add(() => {
       console.log('click btn blueprint');
+      this.modalProdUpgrade.visible = true;
     });
 
     this.btnXCash = this.add.sprite(

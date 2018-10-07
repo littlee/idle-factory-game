@@ -102,7 +102,6 @@ class Start extends window.Phaser.State {
     this.load.image('reso_plug', 'images/reso_plug.png');
     this.load.image('reso_aluminium', 'images/reso_aluminium.png');
     this.load.image('reso_rubber', 'images/reso_rubber.png');
-
   }
 
   create() {

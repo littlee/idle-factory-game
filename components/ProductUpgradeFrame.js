@@ -28,13 +28,16 @@ function getFontStyle(fSize, color, align, weight) {
 
 // 控制big veil的出现和消失
 class ProductUpgradeFrame extends window.Phaser.Group {
-  constructor({game, parent, offsetTop, offsetLeft}) {
+  constructor({game, parent, offsetTop, offsetLeft, modalRef}) {
     super(game, parent);
+    this.modal = modalRef;
 
     this.active = false;
     this.offsetTop = offsetTop;
     this.offsetLeft = offsetLeft;
     this.inactiveChildren = null;
+    this.activatedChild = null;
+    this.activatedProduct = null;
 
     this._getInit();
     this._addAllChildren();
@@ -134,14 +137,27 @@ class ProductUpgradeFrame extends window.Phaser.Group {
   becomeInactive = () => {
     this.active = false;
   }
+
+  getActiveValue = () => {
+    return this.active;
+  }
+
   setBigVeil4Children = () => {
     let children = [this.steel, this.drill, this.can, this.toaster];
     this.inactiveChildren = children.filter((item) => item.getActiveValue() === false);
     this.activatedChild = children.filter((item) => item.getActiveValue() === true);
+    if (this.activatedChild.length > 0) {
+      this.activatedProduct = this.activatedChild[0].getProdLineProductName();
+      this.modal.setActivatedProduct(this.activatedProduct);
+    }
     if (this.inactiveChildren.length === 4) {
       // children中没有一个有active的pie，则不需要veil
       this.becomeInactive();
-      children.forEach((item) => item.makeBigVeilInvisible());
+      if (this.modal.getActivatedProduct() !== null) {
+        children.forEach((item) => item.makeBigVeilVisible());
+      } else {
+        children.forEach((item) => item.makeBigVeilInvisible());
+      }
     } else if (this.inactiveChildren.length === 3) {
       // 有一个active的child, 其他的要有veil+countdown
       this.becomeActive();
@@ -150,10 +166,16 @@ class ProductUpgradeFrame extends window.Phaser.Group {
   }
 
   syncCountdown4relatedChildren = (timestring) => {
-    console.log('inactiveChildren.length: ', this.inactiveChildren.length);
+    // 要在setBigVeil4Children()之后调用
+    let product = this.modal.getActivatedProduct();
     this.inactiveChildren.forEach(item => {
-      item.resetBigCountdownTxt(timestring, this.activatedChild[0].getProdLineProductName());
+      item.resetBigCountdownTxt(timestring, product);
     });
+  }
+
+
+  getActivatedProduct = () => {
+    return this.activatedProduct;
   }
 }
 
