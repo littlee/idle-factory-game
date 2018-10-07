@@ -516,8 +516,14 @@ class Workstation extends window.Phaser.Group {
     }
     this._data.output = outputKey;
     this._data.outputAmount.prod = Big(0);
-    // 需要合并原有的材料
-    this._data.input = getInitInput(this._data.output);
+
+    let nextInitInput = getInitInput(this._data.output);
+    Object.keys(nextInitInput).forEach(key => {
+      // only merge new keys
+      if (!this._data.input[key]) {
+        this._data.input[key] = nextInitInput[key];
+      }
+    });
 
     let outputTexture = SOURCE_IMG_MAP[outputKey];
     this.outputItems.changeTexture(outputKey);
