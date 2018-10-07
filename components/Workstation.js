@@ -6,7 +6,7 @@ import ModalLevel from './ModalLevel';
 import Worker from './Worker';
 import BtnUpgrade from './BtnUpgrade';
 import ResourceEmitter from './ResourceEmitter';
-import ResourecePile from './ResourcePile';
+import ResourcePile from './ResourcePile';
 import BoxCollect from './BoxCollect';
 import SOURCE_IMG_MAP from '../constants/SourceImgMap';
 
@@ -17,7 +17,7 @@ const OUTPUT_DELAY = {
   fast: 1000
 };
 
-const COLLECT_TYPES = {
+export const COLLECT_TYPES = {
   CASH: 'cash',
   PROD: 'prod'
 };
@@ -36,12 +36,22 @@ const GROUND_NUM_STYLE = {
 
 const PRIORITY_ID = 999;
 
-const OUTPUT_REQ_MAP = {
+const OUTPUT_INPUT_MAP = {
   steel: ['ore'],
   can: ['ore'],
   drill: ['steel'],
   toaster: ['steel', 'can']
 };
+
+function getInitInput(output) {
+  return OUTPUT_INPUT_MAP[output].reduce((input, key) => {
+    input[key] = {
+      amount: Big(0),
+      amountHu: '0'
+    };
+    return input;
+  }, {});
+}
 
 class Workstation extends window.Phaser.Group {
   constructor(game, x, y, stationLevel = 1, index = 1) {
@@ -51,18 +61,14 @@ class Workstation extends window.Phaser.Group {
 
     this._data = {
       isBought: false,
-      input: OUTPUT_REQ_MAP['steel'],
-      inputAmount: [Big(0), Big(0)],
-      inputComsumePerMin: [Big(0), Big(0)],
+      isWorking: false,
+      input: getInitInput('steel'),
       output: 'steel',
       outputAmount: {
         cash: Big(0),
         prod: Big(0)
       },
-      outputAmountPerMin: {
-        cash: Big(0),
-        prod: Big(0)
-      },
+      producePerMin: Big(10000),
       outputDelay: 'normal',
       price: {
         cash: Big(123),
@@ -145,23 +151,28 @@ class Workstation extends window.Phaser.Group {
     this.inputItemGroup = this.game.make.group();
     range(MAX_INPUT_PILE).forEach(index => {
       let { input } = this._data;
-      let inputTexture = SOURCE_IMG_MAP[input[index]];
-      let inputItem = new ResourecePile(this.game, inputTexture, true);
+      let inputKeys = Object.keys(input);
+      let inputItem = new ResourcePile(this.game, inputKeys[index], true);
       inputItem.x = this.table.x + 20 + index * 40;
       inputItem.y = index * 10;
-      inputItem.setNum(formatBigNum(this._data.inputAmount[index]));
-      inputItem.visible = Boolean(inputTexture);
+      if (inputKeys[index]) {
+        inputItem.setNum(formatBigNum(input[inputKeys[index]].amount));
+      } else {
+        inputItem.setNum(0);
+      }
+      inputItem.visible = Boolean(inputKeys[index]);
       this.inputItemGroup.add(inputItem);
     });
 
-    this.outputItems = new ResourecePile(this.game, 'prod_steel');
+    let { output } = this._data;
+    this.outputItems = new ResourcePile(this.game, output);
     this.outputItems.alignIn(this.table, window.Phaser.TOP_CENTER);
 
     this.inputItemsAni = new ResourceEmitter(
       this.game,
       this.table.x + 50,
       this.table.y + 50,
-      this._data.input.map(item => SOURCE_IMG_MAP[item]),
+      Object.keys(this._data.input).map(item => SOURCE_IMG_MAP[item]),
       100,
       0
     );
@@ -204,7 +215,7 @@ class Workstation extends window.Phaser.Group {
       this.setCollectType.bind(this, COLLECT_TYPES.PROD)
     );
 
-    this.outputTradeAni = new ResourceEmitter(
+    this.outputGiveAni = new ResourceEmitter(
       this.game,
       this.boxHolderProd.x,
       this.boxHolderProd.y,
@@ -238,7 +249,7 @@ class Workstation extends window.Phaser.Group {
     this.productGroup.add(this.boxHolderProd);
     this.productGroup.add(this.boxHolderCash);
     this.productGroup.add(this.boxCollect);
-    this.productGroup.add(this.outputTradeAni);
+    this.productGroup.add(this.outputGiveAni);
     this.productGroup.add(this.upBtn);
     this.productGroup.visible = false;
 
@@ -247,7 +258,7 @@ class Workstation extends window.Phaser.Group {
       game: this.game,
       type: 'workstation',
       coupledBtn: this.upBtn,
-      workstation: this, // more to go
+      workstation: this // more to go
     });
 
     // for simple z-depth
@@ -266,51 +277,66 @@ class Workstation extends window.Phaser.Group {
   }
 
   _init() {
-    // this.beAbleToBuy();
-    // this.buy('cash');
-    // this.setCollectType(COLLECT_TYPES.CASH);
+    this.setCollectType(COLLECT_TYPES.CASH);
   }
 
   _outputLoop() {
     if (this._getHasNoInput()) {
       this.stopWork();
+      return false;
     }
     let {
       collectType,
-      inputAmount,
-      inputComsumePerMin,
+      input,
+      producePerMin,
       outputAmount,
-      outputAmountPerMin,
       outputDelay
     } = this._data;
     this._data.outputAmount[collectType] = outputAmount[collectType].plus(
-      outputAmountPerMin[collectType].div(
-        Big(A_MINUTE / OUTPUT_DELAY[outputDelay])
-      )
+      producePerMin.div(Big(A_MINUTE / OUTPUT_DELAY[outputDelay]))
     );
     this.boxCollect.setNum(formatBigNum(outputAmount[collectType]));
 
-    this._data.inputAmount = inputAmount.map((amount, index) => {
-      let nextAmount = amount.minus(
-        inputComsumePerMin[index].div(Big(A_MINUTE / OUTPUT_DELAY[outputDelay]))
-      );
-      if (nextAmount.lt(0)) {
-        nextAmount = Big(0);
-      }
-      return nextAmount;
-    });
+    let inputKeys = Object.keys(this._data.input);
+    this._data.input = inputKeys
+      .map(key => {
+        let nextAmount = input[key].amount.minus(
+          producePerMin.div(Big(A_MINUTE / OUTPUT_DELAY[outputDelay]))
+        );
+        if (nextAmount.lt(0)) {
+          nextAmount = Big(0);
+        }
+        return {
+          key,
+          amount: nextAmount,
+          amountHu: nextAmount.toString()
+        };
+      })
+      .reduce((map, item) => {
+        let { key, amount, amountHu } = item;
+        map[key] = {
+          amount,
+          amountHu
+        };
+        return map;
+      }, {});
     this.inputItemGroup.forEach(item => {
       let index = this.inputItemGroup.getChildIndex(item);
-      item.setNum(formatBigNum(this._data.inputAmount[index]));
+      if (inputKeys[index]) {
+        item.setNum(formatBigNum(this._data.input[inputKeys[index]].amount));
+      } else {
+        item.setNum(0);
+      }
     });
+    return true;
   }
 
   _getHasNoInput() {
-    let neededInputAmount = this._data.inputAmount.slice(
-      0,
-      this._data.input.length
-    );
-    return neededInputAmount.some(amount => {
+    let { input } = this._data;
+    let inputAmt = Object.keys(input).map(key => {
+      return input[key].amount;
+    });
+    return inputAmt.some(amount => {
       return amount.lte(0);
     });
   }
@@ -332,20 +358,54 @@ class Workstation extends window.Phaser.Group {
     this.worker.visible = true;
     this.productGroup.visible = true;
 
-    this.startWork();
+    // this.startWork();
   }
 
   getIsBought() {
     return this._data.isBought;
   }
 
+  getIsWorking() {
+    return this._data.isWorking;
+  }
+
+  getOutputKey() {
+    return this._data.output;
+  }
+
+  getHasProdOutput() {
+    let isProdType = this.getCollectType() === COLLECT_TYPES.PROD;
+    let hasProd = this.getProdOutput().gt(0);
+    return isProdType && hasProd;
+  }
+
+  getHasCashOutput() {
+    let isCashType = this.getCollectType() === COLLECT_TYPES.CASH;
+    let hasCash = this.getCashOutput().gt(0);
+    return isCashType && hasCash;
+  }
+
+  getProdOutput() {
+    return this._data.outputAmount.prod;
+  }
+
+  getCashOutput() {
+    return this._data.outputAmount.cash;
+  }
+
   startWork() {
+    this._data.isWorking = true;
     if (this.outputTimer) {
       this.game.time.events.remove(this.outputTimer);
     }
+    this.inputItemsAni.start();
+    if (this.getCollectType() === COLLECT_TYPES.PROD) {
+      this.outputItemsAniLeft.start();
+    } else {
+      this.outputItemsAniRight.start();
+    }
     this.worker.work();
-    this.setCollectType(COLLECT_TYPES.CASH);
-    this._outputLoop();
+
     this.outputTimer = this.game.time.events.loop(
       OUTPUT_DELAY[this._data.outputDelay],
       this._outputLoop,
@@ -354,6 +414,7 @@ class Workstation extends window.Phaser.Group {
   }
 
   stopWork() {
+    this._data.isWorking = false;
     this.inputItemsAni.stop();
     this.outputItemsAniLeft.stop();
     this.outputItemsAniRight.stop();
@@ -363,8 +424,52 @@ class Workstation extends window.Phaser.Group {
     }
   }
 
-  takeFromWorker() {
-    
+  takeFromWorker(amountMap) {
+    let { input } = this._data;
+    // update _data;
+    Object.keys(amountMap).forEach(key => {
+      input[key].amount = input[key].amount.plus(amountMap[key].amount);
+      input[key].amountHu = input[key].amount.toString();
+    });
+
+    // update visual
+    Object.keys(input).forEach(key => {
+      this.inputItemGroup.forEach(inItem => {
+        if (inItem.getKey() === key) {
+          inItem.setNum(formatBigNum(input[key].amount));
+        }
+      });
+    });
+    if (!this.getIsWorking()) {
+      this.startWork();
+    }
+  }
+
+  giveToWorker(amount) {
+    this.outputGiveAni.start();
+    let { outputAmount } = this._data;
+    outputAmount.prod = outputAmount.prod.minus(amount);
+  }
+
+  giveToWorkerLoading(stayDuration) {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        this.outputGiveAni.stop();
+        let { outputAmount, collectType } = this._data;
+        this.boxCollect.setNum(formatBigNum(outputAmount[collectType]));
+        resolve();
+      }, stayDuration);
+    });
+  }
+
+  giveToWorkerMarket(amount) {
+    let { outputAmount, collectType } = this._data;
+    outputAmount.cash = outputAmount.cash.minus(amount);
+    this.boxCollect.setNum(formatBigNum(outputAmount[collectType]));
+  }
+
+  getCollectType() {
+    return this._data.collectType;
   }
 
   setCollectType(collectType) {
@@ -401,36 +506,49 @@ class Workstation extends window.Phaser.Group {
     return this._data.input;
   }
 
+  getInputKeys() {
+    return Object.keys(this._data.input);
+  }
+
   setOutput(outputKey) {
     if (outputKey === this._data.output) {
       return;
     }
     this._data.output = outputKey;
-    this._data.input = OUTPUT_REQ_MAP[outputKey];
+    this._data.outputAmount.prod = Big(0);
+
+    let nextInitInput = getInitInput(this._data.output);
+    Object.keys(nextInitInput).forEach(key => {
+      // only merge new keys
+      if (!this._data.input[key]) {
+        this._data.input[key] = nextInitInput[key];
+      }
+    });
 
     let outputTexture = SOURCE_IMG_MAP[outputKey];
-    this.outputItems.changeTexture(outputTexture);
+    this.outputItems.changeTexture(outputKey);
     this.outputItemsAniLeft.changeTexture(outputTexture);
     this.outputItemsAniRight.changeTexture(outputTexture);
-    this.outputTradeAni.changeTexture(outputTexture);
+    this.outputGiveAni.changeTexture(outputTexture);
 
     this.productBtnItem.loadTexture(outputTexture);
 
-    let inputTexture = this._data.input.map(item => SOURCE_IMG_MAP[item]);
-    this.inputItemGroup.forEach(item => {
-      let index = this.inputItemGroup.getChildIndex(item);
-      if (inputTexture[index]) {
-        item.changeTexture(inputTexture[index]);
-        item.visible = true;
+    let { input } = this._data;
+    let inputKeys = Object.keys(input);
+    this.inputItemGroup.forEach(inItem => {
+      let index = this.inputItemGroup.getChildIndex(inItem);
+      if (inputKeys[index]) {
+        inItem.changeTexture(inputKeys[index]);
+        inItem.setNum(formatBigNum(input[inputKeys[index]].amount));
+        inItem.visible = true;
       } else {
-        item.visible = false;
+        inItem.setNum(0);
+        inItem.visible = false;
       }
     });
-    this.inputItemsAni.changeTexture(inputTexture);
-  }
 
-  getData() {
-    return this._data;
+    let inputTexture = inputKeys.map(item => SOURCE_IMG_MAP[item]);
+    this.inputItemsAni.changeTexture(inputTexture);
   }
 }
 

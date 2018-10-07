@@ -20,19 +20,23 @@ const CARRY_NUM_STYLE = {
   strokeThickness: 5
 };
 
-const SPEED = {
-  normal: 0.3,
-  fast: 0.5
-};
+/*
+- Max Resource Transported ??? 计算出来的数字 x/min
+- Transporters
+- Transporter Capacity
+- Transporter Loading Speed
+- Transporter Walk Speed
+ */
 
 class WorkerWarehouse extends window.Phaser.Group {
   constructor(game, x, y) {
     super(game);
     this._data = {
-      carry: [],
-      maxCarry: Big(1000),
+      carry: {},
       onRoutine: false,
-      speed: SPEED.normal
+      capacity: Big(2000),
+      loadingSpeed: Big(1000),
+      walkSpeed: 0.2
     };
 
     this.x = x;
@@ -66,26 +70,44 @@ class WorkerWarehouse extends window.Phaser.Group {
     this.add(this.carryNum);
   }
 
+  _getTotalCarry() {
+    let { carry } = this._data;
+    return Object.keys(carry)
+      .map(key => carry[key].amount)
+      .reduce((total, amount) => {
+        return total.plus(amount);
+      }, Big(0));
+  }
+
   getIsOnRoutine() {
     return this._data.onRoutine;
   }
 
-  getSpeed() {
-    return this._data.speed;
+  setIsOnRoutine(onRoutine) {
+    this._data.onRoutine = onRoutine;
   }
 
-  goFast() {
-    this._data.speed = SPEED.fast;
+  getCapacity() {
+    return this._data.capacity;
   }
 
-  goNormal() {
-    this._data.speed = SPEED.normal;
+  getHasFreeCapacity() {
+    let { capacity } = this._data;
+    let totalCarry = this._getTotalCarry();
+    return capacity.gt(totalCarry);
+  }
+
+  getFreeCapacity() {
+    let { capacity } = this._data;
+    let totalCarry = this._getTotalCarry();
+    return capacity.minus(totalCarry);
   }
 
   move(y) {
     return new Promise(resolve => {
+      let { walkSpeed } = this._data;
       let prevY = this.y;
-      let duration = Math.abs(y - prevY) / this.getSpeed();
+      let duration = Math.abs(y - prevY) / walkSpeed;
       this.game.add
         .tween(this)
         .to(
@@ -102,57 +124,134 @@ class WorkerWarehouse extends window.Phaser.Group {
     });
   }
 
-  carryFromWarehouse(neededKeys) {
-    this._data.onRoutine = true;
-    this._data.carry = neededKeys.map(key => {
-      return {
-        key,
-        amount: Big(100)
-      };
-    });
-    this.setCarryNum(formatBigNum(this._data.maxCarry));
-    this.walkWithBox();
+  carryFromWarehouse(carry) {
     return new Promise(resolve => {
-      setTimeout(resolve, 1500);
+      this.setIsOnRoutine(true);
+      this.walkWithBox();
+      let { capacity, loadingSpeed } = this._data;
+      let carryDuration = parseInt(capacity.div(loadingSpeed).times(1000), 10);
+      this.setCarry(carry);
+      setTimeout(() => {
+        this.setCarryNum(formatBigNum(capacity));
+        resolve();
+      }, carryDuration);
     });
   }
 
+  setCarry(carry) {
+    this._data.carry = carry;
+  }
+
   setCarryNum(num) {
-    this.carryNum.setText(num);
+    this.carryNum.setText(`${num}`);
     this.carryNum.alignIn(this.man, window.Phaser.CENTER, 0, 20);
+  }
+
+  updateCarryNum() {
+    let { carry } = this._data;
+    let totalRest = Object.keys(carry).reduce((total, key) => {
+      return total.plus(carry[key].amount);
+    }, Big(0));
+    this.setCarryNum(formatBigNum(totalRest));
   }
 
   moveToStation(station) {
     return this.move(station.y + 50);
   }
 
-  stayInStation() {
-    return new Promise(resolve => {
-      setTimeout(resolve, 1000);
-    });
-  }
-
   getCarryKeys() {
-    return this._data.carry.map(c => c.key);
+    return Object.keys(this._data.carry);
   }
 
   giveToStation(keys) {
-    keys = keys.map(k => SOURCE_IMG_MAP[k]);
-    this.emt.changeTexture(keys);
+    let emtKeys = keys.map(k => SOURCE_IMG_MAP[k]);
+    this.emt.changeTexture(emtKeys);
     this.emt.start();
+
+    let totalGive = Big(0);
+    let giveMap = {};
+    keys.forEach(key => {
+      let { carry } = this._data;
+      let decAmount = carry[key].amount.div(carry[key].stationAmount);
+
+      carry[key].amount = carry[key].amount.minus(decAmount);
+      carry[key].amountHu = carry[key].amount.toString();
+      carry[key].stationAmount -= 1;
+
+      totalGive = totalGive.plus(decAmount);
+      giveMap[key] = {
+        amount: decAmount,
+        amountHu: decAmount.toString()
+      };
+    });
+
+    let { loadingSpeed } = this._data;
+    let stayDuration = parseInt(totalGive.div(loadingSpeed).times(1000), 10);
+
+    return {
+      giveMap,
+      stayDuration
+    };
+  }
+
+  giveToStationLoading(stayDuration) {
+    return new Promise(resolve => {
+      setTimeout(() => {
+        this.stopGiveToStation();
+        this.updateCarryNum();
+        resolve();
+      }, stayDuration);
+    });
   }
 
   stopGiveToStation() {
     this.emt.stop();
   }
 
-  takeProdFromStation(station) {}
+  takeFromStation(workerCarry) {
+    let { carry } = this._data;
+    if (carry[workerCarry.key]) {
+      carry[workerCarry.key].amount = carry[workerCarry.key].amount.plus(
+        workerCarry.amount
+      );
+      carry[workerCarry.key].amountHu = carry[
+        workerCarry.key
+      ].amount.toString();
+      // should update stationAmount ??
+    } else {
+      carry[workerCarry.key] = {
+        amount: workerCarry.amount,
+        amountHu: workerCarry.amountHu,
+        stationAmount: workerCarry.stationAmount
+      };
+    }
+
+    let stayDuration = parseInt(
+      workerCarry.amount.div(this._data.loadingSpeed).times(1000),
+      10
+    );
+
+    return {
+      stayDuration
+    };
+  }
 
   async backToWarehouse() {
+    this.setCarryNum(0);
     this.back();
     await this.move(this.startY);
     this.stand();
-    this._data.onRoutine = false;
+    this.setIsOnRoutine(false);
+  }
+
+  doubleSpeed() {
+    this._data.loadingSpeed = this._data.loadingSpeed.times(2);
+    this._data.walkSpeed = this._data.walkSpeed * 2;
+  }
+
+  halfSpeed() {
+    this._data.loadingSpeed = this._data.loadingSpeed.div(2);
+    this._data.walkSpeed = this._data.walkSpeed / 2;
   }
 
   stand() {

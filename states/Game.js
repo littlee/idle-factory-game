@@ -6,7 +6,8 @@ import BtnCash from '../components/BtnCash';
 import BtnSuperCash from '../components/BtnSuperCash';
 
 import Warehouse from '../components/Warehouse';
-import Workstation from '../components/Workstation';
+import Market from '../components/Market';
+import Workstation, { COLLECT_TYPES } from '../components/Workstation';
 
 import WorkerWarehouse from '../components/WorkerWarehouse';
 import WorkerMarket from '../components/WorkerMarket';
@@ -98,9 +99,10 @@ class Game extends window.Phaser.State {
     });
 
     this.modalAdCampaign = new ModalAdCampaign({
-      game: this.game,
+      game: this.game
     });
 
+    // TODO: make 30 workstations
     const WORKSTATION_START_Y = 915;
     const WORKSTATION_HEIGHT = 339;
     this.workstationGroup = this.add.group();
@@ -116,12 +118,11 @@ class Game extends window.Phaser.State {
     });
     this.workstationGroup.children[0].beAbleToBuy();
     this.workstationGroup.children[0].buy('cash');
+    // this.workstationGroup.children[0].setCollectType(COLLECT_TYPES.PROD);
     this.workstationGroup.children[1].beAbleToBuy();
     this.workstationGroup.children[1].buy('cash');
-    this.workstationGroup.children[1].setOutput('drill');
+    // this.workstationGroup.children[1].setOutput('drill');
     this.workstationGroup.children[2].beAbleToBuy();
-
-    window.stg = this.workstationGroup;
 
     this.workerWarehouseGroup = this.add.group();
     range(5).forEach(index => {
@@ -135,16 +136,6 @@ class Game extends window.Phaser.State {
         worker.kill();
       }
     });
-    window.wg = this.workerWarehouseGroup;
-
-    // this.workerWarehouseGroup.forEachAlive(async worker => {
-    //   worker.carryFromWarehouse(this.warehouse);
-    //   let workstations = this.workstationGroup.children;
-    //   for (let i = 0; i < workstations.length; i++) {
-    //     await worker.moveToStation(workstations[i]);
-    //   }
-    //   await worker.backToWarehouse(this.warehouse);
-    // });
 
     this.workerMarketGroup = this.add.group();
     range(5).forEach(index => {
@@ -172,37 +163,152 @@ class Game extends window.Phaser.State {
     wholeGameScroller.enableScroll();
 
     this._createFastScrollArrow(wholeGameScroller);
-
-    // this.emt = this.add.emitter(200, 200, 10);
-    // this.emt.makeParticles('reso_ore');
-    // this.emt.setXSpeed(100, 100);
-    // this.emt.setYSpeed(0, 0);
-    // this.emt.setRotation(0, 0);
-    // this.emt.gravity = 0;
-    // this.emt.start(false, 2000, 500);
-    // window.emt = this.emt;
   }
 
   update() {
-    // this.workerWarehouseGroup.forEachAlive(async worker => {
-    //   if (!worker.getIsOnRoutine()) {
-    //     let workstations = this._getBoughtStations();
-    //     let neededKeys = this._getStationsNeededKeys(workstations);
-    //     this.warehouse.outputGoods(neededKeys);
-    //     await worker.carryFromWarehouse(neededKeys);
-    //     this.warehouse.stopOutput();
-    //     for (let i = 0; i < workstations.length; i++) {
-    //       await worker.moveToStation(workstations[i]);
-    //       let workerGiveKeys = arrayIntersect(worker.getCarryKeys(), workstations[i].getInput());
-    //       if (workerGiveKeys.length) {
-    //         worker.giveToStation(workerGiveKeys);
-    //         await worker.stayInStation(workstations[i]);
-    //         worker.stopGiveToStation();
-    //       }
-    //     }
-    //     await worker.backToWarehouse(this.warehouse);
-    //   }
-    // });
+    this.workerWarehouseGroup.forEachAlive(async worker => {
+      if (!worker.getIsOnRoutine()) {
+        let workstations = this._getBoughtStations();
+        let neededKeys = this._getStationsNeededKeys(workstations);
+        this.warehouse.outputGoods(neededKeys);
+
+        let stationAmountKeyMap = this._getStationAmountKeyMap(
+          neededKeys,
+          workstations
+        );
+
+        let warehouseCarry = this._getWorkerWarehouseCarry(
+          neededKeys,
+          worker.getCapacity(),
+          stationAmountKeyMap
+        );
+        await worker.carryFromWarehouse(warehouseCarry);
+        this.warehouse.stopOutput();
+
+        for (let i = 0; i < workstations.length; i++) {
+          await worker.moveToStation(workstations[i]);
+          let loadingPromises = [];
+          let workerGiveRes = this._getShouldWorkerGiveAndKeys(
+            worker,
+            workstations[i]
+          );
+          let gtsRes = null;
+          if (workerGiveRes.result) {
+            gtsRes = worker.giveToStation(workerGiveRes.keys);
+            loadingPromises.push(
+              worker.giveToStationLoading(gtsRes.stayDuration)
+            );
+          }
+
+          let tfsRes = null;
+          let shouldTakeFromStation = this._getShouldTakeFromStation(
+            worker,
+            workstations,
+            i
+          );
+          if (shouldTakeFromStation) {
+            let workerStationCarry = this._getWorkerStationCarry(
+              worker,
+              workstations,
+              i
+            );
+            tfsRes = worker.takeFromStation(workerStationCarry);
+            workstations[i].giveToWorker(workerStationCarry.amount);
+            loadingPromises.push(
+              workstations[i].giveToWorkerLoading(tfsRes.stayDuration)
+            );
+          }
+
+          await Promise.all(loadingPromises);
+
+          if (gtsRes) {
+            workstations[i].takeFromWorker(gtsRes.giveMap);
+          }
+          if (tfsRes) {
+            worker.updateCarryNum();
+          }
+        }
+        await worker.backToWarehouse(this.warehouse);
+      }
+    });
+
+    this.workerMarketGroup.forEachAlive(async worker => {
+      if (!worker.getIsOnRoutine()) {
+        let workstations = this._getBoughtStations();
+        worker.goOutFromMarket();
+        for (let i = 0; i < workstations.length; i++) {
+          await worker.moveToStation(workstations[i]);
+          let shouldWorkerMarketTake = this._getShouldWorkerMarketTake(
+            worker,
+            workstations[i]
+          );
+          if (shouldWorkerMarketTake) {
+            let takeAmount = null;
+            let stationCash = workstations[i].getCashOutput();
+            let workerFreeCapacity = worker.getFreeCapacity();
+            if (stationCash.gt(workerFreeCapacity)) {
+              takeAmount = workerFreeCapacity;
+            } else {
+              takeAmount = stationCash;
+            }
+            let tfsRes = worker.takeFromStation(takeAmount);
+            workstations[i].giveToWorkerMarket(takeAmount);
+            await worker.takeFromStationLoading(tfsRes.stayDuration);
+          }
+        }
+        await worker.backToMarket();
+        if (worker.getHasCarry()) {
+          let sellRes = await worker.sellProd();
+          this.market.sell(sellRes.amount);
+        } else {
+          worker.setIsOnRoutine(false);
+        }
+      }
+    });
+  }
+
+  _getShouldWorkerMarketTake(worker, station) {
+    let workerHasFreeCapacity = worker.getHasFreeCapacity();
+    if (!workerHasFreeCapacity) {
+      return false;
+    }
+
+    let stationHasOutputCash = station.getHasCashOutput();
+    if (!stationHasOutputCash) {
+      return false;
+    }
+    return true;
+  }
+
+  _getShouldWorkerGiveAndKeys(worker, station) {
+    let keys = arrayIntersect(worker.getCarryKeys(), station.getInputKeys());
+    return {
+      result: keys.length > 0,
+      keys
+    };
+  }
+
+  _getShouldTakeFromStation(worker, stations, index) {
+    let workerHasFreeCapacity = worker.getHasFreeCapacity();
+    if (!workerHasFreeCapacity) {
+      return false;
+    }
+
+    let currStation = stations[index];
+    let stationHasOutput = currStation.getHasProdOutput();
+    if (!stationHasOutput) {
+      return false;
+    }
+
+    let stationOutputKey = currStation.getOutputKey();
+    let stationOutputIsNeeded = false;
+    for (let i = index + 1; i < stations.length; i++) {
+      if (stations[i].getInputKeys().indexOf(stationOutputKey) !== -1) {
+        stationOutputIsNeeded = true;
+        break;
+      }
+    }
+    return stationOutputIsNeeded;
   }
 
   _getBoughtStations() {
@@ -212,7 +318,7 @@ class Game extends window.Phaser.State {
   _getStationsNeededKeys(stations) {
     let neededKeys = [];
     stations.forEach(sta => {
-      let staInput = sta.getInput();
+      let staInput = sta.getInputKeys();
       staInput.forEach(input => {
         if (neededKeys.indexOf(input) === -1) {
           neededKeys.push(input);
@@ -220,6 +326,62 @@ class Game extends window.Phaser.State {
       });
     });
     return arrayIntersect(neededKeys, Warehouse.RESOURCE);
+  }
+
+  _getStationAmountKeyMap(keys, stations) {
+    let stationsInputs = stations.map(sta => sta.getInputKeys());
+
+    return keys.reduce((keyMap, key) => {
+      let stationNeedThisKey = stationsInputs.reduce((acc, input) => {
+        if (input.indexOf(key) !== -1) {
+          acc = acc + 1;
+        }
+        return acc;
+      }, 0);
+      keyMap[key] = stationNeedThisKey;
+
+      return keyMap;
+    }, {});
+  }
+
+  _getWorkerWarehouseCarry(neededKeys, capacity, staAmtKeyMap) {
+    let amountPerKey = capacity.div(neededKeys.length);
+    let carry = neededKeys.reduce((acc, key) => {
+      acc[key] = {
+        amount: amountPerKey,
+        amountHu: amountPerKey.toString(),
+        stationAmount: staAmtKeyMap[key]
+      };
+      return acc;
+    }, {});
+    return carry;
+  }
+
+  // 每次只会拿一种，所以不用 map
+  _getWorkerStationCarry(worker, stations, index) {
+    let currStation = stations[index];
+    let key = currStation.getOutputKey();
+    let stationProdOutput = currStation.getProdOutput();
+    let workerFreeCapacity = worker.getFreeCapacity();
+    let amount = stationProdOutput;
+    if (stationProdOutput.gt(workerFreeCapacity)) {
+      amount = workerFreeCapacity;
+    }
+    let amountHu = amount.toString();
+
+    let stationAmount = 0;
+    for (let i = index + 1; i < stations.length; i++) {
+      if (stations[i].getInputKeys().indexOf(key) !== -1) {
+        stationAmount++;
+      }
+    }
+
+    return {
+      key,
+      amount,
+      amountHu,
+      stationAmount
+    };
   }
 
   _createMenus = () => {
@@ -289,7 +451,7 @@ class Game extends window.Phaser.State {
     this.bgGroup.addChild(this.warehouseGround);
     this.bgGroup.addChild(this.warehouse);
     this.bgGroup.addChild(this.marketGround);
-    this.bgGroup.addChild(this.marketTruck);
+    this.bgGroup.addChild(this.market);
     this.bgGroup.addChild(this.wall);
     this.bgGroup.addChild(this.warehouseManager);
     this.bgGroup.addChild(this.marketManager);
@@ -332,12 +494,10 @@ class Game extends window.Phaser.State {
     );
     this.marketGround.endFill();
 
-    this.marketTruck = this.add.sprite(
-      this.world.width - 30,
-      700,
-      'market_truck'
-    );
-    this.marketTruck.anchor.setTo(1);
+    this.market = new Market(this.game, 400, 400);
+    this.market.onSell(amount => {
+      console.log('market sell:', amount.toString());
+    });
 
     // wall behind the above two
     this.wall = this.add.sprite(this.world.centerX, 81, 'wall');
