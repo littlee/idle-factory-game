@@ -2,10 +2,28 @@ import ProductUpgradeItem from './ProductUpgradeItem.js';
 
 const CONFIG = {
   itemGap: 638 / 6,
-  halfItemLineHeight: 100
+  halfItemLineHeight: 100,
+  frameWidth: 638,
+  bigVeilPriorityID: 1002
 };
 
-// 控制同类product之间hightlight的变化和btns的显示
+
+function getFontStyle(fSize, color, align, weight) {
+  return {
+    fontWeight: weight || 'normal',
+    fontSize: fSize || '24px',
+    fill: color || '#ffffff', // '#00FF00', 3a0a00
+    boundsAlignH: 'center',
+    boundsAlignV: 'middle',
+    align: align || 'left'
+  };
+}
+
+/*
+控制同类product之间hightlight的变化和btns的显示:
+问题：用bigVeil吃掉input, 方便但是scroll也会被吃掉。
+*/
+
 class ProductUpgradeLine extends window.Phaser.Group {
   constructor({game, parent, offsetTop, offsetLeft, product}) {
     super(game, parent);
@@ -14,6 +32,8 @@ class ProductUpgradeLine extends window.Phaser.Group {
     this.product = product;
     this.highlightedIndex = null;
     this.active = false;
+    this.activatedProduct = '钢筋';
+    this.timeRemained = '3h30m';
 
     this._getInit();
     this._addAllChildren();
@@ -80,6 +100,27 @@ class ProductUpgradeLine extends window.Phaser.Group {
       prodTexture: 'rubber',
     });
 
+    this.bigVeilGroup = this.game.make.group();
+
+    this.bigVeil = this.game.make.graphics(0, 0);
+    this.bigVeil.beginFill(0x000000, 0.7);
+    this.bigVeil.drawRect(0, -80, CONFIG.frameWidth, CONFIG.halfItemLineHeight * 2 - 20);
+    this.bigVeil.endFill();
+
+    this.bigVeilClock = this.game.make.image(0, 0, 'clock_yellow');
+    this.bigVeilClock.alignTo(this.bigVeil, Phaser.TOP_LEFT, -150, -45);
+
+    this.bigCountdownTxt = this.game.make.text(0, 0, this.activatedProduct + '研究中...' + this.timeRemained, getFontStyle());
+    this.bigCountdownTxt.alignTo(this.bigVeilClock, Phaser.RIGHT_BOTTOM, 20, -this.bigVeilClock.height / 4);
+
+    this.bigVeilGroup.addChild(this.bigVeil);
+    this.bigVeilGroup.addChild(this.bigVeilClock);
+    this.bigVeilGroup.addChild(this.bigCountdownTxt);
+    // this.bigVeilGroup.setAllChildren('inputEnabled', 'true');
+    // this.bigVeilGroup.setAllChildren('input.priorityID', CONFIG.bigVeilPriorityID);
+
+    this.bigVeilGroup.visible = false;
+
   }
 
   _addAllChildren = () => {
@@ -89,6 +130,7 @@ class ProductUpgradeLine extends window.Phaser.Group {
     this.addChild(this.gold);
     this.addChild(this.jade);
     this.addChild(this.rubber);
+    this.addChild(this.bigVeilGroup);
   }
 
   _initUI = () => {
@@ -131,6 +173,8 @@ class ProductUpgradeLine extends window.Phaser.Group {
   makeNextItemBtnsShowUp = () => {
     let children = [this.base, this.copper, this.silver, this.gold, this.jade, this.rubber];
     let targetIndex = this.highlightedIndex + 1;
+    // 剔除最后一个升级的情况
+    if (targetIndex === children.length) return true;
     children[targetIndex].reopenBtns();
   }
 
@@ -138,8 +182,52 @@ class ProductUpgradeLine extends window.Phaser.Group {
     return this.active;
   }
 
-  setActive = (value) => {
-    this.active = value;
+  becomeActive = () => {
+    this.active = true;
+  }
+
+  becomeInactive = () => {
+    this.active = false;
+  }
+
+  makeBigVeilVisible = () => {
+    this.bigVeilGroup.visible = true;
+
+    let children = [this.base, this.copper, this.silver, this.gold, this.jade, this.rubber];
+    children.forEach(item => {
+      item.makeBtnsPriorityZero();
+    });
+  }
+
+  makeBigVeilInvisible = () => {
+    this.bigVeilGroup.visible = false;
+
+    let children = [this.base, this.copper, this.silver, this.gold, this.jade, this.rubber];
+    children.forEach(item => {
+      item.makeBtnsPriorityBack2Initial();
+    });
+  }
+
+  handleOwnItemBeingActivated = () => {
+    this.becomeActive();
+    this.makeBigVeilInvisible();
+    this.parent.setBigVeil4Children();
+    // this.parent.syncCountdown4relatedChildren();
+  }
+
+  handleNoneActivatedItem = () => {
+    this.becomeInactive();
+    this.parent.setBigVeil4Children();
+  }
+
+  resetBigCountdownTxt = (timeString, prod) => {
+    this.timeRemained = timeString;
+    this.activatedProduct = prod;
+    this.bigCountdownTxt.setText(this.activatedProduct + '研究中...' + this.timeRemained, true);
+  }
+
+  getProdLineProductName = () => {
+    return this.product;
   }
 }
 

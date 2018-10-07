@@ -1,18 +1,5 @@
 import ModalRaw from './ModalRaw.js';
-// import ProductUpgradeItem from './ProductUpgradeItem.js';
-// import ProductUpgradeLine from './ProductUpgradeLine.js';
 import ProductUpgradeFrame from './ProductUpgradeFrame.js';
-
-function getFontStyle(fSize, color, align, weight) {
-  return {
-    fontWeight: weight || 'normal',
-    fontSize: fSize || '18px',
-    fill: color || '#3A0A00', // '#00FF00', 3a0a00
-    boundsAlignH: 'center',
-    boundsAlignV: 'middle',
-    align: align || 'left'
-  };
-}
 
 const CONFIG = {
   frameTagStroke: 6,
@@ -70,143 +57,14 @@ class ModalProdUpgrade extends ModalRaw {
     const OFFSET = this.headingH * 1.5;
     const LEFT = (this.w - CONFIG.frameWidth) / 2;
 
-    // fix me: 每个原料的frame改成一个组件
-    // draw frame for each resource
-    // this.frameOre = this.game.make.group();
-    // let frameOre = this.game.make.graphics(
+    // let frameCopper = this.game.make.graphics(
     //   LEFT,
-    //   OFFSET
+    //   OFFSET + CONFIG.frameHeight * 1 + CONFIG.gap * 1
     // );
-    // frameOre.beginFill(CONFIG.frameColor);
-    // frameOre.drawRect(0, 0, CONFIG.frameWidth, CONFIG.frameHeight);
-    // frameOre.endFill();
+    // frameCopper.beginFill(CONFIG.frameColor);
+    // frameCopper.drawRect(0, 0, CONFIG.frameWidth, CONFIG.frameHeight);
+    // frameCopper.endFill();
 
-    let frameCopper = this.game.make.graphics(
-      LEFT,
-      OFFSET + CONFIG.frameHeight * 1 + CONFIG.gap * 1
-    );
-    frameCopper.beginFill(CONFIG.frameColor);
-    frameCopper.drawRect(0, 0, CONFIG.frameWidth, CONFIG.frameHeight);
-    frameCopper.endFill();
-
-    let frameOilBarrel = this.game.make.graphics(
-      LEFT,
-      OFFSET + CONFIG.frameHeight * 2 + CONFIG.gap * 2
-    );
-    frameOilBarrel.beginFill(CONFIG.frameColor);
-    frameOilBarrel.drawRect(0, 0, CONFIG.frameWidth, CONFIG.frameHeight);
-    frameOilBarrel.endFill();
-
-    let framePlug = this.game.make.graphics(
-      LEFT,
-      CONFIG.frameHeight * 3 + CONFIG.gap * 3
-    );
-    framePlug.beginFill(CONFIG.frameColor);
-    framePlug.drawRect(0, 0, CONFIG.frameWidth, CONFIG.frameHeight);
-    framePlug.endFill();
-
-    let frameAlBar = this.game.make.graphics(
-      LEFT,
-      CONFIG.frameHeight * 4 + CONFIG.gap * 4
-    );
-    frameAlBar.beginFill(CONFIG.frameColor);
-    frameAlBar.drawRect(0, 0, CONFIG.frameWidth, CONFIG.frameHeight);
-    frameAlBar.endFill();
-
-    let frameRubber = this.game.make.graphics(
-      LEFT,
-      CONFIG.frameHeight * 5 + CONFIG.gap * 5
-    );
-    frameRubber.beginFill(CONFIG.frameColor);
-    frameRubber.drawRect(0, 0, CONFIG.frameWidth, CONFIG.frameHeight);
-    frameRubber.endFill();
-
-    // draw tag for each frame
-    // let tagOre = this.game.make.graphics(0, 0);
-    // tagOre.beginFill(CONFIG.frameTagColor);
-    // tagOre.drawRect(0, 0, CONFIG.frameTagW, CONFIG.frameTagH);
-    // tagOre.endFill();
-
-    // tagOre.lineStyle(CONFIG.frameTagStroke, CONFIG.frameTagStrokeC);
-    // tagOre.moveTo(0, 0);
-    // tagOre.lineTo(CONFIG.frameTagW, 0);
-    // tagOre.lineTo(CONFIG.frameTagW, CONFIG.frameTagH);
-    // tagOre.lineTo(0, CONFIG.frameTagH);
-    // tagOre.lineTo(0, 0);
-
-    // tagOre.alignTo(frameOre, Phaser.TOP_LEFT, -10, -15);
-
-    // let tagOreName = this.game.make.text(
-    //   0,
-    //   0,
-    //   '铁矿',
-    //   getFontStyle('28px', '', '', 'bold')
-    // ); // fSize, color, align, weight
-    // tagOreName.alignTo(tagOre, Phaser.BOTTOM_LEFT, -20, -CONFIG.frameTagH);
-    // let tagOreImg = this.game.make.image(0, 0, 'reso_ore');
-    // tagOreImg.scale.x = 0.65;
-    // tagOreImg.scale.y = 0.65;
-    // tagOreImg.alignTo(tagOreName, Phaser.RIGHT_BOTTOM, 5, -5);
-
-    let tagCopper = this.game.make.graphics(0, 0);
-    tagCopper.beginFill(CONFIG.frameTagColor);
-    tagCopper.drawRect(0, 0, CONFIG.frameTagW, CONFIG.frameTagH);
-    tagCopper.endFill();
-
-    tagCopper.lineStyle(CONFIG.frameTagStroke, CONFIG.frameTagStrokeC);
-    tagCopper.moveTo(0, 0);
-    tagCopper.lineTo(CONFIG.frameTagW, 0);
-    tagCopper.lineTo(CONFIG.frameTagW, CONFIG.frameTagH);
-    tagCopper.lineTo(0, CONFIG.frameTagH);
-    tagCopper.lineTo(0, 0);
-
-    tagCopper.alignTo(frameCopper, Phaser.TOP_LEFT, -10, -15);
-
-    let tagCopperName = this.game.make.text(
-      0,
-      0,
-      '铁矿',
-      getFontStyle('28px', '', '', 'bold')
-    ); // fSize, color, align, weight
-    tagCopperName.alignTo(
-      tagCopper,
-      Phaser.BOTTOM_LEFT,
-      -20,
-      -CONFIG.frameTagH
-    );
-    let tagCopperImg = this.game.make.image(0, 0, 'reso_ore');
-    tagCopperImg.scale.x = 0.65;
-    tagCopperImg.scale.y = 0.65;
-    tagCopperImg.alignTo(tagCopperName, Phaser.RIGHT_BOTTOM, 5, -5);
-
-    // production update chain
-    // this.steelGroup = new ProductUpgradeItem({
-    //   game: this.game,
-    //   x: LEFT + 60,
-    //   y: OFFSET + 120,
-    //   product: 'steel',
-    //   prodTexture: 'gold',
-    //   bought: true
-    // });
-
-    // this.steel = new ProductUpgradeLine({
-    //   game: this.game,
-    //   offsetTop: OFFSET,
-    //   offsetLeft: LEFT,
-    //   product: 'steel',
-    // });
-    // this.frameOre.addChild(frameOre);
-    // this.frameOre.addChild(tagOre);
-    // this.frameOre.addChild(this.steel);
-
-
-
-
-    // arc arc(cx, cy, radius, startAngle, endAngle, anticlockwise, segments)
-    // arcTo(x1, y1, x2, y2, radius)
-    // http://jsfiddle.net/lewster32/0yvemxnw/
-
-    // TEST.....
     this.frameOre = new ProductUpgradeFrame({
       game: this.game,
       parent: this.contentGroup,
@@ -215,19 +73,6 @@ class ModalProdUpgrade extends ModalRaw {
     });
 
     this.contentGroup.addChild(this.frameOre);
-    this.contentGroup.addChild(frameCopper);
-    this.contentGroup.addChild(frameOilBarrel);
-    this.contentGroup.addChild(framePlug);
-    this.contentGroup.addChild(frameAlBar);
-    this.contentGroup.addChild(frameRubber);
-    // this.contentGroup.addChild(tagOreName);
-    // this.contentGroup.addChild(tagOreImg);
-    this.contentGroup.addChild(tagCopper);
-    this.contentGroup.addChild(tagCopperName);
-    this.contentGroup.addChild(tagCopperImg);
-
-    // test
-    // this.contentGroup.addChild(this.steelGroup);
   };
 }
 

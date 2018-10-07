@@ -34,6 +34,7 @@ class ProductUpgradeFrame extends window.Phaser.Group {
     this.active = false;
     this.offsetTop = offsetTop;
     this.offsetLeft = offsetLeft;
+    this.inactiveChildren = null;
 
     this._getInit();
     this._addAllChildren();
@@ -79,7 +80,7 @@ class ProductUpgradeFrame extends window.Phaser.Group {
     this.tagOreImg.alignTo(this.tagOreName, Phaser.RIGHT_BOTTOM, 5, -5);
 
     // prod1
-    this.steel = new ProductUpgradeLine({
+    this.steel = new ProductUpgradeLine({ // 名字取成和product的一致
       game: this.game,
       parent: this,
       offsetTop: this.offsetTop,
@@ -105,7 +106,7 @@ class ProductUpgradeFrame extends window.Phaser.Group {
       product: 'steel',
     });
 
-    // prod2
+    // prod4
     this.toaster = new ProductUpgradeLine({
       game: this.game,
       parent: this,
@@ -124,6 +125,35 @@ class ProductUpgradeFrame extends window.Phaser.Group {
     this.addChild(this.drill);
     this.addChild(this.can);
     this.addChild(this.toaster);
+  }
+
+  becomeActive = () => {
+    this.active = true;
+  }
+
+  becomeInactive = () => {
+    this.active = false;
+  }
+  setBigVeil4Children = () => {
+    let children = [this.steel, this.drill, this.can, this.toaster];
+    this.inactiveChildren = children.filter((item) => item.getActiveValue() === false);
+    this.activatedChild = children.filter((item) => item.getActiveValue() === true);
+    if (this.inactiveChildren.length === 4) {
+      // children中没有一个有active的pie，则不需要veil
+      this.becomeInactive();
+      children.forEach((item) => item.makeBigVeilInvisible());
+    } else if (this.inactiveChildren.length === 3) {
+      // 有一个active的child, 其他的要有veil+countdown
+      this.becomeActive();
+      this.inactiveChildren.forEach(item => item.makeBigVeilVisible());
+    }
+  }
+
+  syncCountdown4relatedChildren = (timestring) => {
+    console.log('inactiveChildren.length: ', this.inactiveChildren.length);
+    this.inactiveChildren.forEach(item => {
+      item.resetBigCountdownTxt(timestring, this.activatedChild[0].getProdLineProductName());
+    });
   }
 }
 

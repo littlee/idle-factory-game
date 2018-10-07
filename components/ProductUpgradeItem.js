@@ -246,6 +246,7 @@ class ProductUpgradeItem extends window.Phaser.Group {
 
     // 外加让parent去掉原本是hightlighted的item的stroke
     this.parent.setProperHighlightedChild();
+    this.parent.handleOwnItemBeingActivated();
 
     this._data.pieActivatedTimestamp = moment.utc().format('x');
     this._updateDurationTxtUI();
@@ -254,7 +255,7 @@ class ProductUpgradeItem extends window.Phaser.Group {
     this.timer = setInterval(this._reDrawPie, this._data.step * 1000);
     this._addAllBigVeils();
 
-    this.parent.setActive(true);
+    // this.parent.handleOwnItemBeingActivated();
     console.log('coin减少相应的值, 调用parent group方法让其他upgraded同类items的stroke regular');
   }
 
@@ -273,6 +274,8 @@ class ProductUpgradeItem extends window.Phaser.Group {
     this._rmAllBigVeils();
     this.updateProdUIAndValue();
     this.parent.makeNextItemBtnsShowUp();
+
+    this.parent.handleNoneActivatedItem();
   }
 
   _enableBtnsOfNextItem = () => {
@@ -375,14 +378,15 @@ class ProductUpgradeItem extends window.Phaser.Group {
   };
 
   _updateDurationTxtUI = () => {
-    console.log('_updateDurationTxtUI进行中');
     this.remainedMiliSeconds = this.remainedMiliSeconds === null ? this.durationInMiliSeconds : this.remainedMiliSeconds;
     this.remainedMiliSeconds -= 1000;
     if (this.remainedMiliSeconds < 1000) {
       clearInterval(this.txtTimer);
       return false;
     }
-    this.countDownTxt.setText(formatRemainedSecond(Math.round(this.remainedMiliSeconds / 1000)));
+    let timeString = formatRemainedSecond(Math.round(this.remainedMiliSeconds / 1000));
+    this.countDownTxt.setText(timeString);
+    this.parent.parent.syncCountdown4relatedChildren(timeString);
   }
 
   _decideStrokeColor = () => {
@@ -437,7 +441,6 @@ class ProductUpgradeItem extends window.Phaser.Group {
     this.stroke.lineTo(this.bg.width, this.bg.height);
     this.stroke.lineTo(0, this.bg.height);
     this.stroke.lineTo(0, 0);
-    console.log('make高亮');
   }
 
   makeStrokeRegularAndStuff = () => {
@@ -465,9 +468,19 @@ class ProductUpgradeItem extends window.Phaser.Group {
   }
 
   reopenBtns = () => {
-    console.log('reopen');
     this.btnBuyGroup.visible = true;
     this.btnSkipGroup.visible = false;
+  }
+
+  makeBtnsPriorityZero = () => {
+    console.log('make zero');
+    this.btnSkipGroup.setAllChildren('input.priorityID', -1);
+    this.btnBuyGroup.setAllChildren('input.priorityID', -1);
+  }
+
+  makeBtnsPriorityBack2Initial = () => {
+    this.btnSkipGroup.setAllChildren('input.priorityID', 1001);
+    this.btnBuyGroup.setAllChildren('input.priorityID', 1001);
   }
 
 }
