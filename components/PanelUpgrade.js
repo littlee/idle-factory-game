@@ -1,3 +1,6 @@
+import Big from '../js/libs/big.min';
+import { formatBigNum } from '../utils';
+
 function getFontStyle (fSize, color, align, weight) {
   return {
     fontWeight: weight || 'normal',
@@ -25,15 +28,16 @@ NOTE: 被toggle inputEnabled之后的object的priorityID会变成0.
 class PanelUpgrade extends window.Phaser.Group {
   constructor({ game, parent, veilHeight, modal = null, base = null}) {
     super(game, parent);
+    this.state = this.game.state.states[this.game.state.current];
+
     this.veilHeight = veilHeight;
-    this.propsCoin = this.game.share.coin; // 要改，但是coin的哪里没写好，暂时这样
     this.modal = modal;
     this.levelType = modal.getLevelType();
     // 从parent拿级数
     this._data = {
       multiplier: 1,
-      base: base === null ? INIT.base : base, // 计算升级要的coin数
-      coinNeeded: base === null ? INIT.base : base,
+      base: base === null ? Big(INIT.base) : Big(base), // 计算升级要的coin数
+      coinNeeded: base === null ? Big(INIT.base) : Big(base),
     };
 
     this._getInit();
@@ -87,7 +91,8 @@ class PanelUpgrade extends window.Phaser.Group {
     this.btnUpgradeGroup.onChildInputDown.add(() => {
       // 点击升级：保存当前multiplier的值，更新game.share.coin的值，改变heading和外部btn的等级数
       this.modal.setCurrLevel(this._data.multiplier);
-      this.game.share.coin -= Number(this.txtUpgradeCoinNeeded.text); // 后面要改
+      // 从state拿方法操作coin
+      this.state.subtractCash(this._data.coinNeeded);
       try {
         this.modal.handleUpgradation(true);
       } catch(err) {
@@ -159,24 +164,23 @@ class PanelUpgrade extends window.Phaser.Group {
       console.log('max 选中。。。未实现');
       // 要根据当前game的coin去计算可以升的最高级别，然后除了要改变升级要用的coin之外，能升多少级也要显示
     } else {
-      this._data.coinNeeded = this._data.base * map[multiplier.toString()];
+      this._data.coinNeeded = this._data.base.times(map[multiplier.toString()]);
       this.txtUpgradeCoinNeeded.setText(this._data.coinNeeded.toString());
     }
   }
 
   updateLevelUpgradeBtnUI = () => {
-    // 1)判断当前coin是不是 > UI上显示的数字，是：绿；否：灰, 2)同理判断要不要显示箭头，多少个箭头。要让最外面coin的组件来调用
-    let parsedCoin = parseFloat(this.game.share.coin);
-    let parsedNeeded = parseFloat(this.txtUpgradeCoinNeeded.text);
-    if (Object.is(parsedCoin, NaN) || Object.is(parsedNeeded, NaN)) {
-      throw new Error('updateLevelUpgradeBtnUI() 的操作数应该都是valid string');
-    }
-    if ( parsedCoin < parsedNeeded) {
+    // 要拿到currCoin
+    let currCoin = this.state.getCurrCoin();
+    console.log('currCoin: ', currCoin.valueOf());
+    console.log('coinNeeded: ', this._data.coinNeeded.valueOf());
+
+    if ( currCoin.lt(this._data.coinNeeded) ) {
       this.btnUpgrade.loadTexture('btn_level_upgrade_unable');
       this.btnUpgradeGroup.setAllChildren('inputEnabled', false);
       this.txtUpgradeCoinNeeded.addColor(INIT.deficitColor, 0);
     } else {
-      // console.log('可以买');
+      console.log('可以买');
       this.btnUpgrade.loadTexture('btn_level_upgrade');
       this.txtUpgradeCoinNeeded.addColor(INIT.surplursColor, 0);
       this.btnUpgradeGroup.setAllChildren('inputEnabled', true);

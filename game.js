@@ -18,30 +18,6 @@ var game = new Phaser.Game({
   canvas: canvas
 });
 
-// realtime-update-related data
-game.share = {
-  coin: 0,
-  cash: 0,
-  // market: {
-  //   level: 1,
-  //   multiplier: 1,
-  //   maxTransported: 0.1111,
-  //   transportCount: 1.111,
-  //   transCapacity: 1.111,
-  //   loadingSpeed: 1.111,
-  //   walkSpeed: 1.1111
-  // },
-  // warehouse: {
-  //   level: 1,
-  //   multiplier: 1,
-  //   maxTransported: 0.10,
-  //   transportCount: 1.10,
-  //   transCapacity: 1.10,
-  //   loadingSpeed: 1.10,
-  //   walkSpeed: 1.10
-  // }
-};
-
 window.game = game;
 
 game.state.add('Start', StartState, false);

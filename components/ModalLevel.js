@@ -298,22 +298,27 @@ class ModalLevel extends ModalRaw {
   // 点击 x1 x10 ... btns时候, 需要一起更新的东西【需要的coin数值不归在这里更新】
   handleLevelBtnsChoosing = upgraded => {
     if (this._data.type === 'market' || this._data.type === 'warehouse') {
+      // update item的描述数据
       this.item1.getDesUpdated(upgraded);
       this.item2.getDesUpdated(upgraded);
       this.item3.getDesUpdated(upgraded);
       this.item4.getDesUpdated(upgraded);
       this.item5.getDesUpdated(upgraded);
+      // update upgradeBtn的UI 根据currCoin
+      this.upgradePanel.updateLevelUpgradeBtnUI();
     } else if (this._data.type === 'workstation') {
       this.need1.getDesUpdated(upgraded);
       this.need2.getDesUpdated(upgraded);
       this.prod.getDesUpdated(upgraded);
       this.iconPower.getDesUpdated(upgraded);
+
+      this.upgradePanel.updateLevelUpgradeBtnUI();
     }
   }
 
-  getUpdated = () => {
+  getUpdated = (currCoin) => {
     try {
-      this.upgradePanel.updateLevelUpgradeBtnUI();
+      this.upgradePanel.updateLevelUpgradeBtnUI(currCoin);
       return true;
     } catch (ex) {
       console.log('game state update() err');

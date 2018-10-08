@@ -9,7 +9,7 @@ const TEXT_STYLE = {
 };
 
 class BtnCash extends window.Phaser.Group {
-  constructor(game, x, y, value = 1000000000) {
+  constructor(game, x, y, value = 4000) {
     super(game);
     this.x = x;
     this.y = y;
@@ -41,7 +41,6 @@ class BtnCash extends window.Phaser.Group {
   subtractCashAndUpdate(decrement) {
     this.value = this.value.minus(decrement);
     this._resetCashValueUI();
-    // console.log('this curr coin: ', this._getformattedCashValue());
   }
 
   onClick(func, context) {
@@ -51,6 +50,7 @@ class BtnCash extends window.Phaser.Group {
   getCash() {
     return this.value;
   }
+
 }
 
 export default BtnCash;
