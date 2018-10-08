@@ -364,6 +364,7 @@ class ProductUpgradeItem extends window.Phaser.Group {
 
   _updateDurationTxtUI = () => {
     this.remainedMiliSeconds = this.remainedMiliSeconds === null ? this.durationInMiliSeconds : this.remainedMiliSeconds;
+    // adjust frequency based on this.remainedMiliSeconds
     this.remainedMiliSeconds -= 1000;
     if (this.remainedMiliSeconds < 1000) {
       clearInterval(this.txtTimer);
@@ -443,10 +444,6 @@ class ProductUpgradeItem extends window.Phaser.Group {
     this.stroke.lineTo(0, 0);
   }
 
-  updateProdUIAndValue = () => {
-    console.log('upgraded is done, UI and value should be changed');
-  }
-
   closeBtns = () => {
     this.btnBuyGroup.visible = false;
     this.btnSkipGroup.visible = false;
@@ -465,6 +462,10 @@ class ProductUpgradeItem extends window.Phaser.Group {
   makeBtnsPriorityBack2Initial = () => {
     this.btnSkipGroup.setAllChildren('input.priorityID', 1001);
     this.btnBuyGroup.setAllChildren('input.priorityID', 1001);
+  }
+
+  updateProdUIAndValue = () => {
+    console.log('upgraded is done, UI and value should be changed');
   }
 
 }

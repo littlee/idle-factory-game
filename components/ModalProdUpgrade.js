@@ -15,9 +15,12 @@ const CONFIG = {
   connectlineH: 4,
 };
 
+// todo: 1）UI的更新timer要改，不要1s更一次；2）明确配置和输出；
+
 /*
 这个Modal 关闭了统一boost children的priortyID的代码执行，
-对于要有自己input事件的game object, 要手动开input, 在用继承来的 this.priorityID 来操作 */
+对于要有自己input事件的game object, 要手动开input, 在用继承来的 this.priorityID 来操作
+*/
 class ModalProdUpgrade extends ModalRaw {
   constructor({
     game,

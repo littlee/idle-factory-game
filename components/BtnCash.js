@@ -1,3 +1,7 @@
+import Big from '../js/libs/big.min';
+import { formatBigNum } from '../utils';
+
+
 const TEXT_STYLE = {
   font: 'Arial',
   fontSize: 36,
@@ -5,29 +9,47 @@ const TEXT_STYLE = {
 };
 
 class BtnCash extends window.Phaser.Group {
-  constructor(game, x, y) {
+  constructor(game, x, y, value = 0) {
     super(game);
     this.x = x;
     this.y = y;
-    this.gameRef = game;
+    this.value = value;
 
-    this.img = this.gameRef.make.image(0, 0, 'btn_cash');
+    this.img = this.game.make.image(0, 0, 'btn_cash');
     this.add(this.img);
 
-    this.text = this.gameRef.make.text(55, 45, '666', TEXT_STYLE);
+    this.text = this.game.make.text(55, 45, this._getformattedCashValue(), TEXT_STYLE);
     this.add(this.text);
 
     this.setAllChildren('inputEnabled', true);
     this.setAllChildren('input.priorityID', 888);
   }
 
-  setText(text) {
-    this.text.setText(text);
+  _getformattedCashValue() {
+    let tmp = Big(this.value);
+    return formatBigNum(tmp);
+  }
+
+  _resetCashValueUI() {
+    this.text.setText(this._getformattedCashValue());
+  }
+
+  addCash(increment) {
+    this.value += increment;
+    this._resetCashValueUI();
+  }
+
+  subtractCash(decrement) {
+    this.value -= decrement;
+    this._resetCashValueUI();
   }
 
   onClick(func, context) {
-    this.img.inputEnabled = true;
-    this.img.events.onInputDown.add(func, context);
+    this.onChildInputDown.add(func, context);
+  }
+
+  getCash() {
+    return this.value;
   }
 }
 

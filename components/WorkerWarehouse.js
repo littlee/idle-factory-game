@@ -1,4 +1,4 @@
-/* 
+/*
 从仓库出发，收集最大值，按照需求种类平均收集
 走到工作台，给予原料
 如果工作台输出产品，判断是否需要收集，收集到最大值
@@ -38,6 +38,8 @@ class WorkerWarehouse extends window.Phaser.Group {
       loadingSpeed: Big(1000),
       walkSpeed: 0.2
     };
+    console.log('this._data: ', this._data);
+    console.log('format capacity: ', formatBigNum(this._data.capacity));
 
     this.x = x;
     this.y = y;
