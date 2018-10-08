@@ -95,7 +95,7 @@ class ResourceItem extends window.Phaser.Group {
     return this._data.target2buy;
   }
 
-  // 外调来改UI
+  // 被外调来改UI
   updateBtnBuyUI = (currCoin) => {
     this.btnBuyGroup.greyOutBtnOrNot(currCoin);
   }

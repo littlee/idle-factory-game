@@ -74,8 +74,6 @@ class Game extends window.Phaser.State {
     this.upBtnWarehouse.alignIn(this.wall, window.Phaser.LEFT_CENTER, -60, -10);
     this.upBtnWarehouse.onClick(() => {
       console.log('仓库升级按钮');
-      this.game.share.coin += 100; // dev
-      console.log('new coin: ', this.game.share.coin);
       this.modalWarehose.visible = true;
     });
 
@@ -550,10 +548,12 @@ class Game extends window.Phaser.State {
   // 在全部object初始化后inovke
   _updateWhateverNeed2KnowCoinValue = () => {
     let currCoin = this.btnCash.getCash();
-    console.log('game currCoin changed');
+    console.log('game currCoin changed: ', currCoin.valueOf());
 
     // raw material's buybtns
     this.modalRescources.updateBtnBuyUI(currCoin);
+    this.modalMarket.getUpdated();
+    this.modalWarehose.getUpdated();
   }
 
   subtractCash = (decrement) => {
@@ -564,6 +564,10 @@ class Game extends window.Phaser.State {
   addCash = (increment) => {
     this.btnCash.addCashAndUpdate(increment);
     this._updateWhateverNeed2KnowCoinValue();
+  }
+
+  getCurrCoin = () => {
+    return this.btnCash.getCash();
   }
 }
 
