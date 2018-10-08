@@ -35,8 +35,6 @@ import { arrayIntersect } from '../utils';
 const PRIORITY_ID = 999;
 
 class Game extends window.Phaser.State {
-  // test state data management
-
   // create(): execution order inside MATTERS!!
   create() {
     this.result = true;
@@ -172,6 +170,9 @@ class Game extends window.Phaser.State {
     wholeGameScroller.enableScroll();
 
     this._createFastScrollArrow(wholeGameScroller);
+
+    // for cash-value-responsive-UI-related
+    this._updateWhateverNeed2KnowCoinValue();
   }
 
   update() {
@@ -395,6 +396,8 @@ class Game extends window.Phaser.State {
 
   _createMenus = () => {
     // top and bottom menu bar
+
+    // top
     this.menuTop = this.add.graphics();
     this.menuTop.beginFill(0x5a5858);
     this.menuTop.drawRect(0, 0, this.world.width, 81);
@@ -404,6 +407,11 @@ class Game extends window.Phaser.State {
     this.btnCash = new BtnCash(this.game, 186, 0);
     this.btnSuperCash = new BtnSuperCash(this.game, 186 * 2, 0);
 
+    this.btnCash.onClick(() => {
+      console.log('cash clicked');
+    });
+
+    // bottom
     this.menuBottom = this.add.graphics();
     this.menuBottom.beginFill(0x5a5858);
     this.menuBottom.drawRect(0, this.world.height - 81, this.world.width, 81);
@@ -538,6 +546,25 @@ class Game extends window.Phaser.State {
     this.arrowFastUp.events.onInputUp.add(scroller.scrollToTop);
     this.arrowFastDown.events.onInputUp.add(scroller.scrollTo.bind(this, 1000));
   };
+
+  // 在全部object初始化后inovke
+  _updateWhateverNeed2KnowCoinValue = () => {
+    let currCoin = this.btnCash.getCash();
+    console.log('game currCoin changed');
+
+    // raw material's buybtns
+    this.modalRescources.updateBtnBuyUI(currCoin);
+  }
+
+  subtractCash = (decrement) => {
+    this.btnCash.subtractCashAndUpdate(decrement);
+    this._updateWhateverNeed2KnowCoinValue();
+  }
+
+  addCash = (increment) => {
+    this.btnCash.addCashAndUpdate(increment);
+    this._updateWhateverNeed2KnowCoinValue();
+  }
 }
 
 export default Game;

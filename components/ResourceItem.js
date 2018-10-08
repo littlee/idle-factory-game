@@ -1,3 +1,5 @@
+import Big from '../js/libs/big.min';
+
 import BtnBuy from './BtnBuy.js';
 
 const CONFIG = {
@@ -30,7 +32,7 @@ class ResourceItem extends window.Phaser.Group {
     this._data = {
       target2buy: KEY_TARGET_MAP[key],
       boughtFlag: this.resourcesList.indexOf(KEY_TARGET_MAP[key]) > -1,
-      coinNeeded,
+      coinNeeded: Big(coinNeeded),
       cashNeeded,
     };
 
@@ -61,7 +63,7 @@ class ResourceItem extends window.Phaser.Group {
       game: this.game,
       alignToObj: this.bg,
       target2buy: KEY_TARGET_MAP[this.key], // should map to a unified name
-      coinNeeded: this._data.coinNeeded,
+      coinNeeded: this._data.coinNeeded, // 一个Big
       cashNeeded: this._data.cashNeeded,
       boughtFlag: this._data.boughtFlag,
       resourcesTable: this.resourcesTable,
@@ -76,6 +78,7 @@ class ResourceItem extends window.Phaser.Group {
 
   getData = () => {
     let data = null;
+    // 拿到的cash 和 coin都是个Big object
     data = Object.assign({}, this._data, this.btnBuyGroup.getData());
     return data;
   }
@@ -90,6 +93,11 @@ class ResourceItem extends window.Phaser.Group {
 
   getTarget = () => {
     return this._data.target2buy;
+  }
+
+  // 外调来改UI
+  updateBtnBuyUI = (currCoin) => {
+    this.btnBuyGroup.greyOutBtnOrNot(currCoin);
   }
 
 }

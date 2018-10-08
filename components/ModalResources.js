@@ -12,7 +12,14 @@ const FONT_STYLE = {
 const CONFIG = {
   width: 500,
   height: 717,
-  priceTags: {},
+  priceTags: {
+    'ore': '0',
+    'copper': '2000',
+    'oilBarrel': '3000000',
+    'plug': '4000000000',
+    'aluminium': '5000000000000',
+    'rubber': '6000000000000000'
+  },
 };
 
 class ModalRescources extends ModalRaw {
@@ -52,7 +59,7 @@ class ModalRescources extends ModalRaw {
       pWidth: this.w,
       y: OFFSET,
       resourcesTable: this.resourcesTable,
-      coinNeeded: null,
+      coinNeeded: CONFIG.priceTags.ore,
       cashNeeded: null
     });
 
@@ -63,7 +70,7 @@ class ModalRescources extends ModalRaw {
       pWidth: this.w,
       y: OFFSET + 85 + 17,
       resourcesTable: this.resourcesTable,
-      coinNeeded: null,
+      coinNeeded: CONFIG.priceTags.copper,
       cashNeeded: null
     });
 
@@ -74,7 +81,7 @@ class ModalRescources extends ModalRaw {
       pWidth: this.w,
       y: OFFSET + 85 * 2 + 17 * 2,
       resourcesTable: this.resourcesTable,
-      coinNeeded: null,
+      coinNeeded: CONFIG.priceTags.oilBarrel,
       cashNeeded: null
     });
 
@@ -85,7 +92,7 @@ class ModalRescources extends ModalRaw {
       pWidth: this.w,
       y: OFFSET + 85 * 3 + 17 * 3,
       resourcesTable: this.resourcesTable,
-      coinNeeded: null,
+      coinNeeded: CONFIG.priceTags.plug,
       cashNeeded: null
     });
 
@@ -96,7 +103,7 @@ class ModalRescources extends ModalRaw {
       pWidth: this.w,
       y: OFFSET + 85 * 4 + 17 * 4,
       resourcesTable: this.resourcesTable,
-      coinNeeded: null,
+      coinNeeded: CONFIG.priceTags.aluminium,
       cashNeeded: null
     });
 
@@ -107,20 +114,9 @@ class ModalRescources extends ModalRaw {
       pWidth: this.w,
       y: OFFSET + 85 * 5 + 17 * 5,
       resourcesTable: this.resourcesTable,
-      coinNeeded: null,
+      coinNeeded: CONFIG.priceTags.rubber,
       cashNeeded: null
     });
-  }
-
-  // 不用
-  getAvailableResources = () => {
-    let availableResourcesList = [];
-    for (let i=1; i<7; i++) {
-      if (this['re'+i].isBought()) {
-        availableResourcesList.push(this['re'+i].getTarget());
-      }
-    }
-    return availableResourcesList;
   }
 
   // 不用
@@ -134,6 +130,16 @@ class ModalRescources extends ModalRaw {
     info.re6 = this.re6.getData();
     return info;
   };
+
+  // 更新BtnBuy
+  updateBtnBuyUI = (currCoin) => {
+    this.re1.updateBtnBuyUI(currCoin);
+    this.re2.updateBtnBuyUI(currCoin);
+    this.re3.updateBtnBuyUI(currCoin);
+    this.re4.updateBtnBuyUI(currCoin);
+    this.re5.updateBtnBuyUI(currCoin);
+    this.re6.updateBtnBuyUI(currCoin);
+  }
 }
 
 export default ModalRescources;
