@@ -38,8 +38,6 @@ class WorkerWarehouse extends window.Phaser.Group {
       loadingSpeed: Big(1000),
       walkSpeed: 0.2
     };
-    console.log('this._data: ', this._data);
-    console.log('format capacity: ', formatBigNum(this._data.capacity));
 
     this.x = x;
     this.y = y;

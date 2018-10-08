@@ -35,8 +35,6 @@ import { arrayIntersect } from '../utils';
 const PRIORITY_ID = 999;
 
 class Game extends window.Phaser.State {
-  // test state data management
-
   // create(): execution order inside MATTERS!!
   create() {
     this.result = true;
@@ -172,6 +170,9 @@ class Game extends window.Phaser.State {
     wholeGameScroller.enableScroll();
 
     this._createFastScrollArrow(wholeGameScroller);
+
+    // for cash-value-responsive-UI-related
+    this._updateWhateverNeed2KnowCoinValue();
   }
 
   update() {
@@ -545,6 +546,25 @@ class Game extends window.Phaser.State {
     this.arrowFastUp.events.onInputUp.add(scroller.scrollToTop);
     this.arrowFastDown.events.onInputUp.add(scroller.scrollTo.bind(this, 1000));
   };
+
+  // 在全部object初始化后inovke
+  _updateWhateverNeed2KnowCoinValue = () => {
+    let currCoin = this.btnCash.getCash();
+    console.log('game currCoin changed');
+
+    // raw material's buybtns
+    this.modalRescources.updateBtnBuyUI(currCoin);
+  }
+
+  subtractCash = (decrement) => {
+    this.btnCash.subtractCashAndUpdate(decrement);
+    this._updateWhateverNeed2KnowCoinValue();
+  }
+
+  addCash = (increment) => {
+    this.btnCash.addCashAndUpdate(increment);
+    this._updateWhateverNeed2KnowCoinValue();
+  }
 }
 
 export default Game;

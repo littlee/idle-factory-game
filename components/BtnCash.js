@@ -9,11 +9,11 @@ const TEXT_STYLE = {
 };
 
 class BtnCash extends window.Phaser.Group {
-  constructor(game, x, y, value = 0) {
+  constructor(game, x, y, value = 1000000000) {
     super(game);
     this.x = x;
     this.y = y;
-    this.value = value;
+    this.value = Big(value);
 
     this.img = this.game.make.image(0, 0, 'btn_cash');
     this.add(this.img);
@@ -26,22 +26,22 @@ class BtnCash extends window.Phaser.Group {
   }
 
   _getformattedCashValue() {
-    let tmp = Big(this.value);
-    return formatBigNum(tmp);
+    return formatBigNum(this.value);
   }
 
   _resetCashValueUI() {
     this.text.setText(this._getformattedCashValue());
   }
 
-  addCash(increment) {
-    this.value += increment;
+  addCashAndUpdate(increment) {
+    this.value = this.value.plus(increment);
     this._resetCashValueUI();
   }
 
-  subtractCash(decrement) {
-    this.value -= decrement;
+  subtractCashAndUpdate(decrement) {
+    this.value = this.value.minus(decrement);
     this._resetCashValueUI();
+    // console.log('this curr coin: ', this._getformattedCashValue());
   }
 
   onClick(func, context) {
