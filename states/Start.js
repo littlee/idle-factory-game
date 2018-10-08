@@ -51,11 +51,11 @@ class Start extends window.Phaser.State {
 
     // reso
     this.load.image('reso_ore', 'images/material/IronOre_Base.png');
-    this.load.image('reso_barrel', 'images/reso_barrel.png');
-    this.load.image('reso_copper', 'images/reso_copper.png');
-    this.load.image('reso_plug', 'images/reso_plug.png');
-    this.load.image('reso_aluminium', 'images/reso_aluminium.png');
-    this.load.image('reso_rubber', 'images/reso_rubber.png');
+    this.load.image('reso_barrel', 'images/material/Barrel_Base.png');
+    this.load.image('reso_copper', 'images/material/Copper_Base.png');
+    this.load.image('reso_plug', 'images/material/ElectricDevice_Base.png');
+    this.load.image('reso_aluminium', 'images/material/Aluminium_Base.png');
+    this.load.image('reso_rubber', 'images/material/Rubber_Base.png');
 
     // prod
     this.load.image('prod_steel', 'images/material/Steel_Base.png');
