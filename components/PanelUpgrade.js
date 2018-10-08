@@ -24,6 +24,7 @@ NOTE: 被toggle inputEnabled之后的object的priorityID会变成0.
 -2- 点击确定购买升级，coin会被扣，所以item的值都要更新，base变化，级数变化，即modal和coupledBtn的text都要变
 -3- 点击确定购买升级是灰色还是绿色，要能实时变化调整
 -4- max点击的逻辑【未实现】
+-5- modalLevel panel的数据输入格式？部分逻辑需要改
  */
 class PanelUpgrade extends window.Phaser.Group {
   constructor({ game, parent, veilHeight, modal = null, base = null}) {
