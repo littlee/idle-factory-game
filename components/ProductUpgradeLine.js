@@ -97,7 +97,7 @@ class ProductUpgradeLine extends window.Phaser.Group {
       x: CONFIG.itemGap * 5.5,
       y: 0, //OFFSET + 120,
       product: this.product,
-      prodTexture: 'rubber',
+      prodTexture: 'ruby',
     });
 
     this.bigVeilGroup = this.game.make.group();

@@ -8,7 +8,7 @@
 // eslint-disable-next-line
 import regeneratorRuntime from '../js/libs/regenerator-runtime';
 import ResourceEmitter from './ResourceEmitter';
-import SOURCE_IMG_MAP from '../constants/SourceImgMap';
+import SourceImg from '../resource/SourceImg';
 import Big from '../js/libs/big.min';
 import { formatBigNum } from '../utils';
 
@@ -54,7 +54,7 @@ class WorkerWarehouse extends window.Phaser.Group {
       this.game,
       this.man.width / 2,
       this.man.height / 2,
-      SOURCE_IMG_MAP['ore'],
+      SourceImg.get('ore'),
       200,
       -100,
       500,
@@ -164,7 +164,7 @@ class WorkerWarehouse extends window.Phaser.Group {
   }
 
   giveToStation(keys) {
-    let emtKeys = keys.map(k => SOURCE_IMG_MAP[k]);
+    let emtKeys = keys.map(k => SourceImg.get(k));
     this.emt.changeTexture(emtKeys);
     this.emt.start();
 
