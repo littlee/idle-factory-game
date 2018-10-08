@@ -1,6 +1,5 @@
 // eslint-disable-next-line
 import regeneratorRuntime from '../js/libs/regenerator-runtime';
-import SOURCE_IMG_MAP from '../constants/SourceImgMap';
 import Big from '../js/libs/big.min';
 import { formatBigNum } from '../utils';
 

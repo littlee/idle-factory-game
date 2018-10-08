@@ -8,7 +8,7 @@ import BtnUpgrade from './BtnUpgrade';
 import ResourceEmitter from './ResourceEmitter';
 import ResourcePile from './ResourcePile';
 import BoxCollect from './BoxCollect';
-import SOURCE_IMG_MAP from '../constants/SourceImgMap';
+import SourceImg from '../resource/SourceImg';
 
 const MAX_INPUT_PILE = 2;
 const A_MINUTE = 60000;
@@ -54,8 +54,6 @@ function getInitInput(output) {
     return input;
   }, {});
 }
-
-
 
 class Workstation extends window.Phaser.Group {
   constructor(game, x, y, stationLevel = 1, index = 1) {
@@ -148,7 +146,7 @@ class Workstation extends window.Phaser.Group {
     this.productBtnItem = this.game.make.sprite(
       0,
       0,
-      SOURCE_IMG_MAP[this._data.output]
+      SourceImg.get(this._data.output)
     );
     this.productBtnItem.scale.setTo(TEXTURE_SCALE);
     this.productBtnItem.alignIn(this.productBtn, window.Phaser.CENTER, 0, -5);
@@ -177,7 +175,7 @@ class Workstation extends window.Phaser.Group {
       this.game,
       this.table.x + 50,
       this.table.y + 50,
-      Object.keys(this._data.input).map(item => SOURCE_IMG_MAP[item]),
+      Object.keys(this._data.input).map(item => SourceImg.get(item)),
       100,
       0
     );
@@ -186,7 +184,7 @@ class Workstation extends window.Phaser.Group {
       this.game,
       this.table.x + this.table.width / 2 - 30,
       this.table.y + this.table.height / 2 - 20,
-      SOURCE_IMG_MAP[this._data.output],
+      SourceImg.get(this._data.output)
       -100,
       100
     );
@@ -195,7 +193,7 @@ class Workstation extends window.Phaser.Group {
       this.game,
       this.table.x + this.table.width / 2 + 30,
       this.table.y + this.table.height / 2 - 20,
-      SOURCE_IMG_MAP[this._data.output],
+      SourceImg.get(this._data.output),
       100,
       100
     );
@@ -224,7 +222,7 @@ class Workstation extends window.Phaser.Group {
       this.game,
       this.boxHolderProd.x,
       this.boxHolderProd.y,
-      SOURCE_IMG_MAP[this._data.output],
+      SourceImg.get(this._data.output),
       -100,
       -30
     );
@@ -530,7 +528,7 @@ class Workstation extends window.Phaser.Group {
       }
     });
 
-    let outputTexture = SOURCE_IMG_MAP[outputKey];
+    let outputTexture = SourceImg.get(outputKey);
     this.outputItems.changeTexture(outputKey);
     this.outputItemsAniLeft.changeTexture(outputTexture);
     this.outputItemsAniRight.changeTexture(outputTexture);
@@ -552,7 +550,7 @@ class Workstation extends window.Phaser.Group {
       }
     });
 
-    let inputTexture = inputKeys.map(item => SOURCE_IMG_MAP[item]);
+    let inputTexture = inputKeys.map(item => SourceImg.get(item));
     this.inputItemsAni.changeTexture(inputTexture);
   }
 }
