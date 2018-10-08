@@ -64,7 +64,7 @@ class Start extends window.Phaser.State {
     this.load.image('avatar_tran_warehose', 'images/avatar_transporter.png');
     this.load.image('avatar_worker', 'images/avatar_worker.png');
     this.load.image('bg_base', 'images/background_base.png');
-    this.load.image('bg_copper', 'images/background_copper.png');
+    this.load.image('bg_bronze', 'images/background_copper.png');
     this.load.image('bg_gold', 'images/background_gold.png');
     this.load.image('bg_jade', 'images/background_jade.png');
     this.load.image('bg_rubber', 'images/background_rubber.png');
@@ -82,7 +82,7 @@ class Start extends window.Phaser.State {
     this.load.image('clock_yellow', 'images/clock_yellow.png');
     this.load.image('prod_can', 'images/prod_can.png');
     this.load.image('prod_toaster', 'images/prod_toaster.png');
-    this.load.image('prod_steel_copper', 'images/prod_steel_bronze.png');
+    this.load.image('prod_steel_bronze', 'images/prod_steel_bronze.png');
     this.load.image('prod_steel_gold', 'images/prod_steel_gold.png');
     this.load.image('prod_steel_jade', 'images/prod_steel_jade.png');
     this.load.image('prod_steel_rubber', 'images/prod_steel_rubber.png');

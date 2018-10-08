@@ -61,7 +61,7 @@ class ProductUpgradeLine extends window.Phaser.Group {
       x: CONFIG.itemGap * 1.5,
       y: 0, //OFFSET + 120,
       product: this.product,
-      prodTexture: 'copper',
+      prodTexture: 'bronze',
     });
 
     this.silver = new ProductUpgradeItem({

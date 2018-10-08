@@ -506,7 +506,7 @@ class Game extends window.Phaser.State {
 
     this.market = new Market(this.game, 400, 400);
     this.market.onSell(amount => {
-      console.log('market sell:', amount.toString());
+      // console.log('market sell:', amount.toString());
     });
 
     // wall behind the above two
