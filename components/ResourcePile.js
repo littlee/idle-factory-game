@@ -19,6 +19,7 @@ class ResourecePile extends window.Phaser.Group {
 
     this.pile = this.game.add.group();
     this.pile.createMultiple(5, SOURCE_IMG_MAP[key], null, true, (item, index) => {
+      item.scale.setTo(0.43);
       if (index === 0) {
         this._data.pileWidth = item.width;
       }

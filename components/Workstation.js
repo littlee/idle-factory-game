@@ -43,6 +43,8 @@ const OUTPUT_INPUT_MAP = {
   toaster: ['steel', 'can']
 };
 
+const TEXTURE_SCALE = 0.43;
+
 function getInitInput(output) {
   return OUTPUT_INPUT_MAP[output].reduce((input, key) => {
     input[key] = {
@@ -52,6 +54,8 @@ function getInitInput(output) {
     return input;
   }, {});
 }
+
+
 
 class Workstation extends window.Phaser.Group {
   constructor(game, x, y, stationLevel = 1, index = 1) {
@@ -146,6 +150,7 @@ class Workstation extends window.Phaser.Group {
       0,
       SOURCE_IMG_MAP[this._data.output]
     );
+    this.productBtnItem.scale.setTo(TEXTURE_SCALE);
     this.productBtnItem.alignIn(this.productBtn, window.Phaser.CENTER, 0, -5);
 
     this.inputItemGroup = this.game.make.group();

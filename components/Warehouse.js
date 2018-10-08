@@ -59,7 +59,8 @@ class Warehouse extends window.Phaser.Group {
     this.goods = this.game.add.group();
     Object.keys(GOODS_MAP).forEach(goodKey => {
       let item = GOODS_MAP[goodKey];
-      this.goods.create(item.x, item.y, item.key, null, false);
+      let good = this.goods.create(item.x, item.y, item.key, null, false);
+      good.scale.setTo(0.43);
     });
 
     this.goodsOutputs = this.game.add.group();

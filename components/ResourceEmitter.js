@@ -1,3 +1,5 @@
+
+
 class ResourceEmitter extends window.Phaser.Particles.Arcade.Emitter {
   constructor(
     game,
@@ -24,7 +26,7 @@ class ResourceEmitter extends window.Phaser.Particles.Arcade.Emitter {
       this.setYSpeed(ySpeed, ySpeed);
     }
     this.setRotation(0, 0);
-    this.setScale(0.7, 0.7, 0.7, 0.7);
+    this.setScale(0.3, 0.3, 0.3, 0.3);
     this.gravity = 0;
 
     this.particleKey = key;
