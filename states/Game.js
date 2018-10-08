@@ -6,6 +6,7 @@ import BtnCash from '../components/BtnCash';
 import BtnSuperCash from '../components/BtnSuperCash';
 
 import Warehouse from '../components/Warehouse';
+import Market from '../components/Market';
 import Workstation, { COLLECT_TYPES } from '../components/Workstation';
 
 import WorkerWarehouse from '../components/WorkerWarehouse';
@@ -19,6 +20,7 @@ import BtnUpgrade from '../components/BtnUpgrade';
 import ModalLevel from '../components/ModalLevel.js';
 import ModalRescources from '../components/ModalResources.js';
 import ModalAdCampaign from '../components/ModalAdCampaign';
+import ModalProdUpgrade from '../components/ModalProdUpgrade';
 
 import range from '../js/libs/_/range';
 import { arrayIntersect } from '../utils';
@@ -86,6 +88,7 @@ class Game extends window.Phaser.State {
       this.modalMarket.visible = true;
     });
 
+    // modals
     this.modalWarehose = new ModalLevel({
       game: this.game,
       type: 'warehouse',
@@ -101,6 +104,12 @@ class Game extends window.Phaser.State {
       game: this.game
     });
 
+    this.modalProdUpgrade = new ModalProdUpgrade({
+      game: this.game,
+      headingTxt: '生产产品升级',
+    });
+
+    // TODO: make 30 workstations
     const WORKSTATION_START_Y = 915;
     const WORKSTATION_HEIGHT = 339;
     this.workstationGroup = this.add.group();
@@ -116,13 +125,11 @@ class Game extends window.Phaser.State {
     });
     this.workstationGroup.children[0].beAbleToBuy();
     this.workstationGroup.children[0].buy('cash');
-    this.workstationGroup.children[0].setCollectType(COLLECT_TYPES.PROD);
+    // this.workstationGroup.children[0].setCollectType(COLLECT_TYPES.PROD);
     this.workstationGroup.children[1].beAbleToBuy();
     this.workstationGroup.children[1].buy('cash');
-    this.workstationGroup.children[1].setOutput('drill');
+    // this.workstationGroup.children[1].setOutput('drill');
     this.workstationGroup.children[2].beAbleToBuy();
-
-    window.stg = this.workstationGroup;
 
     this.workerWarehouseGroup = this.add.group();
     range(5).forEach(index => {
@@ -136,7 +143,6 @@ class Game extends window.Phaser.State {
         worker.kill();
       }
     });
-    window.wg = this.workerWarehouseGroup;
 
     this.workerMarketGroup = this.add.group();
     range(5).forEach(index => {
@@ -156,6 +162,8 @@ class Game extends window.Phaser.State {
 
     // add stuff to bg to enable scroll
     this._addAllRelatedStuff2Bg();
+
+
     // with bg fills with stull, scrolling now is all set
     let wholeGameScroller = new Scroller({
       targetToScroll: this.bgGroup,
@@ -188,34 +196,97 @@ class Game extends window.Phaser.State {
 
         for (let i = 0; i < workstations.length; i++) {
           await worker.moveToStation(workstations[i]);
+          let loadingPromises = [];
           let workerGiveRes = this._getShouldWorkerGiveAndKeys(
             worker,
             workstations[i]
           );
+          let gtsRes = null;
           if (workerGiveRes.result) {
-            let giveAmountMap = await worker.giveToStation(
-              workerGiveRes.keys,
-              () => {
-                let shouldTakeFromStation = this._getShouldTakeFromStation(
-                  worker,
-                  workstations,
-                  i
-                );
-                if (shouldTakeFromStation) {
-                  // worker.takeFromStation();
-                  // stations[i].giveToWorker();
-                  // console.log(i);
-                  // console.log(this._getWorkerStationCarry(worker, workstations, i));
-                }
-              }
+            gtsRes = worker.giveToStation(workerGiveRes.keys);
+            loadingPromises.push(
+              worker.giveToStationLoading(gtsRes.stayDuration)
             );
-            workstations[i].takeFromWorker(giveAmountMap);
           }
 
+          let tfsRes = null;
+          let shouldTakeFromStation = this._getShouldTakeFromStation(
+            worker,
+            workstations,
+            i
+          );
+          if (shouldTakeFromStation) {
+            let workerStationCarry = this._getWorkerStationCarry(
+              worker,
+              workstations,
+              i
+            );
+            tfsRes = worker.takeFromStation(workerStationCarry);
+            workstations[i].giveToWorker(workerStationCarry.amount);
+            loadingPromises.push(
+              workstations[i].giveToWorkerLoading(tfsRes.stayDuration)
+            );
+          }
+
+          await Promise.all(loadingPromises);
+
+          if (gtsRes) {
+            workstations[i].takeFromWorker(gtsRes.giveMap);
+          }
+          if (tfsRes) {
+            worker.updateCarryNum();
+          }
         }
         await worker.backToWarehouse(this.warehouse);
       }
     });
+
+    this.workerMarketGroup.forEachAlive(async worker => {
+      if (!worker.getIsOnRoutine()) {
+        let workstations = this._getBoughtStations();
+        worker.goOutFromMarket();
+        for (let i = 0; i < workstations.length; i++) {
+          await worker.moveToStation(workstations[i]);
+          let shouldWorkerMarketTake = this._getShouldWorkerMarketTake(
+            worker,
+            workstations[i]
+          );
+          if (shouldWorkerMarketTake) {
+            let takeAmount = null;
+            let stationCash = workstations[i].getCashOutput();
+            let workerFreeCapacity = worker.getFreeCapacity();
+            if (stationCash.gt(workerFreeCapacity)) {
+              takeAmount = workerFreeCapacity;
+            } else {
+              takeAmount = stationCash;
+            }
+            let tfsRes = worker.takeFromStation(takeAmount);
+            workstations[i].giveToWorkerMarket(takeAmount);
+            await worker.takeFromStationLoading(tfsRes.stayDuration);
+          }
+        }
+        await worker.backToMarket();
+        if (worker.getHasCarry()) {
+          let sellRes = await worker.sellProd();
+          this.market.sell(sellRes.amount);
+        } else {
+          worker.setIsOnRoutine(false);
+        }
+      }
+    });
+  }
+
+  _getShouldWorkerMarketTake(worker, station) {
+    let workerHasFreeCapacity = worker.getHasFreeCapacity();
+    if (!workerHasFreeCapacity) {
+      return false;
+    }
+
+    let stationHasOutputCash = station.getHasCashOutput();
+    if (!stationHasOutputCash) {
+      return false;
+    }
+    return true;
   }
 
   _getShouldWorkerGiveAndKeys(worker, station) {
@@ -295,6 +366,7 @@ class Game extends window.Phaser.State {
     return carry;
   }
 
+  // 每次只会拿一种，所以不用 map
   _getWorkerStationCarry(worker, stations, index) {
     let currStation = stations[index];
     let key = currStation.getOutputKey();
@@ -314,11 +386,10 @@ class Game extends window.Phaser.State {
     }
 
     return {
-      [key]: {
-        amount,
-        amountHu,
-        stationAmount
-      }
+      key,
+      amount,
+      amountHu,
+      stationAmount
     };
   }
 
@@ -356,6 +427,7 @@ class Game extends window.Phaser.State {
     this.btnBlueprint.input.priorityID = PRIORITY_ID;
     this.btnBlueprint.events.onInputDown.add(() => {
       console.log('click btn blueprint');
+      this.modalProdUpgrade.visible = true;
     });
 
     this.btnXCash = this.add.sprite(
@@ -389,7 +461,7 @@ class Game extends window.Phaser.State {
     this.bgGroup.addChild(this.warehouseGround);
     this.bgGroup.addChild(this.warehouse);
     this.bgGroup.addChild(this.marketGround);
-    this.bgGroup.addChild(this.marketTruck);
+    this.bgGroup.addChild(this.market);
     this.bgGroup.addChild(this.wall);
     this.bgGroup.addChild(this.warehouseManager);
     this.bgGroup.addChild(this.marketManager);
@@ -432,12 +504,10 @@ class Game extends window.Phaser.State {
     );
     this.marketGround.endFill();
 
-    this.marketTruck = this.add.sprite(
-      this.world.width - 30,
-      700,
-      'market_truck'
-    );
-    this.marketTruck.anchor.setTo(1);
+    this.market = new Market(this.game, 400, 400);
+    this.market.onSell(amount => {
+      console.log('market sell:', amount.toString());
+    });
 
     // wall behind the above two
     this.wall = this.add.sprite(this.world.centerX, 81, 'wall');

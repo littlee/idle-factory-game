@@ -82,7 +82,7 @@ class Start extends window.Phaser.State {
     this.load.image('clock_yellow', 'images/clock_yellow.png');
     this.load.image('prod_can', 'images/prod_can.png');
     this.load.image('prod_toaster', 'images/prod_toaster.png');
-    this.load.image('prod_steel_bronze', 'images/prod_steel_bronze.png');
+    this.load.image('prod_steel_copper', 'images/prod_steel_bronze.png');
     this.load.image('prod_steel_gold', 'images/prod_steel_gold.png');
     this.load.image('prod_steel_jade', 'images/prod_steel_jade.png');
     this.load.image('prod_steel_rubber', 'images/prod_steel_rubber.png');
@@ -102,7 +102,6 @@ class Start extends window.Phaser.State {
     this.load.image('reso_plug', 'images/reso_plug.png');
     this.load.image('reso_aluminium', 'images/reso_aluminium.png');
     this.load.image('reso_rubber', 'images/reso_rubber.png');
-
   }
 
   create() {
