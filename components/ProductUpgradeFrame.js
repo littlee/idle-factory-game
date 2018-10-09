@@ -205,6 +205,13 @@ class ProductUpgradeFrame extends window.Phaser.Group {
   getActivatedProduct = () => {
     return this.activatedProduct;
   };
+
+  updateFrameBtnBuyUI = (currCoin) => {
+    let children = [this.prod1, this.prod2, this.prod3, this.prod4];
+    children.forEach(item => {
+      item.updateLineBtnBuyUI(currCoin);
+    });
+  }
 }
 
 export default ProductUpgradeFrame;

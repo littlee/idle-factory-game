@@ -234,6 +234,13 @@ class ProductUpgradeLine extends window.Phaser.Group {
   getProdLineProductName = () => {
     return this.product;
   }
+
+  updateLineBtnBuyUI = (currCoin) => {
+    let children = [this.base, this.copper, this.silver, this.gold, this.jade, this.rubber];
+    children.forEach(item => {
+      item.updateItemBtnBuyUI(currCoin);
+    });
+  }
 }
 
 export default ProductUpgradeLine;

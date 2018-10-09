@@ -561,6 +561,7 @@ class Game extends window.Phaser.State {
     this.modalRescources.updateBtnBuyUI(currCoin);
     this.modalMarket.getUpdated();
     this.modalWarehose.getUpdated();
+    this.modalProdUpgrade.updateModalAllBtnBuyUI(currCoin);
   }
 
   subtractCash = (decrement) => {

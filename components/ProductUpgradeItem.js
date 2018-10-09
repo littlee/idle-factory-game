@@ -449,6 +449,16 @@ class ProductUpgradeItem extends window.Phaser.Group {
     this.stroke.lineTo(0, 0);
   }
 
+  _setBtnBuyInputEnabled = (bool) => {
+    if (bool === true) {
+      this.btnBuyGroup.setAllChildren('inputEnabled', true);
+      this.btnBuyGroup.setAllChildren('input.priorityID', 1001);
+    } else {
+      this.btnBuyGroup.setAllChildren('inputEnabled', false);
+    }
+
+  }
+
   getIncrementPercentage = () => {
     return this._data.incrementPercentage;
   }
@@ -516,6 +526,18 @@ class ProductUpgradeItem extends window.Phaser.Group {
 
   updateProdUIAndValue = () => {
     console.log('upgraded is done, UI and value should be changed');
+  }
+
+  // 及时更新按钮UI
+  updateItemBtnBuyUI = (currCoin) => {
+    if (currCoin === undefined) return false;
+    if (currCoin.lt(this.coin)) {
+      this.btnBuy.loadTexture('btn_research_update_disable');
+      this._setBtnBuyInputEnabled(false);
+    } else {
+      this.btnBuy.loadTexture('btn_research_update');
+      this._setBtnBuyInputEnabled(true);
+    }
   }
 
 }
