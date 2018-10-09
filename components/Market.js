@@ -13,10 +13,23 @@ const INC_NUM_STYLE = {
   strokeThickness: 5
 };
 
+const INIT_MULTIPLE = 1;
+
+function getSellText(amount, multiple) {
+  let text = `${formatBigNum(amount)}`;
+  if (multiple > 1) {
+    text += ` x ${multiple}`;
+  }
+  return text;
+}
+
 class Market extends window.Phaser.Group {
   constructor(game, x, y) {
     super(game);
-    // this.state = this.game.state.states[this.game.state.current];
+
+    this._data = {
+      multiple: INIT_MULTIPLE
+    };
 
     this.x = x;
     this.y = y;
@@ -49,7 +62,7 @@ class Market extends window.Phaser.Group {
     let textItem = this.textGroup.getFirstDead();
     textItem.reset(TEXT_START_X, TEXT_START_Y);
     textItem.alpha = 1;
-    textItem.setText(`+${formatBigNum(amount)}`);
+    textItem.setText(getSellText(amount, this._data.multiple));
     this.killQueue.push(textItem);
     this.game.add
       .tween(textItem)
@@ -68,13 +81,28 @@ class Market extends window.Phaser.Group {
       });
 
     if (this.onSellCallback) {
-      this.onSellCallback.call(this.onSellContext, amount);
+      this.onSellCallback.call(
+        this.onSellContext,
+        amount.times(this._data.multiple)
+      );
     }
   }
 
   onSell(func, context) {
     this.onSellCallback = func;
     this.onSellContext = context;
+  }
+
+  getMultiple() {
+    return this._data.multiple;
+  }
+
+  setMultiple(multiple) {
+    this._data.multiple = multiple;
+  }
+
+  resetMultiple() {
+    this._data.multiple = INIT_MULTIPLE;
   }
 }
 
