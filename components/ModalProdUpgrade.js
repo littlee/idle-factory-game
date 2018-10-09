@@ -75,6 +75,7 @@ class ModalProdUpgrade extends ModalRaw {
       offsetTop: OFFSET,
       offsetLeft: LEFT,
       modalRef: this,
+      reso: 'ore'
     });
 
     this.frameCopper = new ProductUpgradeFrame({
@@ -83,23 +84,26 @@ class ModalProdUpgrade extends ModalRaw {
       offsetTop: OFFSET + CONFIG.frameHeight * 1 + CONFIG.gap * 1,
       offsetLeft: LEFT,
       modalRef: this,
+      reso: 'copper'
     });
 
-    this.framesOilBarrel = new ProductUpgradeFrame({
-      game: this.game,
-      parent: this.contentGroup,
-      offsetTop: OFFSET + CONFIG.frameHeight * 2 + CONFIG.gap * 2,
-      offsetLeft: LEFT,
-      modalRef: this,
-    });
+    // this.framesOilBarrel = new ProductUpgradeFrame({
+    //   game: this.game,
+    //   parent: this.contentGroup,
+    //   offsetTop: OFFSET + CONFIG.frameHeight * 2 + CONFIG.gap * 2,
+    //   offsetLeft: LEFT,
+    //   modalRef: this,
+    //   prodList: ['plastic_bar', 'wheel', 'screen', 'phone']
+    // });
 
     this.contentGroup.addChild(this.frameOre);
     this.contentGroup.addChild(this.frameCopper);
-    this.contentGroup.addChild(this.framesOilBarrel);
+    // this.contentGroup.addChild(this.framesOilBarrel);
   };
 
   handleBigVeils4AllFrames = () => {
-    let children = [this.frameOre, this.frameCopper, this.framesOilBarrel];
+    let children = [this.frameOre, this.frameCopper];
+    // 如果frame的visible是false的话，可以考虑着这里做处理
     children.forEach(item => {
       item.setBigVeil4Children();
     });
@@ -107,7 +111,7 @@ class ModalProdUpgrade extends ModalRaw {
 
   handleCountdown4AllFrames = (timestring) => {
     // should be invoked after this.handleBigVeils4AllFrames()
-    let children = [this.frameOre, this.frameCopper, this.framesOilBarrel];
+    let children = [this.frameOre, this.frameCopper];
     children.forEach(item => {
       item.syncCountdown4relatedChildren(timestring);
     });

@@ -566,9 +566,16 @@ class Game extends window.Phaser.State {
     this.btnCash.addCashAndUpdate(increment);
     this._updateWhateverNeed2KnowCoinValue();
   }
-
   getCurrCoin = () => {
     return this.btnCash.getCash();
+  }
+
+  // 这里也要改工作台弹窗里头的UI
+  updateProdTextureAfterUpgrade = () => {
+    this.workstationGroup.children.forEach((item, index) => {
+      // console.log('workstation: ', index, ' update prod UI');
+      item.updateTexture();
+    });
   }
 }
 

@@ -607,7 +607,7 @@ class Workstation extends window.Phaser.Group {
     this.outputItemsAniRight.changeTexture(outputTextureKey);
     this.outputGiveAni.changeTexture(outputTextureKey);
 
-    this.this.productBtnItem.loadTexture(outputTextureKey);
+    this.productBtnItem.loadTexture(outputTextureKey);
   }
 }
 
