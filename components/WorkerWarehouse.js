@@ -36,7 +36,8 @@ class WorkerWarehouse extends window.Phaser.Group {
       onRoutine: false,
       capacity: Big(2000),
       loadingSpeed: Big(1000),
-      walkSpeed: 0.2
+      walkSpeed: 0.2,
+      prevSpeed: null
     };
 
     this.x = x;
@@ -244,14 +245,21 @@ class WorkerWarehouse extends window.Phaser.Group {
     this.setIsOnRoutine(false);
   }
 
-  doubleSpeed() {
-    this._data.loadingSpeed = this._data.loadingSpeed.times(2);
-    this._data.walkSpeed = this._data.walkSpeed * 2;
+  multipleSpeed(times) {
+    this._data.prevSpeed = {
+      loadingSpeed: Big(this._data.loadingSpeed), // copy object
+      walkSpeed: this._data.walkSpeed,
+    };
+    this._data.loadingSpeed = this._data.loadingSpeed.times(times);
+    this._data.walkSpeed = this._data.walkSpeed * times;
   }
 
-  halfSpeed() {
-    this._data.loadingSpeed = this._data.loadingSpeed.div(2);
-    this._data.walkSpeed = this._data.walkSpeed / 2;
+  resetSpeed() {
+    if (!this._data.prevSpeed) {
+      return;
+    }
+    this._data.loadingSpeed = this._data.prevSpeed.loadingSpeed;
+    this._data.walkSpeed = this._data.prevSpeed.walkSpeed;
   }
 
   stand() {

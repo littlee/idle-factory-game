@@ -65,7 +65,13 @@ class Game extends window.Phaser.State {
 
     this.bellRed = new BellRed(this.game, 80, 116);
     this.bellRed.unlock();
-    this.bellRed.disable();
+    // this.bellRed.disable();
+    this.bellRed.onSkill(() => {
+      console.log('red skill');
+    });
+    this.bellRed.onSkillEnd(() => {
+      console.log('red skill end');
+    });
 
     this.bellYellow = new BellYellow(this.game, 550, 116);
     this.bellYellow.unlock();
