@@ -26,6 +26,7 @@ class Production {
   }
 
   getPrice() {
+    // 应该是写错
     return this._prodPrice;
   }
 
@@ -39,6 +40,7 @@ class Production {
 
   setLevelByKey(key, level) {
     this._prodLevel[key] = level;
+    console.log('更新', key, '到level: ', level);
   }
 }
 

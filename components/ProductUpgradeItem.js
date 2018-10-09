@@ -1,5 +1,5 @@
 import moment from '../js/libs/moment.min.js';
-// import Production from '../store/Production.js';
+import Production from '../store/Production.js';
 
 const CONFIG = {
   prodStrokeWidth: 4,
@@ -14,6 +14,15 @@ const CONFIG = {
   incrementPercentage: '40%',
   prodImgScale: 62 / 128,
 
+};
+
+const TEXTURE_LEVEL_MAP = {
+  base: 0,
+  bronze: 1,
+  silver: 2,
+  gold: 4,
+  jade: 5,
+  ruby: 6
 };
 
 function getFontStyle(fSize, color, align, weight) {
@@ -279,6 +288,9 @@ class ProductUpgradeItem extends window.Phaser.Group {
     this.updateProdUIAndValue();
     this.parent.makeNextItemBtnsShowUp();
     this.parent.handleNoneActivatedItem();
+    // 更新product UI的key
+    let currLevel = TEXTURE_LEVEL_MAP[this.prodTexture];
+    Production.setLevelByKey(this.product, currLevel);
   }
 
 
