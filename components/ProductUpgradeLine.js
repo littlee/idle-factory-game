@@ -50,8 +50,6 @@ class ProductUpgradeLine extends window.Phaser.Group {
       y: 0, //OFFSET + 120,
       product: this.product,
       prodTexture: 'base',
-      countDownDuration: '0s',
-      pieActivatedTimestamp: 1538820968140,
       incrementPercentage: '30%',
     });
 
