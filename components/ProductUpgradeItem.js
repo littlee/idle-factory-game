@@ -61,12 +61,26 @@ function formatRemainedSecond(secs) {
   secs = secs % 60;
   let seconds = secs;
   if (hours > 0) {
-    return `${hours}h${minutes}m`;
+    return minutes === 0 ? `${hours}h` : `${hours}h${minutes}m`;
   } else if (minutes > 0) {
     return `${minutes}m${seconds}s`;
   } else {
     return `${seconds}s`;
   }
+}
+
+function getCountdownUIUpdateFrequency(secs) {
+  // 一小时以上，不包括？update/min, xxhxxm
+  // 一小时及一下？update/second, xxmxxs
+  let timeout;
+  if (secs > 3600 * 2) {
+    timeout = 3600 * 1000;
+  } else if (secs > 3660) {
+    timeout = 60 * 1000;
+  } else {
+    timeout = 1000;
+  }
+  return timeout;
 }
 /*
 key:
@@ -106,6 +120,7 @@ class ProductUpgradeItem extends window.Phaser.Group {
 
     this.timer = null;
     this.txtTimer = null;
+    this.txtTimeout = null;
     this.drawCount = 0;
     this.durationInMiliSeconds = 0;
     this.remainedMiliSeconds = null;
@@ -268,7 +283,7 @@ class ProductUpgradeItem extends window.Phaser.Group {
 
     this._data.pieActivatedTimestamp = moment.utc().format('x');
     this._updateDurationTxtUI();
-    this.txtTimer = setInterval(this._updateDurationTxtUI, 990);
+    // this.txtTimer = setTimeout(this._updateDurationTxtUI, this.txtTimeout);
     this._reDrawPie();
     this.timer = setInterval(this._reDrawPie, this._data.step * 1000);
 
@@ -280,12 +295,13 @@ class ProductUpgradeItem extends window.Phaser.Group {
     1）其他的大蒙层消失，自己的小蒙层也消失，倒计时也消失。
     2) 下一个item的btns出现
     3）workstation上面的product UI变化，外加卖出价格变化
+    4) 减少主界面里头，cash的数额
     */
     this.btnSkipGroup.visible = false;
     this.countDownGroup.visible = false;
     this.upgraded = true;
     clearInterval(this.timer);
-    clearInterval(this.txtTimer);
+    clearTimeout(this.txtTimer);
     this.updateProdUIAndValue();
     this.parent.makeNextItemBtnsShowUp();
     this.parent.handleNoneActivatedItem();
@@ -321,19 +337,20 @@ class ProductUpgradeItem extends window.Phaser.Group {
   };
 
   _reBoostPieDrawing = (formattedRemainedTimeTxt, elapsedMiliseconds) => {
+    // this.remainedMiliSeconds已经assigned
     this.btnBuyGroup.visible = false;
     this.btnSkipGroup.visible = true;
     this.countDownTxt.setText(formattedRemainedTimeTxt);
     this.drawCount = Math.round(elapsedMiliseconds / (this._data.step * 1000));
-    console.log('drawCount:', this.drawCount);
+    // console.log('drawCount:', this.drawCount);
     this._reDrawPie();
     this._updateDurationTxtUI();
     this.timer = setInterval(this._reDrawPie, this._data.step * 1000);
-    this.txtTimer = setInterval(this._updateDurationTxtUI, 990);
+    // this.txtTimer = setTimeout(this._updateDurationTxtUI, this.txtTimeout);
   }
 
   _computePieDrawingFrequencyNStuff = durationTxt => {
-    // xxm || xxs|| xxmxxs || xxhxxm
+    // xxm || xxs || xxh || xxmxxs || xxhxxm
     let hours, minutes, seconds;
     let tmp = durationTxt.split(/[hms]/);
     if (tmp.length === 3 && durationTxt.indexOf('h') > -1) {
@@ -344,6 +361,10 @@ class ProductUpgradeItem extends window.Phaser.Group {
       hours = NaN;
       minutes = Number(tmp[0]);
       seconds = minutes * 60 + Number(tmp[1]);
+    } else if (tmp.length === 2 && durationTxt.indexOf('h') > -1) {
+      hours = Number(tmp[0]);
+      minutes = NaN;
+      seconds = hours * 60 * 60;
     } else if (tmp.length === 2 && durationTxt.indexOf('m') > -1) {
       hours = NaN;
       minutes = Number(tmp[0]);
@@ -384,16 +405,19 @@ class ProductUpgradeItem extends window.Phaser.Group {
   };
 
   _updateDurationTxtUI = () => {
+    // this.remainedMiliSeconds的值不会是个问题
     this.remainedMiliSeconds = this.remainedMiliSeconds === null ? this.durationInMiliSeconds : this.remainedMiliSeconds;
     // adjust frequency based on this.remainedMiliSeconds
-    this.remainedMiliSeconds -= 1000;
+    this.txtTimeout = getCountdownUIUpdateFrequency(this.remainedMiliSeconds / 1000);
+    this.remainedMiliSeconds -= this.txtTimeout;
     if (this.remainedMiliSeconds < 1000) {
-      clearInterval(this.txtTimer);
+      clearTimeout(this.txtTimer);
       return false;
     }
     let timeString = formatRemainedSecond(Math.round(this.remainedMiliSeconds / 1000));
     this.countDownTxt.setText(timeString);
     this.parent.parent.modal.handleCountdown4AllFrames(timeString);
+    this.txtTimer = setTimeout(this._updateDurationTxtUI, this.txtTimeout);
   }
 
   _decideStrokeColor = () => {

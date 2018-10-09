@@ -32,7 +32,8 @@ const RESO_PRODLIST_MAP = {
   copper: ['battery', 'coffee_machine', 'mp3', 'speaker'],
   oilBarrel: [],
   plug: [],
-  // two more 2 go
+  aluminium: [],
+  rubber: []
 };
 
 const RESO_TAGNAME_MAP = {
@@ -41,7 +42,7 @@ const RESO_TAGNAME_MAP = {
   oilBarrel: '油桶',
   plug: '电器',
   aluminium: '铝器',
-  rubber: '香蕉'
+  rubber: '橡胶'
 };
 
 // 控制big veil的出现和消失
