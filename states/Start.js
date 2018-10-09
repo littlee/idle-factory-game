@@ -86,6 +86,13 @@ class Start extends window.Phaser.State {
     this.load.image('prod_toaster_jade', 'images/material/Toaster_Jade.png');
     this.load.image('prod_toaster_ruby', 'images/material/Toaster_Ruby.png');
 
+    this.load.image('prod_battery', 'images/material/Battery_Base.png');
+    this.load.image('prod_battery_bronze', 'images/material/Battery_Bronze.png');
+    this.load.image('prod_battery_silver', 'images/material/Battery_Silver.png');
+    this.load.image('prod_battery_gold', 'images/material/Battery_Gold.png');
+    this.load.image('prod_battery_jade', 'images/material/Battery_Jade.png');
+    this.load.image('prod_battery_ruby', 'images/material/Battery_Ruby.png');
+
     this.load.image('prod_coffee_machine', 'images/material/CoffeeMachine_Base.png');
     this.load.image('prod_coffee_machine_bronze', 'images/material/CoffeeMachine_Bronze.png');
     this.load.image('prod_coffee_machine_silver', 'images/material/CoffeeMachine_Silver.png');

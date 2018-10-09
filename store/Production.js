@@ -3,14 +3,25 @@
 class Production {
   constructor() {
     this._prodPrice = {
+      // ore
       steel: [1, 1.3, 1.8, 2.5, 3.5, 5],
       can: [4, 5.2, 7.2, 10, 14, 20],
       drill: [25, 32.5, 45, 62.5, 87.5, 125],
       toaster: [117, 152.1, 210.6, 292.5, 409.5, 585],
+      // copper
       battery: [18, 23.4, 32.4, 45, 63, 90],
       coffee_machine: [45, 58.5, 81, 112.5, 157.5, 225],
       mp3: [180, 234, 324, 450, 630, 900],
-      speaker: [1980, 2574, 3564, 4950, 6930, 9900]
+      speaker: [1980, 2574, 3564, 4950, 6930, 9900],
+      // oil barrel
+      plastic_bar: [],
+      wheel: [],
+      screen: [],
+      phone: [],
+      // plug
+      circuit: [],
+      tv: [],
+      computer: []
     };
 
     this._prodLevel = {
@@ -21,7 +32,14 @@ class Production {
       battery: 0,
       coffee_machine: 0,
       mp3: 0,
-      speaker: 0
+      speaker: 0,
+      plastic_bar: 0,
+      wheel: 0,
+      screen: 0,
+      phone: 0,
+      circuit: 0,
+      tv: 0,
+      computer: 0
     };
   }
 
