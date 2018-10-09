@@ -13,10 +13,8 @@ import Production from '../store/Production';
 
 const MAX_INPUT_PILE = 2;
 const A_MINUTE = 60000;
-const OUTPUT_DELAY = {
-  normal: 3000,
-  fast: 1000
-};
+
+const INIT_OUTPUT_DELAY = 3000;
 
 export const COLLECT_TYPES = {
   CASH: 'cash',
@@ -88,7 +86,7 @@ class Workstation extends window.Phaser.Group {
         prod: Big(0)
       },
       producePerMin: Big(10000),
-      outputDelay: 'normal',
+      outputDelay: INIT_OUTPUT_DELAY,
       price: {
         cash: Big(123),
         superCash: Big(456)
@@ -318,14 +316,14 @@ class Workstation extends window.Phaser.Group {
     if (collectType === COLLECT_TYPES.CASH) {
       this._data.outputAmount[collectType] = outputAmount[collectType].plus(
         producePerMin
-          .div(Big(A_MINUTE / OUTPUT_DELAY[outputDelay]))
+          .div(Big(A_MINUTE / outputDelay))
           .times(OUTPUT_PRODUCE_MAP[output])
           .times(Production.getPriceByKey(output))
       );
     } else {
       this._data.outputAmount[collectType] = outputAmount[collectType].plus(
         producePerMin
-          .div(Big(A_MINUTE / OUTPUT_DELAY[outputDelay]))
+          .div(Big(A_MINUTE / outputDelay))
           .times(OUTPUT_PRODUCE_MAP[output])
       );
     }
@@ -336,7 +334,7 @@ class Workstation extends window.Phaser.Group {
     this._data.input = inputKeys
       .map(key => {
         let nextAmount = input[key].amount.minus(
-          producePerMin.div(Big(A_MINUTE / OUTPUT_DELAY[outputDelay]))
+          producePerMin.div(Big(A_MINUTE / outputDelay))
         );
         if (nextAmount.lt(0)) {
           nextAmount = Big(0);
@@ -442,7 +440,7 @@ class Workstation extends window.Phaser.Group {
     this.worker.work();
 
     this.outputTimer = this.game.time.events.loop(
-      OUTPUT_DELAY[this._data.outputDelay],
+      this._data.outputDelay,
       this._outputLoop,
       this
     );
