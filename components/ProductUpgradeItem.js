@@ -20,9 +20,9 @@ const TEXTURE_LEVEL_MAP = {
   base: 0,
   bronze: 1,
   silver: 2,
-  gold: 4,
-  jade: 5,
-  ruby: 6
+  gold: 3,
+  jade: 4,
+  ruby: 5
 };
 
 function getFontStyle(fSize, color, align, weight) {
@@ -94,6 +94,7 @@ class ProductUpgradeItem extends window.Phaser.Group {
     incrementPercentage = CONFIG.incrementPercentage,
   }) {
     super(game, parent);
+    this.state = this.game.state.states[this.game.state.current];
 
     this.prodTexture = prodTexture;
     this.product = product;
@@ -291,6 +292,7 @@ class ProductUpgradeItem extends window.Phaser.Group {
     // 更新product UI的key
     let currLevel = TEXTURE_LEVEL_MAP[this.prodTexture];
     Production.setLevelByKey(this.product, currLevel);
+    this.state.updateProdTextureAfterUpgrade();
   }
 
 

@@ -309,7 +309,7 @@ class Workstation extends window.Phaser.Group {
         producePerMin.div(Big(A_MINUTE / OUTPUT_DELAY[outputDelay]))
       );
     }
-    
+
     this.boxCollect.setNum(formatBigNum(outputAmount[collectType]));
 
     let inputKeys = Object.keys(this._data.input);
@@ -585,7 +585,7 @@ class Workstation extends window.Phaser.Group {
     this.outputItemsAniRight.changeTexture(outputTextureKey);
     this.outputGiveAni.changeTexture(outputTextureKey);
 
-    this.this.productBtnItem.loadTexture(outputTextureKey);
+    this.productBtnItem.loadTexture(outputTextureKey);
   }
 }
 
