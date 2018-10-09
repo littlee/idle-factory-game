@@ -9,6 +9,7 @@ import ResourceEmitter from './ResourceEmitter';
 import ResourcePile from './ResourcePile';
 import BoxCollect from './BoxCollect';
 import SourceImg from '../resource/SourceImg';
+import Production from '../store/Production';
 
 const MAX_INPUT_PILE = 2;
 const A_MINUTE = 60000;
@@ -292,12 +293,22 @@ class Workstation extends window.Phaser.Group {
       collectType,
       input,
       producePerMin,
+      output,
       outputAmount,
       outputDelay
     } = this._data;
-    this._data.outputAmount[collectType] = outputAmount[collectType].plus(
-      producePerMin.div(Big(A_MINUTE / OUTPUT_DELAY[outputDelay]))
-    );
+
+    if (collectType === COLLECT_TYPES.CASH) {
+      this._data.outputAmount[collectType] = outputAmount[collectType].plus(
+        producePerMin.div(Big(A_MINUTE / OUTPUT_DELAY[outputDelay])).times(Production.getPriceByKey(output))
+      );
+    }
+    else {
+      this._data.outputAmount[collectType] = outputAmount[collectType].plus(
+        producePerMin.div(Big(A_MINUTE / OUTPUT_DELAY[outputDelay]))
+      );
+    }
+    
     this.boxCollect.setNum(formatBigNum(outputAmount[collectType]));
 
     let inputKeys = Object.keys(this._data.input);

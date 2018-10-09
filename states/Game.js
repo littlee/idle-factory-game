@@ -107,7 +107,7 @@ class Game extends window.Phaser.State {
 
     // TODO: make 30 workstations
     const WORKSTATION_START_Y = 915;
-    const WORKSTATION_HEIGHT = 339;
+    const WORKSTATION_HEIGHT = 340;
     this.workstationGroup = this.add.group();
     range(3).forEach(index => {
       let workstation = new Workstation(
