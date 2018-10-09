@@ -1,4 +1,5 @@
 import moment from '../js/libs/moment.min.js';
+// import Production from '../store/Production.js';
 
 const CONFIG = {
   prodStrokeWidth: 4,
@@ -191,6 +192,8 @@ class ProductUpgradeItem extends window.Phaser.Group {
       getFontStyle(undefined, 0x004818, undefined, 'bold')
     );
     this.bubbleTxt.alignTo(this.bg, Phaser.TOP_LEFT, -30, 0);
+    this.bubble.visible = this.prodTexture === 'base' ? false : true;
+    this.bubbleTxt.visible = this.prodTexture === 'base' ? false : true;
 
     // btn*buy
     this.btnBuyGroup = this.game.make.group();
@@ -275,7 +278,6 @@ class ProductUpgradeItem extends window.Phaser.Group {
     clearInterval(this.txtTimer);
     this.updateProdUIAndValue();
     this.parent.makeNextItemBtnsShowUp();
-
     this.parent.handleNoneActivatedItem();
   }
 
