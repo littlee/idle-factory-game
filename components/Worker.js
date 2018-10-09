@@ -1,10 +1,9 @@
+const INIT_FPS = 5;
+
 class Worker extends window.Phaser.Sprite {
   constructor(game, x, y) {
     super(game, x, y, 'worker');
-
-    this.gameRef = game;
-
-    this.animations.add('work', null, 5, true);
+    this.animations.add('work', null, INIT_FPS, true);
   }
 
   stop() {
@@ -12,7 +11,17 @@ class Worker extends window.Phaser.Sprite {
   }
 
   work() {
-    this.animations.play('work');
+    this.stop();
+    this.animations.play('work', INIT_FPS);
+  }
+
+  multipleSpeed(times) {
+    this.stop();
+    this.animations.play('work', INIT_FPS * times);
+  }
+
+  resetSpeed() {
+    this.work();
   }
 }
 

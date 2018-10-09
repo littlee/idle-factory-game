@@ -63,18 +63,41 @@ class Game extends window.Phaser.State {
     this.marketManager.alignIn(this.wall, window.Phaser.BOTTOM_CENTER, 80, 80);
     // group 1-5
 
+    // 速度提升 3 倍
     this.bellRed = new BellRed(this.game, 80, 116);
     this.bellRed.unlock();
-    // this.bellRed.disable();
     this.bellRed.onSkill(() => {
-      console.log('red skill');
+      this.workerWarehouseGroup.forEach(worker => {
+        worker.multipleSpeed(3);
+      });
+      this.workerMarketGroup.forEach(worker => {
+        worker.multipleSpeed(3);
+      });
+      this.workstationGroup.forEach(station => {
+        station.multipleSpeed(3);
+      });
     });
     this.bellRed.onSkillEnd(() => {
-      console.log('red skill end');
+      this.workerWarehouseGroup.forEach(worker => {
+        worker.resetSpeed();
+      });
+      this.workerMarketGroup.forEach(worker => {
+        worker.resetSpeed();
+      });
+      this.workstationGroup.forEach(station => {
+        station.resetSpeed();
+      });
     });
 
+    // 销售提升 3 倍
     this.bellYellow = new BellYellow(this.game, 550, 116);
     this.bellYellow.unlock();
+    this.bellYellow.onSkill(() => {
+      this.market.setMultiple(3);
+    });
+    this.bellYellow.onSkillEnd(() => {
+      this.market.resetMultiple();
+    });
 
     this.upBtnWarehouse = new BtnUpgrade(this.game, 0, 0);
     this.upBtnWarehouse.alignIn(this.wall, window.Phaser.LEFT_CENTER, -60, -10);
@@ -128,10 +151,11 @@ class Game extends window.Phaser.State {
     this.workstationGroup.children[0].beAbleToBuy();
     this.workstationGroup.children[0].buy('cash');
     // this.workstationGroup.children[0].setCollectType(COLLECT_TYPES.PROD);
-    this.workstationGroup.children[1].beAbleToBuy();
-    this.workstationGroup.children[1].buy('cash');
+    // this.workstationGroup.children[1].beAbleToBuy();
+    // this.workstationGroup.children[1].buy('cash');
     // this.workstationGroup.children[1].setOutput('drill');
-    this.workstationGroup.children[2].beAbleToBuy();
+    // this.workstationGroup.children[2].beAbleToBuy();
+    window.wsg = this.workstationGroup;
 
     this.workerWarehouseGroup = this.add.group();
     range(5).forEach(index => {

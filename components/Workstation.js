@@ -437,7 +437,13 @@ class Workstation extends window.Phaser.Group {
     } else {
       this.outputItemsAniRight.start();
     }
-    this.worker.work();
+
+    if (this._data.outputDelay === INIT_OUTPUT_DELAY) {
+      this.worker.work();
+    }
+    else {
+      this.worker.multipleSpeed(3);
+    }
 
     this.outputTimer = this.game.time.events.loop(
       this._data.outputDelay,
@@ -606,6 +612,16 @@ class Workstation extends window.Phaser.Group {
     this.outputGiveAni.changeTexture(outputTextureKey);
 
     this.productBtnItem.loadTexture(outputTextureKey);
+  }
+
+  multipleSpeed(times) {
+    this._data.outputDelay = this._data.outputDelay / times;    
+    this.startWork();
+  }
+
+  resetSpeed() {
+    this._data.outputDelay = INIT_OUTPUT_DELAY;
+    this.startWork();
   }
 }
 
