@@ -1,5 +1,9 @@
 import moment from '../js/libs/moment.min.js';
+
 import Production from '../store/Production.js';
+import { prodUpgradeMap } from './puedoLevelMap.js';
+import Big from '../js/libs/big.min';
+import { formatBigNum } from '../utils';
 
 const CONFIG = {
   prodStrokeWidth: 4,
@@ -103,17 +107,18 @@ class ProductUpgradeItem extends window.Phaser.Group {
     y,
     product,
     prodTexture = 'base',
-    countDownDuration = CONFIG.countDownDuration,
-    pieActivatedTimestamp = CONFIG.pieActivatedTimestamp,
     incrementPercentage = CONFIG.incrementPercentage,
   }) {
     super(game, parent);
     this.state = this.game.state.states[this.game.state.current];
 
-    this.prodTexture = prodTexture;
-    this.product = product;
     this.posX = x;
     this.posY = y;
+
+    this.prodTexture = prodTexture;
+    this.product = product;
+    this.coin = Big(prodUpgradeMap[this.product][this.prodTexture].coin);
+    this.cash = Big(prodUpgradeMap[this.product][this.prodTexture].cash);
 
     this.keyBg = `bg_${prodTexture}`;
     this.keyProdWithTexture = prodTexture === 'base' ? `prod_${product}` : `prod_${product}_${prodTexture}`;
@@ -129,8 +134,8 @@ class ProductUpgradeItem extends window.Phaser.Group {
     this.upgraded = false;
 
     this._data = {
-      countDownDuration: countDownDuration,
-      pieActivatedTimestamp: pieActivatedTimestamp,
+      countDownDuration: prodUpgradeMap[this.product][this.prodTexture].duration,
+      pieActivatedTimestamp: prodUpgradeMap[this.product][this.prodTexture].pieActivatedTimestamp,
       step: null,
       incrementPercentage: incrementPercentage
     };
@@ -220,7 +225,7 @@ class ProductUpgradeItem extends window.Phaser.Group {
     this.bubble.visible = this.prodTexture === 'base' ? false : true;
     this.bubbleTxt.visible = this.prodTexture === 'base' ? false : true;
 
-    // btn*buy
+    // btn*buy 通过换texture和换fontColor，check key来确定要不要有input开的情况
     this.btnBuyGroup = this.game.make.group();
     this.btnBuy = this.game.make.image(0, 0, 'btn_research_update');
     // this.btnBuy.alignTo(this.bg, Phaser.BOTTOM_LEFT, 2, 0);
@@ -228,7 +233,7 @@ class ProductUpgradeItem extends window.Phaser.Group {
     this.btnBuyTxt = this.game.make.text(
       0,
       0,
-      '233ac',
+      formatBigNum(this.coin),
       getFontStyle(undefined, 'white')
     );
     this.btnBuyTxt.alignTo(this.bg, Phaser.BOTTOM_LEFT, -30, 2);
@@ -246,7 +251,7 @@ class ProductUpgradeItem extends window.Phaser.Group {
     this.btnSkipTxt = this.game.make.text(
       0,
       0,
-      '233ac',
+      formatBigNum(this.cash),
       getFontStyle(undefined, 'white')
     );
     this.btnSkipTxt.alignTo(this.bg, Phaser.BOTTOM_LEFT, -30, 2);
