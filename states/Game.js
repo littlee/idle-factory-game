@@ -585,6 +585,7 @@ class Game extends window.Phaser.State {
     this.modalRescources.updateBtnBuyUI(currCoin);
     this.modalMarket.getUpdated();
     this.modalWarehose.getUpdated();
+    this.modalProdUpgrade.updateModalAllBtnBuyUI(currCoin);
   }
 
   subtractCash = (decrement) => {
@@ -600,7 +601,7 @@ class Game extends window.Phaser.State {
     return this.btnCash.getCash();
   }
 
-  // 这里也要改工作台弹窗里头的UI
+  // 升级好产品之后workstation的UI改，这里也要改工作台弹窗里头的UI
   updateProdTextureAfterUpgrade = () => {
     this.workstationGroup.children.forEach((item, index) => {
       // console.log('workstation: ', index, ' update prod UI');

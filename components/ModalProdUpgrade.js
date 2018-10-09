@@ -69,6 +69,7 @@ class ModalProdUpgrade extends ModalRaw {
     const OFFSET = this.headingH * 1.5;
     const LEFT = (this.w - CONFIG.frameWidth) / 2;
 
+    this.frameGroup = this.game.make.group();
     this.frameOre = new ProductUpgradeFrame({
       game: this.game,
       parent: this.contentGroup,
@@ -96,26 +97,31 @@ class ModalProdUpgrade extends ModalRaw {
     //   prodList: ['plastic_bar', 'wheel', 'screen', 'phone']
     // });
 
-    this.contentGroup.addChild(this.frameOre);
-    this.contentGroup.addChild(this.frameCopper);
-    // this.contentGroup.addChild(this.framesOilBarrel);
+    this.frameGroup.addChild(this.frameOre);
+    this.frameGroup.addChild(this.frameCopper);
+    this.contentGroup.addChild(this.frameGroup);
   };
 
   handleBigVeils4AllFrames = () => {
-    let children = [this.frameOre, this.frameCopper];
     // 如果frame的visible是false的话，可以考虑着这里做处理
-    children.forEach(item => {
+    this.frameGroup.children.forEach(item => {
       item.setBigVeil4Children();
     });
   }
 
   handleCountdown4AllFrames = (timestring) => {
     // should be invoked after this.handleBigVeils4AllFrames()
-    let children = [this.frameOre, this.frameCopper];
-    children.forEach(item => {
+    this.frameGroup.children.forEach(item => {
       item.syncCountdown4relatedChildren(timestring);
     });
   }
+
+  updateModalAllBtnBuyUI = (currCoin) => {
+    this.frameGroup.children.forEach(item => {
+      item.updateFrameBtnBuyUI(currCoin);
+    });
+  }
+
 }
 
 export default ModalProdUpgrade;
