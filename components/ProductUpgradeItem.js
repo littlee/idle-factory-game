@@ -11,6 +11,8 @@ const CONFIG = {
   pieColor: 0x000000,
   pieAlpha: 0.7,
   incrementPercentage: '40%',
+  prodImgScale: 62 / 128,
+
 };
 
 function getFontStyle(fSize, color, align, weight) {
@@ -117,8 +119,11 @@ class ProductUpgradeItem extends window.Phaser.Group {
     this.y = this.posY;
     this.bg = this.game.make.image(0, 0, this.keyBg);
     this.bg.anchor.setTo(0.5, 0.5);
+
     this.prodImg = this.game.make.image(0, 0, this.keyProdWithTexture);
     this.prodImg.anchor.setTo(0.5, 0.5);
+    this.prodImg.scale.x = CONFIG.prodImgScale;
+    this.prodImg.scale.y = CONFIG.prodImgScale;
 
     this.stroke = this.game.make.graphics(0, 0);
     this.stroke.alignTo(this.bg);
