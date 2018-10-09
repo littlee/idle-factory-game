@@ -35,6 +35,15 @@ const RESO_PRODLIST_MAP = {
   // two more 2 go
 };
 
+const RESO_TAGNAME_MAP = {
+  ore: '铁矿',
+  copper: '黄铜',
+  oilBarrel: '油桶',
+  plug: '电器',
+  aluminium: '铝器',
+  rubber: '香蕉'
+};
+
 // 控制big veil的出现和消失
 class ProductUpgradeFrame extends window.Phaser.Group {
   constructor({ game, parent, offsetTop, offsetLeft, modalRef, reso }) {
@@ -42,6 +51,7 @@ class ProductUpgradeFrame extends window.Phaser.Group {
     this.modal = modalRef;
     this.prodList = RESO_PRODLIST_MAP[reso]; // 格式 ['steel', 'can', 'drill', 'toaster']
     this.reso = reso;
+    this.tagCnName = RESO_TAGNAME_MAP[reso];
 
     this.active = false;
     this.offsetTop = offsetTop;
@@ -79,7 +89,7 @@ class ProductUpgradeFrame extends window.Phaser.Group {
     this.tagName = this.game.make.text(
       0,
       0,
-      '铁矿',
+      this.tagCnName,
       getFontStyle('28px', '', '', 'bold')
     ); // fSize, color, align, weight
     this.tagName.alignTo(
