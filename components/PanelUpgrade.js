@@ -24,6 +24,7 @@ NOTE: 被toggle inputEnabled之后的object的priorityID会变成0.
 -2- 点击确定购买升级，coin会被扣，所以item的值都要更新，base变化，级数变化，即modal和coupledBtn的text都要变
 -3- 点击确定购买升级是灰色还是绿色，要能实时变化调整
 -4- max点击的逻辑【未实现】
+-5- modalLevel panel的数据输入格式？部分逻辑需要改
  */
 class PanelUpgrade extends window.Phaser.Group {
   constructor({ game, parent, veilHeight, modal = null, base = null}) {
@@ -33,6 +34,8 @@ class PanelUpgrade extends window.Phaser.Group {
     this.veilHeight = veilHeight;
     this.modal = modal;
     this.levelType = modal.getLevelType();
+
+    this.btnDes = '升级';
     // 从parent拿级数
     this._data = {
       multiplier: 1,
@@ -85,8 +88,14 @@ class PanelUpgrade extends window.Phaser.Group {
     this.btnUpgrade.alignTo(this.bg, Phaser.RIGHT_BOTTOM, 75);
     this.txtUpgradeCoinNeeded = this.game.make.text(0, 0, this._data.coinNeeded.toString(), getFontStyle('24px', 'white', 'center', 'bold'));
     this.txtUpgradeCoinNeeded.alignTo(this.bg, Phaser.RIGHT_TOP, 140, -5);
+
+    this.txtBtnDes = this.game.make.text(0, 0, this.btnDes, getFontStyle('24px', 'white', 'center', 'bold'));
+    this.txtBtnDes.setTextBounds(0, 0, this.btnUpgrade.width, 30);
+    this.txtBtnDes.alignTo(this.bg, Phaser.RIGHT_TOP, 75, -40);
+
     this.btnUpgradeGroup.addChild(this.btnUpgrade);
     this.btnUpgradeGroup.addChild(this.txtUpgradeCoinNeeded);
+    this.btnUpgradeGroup.addChild(this.txtBtnDes);
 
     this.btnUpgradeGroup.onChildInputDown.add(() => {
       // 点击升级：保存当前multiplier的值，更新game.share.coin的值，改变heading和外部btn的等级数
@@ -161,9 +170,14 @@ class PanelUpgrade extends window.Phaser.Group {
       '50': 45,
     };
     if (Object.is(multiplier, NaN)) {
-      console.log('max 选中。。。未实现');
+      console.log('max 选中。。。coinNeeded和btnDes变');
       // 要根据当前game的coin去计算可以升的最高级别，然后除了要改变升级要用的coin之外，能升多少级也要显示
+      // this._data.coinNeeded = ??
+      // let availableLevel = 'x22';
+      // this.txtBtnDes.setText(this.btnDes + availableLevel, true);
+      // this.txtUpgradeCoinNeeded.setText(this._data.coinNeeded.toString());
     } else {
+      this.txtBtnDes.setText(this.btnDes);
       this._data.coinNeeded = this._data.base.times(map[multiplier.toString()]);
       this.txtUpgradeCoinNeeded.setText(this._data.coinNeeded.toString());
     }

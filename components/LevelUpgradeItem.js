@@ -129,7 +129,7 @@ class LevelUpgradeItem extends window.Phaser.Group {
     };
 
     if (Object.is(this.panelUpgradeInstance.getMultiplier(), NaN)) {
-      console.log('max 选中...');
+      console.log('max 选中 des 变...');
     } else {
       this.increment = this._data.value * map[this.panelUpgradeInstance.getMultiplier().toString()];
       this.txtCurr.setText(formatTo3digits(this._data.value));

@@ -16,6 +16,8 @@ const INC_NUM_STYLE = {
 class Market extends window.Phaser.Group {
   constructor(game, x, y) {
     super(game);
+    // this.state = this.game.state.states[this.game.state.current];
+
     this.x = x;
     this.y = y;
 
