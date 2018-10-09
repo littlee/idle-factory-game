@@ -129,7 +129,7 @@ class Start extends window.Phaser.State {
     this.load.image('bg_bronze', 'images/background_copper.png');
     this.load.image('bg_gold', 'images/background_gold.png');
     this.load.image('bg_jade', 'images/background_jade.png');
-    this.load.image('bg_ruby', 'images/background_rubber.png');
+    this.load.image('bg_ruby', 'images/background_ruby.png');
     this.load.image('bg_silver', 'images/background_silver.png');
     this.load.image('btn_close', 'images/btn_close.png');
     this.load.image('btn_cash_able2buy', 'images/btn_cash_able2buy.png');
