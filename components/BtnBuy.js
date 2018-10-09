@@ -96,7 +96,7 @@ class BtnBuy extends window.Phaser.Group {
   greyOutBtnOrNot = (currCoin) => {
     // first invoke, currCoin is undefined
     if (currCoin === undefined) return false;
-    if (currCoin.lte(this._data.coinNeeded)) {
+    if (currCoin.lt(this._data.coinNeeded)) {
       this.can = false;
       this.btn.loadTexture(this.keyCoinUnable);
     } else {

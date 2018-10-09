@@ -1,4 +1,5 @@
 import moment from '../js/libs/moment.min.js';
+import Production from '../store/Production.js';
 
 const CONFIG = {
   prodStrokeWidth: 4,
@@ -11,6 +12,17 @@ const CONFIG = {
   pieColor: 0x000000,
   pieAlpha: 0.7,
   incrementPercentage: '40%',
+  prodImgScale: 62 / 128,
+
+};
+
+const TEXTURE_LEVEL_MAP = {
+  base: 0,
+  bronze: 1,
+  silver: 2,
+  gold: 4,
+  jade: 5,
+  ruby: 6
 };
 
 function getFontStyle(fSize, color, align, weight) {
@@ -117,8 +129,11 @@ class ProductUpgradeItem extends window.Phaser.Group {
     this.y = this.posY;
     this.bg = this.game.make.image(0, 0, this.keyBg);
     this.bg.anchor.setTo(0.5, 0.5);
+
     this.prodImg = this.game.make.image(0, 0, this.keyProdWithTexture);
     this.prodImg.anchor.setTo(0.5, 0.5);
+    this.prodImg.scale.x = CONFIG.prodImgScale;
+    this.prodImg.scale.y = CONFIG.prodImgScale;
 
     this.stroke = this.game.make.graphics(0, 0);
     this.stroke.alignTo(this.bg);
@@ -186,6 +201,8 @@ class ProductUpgradeItem extends window.Phaser.Group {
       getFontStyle(undefined, 0x004818, undefined, 'bold')
     );
     this.bubbleTxt.alignTo(this.bg, Phaser.TOP_LEFT, -30, 0);
+    this.bubble.visible = this.prodTexture === 'base' ? false : true;
+    this.bubbleTxt.visible = this.prodTexture === 'base' ? false : true;
 
     // btn*buy
     this.btnBuyGroup = this.game.make.group();
@@ -270,8 +287,10 @@ class ProductUpgradeItem extends window.Phaser.Group {
     clearInterval(this.txtTimer);
     this.updateProdUIAndValue();
     this.parent.makeNextItemBtnsShowUp();
-
     this.parent.handleNoneActivatedItem();
+    // 更新product UI的key
+    let currLevel = TEXTURE_LEVEL_MAP[this.prodTexture];
+    Production.setLevelByKey(this.product, currLevel);
   }
 
 

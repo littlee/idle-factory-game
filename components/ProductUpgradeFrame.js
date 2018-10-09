@@ -12,7 +12,8 @@ const CONFIG = {
   frameVeilH: 174,
   gap: 100,
   connectlineH: 4,
-  productLineHeight: 200
+  productLineHeight: 200,
+  tagImgScale: 34 / 128
 };
 
 function getFontStyle(fSize, color, align, weight) {
@@ -78,8 +79,8 @@ class ProductUpgradeFrame extends window.Phaser.Group {
 
     // tag img
     this.tagOreImg = this.game.make.image(0, 0, 'reso_ore');
-    this.tagOreImg.scale.x = 0.65;
-    this.tagOreImg.scale.y = 0.65;
+    this.tagOreImg.scale.x = CONFIG.tagImgScale;
+    this.tagOreImg.scale.y = CONFIG.tagImgScale;
     this.tagOreImg.alignTo(this.tagOreName, Phaser.RIGHT_BOTTOM, 5, -5);
 
     // prod1

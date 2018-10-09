@@ -7,7 +7,8 @@ const CONFIG = {
   height: 85,
   bgColor: 0x000000,
   bgAlpha: 0.1,
-  bgUnableAlpha: 0.4
+  bgUnableAlpha: 0.4,
+  imgScale: 70 / 128
 };
 
 const KEY_TARGET_MAP = {
@@ -50,7 +51,8 @@ class ResourceItem extends window.Phaser.Group {
 
     this.icon = this.game.make.image(20, 42, this.key);
     this.icon.anchor.setTo(0, 0.5);
-
+    this.icon.scale.x = CONFIG.imgScale;
+    this.icon.scale.y = CONFIG.imgScale;
 
     this.bgVeil = this.game.make.graphics(0, 0);
     this.bgVeil.beginFill(CONFIG.bgColor, CONFIG.bgUnableAlpha);

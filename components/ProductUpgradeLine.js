@@ -52,7 +52,7 @@ class ProductUpgradeLine extends window.Phaser.Group {
       prodTexture: 'base',
       countDownDuration: '0s',
       pieActivatedTimestamp: 1538820968140,
-      incrementPercentage: '20%',
+      incrementPercentage: '30%',
     });
 
     this.copper = new ProductUpgradeItem({
@@ -62,6 +62,7 @@ class ProductUpgradeLine extends window.Phaser.Group {
       y: 0, //OFFSET + 120,
       product: this.product,
       prodTexture: 'bronze',
+      incrementPercentage: '30%',
     });
 
     this.silver = new ProductUpgradeItem({
@@ -71,6 +72,7 @@ class ProductUpgradeLine extends window.Phaser.Group {
       y: 0, //OFFSET + 120,
       product: this.product,
       prodTexture: 'silver',
+      incrementPercentage: '80%',
     });
 
     this.gold = new ProductUpgradeItem({
@@ -80,6 +82,7 @@ class ProductUpgradeLine extends window.Phaser.Group {
       y: 0, //OFFSET + 120,
       product: this.product,
       prodTexture: 'gold',
+      incrementPercentage: '150%',
     });
 
     this.jade = new ProductUpgradeItem({
@@ -89,6 +92,7 @@ class ProductUpgradeLine extends window.Phaser.Group {
       y: 0, //OFFSET + 120,
       product: this.product,
       prodTexture: 'jade',
+      incrementPercentage: '250%',
     });
 
     this.rubber = new ProductUpgradeItem({
@@ -98,6 +102,7 @@ class ProductUpgradeLine extends window.Phaser.Group {
       y: 0, //OFFSET + 120,
       product: this.product,
       prodTexture: 'ruby',
+      incrementPercentage: '400%'
     });
 
     this.bigVeilGroup = this.game.make.group();

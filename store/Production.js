@@ -40,6 +40,7 @@ class Production {
 
   setLevelByKey(key, level) {
     this._prodLevel[key] = level;
+    console.log('更新', key, '到level: ', level);
   }
 }
 
