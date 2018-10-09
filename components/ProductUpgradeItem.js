@@ -291,8 +291,7 @@ class ProductUpgradeItem extends window.Phaser.Group {
     // this.txtTimer = setTimeout(this._updateDurationTxtUI, this.txtTimeout);
     this._reDrawPie();
     this.timer = setInterval(this._reDrawPie, this._data.step * 1000);
-
-    console.log('coin减少相应的值');
+    this.state.subtractCash(this.coin);
   }
 
   _handleBtnSkipClicked = () => {
