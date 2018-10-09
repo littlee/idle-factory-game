@@ -75,6 +75,7 @@ class ModalProdUpgrade extends ModalRaw {
       offsetTop: OFFSET,
       offsetLeft: LEFT,
       modalRef: this,
+      prodList: ['steel', 'can', 'drill', 'toaster']
     });
 
     this.frameCopper = new ProductUpgradeFrame({
@@ -83,6 +84,7 @@ class ModalProdUpgrade extends ModalRaw {
       offsetTop: OFFSET + CONFIG.frameHeight * 1 + CONFIG.gap * 1,
       offsetLeft: LEFT,
       modalRef: this,
+      prodList: ['battery', 'coffee_machine', 'mp3', 'speaker']
     });
 
     this.framesOilBarrel = new ProductUpgradeFrame({
@@ -91,6 +93,7 @@ class ModalProdUpgrade extends ModalRaw {
       offsetTop: OFFSET + CONFIG.frameHeight * 2 + CONFIG.gap * 2,
       offsetLeft: LEFT,
       modalRef: this,
+      prodList: []
     });
 
     this.contentGroup.addChild(this.frameOre);

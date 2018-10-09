@@ -29,9 +29,10 @@ function getFontStyle(fSize, color, align, weight) {
 
 // 控制big veil的出现和消失
 class ProductUpgradeFrame extends window.Phaser.Group {
-  constructor({game, parent, offsetTop, offsetLeft, modalRef}) {
+  constructor({game, parent, offsetTop, offsetLeft, modalRef, prodList}) {
     super(game, parent);
     this.modal = modalRef;
+    this.prodList = prodList; // 格式 ['steel', 'can', 'drill', 'toaster']
 
     this.active = false;
     this.offsetTop = offsetTop;
@@ -98,7 +99,7 @@ class ProductUpgradeFrame extends window.Phaser.Group {
       parent: this,
       offsetTop: this.offsetTop + CONFIG.productLineHeight,
       offsetLeft: this.offsetLeft,
-      product: 'steel',
+      product: 'can',
     });
 
     // prod3
@@ -107,7 +108,7 @@ class ProductUpgradeFrame extends window.Phaser.Group {
       parent: this,
       offsetTop: this.offsetTop + CONFIG.productLineHeight * 2,
       offsetLeft: this.offsetLeft,
-      product: 'steel',
+      product: 'drill',
     });
 
     // prod4
@@ -116,7 +117,7 @@ class ProductUpgradeFrame extends window.Phaser.Group {
       parent: this,
       offsetTop: this.offsetTop + CONFIG.productLineHeight * 3,
       offsetLeft: this.offsetLeft,
-      product: 'steel',
+      product: 'toaster',
     });
   }
 
