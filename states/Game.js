@@ -107,7 +107,7 @@ class Game extends window.Phaser.State {
 
     // TODO: make 30 workstations
     const WORKSTATION_START_Y = 915;
-    const WORKSTATION_HEIGHT = 339;
+    const WORKSTATION_HEIGHT = 340;
     this.workstationGroup = this.add.group();
     range(3).forEach(index => {
       let workstation = new Workstation(
@@ -512,7 +512,6 @@ class Game extends window.Phaser.State {
 
     this.market = new Market(this.game, 400, 400);
     this.market.onSell(amount => {
-      console.log('market sell:', amount.toString());
       this.addCash(amount);
     });
 
@@ -549,7 +548,7 @@ class Game extends window.Phaser.State {
   // 在全部object初始化后inovke
   _updateWhateverNeed2KnowCoinValue = () => {
     let currCoin = this.btnCash.getCash();
-    console.log('game currCoin changed: ', currCoin.valueOf());
+    // console.log('game currCoin changed: ', currCoin.valueOf());
 
     // raw material's buybtns
     this.modalRescources.updateBtnBuyUI(currCoin);

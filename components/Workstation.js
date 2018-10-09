@@ -9,6 +9,7 @@ import ResourceEmitter from './ResourceEmitter';
 import ResourcePile from './ResourcePile';
 import BoxCollect from './BoxCollect';
 import SourceImg from '../resource/SourceImg';
+import Production from '../store/Production';
 
 const MAX_INPUT_PILE = 2;
 const A_MINUTE = 60000;
@@ -140,6 +141,7 @@ class Workstation extends window.Phaser.Group {
     this.productBtn.input.priorityID = PRIORITY_ID;
     this.productBtn.events.onInputDown.add(() => {
       console.log('点击工作台产品按钮');
+      this.setOutput('drill');
       // this.game.state.start('Test');
       // this.outputTimer.delay = 100;
     });
@@ -292,12 +294,22 @@ class Workstation extends window.Phaser.Group {
       collectType,
       input,
       producePerMin,
+      output,
       outputAmount,
       outputDelay
     } = this._data;
-    this._data.outputAmount[collectType] = outputAmount[collectType].plus(
-      producePerMin.div(Big(A_MINUTE / OUTPUT_DELAY[outputDelay]))
-    );
+
+    if (collectType === COLLECT_TYPES.CASH) {
+      this._data.outputAmount[collectType] = outputAmount[collectType].plus(
+        producePerMin.div(Big(A_MINUTE / OUTPUT_DELAY[outputDelay])).times(Production.getPriceByKey(output))
+      );
+    }
+    else {
+      this._data.outputAmount[collectType] = outputAmount[collectType].plus(
+        producePerMin.div(Big(A_MINUTE / OUTPUT_DELAY[outputDelay]))
+      );
+    }
+    
     this.boxCollect.setNum(formatBigNum(outputAmount[collectType]));
 
     let inputKeys = Object.keys(this._data.input);
@@ -443,7 +455,8 @@ class Workstation extends window.Phaser.Group {
         }
       });
     });
-    if (!this.getIsWorking()) {
+
+    if (!this.getIsWorking() && !this._getHasNoInput()) {
       this.startWork();
     }
   }
@@ -552,6 +565,27 @@ class Workstation extends window.Phaser.Group {
 
     let inputTexture = inputKeys.map(item => SourceImg.get(item));
     this.inputItemsAni.changeTexture(inputTexture);
+  }
+
+  // 刷新产品材质
+  updateTexture() {
+    this.inputItemGroup.forEach(item => {
+      if (item.visible) {
+        item.updateTexture();
+      }
+    });
+
+    this.outputItems.updateTexture();
+
+    let inputTextureKeys = Object.keys(this._data.input).map(item => SourceImg.get(item));
+    this.inputItemsAni.changeTexture(inputTextureKeys);
+
+    let outputTextureKey = SourceImg.get(this._data.output);
+    this.outputItemsAniLeft.changeTexture(outputTextureKey);
+    this.outputItemsAniRight.changeTexture(outputTextureKey);
+    this.outputGiveAni.changeTexture(outputTextureKey);
+
+    this.this.productBtnItem.loadTexture(outputTextureKey);
   }
 }
 

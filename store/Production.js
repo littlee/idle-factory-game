@@ -25,13 +25,13 @@ class Production {
     };
   }
 
-  getPrice() {
-    // 应该是写错
-    return this._prodPrice;
-  }
-
   setPrice(config) {
     this._prodPrice = config;
+  }
+
+  getPriceByKey(key) {
+    let level = this._prodLevel[key];
+    return this._prodPrice[key][level];
   }
 
   getLevelByKey(key) {
