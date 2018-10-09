@@ -62,6 +62,7 @@ class ProductUpgradeLine extends window.Phaser.Group {
       y: 0, //OFFSET + 120,
       product: this.product,
       prodTexture: 'bronze',
+      countDownDuration: '1h2m',
       incrementPercentage: '30%',
     });
 
