@@ -141,6 +141,7 @@ class Workstation extends window.Phaser.Group {
     this.productBtn.input.priorityID = PRIORITY_ID;
     this.productBtn.events.onInputDown.add(() => {
       console.log('点击工作台产品按钮');
+      this.setOutput('drill');
       // this.game.state.start('Test');
       // this.outputTimer.delay = 100;
     });
@@ -454,7 +455,8 @@ class Workstation extends window.Phaser.Group {
         }
       });
     });
-    if (!this.getIsWorking()) {
+
+    if (!this.getIsWorking() && !this._getHasNoInput()) {
       this.startWork();
     }
   }
@@ -563,6 +565,27 @@ class Workstation extends window.Phaser.Group {
 
     let inputTexture = inputKeys.map(item => SourceImg.get(item));
     this.inputItemsAni.changeTexture(inputTexture);
+  }
+
+  // 刷新产品材质
+  updateTexture() {
+    this.inputItemGroup.forEach(item => {
+      if (item.visible) {
+        item.updateTexture();
+      }
+    });
+
+    this.outputItems.updateTexture();
+
+    let inputTextureKeys = Object.keys(this._data.input).map(item => SourceImg.get(item));
+    this.inputItemsAni.changeTexture(inputTextureKeys);
+
+    let outputTextureKey = SourceImg.get(this._data.output);
+    this.outputItemsAniLeft.changeTexture(outputTextureKey);
+    this.outputItemsAniRight.changeTexture(outputTextureKey);
+    this.outputGiveAni.changeTexture(outputTextureKey);
+
+    this.this.productBtnItem.loadTexture(outputTextureKey);
   }
 }
 

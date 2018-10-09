@@ -62,6 +62,10 @@ class ResourecePile extends window.Phaser.Group {
     });
     this.centerNumText();
   }
+
+  updateTexture() {
+    this.changeTexture(this._data.resourceKey);
+  }
 }
 
 export default ResourecePile;

@@ -186,15 +186,12 @@ class PanelUpgrade extends window.Phaser.Group {
   updateLevelUpgradeBtnUI = () => {
     // 要拿到currCoin
     let currCoin = this.state.getCurrCoin();
-    console.log('currCoin: ', currCoin.valueOf());
-    console.log('coinNeeded: ', this._data.coinNeeded.valueOf());
 
     if ( currCoin.lt(this._data.coinNeeded) ) {
       this.btnUpgrade.loadTexture('btn_level_upgrade_unable');
       this.btnUpgradeGroup.setAllChildren('inputEnabled', false);
       this.txtUpgradeCoinNeeded.addColor(INIT.deficitColor, 0);
     } else {
-      console.log('可以买');
       this.btnUpgrade.loadTexture('btn_level_upgrade');
       this.txtUpgradeCoinNeeded.addColor(INIT.surplursColor, 0);
       this.btnUpgradeGroup.setAllChildren('inputEnabled', true);
