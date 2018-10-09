@@ -41,7 +41,23 @@ const OUTPUT_INPUT_MAP = {
   steel: ['ore'],
   can: ['ore'],
   drill: ['steel'],
-  toaster: ['steel', 'can']
+  toaster: ['steel', 'can'],
+  battery: ['copper'],
+  coffee_machine: ['copper'],
+  mp3: ['battery'],
+  speaker: ['battery', 'mp3']
+};
+
+// 单位输入对应的输出数量
+const OUTPUT_PRODUCE_MAP = {
+  steel: 2,
+  can: 2,
+  drill: 1,
+  toaster: 1,
+  battery: 2,
+  coffee_machine: 2,
+  mp3: 3,
+  speaker: 1
 };
 
 const TEXTURE_SCALE = 0.43;
@@ -186,7 +202,7 @@ class Workstation extends window.Phaser.Group {
       this.game,
       this.table.x + this.table.width / 2 - 30,
       this.table.y + this.table.height / 2 - 20,
-      SourceImg.get(this._data.output)
+      SourceImg.get(this._data.output),
       -100,
       100
     );
@@ -301,12 +317,16 @@ class Workstation extends window.Phaser.Group {
 
     if (collectType === COLLECT_TYPES.CASH) {
       this._data.outputAmount[collectType] = outputAmount[collectType].plus(
-        producePerMin.div(Big(A_MINUTE / OUTPUT_DELAY[outputDelay])).times(Production.getPriceByKey(output))
+        producePerMin
+          .div(Big(A_MINUTE / OUTPUT_DELAY[outputDelay]))
+          .times(OUTPUT_PRODUCE_MAP[output])
+          .times(Production.getPriceByKey(output))
       );
-    }
-    else {
+    } else {
       this._data.outputAmount[collectType] = outputAmount[collectType].plus(
-        producePerMin.div(Big(A_MINUTE / OUTPUT_DELAY[outputDelay]))
+        producePerMin
+          .div(Big(A_MINUTE / OUTPUT_DELAY[outputDelay]))
+          .times(OUTPUT_PRODUCE_MAP[output])
       );
     }
 
@@ -577,7 +597,9 @@ class Workstation extends window.Phaser.Group {
 
     this.outputItems.updateTexture();
 
-    let inputTextureKeys = Object.keys(this._data.input).map(item => SourceImg.get(item));
+    let inputTextureKeys = Object.keys(this._data.input).map(item =>
+      SourceImg.get(item)
+    );
     this.inputItemsAni.changeTexture(inputTextureKeys);
 
     let outputTextureKey = SourceImg.get(this._data.output);

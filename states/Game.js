@@ -174,6 +174,7 @@ class Game extends window.Phaser.State {
   }
 
   update() {
+    // return ;
     this.workerWarehouseGroup.forEachAlive(async worker => {
       if (!worker.getIsOnRoutine()) {
         let workstations = this._getBoughtStations();

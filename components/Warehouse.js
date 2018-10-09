@@ -3,8 +3,8 @@ import ResourceEmitter from './ResourceEmitter';
 const GOODS_MAP = {
   ore: {
     key: 'reso_ore',
-    x: 0,
-    y: 100
+    x: -10,
+    y: 80
   },
   copper: {
     key: 'reso_copper',
@@ -60,7 +60,7 @@ class Warehouse extends window.Phaser.Group {
     Object.keys(GOODS_MAP).forEach(goodKey => {
       let item = GOODS_MAP[goodKey];
       let good = this.goods.create(item.x, item.y, item.key, null, false);
-      good.scale.setTo(0.43);
+      good.scale.setTo(0.5);
     });
 
     this.goodsOutputs = this.game.add.group();
