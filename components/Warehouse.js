@@ -3,7 +3,7 @@ import ResourceEmitter from './ResourceEmitter';
 const GOODS_MAP = {
   ore: {
     key: 'reso_ore',
-    x: -10,
+    x: -5,
     y: 80
   },
   copper: {
