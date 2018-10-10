@@ -78,6 +78,8 @@ class ModalLevel extends ModalRaw {
     super(game, undefined, undefined, scrollable);
     this.state = this.game.state.states[this.game.state.current];
 
+    this.MAP = LevelMap[type];
+
     this.opts = type === 'market' ? CONFIG.opts_m : type === 'warehouse' ? CONFIG.opts_wh : CONFIG.opts_ws;
     this.headingPart =
       type === 'market'
@@ -202,7 +204,7 @@ class ModalLevel extends ModalRaw {
         x: (this.w - LEVEL.aWidth) / 2,
         y: 290 + 85 + 17,
         levelType: this._data.type,
-        itemName: 'transportCount',
+        itemName: 'count',
         panelUpgradeInstance: this.upgradePanel
       });
 
@@ -214,7 +216,7 @@ class ModalLevel extends ModalRaw {
         x: (this.w - LEVEL.aWidth) / 2,
         y: 290 + 85 * 2 + 17 * 2,
         levelType: this._data.type,
-        itemName: 'transCapacity',
+        itemName: 'capacity',
         panelUpgradeInstance: this.upgradePanel
       });
 
@@ -251,6 +253,8 @@ class ModalLevel extends ModalRaw {
         txt: '铁矿',
         x: (this.w - LEVEL.aWidth) / 2,
         y: 330,
+        levelType: this._data.type,
+        itemName: 'prodNeeded',
         panelUpgradeInstance: this.upgradePanel
       });
       this.need2 = new LevelUpgradeItem({
@@ -260,6 +264,8 @@ class ModalLevel extends ModalRaw {
         txt: '铁矿',
         x: (this.w - LEVEL.aWidth) / 2,
         y: 330 + 85 + 17,
+        levelType: this._data.type,
+        itemName: 'prodNeeded',
         panelUpgradeInstance: this.upgradePanel
       });
 
@@ -272,6 +278,8 @@ class ModalLevel extends ModalRaw {
         txt: '铁矿',
         x: (this.w - LEVEL.aWidth) / 2,
         y: 330 + 44 + 40 + 85 * 2,
+        levelType: this._data.type,
+        itemName: 'prodProduced',
         panelUpgradeInstance: this.upgradePanel
       });
       this.iconPower = new LevelUpgradeItem({
@@ -281,6 +289,8 @@ class ModalLevel extends ModalRaw {
         txt: '生产力',
         x: (this.w - LEVEL.aWidth) / 2,
         y: 330 + 44 + 40 + 85 * 3 + 20,
+        levelType: this._data.type,
+        itemName: 'power',
         panelUpgradeInstance: this.upgradePanel
       });
       this.mainGroup.addChild(this.needTxt);
@@ -295,16 +305,15 @@ class ModalLevel extends ModalRaw {
   // 点击level升级之后所有要处理的更新
   handleUpgradation = (upgraded = false) => {
     let type = this._data.type;
-    let MAP = LevelMap[type];
     this.coupledBtn.setLevel(this._data.currLevel);
     this.heading.setText(this._data.currLevel + this.headingPart, true);
     // ****dev****
-    if (this._data.currLevel > Object.keys(MAP).length) return false;
+    if (this._data.currLevel > Object.keys(this.MAP).length) return false;
     // ****dev****
     // 传递当前等级信息给外面workers, market || workstation || warehouse
-    let opts = Object.assign({}, MAP['level'+ this._data.currLevel]);
+    let opts = Object.assign({}, this.MAP['level'+ this._data.currLevel]);
     // 是否加人, 相对上次升级
-    let prevOpts = MAP['level'+ this.prevLevel];
+    let prevOpts = this.MAP['level'+ this.prevLevel];
     let addHC = opts.count - prevOpts.count;
     if (type === 'warehouse') {
       this.state.updateWarehouseWorkersInfoAndHC(opts, addHC);
@@ -318,17 +327,22 @@ class ModalLevel extends ModalRaw {
   }
 
   // 点击 x1 x10 ... btns时候, 需要一起更新的东西【需要的coin数值不归在这里更新】
-  handleLevelBtnsChoosing = upgraded => {
+  handleLevelBtnsChoosing = (upgraded) => {
+    let multiplier = this.upgradePanel.getMultiplier();
+    let furtureOpts = this.MAP['level'+ (this._data.currLevel + multiplier)];
+    let diffs = this._getDiffOpts4LevelBtns(furtureOpts, this.MAP['level' + this._data.currLevel]);
+    console.log('now diff: ', diffs);
     if (this._data.type === 'market' || this._data.type === 'warehouse') {
       // update item的描述数据
-      this.item1.getDesUpdated(upgraded);
-      this.item2.getDesUpdated(upgraded);
-      this.item3.getDesUpdated(upgraded);
-      this.item4.getDesUpdated(upgraded);
-      this.item5.getDesUpdated(upgraded);
+      this.item1.getDesUpdated(diffs, upgraded);
+      this.item2.getDesUpdated(diffs,upgraded);
+      this.item3.getDesUpdated(diffs,upgraded);
+      this.item4.getDesUpdated(diffs,upgraded);
+      this.item5.getDesUpdated(diffs,upgraded);
       // update upgradeBtn的UI 根据currCoin
       this.upgradePanel.updateLevelUpgradeBtnUI();
     } else if (this._data.type === 'workstation') {
+      // 未对接到MAP
       this.need1.getDesUpdated(upgraded);
       this.need2.getDesUpdated(upgraded);
       this.prod.getDesUpdated(upgraded);
@@ -336,6 +350,16 @@ class ModalLevel extends ModalRaw {
 
       this.upgradePanel.updateLevelUpgradeBtnUI();
     }
+  }
+
+  _getDiffOpts4LevelBtns = (furtureOpts, currOpts) => {
+    let keys = Object.keys(currOpts);
+    let tmp = {};
+    keys.forEach((item) => {
+      tmp[item] = furtureOpts[item] - currOpts[item];
+    });
+
+    return tmp;
   }
 
   getUpdated = (currCoin) => {

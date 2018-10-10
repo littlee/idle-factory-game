@@ -1,3 +1,6 @@
+import Big from '../js/libs/big.min';
+import { formatBigNum } from '../utils';
+
 const CONFIG = {
   width: 537,
   height: 85,
@@ -26,28 +29,16 @@ function getFontStyle(fSize, color, align, weight) {
   };
 }
 
-// 随便写
-function formatTo3digits(num) {
-  let integer = num.toString().split('.');
-  let result;
-  if (integer[0].length >= 3) {
-    let tmp = integer[0].length > 3 ? integer[3] : 0;
-    if (tmp >= 5) {
-      result = integer[0].slice(0, 3);
-      result = Number(result) + 1;
-    } else {
-      result = Number(integer[0].slice(0, 3));
-    }
-  } else {
-    if (integer[0].length === 2) {
-      result = Number(num.toFixed(1));
-    } else if (integer[0].length === 1) {
-      result = Number(num.toFixed(2));
-    }
-  }
-
-  return result;
-}
+const ITEM_UNIT_MAP = {
+  maxTransported: '/min',
+  count: '',
+  capacity: '',
+  loadingSpeed: '/s',
+  walkSpeed: '/s',
+  prodNeeded: '/min',
+  prodProduced: '/min',
+  power: '',
+};
 
 class LevelUpgradeItem extends window.Phaser.Group {
   constructor({ game, parent, key, txt, x, y, levelType, itemName, value = null, increment = null, panelUpgradeInstance = null }) {
@@ -57,13 +48,14 @@ class LevelUpgradeItem extends window.Phaser.Group {
     this.posX = x;
     this.posY = y;
 
-    this.increment = increment === null ? INIT.increment : increment;
+    this.increment = increment === null ? Big(INIT.increment) : Big(increment);
     this.panelUpgradeInstance = panelUpgradeInstance;
 
     this._data = {
-      value: value === null ? INIT.value : value,
+      value: value === null ? Big(INIT.value) : Big(value),
       levelType: levelType,
       itemName: itemName,
+      unit: ITEM_UNIT_MAP[itemName]
     };
 
     this._getInit();
@@ -94,7 +86,7 @@ class LevelUpgradeItem extends window.Phaser.Group {
     this.txtCurr = this.game.make.text(
       0,
       0,
-      formatTo3digits(this._data.value),
+      formatBigNum(this._data.value) + this._data.unit,
       getFontStyle('24px', 'white', 'center', 'normal')
     );
     this.txtCurr.setTextBounds(0, 0, this.block.width - 10, 28);
@@ -103,7 +95,7 @@ class LevelUpgradeItem extends window.Phaser.Group {
     this.txtFuture = this.game.make.text(
       0,
       0,
-      `+${formatTo3digits(this.increment)}`,
+      `+${formatBigNum(this.increment)}${this._data.unit}`,
       getFontStyle('24px', '#38ec43', 'center', 'normal')
     );
     this.txtFuture.setTextBounds(0, 0, this.block.width - 10, 28);
@@ -121,35 +113,30 @@ class LevelUpgradeItem extends window.Phaser.Group {
     return this._data;
   }
 
-  getDesUpdated = (upgraded = false) => {
+  getDesUpdated = (diffs = null, upgraded = false) => {
     let map = {
       '1': 0.01,
       '10': 0.1,
       '50': 0.5
     };
 
+
     if (Object.is(this.panelUpgradeInstance.getMultiplier(), NaN)) {
       console.log('max 选中 des 变...');
     } else {
-      this.increment = this._data.value * map[this.panelUpgradeInstance.getMultiplier().toString()];
-      this.txtCurr.setText(formatTo3digits(this._data.value));
-      this.txtFuture.setText(`+${formatTo3digits(this.increment)}`);
+      // 未对接到diffs
+      this.increment = this._data.value.times(map[this.panelUpgradeInstance.getMultiplier().toString()]);
+      // console.log('value: increment: ', this._data.value.valueOf(), this.increment.valueOf());
+      this.txtCurr.setText(formatBigNum(this._data.value) + this._data.unit);
+      this.txtFuture.setText(`+${formatBigNum(this.increment)}${this._data.unit}`);
       if (upgraded === true) {
-        this._data.value = formatTo3digits(
-          this.increment + this._data.value
-        );
-        // console.log(
-        //   this._data.levelType,
-        //   this._data.itemName,
-        //   this._data.value
-        // );
+        this._data.value = this.increment.plus(this._data.value);
         this.txtCurr.setText(
-          formatTo3digits(this._data.value)
+          formatBigNum(this._data.value)
         );
         this.txtFuture.setText(
-          `+ ${formatTo3digits(
-            this._data.value *
-              map[this.panelUpgradeInstance.getMultiplier().toString()]
+          `+ ${formatBigNum(
+            this._data.value.times(map[this.panelUpgradeInstance.getMultiplier().toString()])
           )}`
         );
       }
