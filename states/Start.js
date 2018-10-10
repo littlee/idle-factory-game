@@ -135,6 +135,7 @@ class Start extends window.Phaser.State {
     this.load.image('btn_cash_able2buy', 'images/btn_cash_able2buy.png');
     this.load.image('btn_cash_unable2buy', 'images/btn_cash_unable2buy.png');
     this.load.image('btn_watch_ad', 'images/btn_watch_ad.png');
+    this.load.image('btn_watch_ad_disabled', 'images/btn_watch_ad_disabled.png');
     this.load.image('btn_level_upgrade', 'images/btn_level_upgrade.png');
     this.load.image('btn_level_upgrade_unable', 'images/btn_level_upgrade_unable.png');
     this.load.image('btn_pick_upgrade', 'images/btn_activated.png');

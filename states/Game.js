@@ -467,7 +467,8 @@ class Game extends window.Phaser.State {
       this.modalProdUpgrade.visible = true;
     });
 
-    this.btnXCash = this.add.sprite(
+    this.btnXCashGroup = this.add.group();
+    this.btnXCash = this.make.sprite(
       this.world.centerX,
       this.world.height - 10,
       'btn_x_cash'
@@ -479,6 +480,11 @@ class Game extends window.Phaser.State {
       console.log('click btn x cash');
       this.modalAdCampaign.visible = true;
     });
+    this.btnXCashTxt = this.add.text(0, 0, '视频', {fontSize: '38px', fill: 'white', fontWeight: 'normal'});
+    this.btnXCashTxt.alignTo(this.btnXCash, Phaser.TOP_LEFT, -70, -65);
+
+    this.btnXCashGroup.addChild(this.btnXCash);
+    this.btnXCashGroup.addChild(this.btnXCashTxt);
 
     this.btnWheelCoin = this.add.sprite(
       this.world.width - 10,
@@ -601,11 +607,28 @@ class Game extends window.Phaser.State {
     return this.btnCash.getCash();
   }
 
+  // 看完视频后btnXCash显示countdown
+  getBtnXCashUpdated = (timeString) => {
+    this.btnXCashTxt.setText(timeString);
+  }
+
   // 升级好产品之后workstation的UI改，这里也要改工作台弹窗里头的UI
   updateProdTextureAfterUpgrade = () => {
     this.workstationGroup.children.forEach((item, index) => {
       // console.log('workstation: ', index, ' update prod UI');
       item.updateTexture();
+    });
+  }
+
+  // 升级搬运工和workstation的等级资料
+  updateWarehouseWorkersInfo = () => {
+    this.workerWarehouseGroup.forEach(item => {
+      item.worker.setLevelProps({});
+    });
+  }
+  updateMarketWorkersInfo = () => {
+    this.workerMarketGroup.forEach(item => {
+      item.worker.setLevelProps({});
     });
   }
 }

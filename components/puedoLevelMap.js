@@ -2,67 +2,73 @@ export const warehouseLevelMap = {
  level1: {
   level: 1,
   count: 1,
-  capacity: 40,
-  loadingSpeed: 20,
-  walkSpeed: 0.623
+  capacity: '4000',
+  loadingSpeed: '2000',
+  walkSpeed: 0.1
  },
  level2: {
   level: 2,
   count: 1,
-  capacity: 48,
-  loadingSpeed: 10,
-  walkSpeed: 0.623
+  capacity: '4800',
+  loadingSpeed: '3000',
+  walkSpeed: 0.1 * 1.1
  },
  level3: {
   level: 3,
   count: 1,
-  capacity: 56,
-  loadingSpeed: 20,
-  walkSpeed: 0.623
+  capacity: '5600',
+  loadingSpeed: '4000',
+  walkSpeed: 0.1 * 1.2
  },
  level4: {
   level: 4,
-  count: 1,
-  capacity: 64,
-  loadingSpeed: 20 * 2,
-  walkSpeed: 0.623 * 2
+  count: 2,
+  capacity: '6400',
+  loadingSpeed: '5000',
+  walkSpeed: 0.1 * 1.3
  },
  level5: {
   level: 5,
   count: 2,
-  capacity: 72,
-  loadingSpeed: 20 * 3,
-  walkSpeed: 0.623 * 3
+  capacity: '7200',
+  loadingSpeed: '6000',
+  walkSpeed: 0.1 * 1.4
  },
  level6: {
   level: 6,
   count: 2,
-  capacity: 80,
-  loadingSpeed: 20 * 4,
-  walkSpeed: 0.623 * 4
+  capacity: '8000',
+  loadingSpeed: '7000',
+  walkSpeed: 0.1 * 1.5
  },
  level7: {
   level: 7,
-  count: 2,
-  capacity: 88,
-  loadingSpeed: 20 * 5,
-  walkSpeed: 0.623 * 5
+  count: 3,
+  capacity: '8800',
+  loadingSpeed: '8000',
+  walkSpeed: 0.1 * 1.6
  },
  level8: {
   level: 8,
   count: 2,
-  capacity: 96,
-  loadingSpeed: 20 * 6,
-  walkSpeed: 0.623 * 6
+  capacity: '9600',
+  loadingSpeed: '9000',
+  walkSpeed: 0.1 * 1.7
  },
  level9: {
   level: 9,
   count: 2,
-  capacity: 104,
-  loadingSpeed: 20 * 7,
-  walkSpeed: 0.623 * 7
+  capacity: '10004',
+  loadingSpeed: '10000',
+  walkSpeed: 0.1 * 1.8
  },
-
+ level10: {
+  level: 10,
+  count: 4,
+  capacity: '11004',
+  loadingSpeed: '11000',
+  walkSpeed: 0.1 * 1.9
+ },
 };
 
 export const marketLevelMap = {

@@ -2,6 +2,8 @@ import ModalRaw from './ModalRaw.js';
 import LevelUpgradeItem from './LevelUpgradeItem.js';
 import PanelUpgrade from './PanelUpgrade.js';
 
+import DATA from './puedoLevelMap.js';
+
 const LEVEL = {
   aWidth: 537,
   aHeight: 178,
