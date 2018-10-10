@@ -8,6 +8,14 @@ const FONT_STYLE = {
   boundsAlignV: 'middle'
 };
 
+const DATA = {
+  boostHourPerAd: 4,
+  maxBoostHour: 30,
+  saleBoostMultiplier: 3,
+  timestamp: null,
+  adAvailable: true
+};
+
 const CONFIG = {
   width: 583,
   height: 817,
@@ -16,9 +24,6 @@ const CONFIG = {
   currBoostHourTxt: '效果持续',
   boostHourLeftTxt: '剩余增加时间：',
   maxBoostHourTxt: '最大增加时间：30小时 ',
-  saleBoostTimes: '3',
-  currBoostHour: '4',
-  maxBoostHour: '30',
   remainedTime: '3h 59m',
   bgColor: '0xb4a59d',
   barColor: '0xffbe47',
@@ -26,7 +31,6 @@ const CONFIG = {
   coloredBarHeight: 58,
   bgWidth: 503,
   bgHeight: 278,
-
 };
 
 function getFontStyle(fSize, color, align, weight) {
@@ -39,10 +43,15 @@ function getFontStyle(fSize, color, align, weight) {
     align: align || 'center'
   };
 }
+
 /*
 key:
-1）两种状态，有广告可以看 || 没得看。btn不一样。
-2）看完回来在给定时间内，卖出的价格x2
+1）3种状态，有广告可以看, countdown untick || 没得看。btn不一样 || 有广告可以看，countdown ticking
+2）根据有无时间戳，来判断要不要run countdown，看有无available ad + 是否当前countdown时长 > 设定max值，来看要不要显示可以看ad的btn
+3）要有个方法可以被调用来启动countdown
+4）要有个方法可以set销售额翻的倍数
+5）countdown的格式：xxh xxm xxs
+6) 有countdown的时候，boost btn也要变成countdown的UI, modal里头精确到s, 但是btn UI到m。
 NOTE：记下广告看完的时间戳
 */
 
@@ -53,9 +62,9 @@ class ModalAdCampagin extends ModalRaw {
     width = CONFIG.width,
     headingTxt = CONFIG.headingTxt,
     headingStyles = FONT_STYLE,
-    saleBoostTimes = CONFIG.saleBoostTimes,
-    currBoostHour = CONFIG.currBoostHour,
-    maxBoostHour = CONFIG.maxBoostHour,
+    saleBoostMultiplier = DATA.saleBoostMultiplier,
+    boostHourPerAd = DATA.boostHourPerAd,
+    maxBoostHour = DATA.maxBoostHour,
     remainedTime = CONFIG.remainedTime,
     scrollable
   }) {
@@ -69,8 +78,8 @@ class ModalAdCampagin extends ModalRaw {
     this.remainedTime = remainedTime;
 
     this._data = {
-      saleBoostTimes: saleBoostTimes,
-      currBoostHour: currBoostHour,
+      saleBoostMultiplier: saleBoostMultiplier,
+      boostHourPerAd: boostHourPerAd,
       maxBoostHour: maxBoostHour,
       startTimestamp: '', // save and fetch
     };
@@ -99,14 +108,14 @@ class ModalAdCampagin extends ModalRaw {
 
     let desTimesTxtPart = this.game.make.text(0, 0, CONFIG.timesTxt, getFontStyle());
     desTimesTxtPart.alignTo(bg, Phaser.TOP_LEFT, -30, -65);
-    let saleBoostTimes = this.game.make.text(0, 0, 'x' + this._data.saleBoostTimes, getFontStyle('50px', '#fdf404'));
-    saleBoostTimes.alignTo(desTimesTxtPart, Phaser.RIGHT_BOTTOM, 5, 10);
+    this.saleBoostMultiplierTxt = this.game.make.text(0, 0, 'x' + this._data.saleBoostMultiplier, getFontStyle('50px', '#fdf404'));
+    this.saleBoostMultiplierTxt.alignTo(desTimesTxtPart, Phaser.RIGHT_BOTTOM, 5, 10);
 
-    let currBoostHourTxt = this.game.make.text(0, 0, `${CONFIG.currBoostHourTxt} ${this._data.currBoostHour} 小时`, getFontStyle());
-    currBoostHourTxt.alignTo(bg, Phaser.BOTTOM_CENTER, 0, -205);
+    this.currBoostHourTxt = this.game.make.text(0, 0, `${CONFIG.currBoostHourTxt} ${this._data.boostHourPerAd} 小时`, getFontStyle());
+    this.currBoostHourTxt.alignTo(bg, Phaser.BOTTOM_CENTER, 0, -205);
 
     let currLeftTimeTxt = this.game.make.text(0, 0, CONFIG.boostHourLeftTxt, getFontStyle('16px'));
-    currLeftTimeTxt.alignTo(currBoostHourTxt, Phaser.BOTTOM_CENTER, 0, 15);
+    currLeftTimeTxt.alignTo(this.currBoostHourTxt, Phaser.BOTTOM_CENTER, 0, 15);
 
     let bar = this.game.make.image(0, 0, 'progressBarSaleBoost');
     bar.alignTo(currLeftTimeTxt, Phaser.BOTTOM_CENTER, 0, 15);
@@ -117,12 +126,12 @@ class ModalAdCampagin extends ModalRaw {
     coloredBar.endFill();
     coloredBar.alignTo(bar, Phaser.TOP_LEFT, -5, -CONFIG.coloredBarHeight - 5);
 
-    let countDownTxt = this.game.make.text(0, 0, this.remainedTime, getFontStyle('24px', 'white', undefined, 'normal'));
-    countDownTxt.alignTo(bar ,Phaser.BOTTOM_CENTER, 0, -55);
+    this.countDownTxt = this.game.make.text(0, 0, this.remainedTime, getFontStyle('24px', 'white', undefined, 'normal'));
+    this.countDownTxt.alignTo(bar ,Phaser.BOTTOM_CENTER, 0, -55);
 
-    let btn = this.game.make.image(this.w / 2, 700, this.keyBtn);
-    btn.anchor.setTo(0.5, 0);
-    btn.events.onInputDown.add(() => {
+    this.btn = this.game.make.image(this.w / 2, 700, this.keyBtn);
+    this.btn.anchor.setTo(0.5, 0);
+    this.btn.events.onInputDown.add(() => {
       console.log('点击去看广告');
     });
     // 需要有一个unavailable的key可以替换这个btn
@@ -130,18 +139,32 @@ class ModalAdCampagin extends ModalRaw {
     this.contentGroup.addChild(img);
     this.contentGroup.addChild(bg);
     this.contentGroup.addChild(desTimesTxtPart);
-    this.contentGroup.addChild(saleBoostTimes);
-    this.contentGroup.addChild(currBoostHourTxt);
+    this.contentGroup.addChild(this.saleBoostMultiplierTxt);
+    this.contentGroup.addChild(this.currBoostHourTxt);
     this.contentGroup.addChild(currLeftTimeTxt);
     this.contentGroup.addChild(bar);
     this.contentGroup.addChild(coloredBar);
-    this.contentGroup.addChild(countDownTxt);
-    this.contentGroup.addChild(btn);
+    this.contentGroup.addChild(this.countDownTxt);
+    this.contentGroup.addChild(this.btn);
   };
 
   getData = () => {
     return this._data;
   }
+
+  startCountdown = () => {
+
+  }
+
+  reboostCountdown = () => {
+
+  }
+
+  checkWhetherNeedReboostCountdown = () => {
+
+  }
+
+
 }
 
 export default ModalAdCampagin;

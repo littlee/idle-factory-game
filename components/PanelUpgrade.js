@@ -1,5 +1,4 @@
 import Big from '../js/libs/big.min';
-import { formatBigNum } from '../utils';
 
 function getFontStyle (fSize, color, align, weight) {
   return {
