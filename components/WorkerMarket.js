@@ -71,8 +71,7 @@ class WorkerMarket extends window.Phaser.Group {
     this.carryNum.alignIn(this.man, window.Phaser.CENTER, 0, 20);
     if (this.getHasCarry()) {
       this.carryNum.visible = true;
-    }
-    else {
+    } else {
       this.carryNum.visible = false;
     }
   }
@@ -154,7 +153,7 @@ class WorkerMarket extends window.Phaser.Group {
   multipleSpeed(times) {
     this._data.prevSpeed = {
       loadingSpeed: Big(this._data.loadingSpeed), // copy object
-      walkSpeed: this._data.walkSpeed,
+      walkSpeed: this._data.walkSpeed
     };
     this._data.loadingSpeed = this._data.loadingSpeed.times(times);
     this._data.walkSpeed = this._data.walkSpeed * times;
@@ -166,6 +165,12 @@ class WorkerMarket extends window.Phaser.Group {
     }
     this._data.loadingSpeed = this._data.prevSpeed.loadingSpeed;
     this._data.walkSpeed = this._data.prevSpeed.walkSpeed;
+  }
+
+  setLevelProps({ capacity, loadingSpeed, walkSpeed }) {
+    this._data.capacity = capacity;
+    this._data.loadingSpeed = loadingSpeed;
+    this._data.walkSpeed = walkSpeed;
   }
 
   stand() {
