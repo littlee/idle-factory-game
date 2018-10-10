@@ -158,7 +158,7 @@ class Game extends window.Phaser.State {
     window.wsg = this.workstationGroup;
 
     this.workerWarehouseGroup = this.add.group();
-    range(5).forEach(index => {
+    range(10).forEach(index => {
       let worker = new WorkerWarehouse(
         this.game,
         50 + index * 5,
@@ -171,7 +171,7 @@ class Game extends window.Phaser.State {
     });
 
     this.workerMarketGroup = this.add.group();
-    range(5).forEach(index => {
+    range(10).forEach(index => {
       let worker = new WorkerMarket(
         this.game,
         this.game.world.width - 180 + index * 5,
