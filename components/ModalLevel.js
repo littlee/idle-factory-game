@@ -2,7 +2,7 @@ import ModalRaw from './ModalRaw.js';
 import LevelUpgradeItem from './LevelUpgradeItem.js';
 import PanelUpgrade from './PanelUpgrade.js';
 
-import DATA from './puedoLevelMap.js';
+import {LevelMap} from './puedoLevelMap.js';
 
 const LEVEL = {
   aWidth: 537,
@@ -76,6 +76,8 @@ class ModalLevel extends ModalRaw {
     workstation = null,
   }) {
     super(game, undefined, undefined, scrollable);
+    this.state = this.game.state.states[this.game.state.current];
+
     this.opts = type === 'market' ? CONFIG.opts_m : type === 'warehouse' ? CONFIG.opts_wh : CONFIG.opts_ws;
     this.headingPart =
       type === 'market'
@@ -95,6 +97,7 @@ class ModalLevel extends ModalRaw {
       currLevel: currLevel === null ? INIT.currLevel : currLevel,
       desLevel: desLevel === null ? INIT.desLevel : desLevel
     };
+    this.prevLevel = this._data.currLevel;
 
     this._getInit();
   }
@@ -291,8 +294,25 @@ class ModalLevel extends ModalRaw {
 
   // 点击level升级之后所有要处理的更新
   handleUpgradation = (upgraded = false) => {
+    let type = this._data.type;
+    let MAP = LevelMap[type];
     this.coupledBtn.setLevel(this._data.currLevel);
     this.heading.setText(this._data.currLevel + this.headingPart, true);
+    // ****dev****
+    if (this._data.currLevel > Object.keys(MAP).length) return false;
+    // ****dev****
+    // 传递当前等级信息给外面workers, market || workstation || warehouse
+    let opts = Object.assign({}, MAP['level'+ this._data.currLevel]);
+    // 是否加人, 相对上次升级
+    let prevOpts = MAP['level'+ this.prevLevel];
+    let addHC = opts.count - prevOpts.count;
+    if (type === 'warehouse') {
+      this.state.updateWarehouseWorkersInfoAndHC(opts, addHC);
+    } else if (type === 'market') {
+      this.state.updateMarketWorkersInfoAndHC(opts, addHC);
+    } else if (type === 'workstation') {
+      // ....
+    }
     // this.avatarDesTxt.setText();
     this.handleLevelBtnsChoosing(upgraded);
   }
@@ -366,6 +386,7 @@ class ModalLevel extends ModalRaw {
   }
 
   setCurrLevel = (level) => {
+    this.prevLevel = this._data.currLevel;
     this._data.currLevel += level;
   }
 }

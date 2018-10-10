@@ -24,6 +24,7 @@ import ModalProdUpgrade from '../components/ModalProdUpgrade';
 
 import range from '../js/libs/_/range';
 import { arrayIntersect } from '../utils';
+import Big from '../js/libs/big.min';
 
 /*
 关于priorityID:
@@ -621,15 +622,35 @@ class Game extends window.Phaser.State {
   }
 
   // 升级搬运工和workstation的等级资料
-  updateWarehouseWorkersInfo = () => {
+  updateWarehouseWorkersInfoAndHC = (opts, addHC = 0) => {
+    let formattedObj = {
+      capacity: Big(opts.capacity),
+      loadingSpeed: Big(opts.loadingSpeed),
+      walkSpeed: opts.walkSpeed
+    };
     this.workerWarehouseGroup.forEach(item => {
-      item.worker.setLevelProps({});
+      item.setLevelProps(formattedObj);
     });
+    if (addHC) {
+      range(addHC).forEach(() => {
+        this.workerWarehouseGroup.getFirstDead().revive();
+      });
+    }
   }
-  updateMarketWorkersInfo = () => {
+  updateMarketWorkersInfoAndHC = (opts, addHC = 0) => {
+    let formattedObj = {
+      capacity: Big(opts.capacity),
+      loadingSpeed: Big(opts.loadingSpeed),
+      walkSpeed: opts.walkSpeed
+    };
     this.workerMarketGroup.forEach(item => {
-      item.worker.setLevelProps({});
+      item.setLevelProps(formattedObj);
     });
+    if (addHC) {
+      range(addHC).forEach(() => {
+        this.workerMarketGroup.getFirstDead().revive();
+      });
+    }
   }
 }
 

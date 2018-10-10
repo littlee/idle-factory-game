@@ -106,11 +106,6 @@ class PanelUpgrade extends window.Phaser.Group {
       } catch(err) {
         console.log('this.modal.handleUpgradation() err: ', err);
       }
-      // 把升级相关des的新值传给market || workstation || warehouse
-      if (this.levelType === 'market' || this.levelType === 'warehouse') {
-        // this.state.
-      }
-
     });
 
     // 66 89
