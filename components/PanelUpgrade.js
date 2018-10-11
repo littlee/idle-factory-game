@@ -1,4 +1,5 @@
 import Big from '../js/libs/big.min';
+import { formatBigNum } from '../utils';
 
 function getFontStyle (fSize, color, align, weight) {
   return {
@@ -12,7 +13,7 @@ function getFontStyle (fSize, color, align, weight) {
 }
 
 const INIT = {
-  base: 100,
+  coinNeeded: 100,
   deficitColor: '#ff0000',
   surplursColor: '#ffffff',
 };
@@ -20,13 +21,13 @@ const INIT = {
 key:
 -1- 点击升级级数x1, x10按钮，panel里头的items会发生相应的变化，记住当前选中的升级级数
 NOTE: 被toggle inputEnabled之后的object的priorityID会变成0.
--2- 点击确定购买升级，coin会被扣，所以item的值都要更新，base变化，级数变化，即modal和coupledBtn的text都要变
+-2- 点击确定购买升级，coin会被扣，所以item的值都要更新，coinNeeded变化，级数变化，即modal和coupledBtn的text都要变
 -3- 点击确定购买升级是灰色还是绿色，要能实时变化调整
 -4- max点击的逻辑【未实现】
 -5- modalLevel panel的数据输入格式？部分逻辑需要改
  */
 class PanelUpgrade extends window.Phaser.Group {
-  constructor({ game, parent, veilHeight, modal = null, base = null}) {
+  constructor({ game, parent, veilHeight, modal = null, coinNeeded = null}) {
     super(game, parent);
     this.state = this.game.state.states[this.game.state.current];
 
@@ -38,8 +39,7 @@ class PanelUpgrade extends window.Phaser.Group {
     // 从parent拿级数
     this._data = {
       multiplier: 1,
-      base: base === null ? Big(INIT.base) : Big(base), // 计算升级要的coin数
-      coinNeeded: base === null ? Big(INIT.base) : Big(base),
+      coinNeeded: coinNeeded === null ? Big(INIT.coinNeeded) : Big(coinNeeded),
     };
 
     this._getInit();
@@ -141,7 +141,7 @@ class PanelUpgrade extends window.Phaser.Group {
               this[entry.key].alpha = 0;
             }
           );
-          this._updateCoinNeeded4Upgrade(this._data.multiplier);
+          // this.updateCoinNeeded4Upgrade(this._data.multiplier);
           this.modal.handleLevelBtnsChoosing();
 
         });
@@ -155,21 +155,16 @@ class PanelUpgrade extends window.Phaser.Group {
               this[entry.key].alpha = 0;
             }
           );
-          this._updateCoinNeeded4Upgrade(this._data.multiplier);
+          // this.updateCoinNeeded4Upgrade(this._data.multiplier);
           this.modal.handleLevelBtnsChoosing();
         });
       }
     );
   }
 
-  _updateCoinNeeded4Upgrade = (multiplier) => {
-    let map = {
-      '1': 1,
-      '10': 9.5,
-      '50': 45,
-    };
-    if (Object.is(multiplier, NaN)) {
-      console.log('max 选中。。。coinNeeded和btnDes变');
+  updateCoinNeeded4Upgrade = (diffs, furtherDiffs, upgraded) => {
+    if (Object.is(this._data.multiplier, NaN)) {
+      console.log('updateCoinNeeded4Upgrade() max 选中。。。coinNeeded和btnDes变');
       // 要根据当前game的coin去计算可以升的最高级别，然后除了要改变升级要用的coin之外，能升多少级也要显示
       // this._data.coinNeeded = ??
       // let availableLevel = 'x22';
@@ -177,8 +172,9 @@ class PanelUpgrade extends window.Phaser.Group {
       // this.txtUpgradeCoinNeeded.setText(this._data.coinNeeded.toString());
     } else {
       this.txtBtnDes.setText(this.btnDes);
-      this._data.coinNeeded = this._data.base.times(map[multiplier.toString()]);
-      this.txtUpgradeCoinNeeded.setText(this._data.coinNeeded.toString());
+      // this._data.coinNeeded = this._data.coinNeeded.times(map[multiplier.toString()]);
+      this._data.coinNeeded = diffs.coinNeeded;
+      this.txtUpgradeCoinNeeded.setText(formatBigNum(this._data.coinNeeded));
     }
   }
 
