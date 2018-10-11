@@ -251,13 +251,15 @@ export const LevelMap = {
       input: '4000',
       output: '4000',
       power: '400',
-      coinNeeded: 1000 * 0
+      count: 1,
+      coinNeeded: 1000 * 0,
     },
     level2: {
       level: 2,
       input: '5000',
       output: '5000',
       power: '500',
+      count: 1,
       coinNeeded: 1500 * 1
     },
     level3: {
@@ -265,6 +267,7 @@ export const LevelMap = {
       input: '6000',
       output: '6000',
       power: '600',
+      count: 1,
       coinNeeded: 1000 * 2
     },
     level4: {
@@ -272,6 +275,7 @@ export const LevelMap = {
       input: '7000',
       output: '7000',
       power: '700',
+      count: 2,
       coinNeeded: 1000 * 3
     },
     level5: {
@@ -279,6 +283,7 @@ export const LevelMap = {
       input: '8000',
       output: '8000',
       power: '800',
+      count: 2,
       coinNeeded: 1000 * 4
     },
     level6: {
@@ -286,6 +291,7 @@ export const LevelMap = {
       input: '9000',
       output: '9000',
       power: '900',
+      count: 2,
       coinNeeded: 1000 * 5
     },
     level7: {
@@ -293,6 +299,7 @@ export const LevelMap = {
       input: '10000',
       output: '10000',
       power: '1000',
+      count: 3,
       coinNeeded: 1000 * 6
     },
     level8: {
@@ -300,6 +307,7 @@ export const LevelMap = {
       input: '11000',
       output: '11000',
       power: '1100',
+      count: 3,
       coinNeeded: 1000 * 7
     },
     level9: {
@@ -307,6 +315,7 @@ export const LevelMap = {
       input: '12000',
       output: '12000',
       power: '1200',
+      count: 3,
       coinNeeded: 1000 * 8
     },
     level10: {
@@ -314,6 +323,7 @@ export const LevelMap = {
       input: '13000',
       output: '13000',
       power: '1300',
+      count: 4,
       coinNeeded: 1000 * 9
     },
     level11: {
@@ -321,6 +331,7 @@ export const LevelMap = {
       input: '14000',
       output: '14000',
       power: '1400',
+      count: 4,
       coinNeeded: 1000 * 10
     },
     level12: {
@@ -328,6 +339,7 @@ export const LevelMap = {
       input: '15000',
       output: '15000',
       power: '1500',
+      count: 4,
       coinNeeded: 1000 * 11
     },
   }

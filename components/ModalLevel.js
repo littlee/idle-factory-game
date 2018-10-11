@@ -94,7 +94,7 @@ class ModalLevel extends ModalRaw {
     this._data = {
       type,
       currLevel: currLevel === null ? INIT.currLevel : currLevel,
-      desLevel: desLevel === null ? INIT.desLevel : desLevel
+      desLevel: null
     };
     this.prevLevel = this._data.currLevel;
 
@@ -138,6 +138,8 @@ class ModalLevel extends ModalRaw {
     this.avatarDesBg.drawRect(0, 0, 339, 30);
     this.avatarDesBg.endFill();
     this.avatarDesBg.alignTo(this.avatarHeading, Phaser.BOTTOM_LEFT, 0, 10);
+    // 拿到初始化boostLevel的值
+    this._data.desLevel = this._getCurrBoostLevelThreshold();
     this.avatarDesTxt = this.game.make.text(
       0,
       0,
@@ -378,9 +380,16 @@ class ModalLevel extends ModalRaw {
   _getCustomizedLevelInfoFromMap = upCount => {
     let maxLength = Object.keys(this.MAP).length;
     let targetLevel = this._data.currLevel + upCount;
+    if (targetLevel < 0) {
+      console.log(
+        '_getCustomizedLevelInfoFromMap() 查询值过小，返回的是map中level1的信息',
+        this._data.currLevel + upCount
+      );
+      return this.MAP.level1;
+    }
     if (targetLevel > maxLength) {
       console.log(
-        '_getCustomizedLevelInfoFromMap() 返回的是map中的最大level信息',
+        '_getCustomizedLevelInfoFromMap() 查询值过大，返回的是map中的最大level信息',
         this._data.currLevel + upCount
       );
       return this.MAP['level' + maxLength];
@@ -388,6 +397,36 @@ class ModalLevel extends ModalRaw {
       return this.MAP['level' + targetLevel];
     }
   };
+
+  _getLastBoostLevelThreshold = () => {
+    let currCount = this._getCurrLevelInfoFromMap().count;
+    let targetCount = currCount - 1;
+    let decrement = -1;
+    let lastBoostLevel = null;
+
+    while (this._getCustomizedLevelInfoFromMap(decrement).count !== targetCount) {
+      decrement -= 1;
+    }
+
+    lastBoostLevel = this._getCustomizedLevelInfoFromMap(decrement).level;
+    console.log('lastBoostLevel: ', lastBoostLevel);
+    return lastBoostLevel;
+  };
+
+  _getCurrBoostLevelThreshold = () => {
+    let currCount = this._getCurrLevelInfoFromMap().count;
+    let targetCount = currCount + 1;
+    let increment = 1;
+    let currBoostLevel = null;
+
+    while (this._getCustomizedLevelInfoFromMap(increment).count !== targetCount) {
+      increment += 1;
+    }
+
+    currBoostLevel = this._getCustomizedLevelInfoFromMap(increment).level;
+    console.log('currBoostLevel: ', currBoostLevel);
+    return currBoostLevel;
+  }
 
   // 点击level升级btn之后所有要处理的更新
   handleUpgradation = (upgraded = false) => {
@@ -407,7 +446,7 @@ class ModalLevel extends ModalRaw {
     } else if (type === 'market') {
       this.state.updateMarketWorkersInfoAndHC(opts, addHC);
     } else if (type === 'workstation') {
-      // ....
+      // 不需要加人，所以不用做什么
     }
     // this.avatarDesTxt.setText();
     this.handleLevelBtnsChoosing(upgraded);
