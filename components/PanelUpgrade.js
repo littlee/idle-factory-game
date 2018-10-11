@@ -85,7 +85,7 @@ class PanelUpgrade extends window.Phaser.Group {
     this.btnUpgradeGroup = this.game.make.group();
     this.btnUpgrade = this.game.make.image(0, 0, 'btn_level_upgrade');
     this.btnUpgrade.alignTo(this.bg, Phaser.RIGHT_BOTTOM, 75);
-    this.txtUpgradeCoinNeeded = this.game.make.text(0, 0, this._data.coinNeeded.toString(), getFontStyle('24px', 'white', 'center', 'bold'));
+    this.txtUpgradeCoinNeeded = this.game.make.text(0, 0, formatBigNum(this._data.coinNeeded), getFontStyle('24px', 'white', 'center', 'bold'));
     this.txtUpgradeCoinNeeded.alignTo(this.bg, Phaser.RIGHT_TOP, 140, -5);
 
     this.txtBtnDes = this.game.make.text(0, 0, this.btnDes, getFontStyle('24px', 'white', 'center', 'bold'));
@@ -141,7 +141,6 @@ class PanelUpgrade extends window.Phaser.Group {
               this[entry.key].alpha = 0;
             }
           );
-          // this.updateCoinNeeded4Upgrade(this._data.multiplier);
           this.modal.handleLevelBtnsChoosing();
 
         });
@@ -155,7 +154,6 @@ class PanelUpgrade extends window.Phaser.Group {
               this[entry.key].alpha = 0;
             }
           );
-          // this.updateCoinNeeded4Upgrade(this._data.multiplier);
           this.modal.handleLevelBtnsChoosing();
         });
       }
@@ -172,7 +170,6 @@ class PanelUpgrade extends window.Phaser.Group {
       // this.txtUpgradeCoinNeeded.setText(this._data.coinNeeded.toString());
     } else {
       this.txtBtnDes.setText(this.btnDes);
-      // this._data.coinNeeded = this._data.coinNeeded.times(map[multiplier.toString()]);
       this._data.coinNeeded = diffs.coinNeeded;
       this.txtUpgradeCoinNeeded.setText(formatBigNum(this._data.coinNeeded));
     }

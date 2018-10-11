@@ -154,6 +154,7 @@ class Start extends window.Phaser.State {
     this.load.image('icon_tick', 'images/icon_tick.png');
     this.load.image('icon_ore', 'images/icon_ore.png');
     this.load.image('icon_power', 'images/icon_power.png');
+    this.load.image('icon_base', 'images/icon_base.png');
   }
 
   create() {

@@ -243,6 +243,93 @@ export const LevelMap = {
       walkSpeed: 0.1 * 2.4,
       coinNeeded: 1000 * 14
     }
+  },
+
+  workstation: {
+    level1: {
+      level: 1,
+      input: '4000',
+      output: '4000',
+      power: '400',
+      coinNeeded: 1000 * 0
+    },
+    level2: {
+      level: 2,
+      input: '5000',
+      output: '5000',
+      power: '500',
+      coinNeeded: 1500 * 1
+    },
+    level3: {
+      level: 3,
+      input: '6000',
+      output: '6000',
+      power: '600',
+      coinNeeded: 1000 * 2
+    },
+    level4: {
+      level: 4,
+      input: '7000',
+      output: '7000',
+      power: '700',
+      coinNeeded: 1000 * 3
+    },
+    level5: {
+      level: 5,
+      input: '8000',
+      output: '8000',
+      power: '800',
+      coinNeeded: 1000 * 4
+    },
+    level6: {
+      level: 6,
+      input: '9000',
+      output: '9000',
+      power: '900',
+      coinNeeded: 1000 * 5
+    },
+    level7: {
+      level: 7,
+      input: '10000',
+      output: '10000',
+      power: '1000',
+      coinNeeded: 1000 * 6
+    },
+    level8: {
+      level: 8,
+      input: '11000',
+      output: '11000',
+      power: '1100',
+      coinNeeded: 1000 * 7
+    },
+    level9: {
+      level: 9,
+      input: '12000',
+      output: '12000',
+      power: '1200',
+      coinNeeded: 1000 * 8
+    },
+    level10: {
+      level: 10,
+      input: '13000',
+      output: '13000',
+      power: '1300',
+      coinNeeded: 1000 * 9
+    },
+    level11: {
+      level: 11,
+      input: '14000',
+      output: '14000',
+      power: '1400',
+      coinNeeded: 1000 * 10
+    },
+    level12: {
+      level: 12,
+      input: '15000',
+      output: '15000',
+      power: '1500',
+      coinNeeded: 1000 * 11
+    },
   }
 };
 

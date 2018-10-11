@@ -35,13 +35,13 @@ const ITEM_UNIT_MAP = {
   capacity: '',
   loadingSpeed: '/s',
   walkSpeed: '/s',
-  prodNeeded: '/min',
-  prodProduced: '/min',
+  input: '/min',
+  output: '/min',
   power: '',
 };
 
 class LevelUpgradeItem extends window.Phaser.Group {
-  constructor({ game, parent, key, txt, x, y, levelType, itemName, value = null, increment = null, panelUpgradeInstance = null }) {
+  constructor({ game, parent, key, txt, x = 0, y = 0, levelType, itemName, value = null, increment = null, panelUpgradeInstance = null }) {
     super(game, parent);
     this.key = key;
     this.plainTxt = txt;
@@ -70,11 +70,20 @@ class LevelUpgradeItem extends window.Phaser.Group {
     this.bg.drawRect(0, 0, CONFIG.width, CONFIG.height);
     this.bg.endFill();
 
+    this.base = this.game.make.image(0, CONFIG.height / 2, 'icon_base');
+    this.base.anchor.set(0, 0.5);
+
+    // 区分是icon类的图，还是reso || prod
     this.icon = this.game.make.image(0, CONFIG.height / 2, this.key);
     this.icon.anchor.set(0, 0.5);
+    if (this.key.indexOf('icon') === -1) {
+      this.icon.anchor.set(-0.15, 0.5);
+      this.icon.scale.x = 0.5;
+      this.icon.scale.y = 0.5;
+    }
 
     this.txtDes = this.game.make.text(0, 0, this.plainTxt, getFontStyle('30px'));
-    this.txtDes.alignTo(this.icon, Phaser.RIGHT_BOTTOM, 10, -15);
+    this.txtDes.alignTo(this.base, Phaser.RIGHT_BOTTOM, 10, -15);
 
     this.block = this.game.make.graphics(0, 0);
     this.block.beginFill(CONFIG.subColor, CONFIG.subAlpha);
@@ -102,6 +111,7 @@ class LevelUpgradeItem extends window.Phaser.Group {
     this.txtFuture.alignTo(this.block, Phaser.TOP_LEFT, -5, -80);
 
     this.addChild(this.bg);
+    this.addChild(this.base);
     this.addChild(this.icon);
     this.addChild(this.txtDes);
     this.addChild(this.block);
