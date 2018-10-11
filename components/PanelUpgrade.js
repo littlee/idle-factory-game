@@ -161,24 +161,28 @@ class PanelUpgrade extends window.Phaser.Group {
   }
 
   updateCoinNeeded4Upgrade = (diffs, furtherDiffs, upgraded) => {
-    if (Object.is(this._data.multiplier, NaN)) {
-      console.log('updateCoinNeeded4Upgrade() max 选中。。。coinNeeded和btnDes变');
-      // 要根据当前game的coin去计算可以升的最高级别，然后除了要改变升级要用的coin之外，能升多少级也要显示
-      // this._data.coinNeeded = ??
-      // let availableLevel = 'x22';
-      // this.txtBtnDes.setText(this.btnDes + availableLevel, true);
-      // this.txtUpgradeCoinNeeded.setText(this._data.coinNeeded.toString());
-    } else {
-      this.txtBtnDes.setText(this.btnDes);
-      this._data.coinNeeded = diffs.coinNeeded;
-      this.txtUpgradeCoinNeeded.setText(formatBigNum(this._data.coinNeeded));
-    }
+    // if (Object.is(this._data.multiplier, NaN)) {
+    //   console.log('updateCoinNeeded4Upgrade() max 选中。。。coinNeeded和btnDes变');
+    //   // 要根据当前game的coin去计算可以升的最高级别，然后除了要改变升级要用的coin之外，能升多少级也要显示
+    //   // this._data.coinNeeded = ??
+    //   // let availableLevel = 'x22';
+    //   // this.txtBtnDes.setText(this.btnDes + availableLevel, true);
+    //   // this.txtUpgradeCoinNeeded.setText(this._data.coinNeeded.toString());
+    // } else {
+    //   // this.txtBtnDes.setText(this.btnDes);
+    //   // this._data.coinNeeded = diffs.coinNeeded;
+    //   // this.txtUpgradeCoinNeeded.setText(formatBigNum(this._data.coinNeeded));
+    // }
+
+    this.txtBtnDes.setText(this.btnDes);
+    this._data.coinNeeded = diffs.coinNeeded;
+    this.txtUpgradeCoinNeeded.setText(formatBigNum(this._data.coinNeeded));
   }
 
-  updateLevelUpgradeBtnUI = () => {
-    // 要拿到currCoin
-    let currCoin = this.state.getCurrCoin();
-
+  updateLevelUpgradeBtnUI = (currCoin) => {
+    // coinz总数update的时候，会调用此方法更新maxLevel; 另外，点击x1等btn时候，不会传入参数，那时要自己要拿到currCoin
+    currCoin = currCoin === undefined ? this.state.getCurrCoin() : currCoin;
+    // 分为：能升(点击xNNN || max), 不能升
     if ( currCoin.lt(this._data.coinNeeded) ) {
       this.btnUpgrade.loadTexture('btn_level_upgrade_unable');
       this.btnUpgradeGroup.setAllChildren('inputEnabled', false);

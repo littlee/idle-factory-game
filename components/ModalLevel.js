@@ -72,6 +72,7 @@ class ModalLevel extends ModalRaw {
     this.state = this.game.state.states[this.game.state.current];
 
     this.MAP = LevelMap[type];
+    this.maxAvailableLevel = null;
 
     this.opts =
       type === 'market'
@@ -382,14 +383,14 @@ class ModalLevel extends ModalRaw {
     let targetLevel = this._data.currLevel + upCount;
     if (targetLevel < 0) {
       console.log(
-        '_getCustomizedLevelInfoFromMap() 查询值过小，返回的是map中level1的信息',
+        // '_getCustomizedLevelInfoFromMap() 查询值过小，返回的是map中level1的信息',
         this._data.currLevel + upCount
       );
       return this.MAP.level1;
     }
     if (targetLevel > maxLength) {
       console.log(
-        '_getCustomizedLevelInfoFromMap() 查询值过大，返回的是map中的最大level信息',
+        // '_getCustomizedLevelInfoFromMap() 查询值过大，返回的是map中的最大level信息',
         this._data.currLevel + upCount
       );
       return this.MAP['level' + maxLength];
@@ -428,6 +429,22 @@ class ModalLevel extends ModalRaw {
     return currBoostLevel;
   }
 
+  _getMaxLevelNowCanGet2 = (currCoin) => {
+    let increment = 1;
+    let tmpBig = Big(this._getCustomizedLevelInfoFromMap(increment).coinNeeded);
+    // let currCoin = this.state.getCurrCoin();
+
+    while (currCoin.gt(tmpBig) && (this._data.currLevel + increment) <= Object.keys(this.MAP).length) {
+      increment = increment + 1;
+      tmpBig = Big(this._getCustomizedLevelInfoFromMap(increment).coinNeeded);
+    }
+    this.maxAvailableLevel = this._data.currLevel + increment - 1;
+    console.log('currCoin vs tmpBig: ', currCoin.valueOf(), tmpBig.valueOf());
+    console.log('maxAvailableLevel ', this.maxAvailableLevel);
+    return this.maxAvailableLevel;
+  }
+
+
   // 点击level升级btn之后所有要处理的更新
   handleUpgradation = (upgraded = false) => {
     let type = this._data.type;
@@ -460,8 +477,10 @@ class ModalLevel extends ModalRaw {
 
     // ****dev****
     if (Object.is(multiplier, NaN)) {
-      console.log('handleLevelBtnsChoosing 选中max，不反应');
-      return false;
+      // 和点击其他按钮为不同在于，x1之类的升级幅度由可视的multiplier直接拿到，max则是需要modal用自己的map和当前的coin来计算得出。
+      console.log('maxAvailableLevel: ', this.maxAvailableLevel);
+      multiplier = this.maxAvailableLevel;
+      // return false;
     }
     // ****dev****
     let currOpts = this._getCurrLevelInfoFromMap();
@@ -495,6 +514,7 @@ class ModalLevel extends ModalRaw {
   getUpdated = currCoin => {
     try {
       this.upgradePanel.updateLevelUpgradeBtnUI(currCoin);
+      this._getMaxLevelNowCanGet2(currCoin);
       return true;
     } catch (ex) {
       console.log('game state update() err');

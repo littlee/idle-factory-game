@@ -131,11 +131,8 @@ class LevelUpgradeItem extends window.Phaser.Group {
     //   walkSpeed: 0, // big
     //   coinNeeded: 0, // big
     // };
-    if (Object.is(this.panelUpgradeInstance.getMultiplier(), NaN)) {
-      console.log('max 选中 des 变...');
-    } else {
-      // 逻辑错
-      let keys = Object.keys(diffs);
+
+    let keys = Object.keys(diffs);
       if (keys.indexOf(this._data.itemName) > -1) {
         this.increment = diffs[this._data.itemName];
         this.txtFuture.setText(`+${formatBigNum(this.increment)}${this._data.unit}`);
@@ -154,7 +151,6 @@ class LevelUpgradeItem extends window.Phaser.Group {
       } else {
         // 'maxTransported' 或者 workstation的
       }
-    }
   };
 }
 

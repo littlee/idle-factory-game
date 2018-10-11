@@ -588,13 +588,15 @@ class Game extends window.Phaser.State {
     let currCoin = this.btnCash.getCash();
 
     this.modalRescources.updateBtnBuyUI(currCoin);
-    this.modalMarket.getUpdated();
-    this.modalWarehose.getUpdated();
+    this.modalMarket.getUpdated(currCoin);
+    this.modalWarehose.getUpdated(currCoin);
     this.modalProdUpgrade.updateModalAllBtnBuyUI(currCoin);
     // 更新workstations里头的modal升级按钮
     this.workstationGroup.forEachAlive(item => {
-      item.workestationLevelModal.getUpdated();
+      item.workestationLevelModal.getUpdated(currCoin);
     });
+    // 拿到所有modals的maxAvailableLevel值
+
   }
 
   subtractCash = (decrement) => {
