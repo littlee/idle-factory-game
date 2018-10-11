@@ -143,7 +143,7 @@ class ModalLevel extends ModalRaw {
     this.avatarDesTxt = this.game.make.text(
       0,
       0,
-      `将在${this._data.desLevel}${this.opts.avatarDes}`,
+      `将在 ${this._data.desLevel} ${this.opts.avatarDes}`,
       getFontStyle('18px', 'white')
     );
     this.avatarDesTxt.setTextBounds(0, 0, 339, 30); // 同上
@@ -448,8 +448,10 @@ class ModalLevel extends ModalRaw {
     } else if (type === 'workstation') {
       // 不需要加人，所以不用做什么
     }
-    // this.avatarDesTxt.setText();
     this.handleLevelBtnsChoosing(upgraded);
+    // 更新avatarDesTxt的值, 需要有最新的currLevel的值, 故要在this.handleLevelBtnsChoosing后invoke
+    this._data.desLevel = this._getCurrBoostLevelThreshold();
+    this.avatarDesTxt.setText(`将在 ${this._data.desLevel} ${this.opts.avatarDes}`);
   };
 
   // 点击 x1 x10 ... btns时候, 需要一起更新的东西【需要的coin数值不归在这里更新】

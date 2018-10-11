@@ -586,13 +586,15 @@ class Game extends window.Phaser.State {
   // 在全部object初始化后inovke
   _updateWhateverNeed2KnowCoinValue = () => {
     let currCoin = this.btnCash.getCash();
-    // console.log('game currCoin changed: ', currCoin.valueOf());
 
-    // raw material's buybtns
     this.modalRescources.updateBtnBuyUI(currCoin);
     this.modalMarket.getUpdated();
     this.modalWarehose.getUpdated();
     this.modalProdUpgrade.updateModalAllBtnBuyUI(currCoin);
+    // 更新workstations里头的modal升级按钮
+    this.workstationGroup.forEachAlive(item => {
+      item.workestationLevelModal.getUpdated();
+    });
   }
 
   subtractCash = (decrement) => {
