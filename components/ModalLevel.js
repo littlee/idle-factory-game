@@ -5,6 +5,7 @@ import LevelUpgradeItem from './LevelUpgradeItem.js';
 import PanelUpgrade from './PanelUpgrade.js';
 
 import { LevelMap } from './puedoLevelMap.js';
+import range from '../js/libs/_/range';
 
 const LEVEL = {
   aWidth: 537,
@@ -144,7 +145,7 @@ class ModalLevel extends ModalRaw {
       getFontStyle('18px', 'white')
     );
     this.avatarDesTxt.setTextBounds(0, 0, 339, 30); // 同上
-    this.avatarDesTxt.alignTo(this.avatarDesBg, Phaser.Phaser.TOP_LEFT, 0, -28);
+    this.avatarDesTxt.alignTo(this.avatarDesBg, Phaser.Phaser.TOP_LEFT, 0, -30);
 
     this.avatarBar = this.game.make.graphics(0, 0);
     this.avatarBar.beginFill(0x3a0a00, 0.8);
@@ -431,20 +432,20 @@ class ModalLevel extends ModalRaw {
 
     if (this._data.type === 'market' || this._data.type === 'warehouse') {
       // update item的描述数据
-      this.item1.getDesUpdated(diffs, furtherDiffs, upgraded);
-      this.item2.getDesUpdated(diffs, furtherDiffs, upgraded);
-      this.item3.getDesUpdated(diffs, furtherDiffs, upgraded);
-      this.item4.getDesUpdated(diffs, furtherDiffs, upgraded);
-      this.item5.getDesUpdated(diffs, furtherDiffs, upgraded);
+      range(5).forEach(item => {
+        this[`item${item+1}`].getDesUpdated(diffs, furtherDiffs, upgraded);
+      });
       // update upgradeBtn的UI 根据currCoin
       this.upgradePanel.updateCoinNeeded4Upgrade(diffs, furtherDiffs, upgraded);
       this.upgradePanel.updateLevelUpgradeBtnUI();
     } else if (this._data.type === 'workstation') {
-      // 未对接到MAP
-      this.need1.getDesUpdated(upgraded);
-      this.need2.getDesUpdated(upgraded);
-      this.prod.getDesUpdated(upgraded);
-      this.iconPower.getDesUpdated(upgraded);
+      // 未对接到MAP, fixme
+      this.need1.getDesUpdated(diffs, furtherDiffs, upgraded);
+      if (this.need2 !== null) {
+        this.need2.getDesUpdated(diffs, furtherDiffs, upgraded);
+      }
+      this.prod.getDesUpdated(diffs, furtherDiffs, upgraded);
+      this.iconPower.getDesUpdated(diffs, furtherDiffs, upgraded);
       this.upgradePanel.updateCoinNeeded4Upgrade(diffs, furtherDiffs, upgraded);
       this.upgradePanel.updateLevelUpgradeBtnUI();
     }
