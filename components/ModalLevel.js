@@ -355,13 +355,29 @@ class ModalLevel extends ModalRaw {
     let tmp = {};
     keys.forEach(item => {
       if (item === 'coinNeeded') {
-        tmp[item] = Big(futureOpts[item]);
+        // tmp[item] = Big(futureOpts[item]);
+        tmp[item] = this.levelIncrement > 1 ? this._getAccumulatedDiffs() : Big(futureOpts[item]);
       } else {
         tmp[item] = Big(futureOpts[item]).minus(Big(currOpts[item]));
       }
     });
     return tmp;
   };
+
+  // 升级跨度大于1才有必要去accumulate
+  _getAccumulatedDiffs = () => {
+    // 拿到中间跨度的data, 吧里头需要累加的东西，累加起来。其实只需要coinNeeded
+    let arr = [];
+    range(this.levelIncrement - 1).forEach(item => {
+      let tmp = this._getCustomizedLevelInfoFromMap(item + 1).coinNeeded;
+      arr.push(Big(tmp)); // push进去的是string
+    });
+    let amassedCoinNeeded = arr.reduce((prev, curr) => {
+      return prev.plus(curr);
+    });
+
+    return amassedCoinNeeded;
+  }
 
   // 应该整合下不同level的item值，这里定义了4个item的。
   _getAllItemsInitOpts = () => {
@@ -522,6 +538,8 @@ class ModalLevel extends ModalRaw {
     this.avatarBarGained.scale.x = scaleFactor;
   };
 
+
+
   // 点击level升级btn之后所有要处理的更新，在点击这里之前，一定是点过x1 || max的按钮，即，itemDes本身就是显示前期available level up的信息
   handleUpgradation = () => {
     this._updateAllItemsValues();
@@ -552,6 +570,7 @@ class ModalLevel extends ModalRaw {
       levelIncrement === 0 &&
       this._data.currLevel < Object.keys(this.MAP).length
     ) {
+      // 这个出现在点击max之后，不够升级1级时候，做升级1级处理
       levelIncrement = 1;
     } else if (
       levelIncrement === 0 &&
@@ -566,7 +585,7 @@ class ModalLevel extends ModalRaw {
     let diffs = this._getDiffOpts4LevelBtns(futureOpts, currOpts);
 
     if (levelIncrement === 0) {
-      diffs.coinNeeded = Big(0);
+      diffs.coinNeeded = Big(0); // 当当前级数已经>=配置表给出数目时
     }
 
     if (this._data.type === 'market' || this._data.type === 'warehouse') {
