@@ -26,7 +26,7 @@ export const LevelMap = {
     },
     level4: {
       level: 4,
-      count: 2,
+      count: 1,
       capacity: '6400',
       loadingSpeed: '5000',
       walkSpeed: 0.1 * 1.3,
