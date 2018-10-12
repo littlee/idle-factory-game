@@ -389,10 +389,10 @@ class ModalLevel extends ModalRaw {
       return this.MAP.level1;
     }
     if (targetLevel > maxLength) {
-      console.log(
+      // console.log(
         // '_getCustomizedLevelInfoFromMap() 查询值过大，返回的是map中的最大level信息',
-        this._data.currLevel + upCount
-      );
+        // this._data.currLevel + upCount
+      // );
       return this.MAP['level' + maxLength];
     } else {
       return this.MAP['level' + targetLevel];
@@ -425,7 +425,7 @@ class ModalLevel extends ModalRaw {
     }
 
     currBoostLevel = this._getCustomizedLevelInfoFromMap(increment).level;
-    console.log('currBoostLevel: ', currBoostLevel);
+    // console.log('currBoostLevel: ', currBoostLevel);
     return currBoostLevel;
   }
 
@@ -439,8 +439,8 @@ class ModalLevel extends ModalRaw {
       tmpBig = Big(this._getCustomizedLevelInfoFromMap(increment).coinNeeded);
     }
     this.maxAvailableLevel = this._data.currLevel + increment - 1;
-    console.log('currCoin vs tmpBig: ', currCoin.valueOf(), tmpBig.valueOf());
-    console.log('maxAvailableLevel ', this.maxAvailableLevel);
+    // console.log('currCoin vs tmpBig: ', currCoin.valueOf(), tmpBig.valueOf());
+    // console.log('maxAvailableLevel ', this.maxAvailableLevel);
     return this.maxAvailableLevel;
   }
 
@@ -478,7 +478,7 @@ class ModalLevel extends ModalRaw {
     // ****dev****
     if (Object.is(multiplier, NaN)) {
       // 和点击其他按钮为不同在于，x1之类的升级幅度由可视的multiplier直接拿到，max则是需要modal用自己的map和当前的coin来计算得出。
-      console.log('maxAvailableLevel: ', this.maxAvailableLevel);
+      // console.log('maxAvailableLevel: ', this.maxAvailableLevel);
       multiplier = this.maxAvailableLevel;
       // return false;
     }
