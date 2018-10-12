@@ -43,7 +43,7 @@ class PanelUpgrade extends window.Phaser.Group {
     };
 
     this._getInit();
-    this._handleInput();
+    this._attached();
   }
 
   _getInit = () => {
@@ -96,16 +96,17 @@ class PanelUpgrade extends window.Phaser.Group {
     this.btnUpgradeGroup.addChild(this.txtUpgradeCoinNeeded);
     this.btnUpgradeGroup.addChild(this.txtBtnDes);
 
+    // fix me
     this.btnUpgradeGroup.onChildInputDown.add(() => {
       // 点击升级：保存当前multiplier的值，更新game.share.coin的值，改变heading和外部btn的等级数
-      this.modal.setCurrLevel(this._data.multiplier);
-      // 从state拿方法操作coin
-      this.state.subtractCash(this._data.coinNeeded);
+      // 考虑max
       try {
-        this.modal.handleUpgradation(true);
+        this.modal.handleUpgradation();
       } catch(err) {
         console.log('this.modal.handleUpgradation() err: ', err);
       }
+      // 从state拿方法操作coin
+      this.state.subtractCash(this._data.coinNeeded);
     });
 
     // 66 89
@@ -121,7 +122,7 @@ class PanelUpgrade extends window.Phaser.Group {
     this.addChild(this.btnUpgradeGroup);
   }
 
-  _handleInput = () => {
+  _attached = () => {
     // UI变化，items描述变化，记录当前选中升级级数
     let tmp = [
       {key: 'btnOne', txt: 'one', num: 1},

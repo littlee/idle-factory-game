@@ -583,7 +583,7 @@ class Game extends window.Phaser.State {
     this.arrowFastDown.events.onInputUp.add(scroller.scrollTo.bind(this, 1000));
   };
 
-  // 在全部object初始化后inovke
+  // 在全部game objects初始化后inovke
   _updateWhateverNeed2KnowCoinValue = () => {
     let currCoin = this.btnCash.getCash();
 

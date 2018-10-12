@@ -123,6 +123,19 @@ class LevelUpgradeItem extends window.Phaser.Group {
     return this._data;
   }
 
+  updateItemValue = () => {
+    // 在更新等级之前改好item的curr值
+    if (this._data.itemName === 'maxTransported') {
+      // 公式推算
+    } else {
+      this._data.value = this.increment.plus(this._data.value);
+    }
+
+    this.txtCurr.setText(
+      formatBigNum(this._data.value) + this._data.unit
+    );
+  }
+
   getDesUpdated = (diffs = null, furtherDiffs = null, upgraded = false) => {
     // diffs = {
     //   capacity: 0, // big
