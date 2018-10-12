@@ -387,19 +387,9 @@ class ModalLevel extends ModalRaw {
     let maxLength = Object.keys(this.MAP).length;
     let targetLevel = this._data.currLevel + upCount;
     if (targetLevel < 0) {
-      // console.log(
-      //   // '_getCustomizedLevelInfoFromMap() 查询值过小，返回的是map中level1的信息',
-      //   this._data.currLevel + upCount
-      // );
       return this.MAP.level1;
     }
     if (targetLevel > maxLength) {
-      // console.log(
-      //   // '_getCustomizedLevelInfoFromMap() 查询值过大，返回的是map中的最大level信息',
-      //   'type: ',
-      //   this._data.type,
-      //   this._data.currLevel + upCount
-      // );
       return this.MAP['level' + maxLength];
     } else {
       return this.MAP['level' + targetLevel];
@@ -413,7 +403,7 @@ class ModalLevel extends ModalRaw {
     let lastBoostLevel = null;
 
     while (
-      this._getCustomizedLevelInfoFromMap(decrement).count !== targetCount
+      this._getCustomizedLevelInfoFromMap(decrement).count !== targetCount && this._getCustomizedLevelInfoFromMap(decrement).level > 1
     ) {
       decrement -= 1;
     }
@@ -430,7 +420,7 @@ class ModalLevel extends ModalRaw {
     let currBoostLevel = null;
 
     while (
-      this._getCustomizedLevelInfoFromMap(increment).count !== targetCount
+      this._getCustomizedLevelInfoFromMap(increment).count !== targetCount && this._getCustomizedLevelInfoFromMap(increment).level < Object.keys(this.MAP).length
     ) {
       increment += 1;
     }
@@ -466,6 +456,7 @@ class ModalLevel extends ModalRaw {
       // 和点击其他按钮为不同在于，x1之类的升级幅度由可视的multiplier直接拿到，max则是需要modal用自己的map和当前的coin来计算得出升级的差值。
       multiplier = this.maxAvailableLevel - this._data.currLevel;
     }
+    multiplier = (this._data.currLevel >= Object.keys(this.MAP).length) ? 0 : multiplier;
     this.levelIncrement = multiplier;
     return multiplier;
   }
@@ -474,7 +465,7 @@ class ModalLevel extends ModalRaw {
     // 传递当前等级信息给外面workers, market || warehouse
     let opts = this._getCurrLevelInfoFromMap();
     // 是否加人, 相对上次升级
-    let prevOpts = this.MAP['level' + this.prevLevel];
+    let prevOpts = this._getCustomizedLevelInfoFromMap(this.prevLevel - this._data.currLevel);
     let addHC = opts.count - prevOpts.count;
 
     let type = this._data.type;
@@ -512,7 +503,7 @@ class ModalLevel extends ModalRaw {
   }
 
   // 点击level升级btn之后所有要处理的更新，在点击这里之前，一定是点过x1 || max的按钮，即，itemDes本身就是显示前期available level up的信息
-  handleUpgradation = (upgraded = false) => {
+  handleUpgradation = () => {
     // update workers info, check whether to add worker or not
     this._handleWorkerAddingIfNeeded();
     this._updateAllItemsValues();
@@ -522,54 +513,56 @@ class ModalLevel extends ModalRaw {
     // set correct heading
     this.coupledBtn.setLevel(this._data.currLevel);
     this.heading.setText(this._data.currLevel + this.headingPart, true);
-
     // set correct avatar desLevel
     this._UpdateAvatarDesLevel();
 
+    // pay the bill
+    let coinNeeded = this.upgradePanel.getCoinNeeded();
+    this.state.subtractCash(coinNeeded);
     // 再根据已经更新的升级数更新modal的item
-    this.handleLevelBtnsChoosing(upgraded);
+    this.handleLevelBtnsChoosing();
 
   };
 
   // 点击 x1 x10 ... btns时候, 需要一起更新的东西【需要的coin数值不归在这里更新】
-  handleLevelBtnsChoosing = upgraded => {
+  handleLevelBtnsChoosing = () => {
+    // 拿到最新的点击升级数 || 可升级数， 可为0
    let levelIncrement = this._getLevelIncrement();
+   if (levelIncrement === 0 && this._data.currLevel < Object.keys(this.MAP).length) {
+    levelIncrement = 1;
+   } else if (levelIncrement === 0 && this._data.currLevel >= Object.keys(this.MAP).length) {
+    console.log('levelIncrement为0，cause以及达到最大级数');
+   }
 
     let currOpts = this._getCurrLevelInfoFromMap();
     let futureOpts = this._getCustomizedLevelInfoFromMap(levelIncrement);
-    let fartherOpts = this._getCustomizedLevelInfoFromMap(levelIncrement * 2);
-
     let diffs = this._getDiffOpts4LevelBtns(futureOpts, currOpts);
-    let furtherDiffs = this._getDiffOpts4LevelBtns(fartherOpts, futureOpts);
+
+    if (levelIncrement === 0) {
+      diffs.coinNeeded = Big(0);
+    }
 
     if (this._data.type === 'market' || this._data.type === 'warehouse') {
       // update item的描述数据
       range(5).forEach(item => {
-        this[`item${item + 1}`].getDesUpdated(diffs, furtherDiffs, upgraded);
+        this[`item${item + 1}`].getDesUpdated(diffs);
       });
     } else if (this._data.type === 'workstation') {
-      this.need1.getDesUpdated(diffs, furtherDiffs, upgraded);
+      this.need1.getDesUpdated(diffs);
       if (this.need2 !== null) {
-        this.need2.getDesUpdated(diffs, furtherDiffs, upgraded);
+        this.need2.getDesUpdated(diffs);
       }
-      this.prod.getDesUpdated(diffs, furtherDiffs, upgraded);
-      this.iconPower.getDesUpdated(diffs, furtherDiffs, upgraded);
+      this.prod.getDesUpdated(diffs);
+      this.iconPower.getDesUpdated(diffs);
     }
-    this.upgradePanel.updateCoinNeeded4Upgrade(diffs, furtherDiffs, upgraded);
+    this.upgradePanel.updateCoinNeeded4Upgrade(diffs.coinNeeded, diffs.level);
     this.upgradePanel.updateLevelUpgradeBtnUI();
   };
 
   // 更新和coin value相关的东西only
   getUpdated = currCoin => {
-    try {
-      this.upgradePanel.updateLevelUpgradeBtnUI(currCoin);
-      this._getMaxLevelNowCanGet2(currCoin);
-      return true;
-    } catch (ex) {
-      console.log('game state update() err');
-      console.log(ex);
-      return false;
-    }
+    this.upgradePanel.updateLevelUpgradeBtnUI(currCoin);
+    this._getMaxLevelNowCanGet2(currCoin);
   };
 
   getLevelType = () => {
@@ -584,29 +577,9 @@ class ModalLevel extends ModalRaw {
     return this._data;
   };
 
-  // untested
-  getInfo2Stored = () => {
-    // 如果是warehouse || market, 要存的是，当前的1）级数，2）箭头那里的级数，3）5个item中各自的数额，4）x1时候要升级的coin数目
-    let info = null;
-    if (this._data.type === 'market' || this._data.type === 'warehouse') {
-      info = Object.assign({}, this._data);
-      info.item1 = this.item1.getData();
-      info.item2 = this.item2.getData();
-      info.item3 = this.item3.getData();
-      info.item4 = this.item4.getData();
-      info.item5 = this.item5.getData();
-      info.upgradePanel = this.upgradePanel.getData();
-    } else if (this._data.type === 'workstation') {
-      info = Object.assign({}, this._data);
-      info.workstationNum = null; // unassigned
-      info.need1 = this.need1.getData();
-      info.need2 = this.need2.getData();
-      info.iconPower = this.iconPower.getData();
-      info.prod = this.prod.getData();
-      info.upgradePanel = this.upgradePanel.getData();
-    }
-    return info;
-  };
+  getLevelIncrement = () => {
+    return this.levelIncrement;
+  }
 
   setCurrLevel = level => {
     this.prevLevel = this._data.currLevel;
