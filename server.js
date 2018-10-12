@@ -6,9 +6,9 @@ const path = require('path');
 const configFile = path.resolve(__dirname, 'server_config.js');
 const localIP = address.ip();
 
-let config = require('./config');
-
-config.BASE_URL = `http://${localIP}:8000/`;
+let config = {
+  BASE_URL: `http://${localIP}:8000/`
+};
 
 let configContent = 'module.exports = ' + JSON.stringify(config, null, 2);
 configContent = prettier.format(configContent, {

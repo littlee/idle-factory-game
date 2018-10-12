@@ -35,6 +35,11 @@ class Start extends window.Phaser.State {
     this.load.image('btn_wheel_coin', 'images/btn_wheel_coin.png');
     this.load.image('btn_x_cash', 'images/btn_x_cash.png');
     this.load.image('ground_level_1', 'images/ground_level_1.png');
+    this.load.image('ground_level_2', 'images/ground_level_2.png');
+    this.load.image('ground_level_3', 'images/ground_level_3.png');
+    this.load.image('ground_level_4', 'images/ground_level_4.png');
+    this.load.image('ground_level_5', 'images/ground_level_5.png');
+    this.load.image('ground_level_6', 'images/ground_level_6.png');
     this.load.image('icon_level_up', 'images/icon_level_up.png');
     this.load.image('market_truck', 'images/market_truck.png');
     this.load.image('mgr_market', 'images/mgr_market.png');
@@ -42,6 +47,11 @@ class Start extends window.Phaser.State {
     this.load.image('mgr_worker', 'images/mgr_worker.png');
     this.load.image('table_cover', 'images/table_cover.png');
     this.load.image('table_level_1', 'images/table_level_1.png');
+    this.load.image('table_level_2', 'images/table_level_2.png');
+    this.load.image('table_level_3', 'images/table_level_3.png');
+    this.load.image('table_level_4', 'images/table_level_4.png');
+    this.load.image('table_level_5', 'images/table_level_5.png');
+    this.load.image('table_level_6', 'images/table_level_6.png');
     this.load.image('wall', 'images/wall.png');
     this.load.image('warehouse_table', 'images/warehouse_table.png');
     this.load.spritesheet('worker_market', 'images/worker_market.png', 84, 126);

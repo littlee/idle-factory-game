@@ -436,7 +436,7 @@ class ModalLevel extends ModalRaw {
     }
 
     currBoostLevel = this._getCustomizedLevelInfoFromMap(increment).level;
-    console.log('currBoostLevel: ', currBoostLevel);
+    // console.log('currBoostLevel: ', currBoostLevel);
     return currBoostLevel;
   };
 
@@ -452,19 +452,9 @@ class ModalLevel extends ModalRaw {
       tmpBig = Big(this._getCustomizedLevelInfoFromMap(increment).coinNeeded);
     }
     this.maxAvailableLevel =
-      this._data.currLevel + increment > Object.keys(this.MAP).length
+      (this._data.currLevel + increment > Object.keys(this.MAP).length)
         ? Object.keys(this.MAP).length
         : this._data.currLevel + increment - 1;
-    // dev
-    // if (this._data.type === 'warehouse') {
-    //   console.log(this._data.type, 'maxAvailableLevel ', this.maxAvailableLevel);
-    //   console.log(
-    //     'currCoin, neededCoin: ',
-    //     currCoin.valueOf(),
-    //     this.MAP['level' + this.maxAvailableLevel].coinNeeded
-    //   );
-    // }
-
     return this.maxAvailableLevel;
   };
 
@@ -544,6 +534,7 @@ class ModalLevel extends ModalRaw {
   // 点击 x1 x10 ... btns时候, 需要一起更新的东西【需要的coin数值不归在这里更新】
   handleLevelBtnsChoosing = upgraded => {
    let levelIncrement = this._getLevelIncrement();
+
     let currOpts = this._getCurrLevelInfoFromMap();
     let futureOpts = this._getCustomizedLevelInfoFromMap(levelIncrement);
     let fartherOpts = this._getCustomizedLevelInfoFromMap(levelIncrement * 2);
