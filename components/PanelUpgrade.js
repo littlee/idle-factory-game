@@ -153,23 +153,11 @@ class PanelUpgrade extends window.Phaser.Group {
   }
 
   updateCoinNeeded4Upgrade = (coinNeeded, levelIncrement) => {
-    // if (Object.is(this._data.multiplier, NaN)) {
-    //   let levelIncrement = this.getLevelIncrement();
-    //   if (levelIncrement === 0) {
-
-    //   }
-    //   // 要根据当前game的coin去计算可以升的最高级别，然后除了要改变升级要用的coin之外，能升多少级也要显示
-    //   // this._data.coinNeeded = ??
-    //   // let availableLevel = 'x22';
-    //   // this.txtBtnDes.setText(this.btnDes + availableLevel, true);
-    //   // this.txtUpgradeCoinNeeded.setText(this._data.coinNeeded.toString());
-    // } else {
-    //   // this.txtBtnDes.setText(this.btnDes);
-    //   // this._data.coinNeeded = diffs.coinNeeded;
-    //   // this.txtUpgradeCoinNeeded.setText(formatBigNum(this._data.coinNeeded));
-    // }
-
-    this.txtBtnDes.setText(this.btnDes);
+    if (Object.is(this._data.multiplier, NaN)) {
+      this.txtBtnDes.setText(`${this.btnDes}x${levelIncrement}`, true);
+    } else {
+      this.txtBtnDes.setText(this.btnDes);
+    }
     this._data.coinNeeded = coinNeeded;
     this.txtUpgradeCoinNeeded.setText(formatBigNum(this._data.coinNeeded));
     console.log(`可以升：${levelIncrement}级`);
