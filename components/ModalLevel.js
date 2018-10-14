@@ -56,8 +56,10 @@ function getFontStyle(fSize, color, align, weight) {
   };
 }
 
-// 这里默认都给children boost priority到1001，所以scroll的input是听不到的。这里不需要滑动，所以没关系。
-// 根据初始化弹窗拿到的当前等级数，来初始化弹窗内item的curr和futrue显示，外加升级btn的数额和颜色。
+/*
+这里默认都给children boost priority到1001，所以scroll的input是听不到的。这里不需要滑动，所以没关系。
+根据初始化弹窗拿到的当前等级数，来初始化弹窗内item的curr和futrue显示，外加升级btn的数额和颜色。
+*/
 class ModalLevel extends ModalRaw {
   constructor({
     game,
@@ -348,9 +350,6 @@ class ModalLevel extends ModalRaw {
 
   // 算出选中升级每个item可以增加几多值，ALL Big
   _getDiffOpts4LevelBtns = (futureOpts, currOpts) => {
-    // if (this._data.type === 'warehouse') {
-    //   console.log('futureOpts info: ', futureOpts.level, futureOpts.coinNeeded);
-    // }
     let keys = Object.keys(currOpts);
     let tmp = {};
     keys.forEach(item => {
@@ -368,14 +367,14 @@ class ModalLevel extends ModalRaw {
   _getAccumulatedDiffs = () => {
     // 拿到中间跨度的data, 吧里头需要累加的东西，累加起来。其实只需要coinNeeded
     let arr = [];
-    range(this.levelIncrement - 1).forEach(item => {
-      let tmp = this._getCustomizedLevelInfoFromMap(item + 1).coinNeeded;
+    range(this.levelIncrement + 1).forEach(item => {
+      let tmp = this._getCustomizedLevelInfoFromMap(item).coinNeeded;
       arr.push(Big(tmp)); // push进去的是string
     });
+
     let amassedCoinNeeded = arr.reduce((prev, curr) => {
       return prev.plus(curr);
     });
-
     return amassedCoinNeeded;
   }
 
@@ -446,15 +445,18 @@ class ModalLevel extends ModalRaw {
 
   _getMaxLevelNowCanGet2 = currCoin => {
     let increment = 1;
-    let tmpBig = Big(this._getCustomizedLevelInfoFromMap(increment).coinNeeded);
+    let futureOptCoin = this._getCustomizedLevelInfoFromMap(increment).coinNeeded;
+    let tmpBig = Big(futureOptCoin);
 
     while (
       currCoin.gt(tmpBig) &&
       this._data.currLevel + increment <= Object.keys(this.MAP).length
     ) {
       increment = increment + 1;
-      tmpBig = Big(this._getCustomizedLevelInfoFromMap(increment).coinNeeded);
+      futureOptCoin += this._getCustomizedLevelInfoFromMap(increment).coinNeeded;
+      tmpBig = Big(futureOptCoin);
     }
+    // console.log('settled for curr vs needed: ', currCoin.valueOf(), tmpBig.minus(this._getCustomizedLevelInfoFromMap(increment).coinNeeded).valueOf());
     this.maxAvailableLevel =
       this._data.currLevel + increment > Object.keys(this.MAP).length
         ? Object.keys(this.MAP).length
@@ -465,7 +467,6 @@ class ModalLevel extends ModalRaw {
   // 拿点击当时可以升级的值, 留住这个值，因为maxAvailableLevel的值是一直在变的
   _getLevelIncrement = () => {
     let multiplier = this.upgradePanel.getMultiplier();
-    // ****dev****
     if (Object.is(multiplier, NaN)) {
       // 和点击其他按钮为不同在于，x1之类的升级幅度由可视的multiplier直接拿到，max则是需要modal用自己的map和当前的coin来计算得出升级的差值。
       multiplier = this.maxAvailableLevel - this._data.currLevel;
@@ -525,12 +526,6 @@ class ModalLevel extends ModalRaw {
     let segmentCount = nowEnd - lastEnd;
     let scaleFactor = (this._data.currLevel - lastEnd) / segmentCount;
     return scaleFactor === 1 ? 0 : scaleFactor;
-
-    // if (this._data.type === 'warehouse') {
-    //   console.log('lastEnd & nowEnd', lastEnd, nowEnd);
-    //   console.log('segmentCount: ', segmentCount);
-    //   console.log('scaleFactor: ', scaleFactor);
-    // }
   };
 
   _updateAvatarGainedBar = () => {
@@ -562,6 +557,8 @@ class ModalLevel extends ModalRaw {
     this._updateAvatarGainedBar();
   };
 
+
+
   // 点击 x1 x10 ... btns时候, 需要一起更新的东西【需要的coin数值不归在这里更新】
   handleLevelBtnsChoosing = () => {
     // 拿到最新的点击升级数 || 可升级数， 可为0
@@ -579,7 +576,6 @@ class ModalLevel extends ModalRaw {
       console.log('levelIncrement为0，cause以及达到最大级数');
     }
 
-    // 这里diffs的计算是有bug的，因为升多级的时候，需要的coin没累计
     let currOpts = this._getCurrLevelInfoFromMap();
     let futureOpts = this._getCustomizedLevelInfoFromMap(levelIncrement);
     let diffs = this._getDiffOpts4LevelBtns(futureOpts, currOpts);
@@ -607,8 +603,8 @@ class ModalLevel extends ModalRaw {
 
   // 更新和coin value相关的东西only
   getCoinRelatedStuffsUpdated = currCoin => {
-    this.upgradePanel.updateLevelUpgradeBtnUI(currCoin);
     this._getMaxLevelNowCanGet2(currCoin);
+    this.upgradePanel.updateLevelUpgradeBtnUI(currCoin);
   };
 
   getLevelType = () => {

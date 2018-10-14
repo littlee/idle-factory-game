@@ -284,7 +284,7 @@ class ModalRaw extends window.Phaser.Group {
   }
 
   _handleClose = () => {
-    console.log('close modal');
+    // console.log('close modal');
     this.visible = false;
   };
 

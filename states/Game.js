@@ -606,6 +606,7 @@ class Game extends window.Phaser.State {
     this.btnCash.addCashAndUpdate(increment);
     this._updateWhateverNeed2KnowCoinValue();
   }
+
   getCurrCoin = () => {
     return this.btnCash.getCash();
   }

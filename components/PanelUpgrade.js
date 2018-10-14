@@ -160,7 +160,7 @@ class PanelUpgrade extends window.Phaser.Group {
     }
     this._data.coinNeeded = coinNeeded;
     this.txtUpgradeCoinNeeded.setText(formatBigNum(this._data.coinNeeded));
-    console.log(`可以升：${levelIncrement}级`);
+    // console.log(`可以升：${levelIncrement}级`);
   }
 
   updateLevelUpgradeBtnUI = (currCoin) => {

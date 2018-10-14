@@ -30,7 +30,7 @@ class BtnCash extends window.Phaser.Group {
   }
 
   _resetCashValueUI() {
-    this.text.setText(this._getformattedCashValue());
+    this.text.setText(this._getformattedCashValue(), true);
   }
 
   addCashAndUpdate(increment) {
