@@ -88,15 +88,6 @@ class ModalProdUpgrade extends ModalRaw {
       reso: 'copper'
     });
 
-    // this.framesOilBarrel = new ProductUpgradeFrame({
-    //   game: this.game,
-    //   parent: this.contentGroup,
-    //   offsetTop: OFFSET + CONFIG.frameHeight * 2 + CONFIG.gap * 2,
-    //   offsetLeft: LEFT,
-    //   modalRef: this,
-    //   prodList: ['plastic_bar', 'wheel', 'screen', 'phone']
-    // });
-
     this.frameGroup.addChild(this.frameOre);
     this.frameGroup.addChild(this.frameCopper);
     this.contentGroup.addChild(this.frameGroup);

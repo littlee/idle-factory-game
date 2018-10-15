@@ -4,6 +4,7 @@ const CONFIG = {
   frameTagStroke: 6,
   frameTagStrokeC: 0xffc131,
   frameHeight: 830,
+  frameHeightUnit: 830 / 4,
   frameWidth: 638,
   frameColor: 0xb4a59d,
   frameTagW: 134,
@@ -27,10 +28,10 @@ function getFontStyle(fSize, color, align, weight) {
   };
 }
 
-// 这个表需要每个workstation都有，然后这里可以去拿到。
+// 这个表需要每个workstation都有，然后这里可以去拿到。how？作为这里group的属性之一，然后父modal可以来改动它？
 const RESO_PRODLIST_MAP = {
   ore: ['steel', 'can', 'drill', 'toaster'],
-  copper: ['battery', 'coffee_machine', 'mp3', 'speaker'],
+  copper: ['battery', 'coffee_machine'],
   oilBarrel: [],
   plug: [],
   aluminium: [],
@@ -70,7 +71,8 @@ class ProductUpgradeFrame extends window.Phaser.Group {
     // frame
     this.frame = this.game.make.graphics(this.offsetLeft, this.offsetTop);
     this.frame.beginFill(CONFIG.frameColor);
-    this.frame.drawRect(0, 0, CONFIG.frameWidth, CONFIG.frameHeight);
+    // this.frame.drawRect(0, 0, CONFIG.frameWidth, CONFIG.frameHeight);
+    this.frame.drawRect(0, 0, CONFIG.frameWidth, CONFIG.frameHeightUnit * this.prodList.length);
     this.frame.endFill();
 
     // tag bg
@@ -119,43 +121,6 @@ class ProductUpgradeFrame extends window.Phaser.Group {
       });
       this.prodGroup.addChild(this[`prod${index}`]);
     });
-
-    // // prod1
-    // this.prod1 = new ProductUpgradeLine({
-    //   // 名字取成和product的一致
-    //   game: this.game,
-    //   parent: this,
-    //   offsetTop: this.offsetTop,
-    //   offsetLeft: this.offsetLeft,
-    //   product: this.prodList[0]
-    // });
-
-    // // prod2
-    // this.prod2 = new ProductUpgradeLine({
-    //   game: this.game,
-    //   parent: this,
-    //   offsetTop: this.offsetTop + CONFIG.productLineHeight,
-    //   offsetLeft: this.offsetLeft,
-    //   product: this.prodList[1]
-    // });
-
-    // // prod3
-    // this.prod3 = new ProductUpgradeLine({
-    //   game: this.game,
-    //   parent: this,
-    //   offsetTop: this.offsetTop + CONFIG.productLineHeight * 2,
-    //   offsetLeft: this.offsetLeft,
-    //   product: this.prodList[2]
-    // });
-
-    // // prod4
-    // this.prod4 = new ProductUpgradeLine({
-    //   game: this.game,
-    //   parent: this,
-    //   offsetTop: this.offsetTop + CONFIG.productLineHeight * 3,
-    //   offsetLeft: this.offsetLeft,
-    //   product: this.prodList[3]
-    // });
   };
 
   _addAllChildren = () => {
@@ -163,10 +128,6 @@ class ProductUpgradeFrame extends window.Phaser.Group {
     this.addChild(this.tag);
     this.addChild(this.tagName);
     this.addChild(this.tagImg);
-    // this.addChild(this.prod1);
-    // this.addChild(this.prod2);
-    // this.addChild(this.prod3);
-    // this.addChild(this.prod4);
     this.addChild(this.prodGroup);
   };
 
@@ -183,7 +144,6 @@ class ProductUpgradeFrame extends window.Phaser.Group {
   };
 
   setBigVeil4Children = () => {
-    // let children = [this.prod1, this.prod2, this.prod3, this.prod4];
     let children = this.prodGroup.children;
     this.inactiveChildren = children.filter(
       item => item.getActiveValue() === false
@@ -223,7 +183,6 @@ class ProductUpgradeFrame extends window.Phaser.Group {
   };
 
   updateFrameBtnBuyUI = (currCoin) => {
-    // let children = [this.prod1, this.prod2, this.prod3, this.prod4];
     let children = this.prodGroup.children;
     children.forEach(item => {
       item.updateLineBtnBuyUI(currCoin);
