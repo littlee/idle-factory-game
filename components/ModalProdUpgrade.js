@@ -15,7 +15,7 @@ const CONFIG = {
   connectlineH: 4,
 };
 
-// todo: 1）UI的更新timer要改，不要1s更一次；2）明确配置和输出；
+// todo: 1）明确配置和输出；
 
 /*
 这个Modal 关闭了统一boost children的priortyID的代码执行，

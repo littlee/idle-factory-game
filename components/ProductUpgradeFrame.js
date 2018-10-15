@@ -27,6 +27,7 @@ function getFontStyle(fSize, color, align, weight) {
   };
 }
 
+// 这个表需要每个workstation都有，然后这里可以去拿到。
 const RESO_PRODLIST_MAP = {
   ore: ['steel', 'can', 'drill', 'toaster'],
   copper: ['battery', 'coffee_machine', 'mp3', 'speaker'],
@@ -106,42 +107,55 @@ class ProductUpgradeFrame extends window.Phaser.Group {
     this.tagImg.scale.y = CONFIG.tagImgScale;
     this.tagImg.alignTo(this.tagName, Phaser.RIGHT_BOTTOM, 5, -5);
 
-    // prod1
-    this.prod1 = new ProductUpgradeLine({
-      // 名字取成和product的一致
-      game: this.game,
-      parent: this,
-      offsetTop: this.offsetTop,
-      offsetLeft: this.offsetLeft,
-      product: this.prodList[0]
+    this.prodGroup = this.game.make.group();
+    this.prodList.forEach((item, index) => {
+      this[`prod${index}`] = new ProductUpgradeLine({
+        // 名字取成和product的一致
+        game: this.game,
+        parent: this,
+        offsetTop: this.offsetTop + CONFIG.productLineHeight * index,
+        offsetLeft: this.offsetLeft,
+        product: this.prodList[index]
+      });
+      this.prodGroup.addChild(this[`prod${index}`]);
     });
 
-    // prod2
-    this.prod2 = new ProductUpgradeLine({
-      game: this.game,
-      parent: this,
-      offsetTop: this.offsetTop + CONFIG.productLineHeight,
-      offsetLeft: this.offsetLeft,
-      product: this.prodList[1]
-    });
+    // // prod1
+    // this.prod1 = new ProductUpgradeLine({
+    //   // 名字取成和product的一致
+    //   game: this.game,
+    //   parent: this,
+    //   offsetTop: this.offsetTop,
+    //   offsetLeft: this.offsetLeft,
+    //   product: this.prodList[0]
+    // });
 
-    // prod3
-    this.prod3 = new ProductUpgradeLine({
-      game: this.game,
-      parent: this,
-      offsetTop: this.offsetTop + CONFIG.productLineHeight * 2,
-      offsetLeft: this.offsetLeft,
-      product: this.prodList[2]
-    });
+    // // prod2
+    // this.prod2 = new ProductUpgradeLine({
+    //   game: this.game,
+    //   parent: this,
+    //   offsetTop: this.offsetTop + CONFIG.productLineHeight,
+    //   offsetLeft: this.offsetLeft,
+    //   product: this.prodList[1]
+    // });
 
-    // prod4
-    this.prod4 = new ProductUpgradeLine({
-      game: this.game,
-      parent: this,
-      offsetTop: this.offsetTop + CONFIG.productLineHeight * 3,
-      offsetLeft: this.offsetLeft,
-      product: this.prodList[3]
-    });
+    // // prod3
+    // this.prod3 = new ProductUpgradeLine({
+    //   game: this.game,
+    //   parent: this,
+    //   offsetTop: this.offsetTop + CONFIG.productLineHeight * 2,
+    //   offsetLeft: this.offsetLeft,
+    //   product: this.prodList[2]
+    // });
+
+    // // prod4
+    // this.prod4 = new ProductUpgradeLine({
+    //   game: this.game,
+    //   parent: this,
+    //   offsetTop: this.offsetTop + CONFIG.productLineHeight * 3,
+    //   offsetLeft: this.offsetLeft,
+    //   product: this.prodList[3]
+    // });
   };
 
   _addAllChildren = () => {
@@ -149,10 +163,11 @@ class ProductUpgradeFrame extends window.Phaser.Group {
     this.addChild(this.tag);
     this.addChild(this.tagName);
     this.addChild(this.tagImg);
-    this.addChild(this.prod1);
-    this.addChild(this.prod2);
-    this.addChild(this.prod3);
-    this.addChild(this.prod4);
+    // this.addChild(this.prod1);
+    // this.addChild(this.prod2);
+    // this.addChild(this.prod3);
+    // this.addChild(this.prod4);
+    this.addChild(this.prodGroup);
   };
 
   becomeActive = () => {
@@ -168,7 +183,8 @@ class ProductUpgradeFrame extends window.Phaser.Group {
   };
 
   setBigVeil4Children = () => {
-    let children = [this.prod1, this.prod2, this.prod3, this.prod4];
+    // let children = [this.prod1, this.prod2, this.prod3, this.prod4];
+    let children = this.prodGroup.children;
     this.inactiveChildren = children.filter(
       item => item.getActiveValue() === false
     );
@@ -207,11 +223,12 @@ class ProductUpgradeFrame extends window.Phaser.Group {
   };
 
   updateFrameBtnBuyUI = (currCoin) => {
-    let children = [this.prod1, this.prod2, this.prod3, this.prod4];
+    // let children = [this.prod1, this.prod2, this.prod3, this.prod4];
+    let children = this.prodGroup.children;
     children.forEach(item => {
       item.updateLineBtnBuyUI(currCoin);
     });
-  }
+  };
 }
 
 export default ProductUpgradeFrame;
