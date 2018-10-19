@@ -4,6 +4,7 @@ import ModalLevel from '../components/ModalLevel.js';
 // import ModalRescources from '../components/ModalResources.js';
 import ModalAdCampaign from '../components/ModalAdCampaign';
 import ModalProdUpgrade from '../components/ModalProdUpgrade';
+import ModalSkills from '../components/ModalSkills';
 
 class Game extends window.Phaser.State {
   create() {
@@ -107,9 +108,14 @@ class Game extends window.Phaser.State {
     //   worker: true
     // });
 
-    let modal = new ModalProdUpgrade({
+    // let modal = new ModalProdUpgrade({
+    //   game: this.game,
+    //   headingTxt: '生产产品升级',
+    // });
+
+
+    let modal = new ModalSkills({
       game: this.game,
-      headingTxt: '生产产品升级',
     });
 
     // btn-egg

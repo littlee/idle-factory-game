@@ -70,7 +70,7 @@ class ModalRaw extends window.Phaser.Group {
     this.margin = contentMargin;
     this.scrollable = scrollable;
     this.priorityID = priority;
-    this.headingTxt = headingTxt || '标题';
+    this.headingTxt = headingTxt || '';
     this.headingH = headingH;
     this.headingStyles = Object.assign({}, FONT_STYLE, headingStyles);
     this.subHeadingTxt = subHeading ? CONFIG.subHeading : '';

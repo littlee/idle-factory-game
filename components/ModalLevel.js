@@ -63,7 +63,6 @@ function getFontStyle(fSize, color, align, weight) {
 class ModalLevel extends ModalRaw {
   constructor({
     game,
-    scrollable,
     opts,
     type = 'market',
     coupledBtn = null,
@@ -71,7 +70,7 @@ class ModalLevel extends ModalRaw {
     desLevel = null,
     workstation = null
   }) {
-    super(game, undefined, undefined, scrollable);
+    super(game);
     this.state = this.game.state.states[this.game.state.current];
 
     this.MAP = LevelMap[type];
@@ -154,7 +153,7 @@ class ModalLevel extends ModalRaw {
       getFontStyle('18px', 'white')
     );
     this.avatarDesTxt.setTextBounds(0, 0, 339, 30); // 同上
-    this.avatarDesTxt.alignTo(this.avatarDesBg, Phaser.Phaser.TOP_LEFT, 0, -30);
+    this.avatarDesTxt.alignTo(this.avatarDesBg, Phaser.TOP_LEFT, 0, -30);
 
     this.avatarBar = this.game.make.graphics(0, 0);
     this.avatarBar.beginFill(0x3a0a00, 0.8);

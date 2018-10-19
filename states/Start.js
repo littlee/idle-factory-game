@@ -135,12 +135,23 @@ class Start extends window.Phaser.State {
     this.load.image('avatar_tran_market', 'images/avatar_market_transporter.png');
     this.load.image('avatar_tran_warehose', 'images/avatar_transporter.png');
     this.load.image('avatar_worker', 'images/avatar_worker.png');
+    this.load.image('bell_panel_heading', 'images/bell_panel_heading.png');
+    this.load.image('bell_red_whole', 'images/bell_red_whole.png');
+    this.load.image('bell_yellow_whole', 'images/bell_yellow_whole.png');
+    this.load.image('btn_skill_upgrade_disable', 'images/btn_skill_upgrade_disable.png');
+    this.load.image('btn_skill_upgrade_able', 'images/btn_skill_upgrade_able.png');
+    this.load.image('btn_skill_buy_able', 'images/btn_skill_buy_able.png');
+    this.load.image('btn_skill_buy_disable', 'images/btn_buy_skill_disable.png');
+    this.load.image('btn_sale_upgrade_disable', 'images/btn_sale_upgrade_disable.png');
+    this.load.image('btn_sale_upgrade_able', 'images/btn_sale_upgrade_able.png');
     this.load.image('bg_base', 'images/background_base.png');
     this.load.image('bg_bronze', 'images/background_copper.png');
     this.load.image('bg_gold', 'images/background_gold.png');
     this.load.image('bg_jade', 'images/background_jade.png');
     this.load.image('bg_ruby', 'images/background_ruby.png');
     this.load.image('bg_silver', 'images/background_silver.png');
+    this.load.image('bg_bell', 'images/bell_bg.png');
+    this.load.image('bg_skill', 'images/skill_bg.png');
     this.load.image('btn_close', 'images/btn_close.png');
     this.load.image('btn_cash_able2buy', 'images/btn_cash_able2buy.png');
     this.load.image('btn_cash_unable2buy', 'images/btn_cash_unable2buy.png');
@@ -155,6 +166,7 @@ class Start extends window.Phaser.State {
     this.load.image('bubble_percentage', 'images/bubble_percentage.png');
     this.load.image('clock_yellow', 'images/clock_yellow.png');
     this.load.image('progressBarSaleBoost', 'images/progressBarSaleBoost.png');
+    this.load.image('panel_skill_counts', 'images/panel_skill_counts.png');
     this.load.image('icon_loading_speed', 'images/icon_loading_speed.png');
     this.load.image('icon_transporter', 'images/icon_transporter.png');
     this.load.image('icon_walk_speed', 'images/icon_walk_speed.png');
@@ -165,6 +177,9 @@ class Start extends window.Phaser.State {
     this.load.image('icon_ore', 'images/icon_ore.png');
     this.load.image('icon_power', 'images/icon_power.png');
     this.load.image('icon_base', 'images/icon_base.png');
+    this.load.image('icon_skill_factory2', 'images/icon_skill_factory2.png');
+    this.load.image('icon_skill_factory1', 'images/icon_skill_factory1.png');
+    this.load.image('skill_panel_heading', 'images/skill_panel_heading.png');
   }
 
   create() {
