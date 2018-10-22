@@ -1,9 +1,9 @@
 import Scroller from '../components/Scroller.js';
 // import ModalRaw from '../components/ModalRaw.js';
-import ModalLevel from '../components/ModalLevel.js';
+// import ModalLevel from '../components/ModalLevel.js';
 // import ModalRescources from '../components/ModalResources.js';
-import ModalAdCampaign from '../components/ModalAdCampaign';
-import ModalProdUpgrade from '../components/ModalProdUpgrade';
+// import ModalAdCampaign from '../components/ModalAdCampaign';
+// import ModalProdUpgrade from '../components/ModalProdUpgrade';
 import ModalSkills from '../components/ModalSkills';
 
 class Game extends window.Phaser.State {

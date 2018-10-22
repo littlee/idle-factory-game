@@ -156,12 +156,23 @@ class ModalSkills extends ModalRaw {
     this.skillBg1 = this.game.make.image(0, 0, 'bg_skill');
     this.skillBg1.alignTo(this.skillHeading, Phaser.BOTTOM_CENTER, -140, 30);
 
-    // two bells
+    // two skill count panel
+    this.panelSkillCount1 = this.game.make.image(0, 0, 'panel_skill_counts');
+    this.panelSkillCount1.alignTo(this.skillBg1, Phaser.TOP_CENTER, 0, -33);
+    this.skillCountTxt1 = this.game.make.text(0, 0, this.pointRed, getFontStyle());
+    this.skillCountTxt1.alignTo(this.panelSkillCount1, Phaser.BOTTOM_CENTER, 0, -33);
+
+    this.panelSkillCount2 = this.game.make.image(0, 0, 'panel_skill_counts');
+    this.panelSkillCount2.alignTo(this.skillBg0, Phaser.TOP_CENTER, 0, -33);
+    this.skillCountTxt2 = this.game.make.text(0, 0, this.pointRed, getFontStyle());
+    this.skillCountTxt2.alignTo(this.panelSkillCount2, Phaser.BOTTOM_CENTER, 0, -33);
+
+    // two skill icons
     this.iconFactory1 = this.game.make.image(0, 0, 'icon_skill_factory1');
-    this.iconFactory1.alignTo(this.skillBg1, Phaser.TOP_CENTER, 0, -203);
+    this.iconFactory1.alignTo(this.skillBg1, Phaser.TOP_CENTER, 0, -223);
 
     this.iconFactory2 = this.game.make.image(0, 0, 'icon_skill_factory2');
-    this.iconFactory2.alignTo(this.skillBg0, Phaser.TOP_CENTER, 0, -203);
+    this.iconFactory2.alignTo(this.skillBg0, Phaser.TOP_CENTER, 0, -223);
 
     // buy-able btn & disable btn
     this.btnBuyAble1 = this.game.make.image(0, 0, 'btn_skill_buy_able');
@@ -187,6 +198,10 @@ class ModalSkills extends ModalRaw {
     this.skillGroup.addChild(this.skillHeading);
     this.skillGroup.addChild(this.skillBg0);
     this.skillGroup.addChild(this.skillBg1);
+    this.skillGroup.addChild(this.panelSkillCount1);
+    this.skillGroup.addChild(this.panelSkillCount2);
+    this.skillGroup.addChild(this.skillCountTxt1);
+    this.skillGroup.addChild(this.skillCountTxt2);
     this.skillGroup.addChild(this.iconFactory1);
     this.skillGroup.addChild(this.iconFactory2);
     this.skillGroup.addChild(this.btnBuyAble1);
