@@ -1,4 +1,4 @@
-import Big from '../js/libs/big.min';
+// import Big from '../js/libs/big.min';
 
 import ModalRaw from './ModalRaw.js';
 

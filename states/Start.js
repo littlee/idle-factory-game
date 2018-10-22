@@ -163,10 +163,15 @@ class Start extends window.Phaser.State {
     this.load.image('btn_research_update', 'images/btn_research_update.png');
     this.load.image('btn_research_skip', 'images/btn_research_skip.png');
     this.load.image('btn_research_update_disable', 'images/btn_research_update_disable.png');
+    this.load.image('btn_prod_cash', 'images/btn_prod_cash.png');
+    this.load.image('btn_prod_coin', 'images/btn_prod_coin.png');
+    this.load.image('btn_prodLocked', 'images/btn_prodLocked.png');
+    this.load.image('btn_tick', 'images/btn_tick.png');
     this.load.image('bubble_percentage', 'images/bubble_percentage.png');
     this.load.image('clock_yellow', 'images/clock_yellow.png');
     this.load.image('progressBarSaleBoost', 'images/progressBarSaleBoost.png');
     this.load.image('panel_skill_counts', 'images/panel_skill_counts.png');
+    this.load.image('panel_prod_price', 'images/panel_prod_price.png');
     this.load.image('icon_loading_speed', 'images/icon_loading_speed.png');
     this.load.image('icon_transporter', 'images/icon_transporter.png');
     this.load.image('icon_walk_speed', 'images/icon_walk_speed.png');
@@ -183,8 +188,8 @@ class Start extends window.Phaser.State {
   }
 
   create() {
-    // this.state.start('Game');
-    this.state.start('Test');
+    this.state.start('Game');
+    // this.state.start('Test');
 
     // console.log(formatBigNum(Big('123456789123456789')))
   }

@@ -4,7 +4,8 @@ import Scroller from '../components/Scroller.js';
 // import ModalRescources from '../components/ModalResources.js';
 // import ModalAdCampaign from '../components/ModalAdCampaign';
 // import ModalProdUpgrade from '../components/ModalProdUpgrade';
-import ModalSkills from '../components/ModalSkills';
+// import ModalSkills from '../components/ModalSkills';
+import ModalProdPick from '../components/ModalProdPick.js';
 
 class Game extends window.Phaser.State {
   create() {
@@ -114,7 +115,11 @@ class Game extends window.Phaser.State {
     // });
 
 
-    let modal = new ModalSkills({
+    // let modal = new ModalSkills({
+    //   game: this.game,
+    // });
+
+    let modal = new ModalProdPick({
       game: this.game,
     });
 
