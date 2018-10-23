@@ -10,8 +10,8 @@ const CONFIG = {
   frameTagStrokeC: 0xffd945,
   tagImgScale: 34 / 128,
   frameWidth: 553,
-  frameHeight: 396,
-  gap: 100,
+  frameHeight: 405,
+  gap: 100
 };
 
 const RESO_TAGNAME_MAP = {
@@ -34,16 +34,29 @@ function getFontStyle(fSize, color, align, weight) {
   };
 }
 
-
 // control the UI of a raw-material-frame
 class ModalProdPick extends ModalRaw {
   constructor({
     game,
-    headingTxt = '选择生产'
+    headingTxt = '选择生产',
+    scrollable = true,
+    boost = false
   }) {
-    super(game, headingTxt);
+    super(
+      game,
+      headingTxt,
+      undefined,
+      undefined,
+      scrollable,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      boost,
+      undefined
+    );
     // has inherited this.w this.h
-    this.framesList = null;
+    this.framesList = ['steel', 'can', 'drill', 'toaster'];
     this.reso = 'ore';
     this.tagCnName = RESO_TAGNAME_MAP[this.reso];
 
@@ -56,7 +69,7 @@ class ModalProdPick extends ModalRaw {
     // frame
     let left = (this.w - CONFIG.frameWidth) / 2;
     this.frameOre = this.game.make.graphics(left, OFFSET * 1.5);
-    this.frameOre.beginFill(CONFIG.frameColor);
+    this.frameOre.beginFill(CONFIG.frameColor, 0.7);
     this.frameOre.drawRect(0, 0, CONFIG.frameWidth, CONFIG.frameHeight);
     this.frameOre.endFill();
 
@@ -82,12 +95,7 @@ class ModalProdPick extends ModalRaw {
       getFontStyle('28px', '', '', 'bold')
     ); // fSize, color, align, weight
 
-    this.tagName.alignTo(
-      this.tag,
-      Phaser.BOTTOM_LEFT,
-      -20,
-      -CONFIG.frameTagH
-    );
+    this.tagName.alignTo(this.tag, Phaser.BOTTOM_LEFT, -20, -CONFIG.frameTagH);
 
     // tag img
     this.tagImg = this.game.make.image(0, 0, `reso_${this.reso}`);
@@ -115,9 +123,8 @@ class ModalProdPick extends ModalRaw {
 
     this._drawItems();
 
-
     this._addAllChildren();
-  }
+  };
 
   _drawItems = () => {
     this.item1 = new ProdPickItem({
@@ -144,14 +151,13 @@ class ModalProdPick extends ModalRaw {
       prodOrder: 4
     });
 
-
     this.item1.alignTo(this.thBg, Phaser.BOTTOM_LEFT, 0, 10);
     this.item2.alignTo(this.item1, Phaser.BOTTOM_LEFT, 0, 10);
     this.item3.alignTo(this.item2, Phaser.BOTTOM_LEFT, 0, 10);
     this.item4.alignTo(this.item3, Phaser.BOTTOM_LEFT, 0, 10);
-  }
+  };
 
-   _addAllChildren = () => {
+  _addAllChildren = () => {
     this.contentGroup.addChild(this.frameOre);
     this.contentGroup.addChild(this.tag);
     this.contentGroup.addChild(this.tagName);
@@ -168,8 +174,7 @@ class ModalProdPick extends ModalRaw {
     this.contentGroup.addChild(this.item4);
   };
 
-
-   _getInit = () => {
+  _getInit = () => {
     this._prepBeforeContentGroup();
     /* real content goes here */
     this.getContextGroupInit();

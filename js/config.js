@@ -48,46 +48,62 @@ export const PROD_DES = {
   // rubber goes here
 };
 
-export const PROD_PRICE_VALUE = {
+export const PROD_INFO = {
   steel: {
     price: 5,
     coinNeeded: 0,
-    cashNeeded: 0
+    cashNeeded: 0,
+    bought: true,
+    activated: true,
   },
   can: {
     price: 10,
-    coinNeeded: 1000,
-    cashNeeded: 100
+    coinNeeded: 5000,
+    cashNeeded: 100,
+    bought: false,
+    activated: false,
   },
   drill: {
     price: 250,
-    coinNeeded: 3000,
-    cashNeeded: 200
+    coinNeeded: 8000,
+    cashNeeded: 200,
+    bought: false,
+    activated: false,
   },
   toaster: {
     price: 1000,
     coinNeeded: 10000,
-    cashNeeded: 250
+    cashNeeded: 250,
+    bought: false,
+    activated: false,
   },
   battery: {
     price: 1300,
     coinNeeded: 15000,
-    cashNeeded:  200
+    cashNeeded:  200,
+    bought: false,
+    activated: false,
   },
   coffee_machine: {
     price: 3000,
     coinNeeded: 1000000,
-    cashNeeded: 300
+    cashNeeded: 300,
+    bought: false,
+    activated: false,
   },
   mp3: {
     price: 5000,
     coinNeeded: 10000000,
-    cashNeeded: 350
+    cashNeeded: 350,
+    bought: false,
+    activated: false,
   },
   speaker: {
     price: 10000,
     coinNeeded: 10500000,
-    cashNeeded: 350
+    cashNeeded: 350,
+    bought: false,
+    activated: false,
   },
 };
 
