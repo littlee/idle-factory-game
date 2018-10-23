@@ -68,6 +68,7 @@ class Start extends window.Phaser.State {
     this.load.image('reso_rubber', 'images/material/Rubber_Base.png');
 
     // prod
+    // ore
     this.load.image('prod_steel', 'images/material/Steel_Base.png');
     this.load.image('prod_steel_bronze', 'images/material/Steel_Bronze.png');
     this.load.image('prod_steel_silver', 'images/material/Steel_Silver.png');
@@ -96,6 +97,7 @@ class Start extends window.Phaser.State {
     this.load.image('prod_toaster_jade', 'images/material/Toaster_Jade.png');
     this.load.image('prod_toaster_ruby', 'images/material/Toaster_Ruby.png');
 
+    // copper
     this.load.image('prod_battery', 'images/material/Battery_Base.png');
     this.load.image('prod_battery_bronze', 'images/material/Battery_Bronze.png');
     this.load.image('prod_battery_silver', 'images/material/Battery_Silver.png');
@@ -123,6 +125,122 @@ class Start extends window.Phaser.State {
     this.load.image('prod_speaker_gold', 'images/material/Speaker_Gold.png');
     this.load.image('prod_speaker_jade', 'images/material/Speaker_Jade.png');
     this.load.image('prod_speaker_ruby', 'images/material/Speaker_Ruby.png');
+
+    // oilBarrel
+    this.load.image('prod_plasticBar', 'images/material/Plastic_Base.png');
+    this.load.image('prod_plasticBar_bronze', 'images/material/Plastic_Bronze.png');
+    this.load.image('prod_plasticBar_silver', 'images/material/Plastic_Silver.png');
+    this.load.image('prod_plasticBar_gold', 'images/material/Plastic_Gold.png');
+    this.load.image('prod_plasticBar_jade', 'images/material/Plastic_Jade.png');
+    this.load.image('prod_plasticBar_ruby', 'images/material/Plastic_Ruby.png');
+
+    this.load.image('prod_wheel', 'images/material/Wheel_Base.png');
+    this.load.image('prod_wheel_bronze', 'images/material/Wheel_Bronze.png');
+    this.load.image('prod_wheel_silver', 'images/material/Wheel_Silver.png');
+    this.load.image('prod_wheel_gold', 'images/material/Wheel_Gold.png');
+    this.load.image('prod_wheel_jade', 'images/material/Wheel_Jade.png');
+    this.load.image('prod_wheel_ruby', 'images/material/Wheel_Ruby.png');
+
+    this.load.image('prod_screen', 'images/material/Screen_Base.png');
+    this.load.image('prod_screen_bronze', 'images/material/Screen_Bronze.png');
+    this.load.image('prod_screen_silver', 'images/material/Screen_Silver.png');
+    this.load.image('prod_screen_gold', 'images/material/Screen_Gold.png');
+    this.load.image('prod_screen_jade', 'images/material/Screen_Jade.png');
+    this.load.image('prod_screen_ruby', 'images/material/Screen_Ruby.png');
+
+    this.load.image('prod_phone', 'images/material/Phone_Base.png');
+    this.load.image('prod_phone_bronze', 'images/material/Phone_Bronze.png');
+    this.load.image('prod_phone_silver', 'images/material/Phone_Silver.png');
+    this.load.image('prod_phone_gold', 'images/material/Phone_Gold.png');
+    this.load.image('prod_phone_jade', 'images/material/Phone_Jade.png');
+    this.load.image('prod_phone_ruby', 'images/material/Phone_Ruby.png');
+
+    // plugsx
+    this.load.image('prod_circuit', 'images/material/Circuit_Base.png');
+    this.load.image('prod_circuit_bronze', 'images/material/Circuit_Bronze.png');
+    this.load.image('prod_circuit_silver', 'images/material/Circuit_Silver.png');
+    this.load.image('prod_circuit_gold', 'images/material/Circuit_Gold.png');
+    this.load.image('prod_circuit_jade', 'images/material/Circuit_Jade.png');
+    this.load.image('prod_circuit_ruby', 'images/material/Circuit_Ruby.png');
+
+    this.load.image('prod_tv', 'images/material/TV_Base.png');
+    this.load.image('prod_tv_bronze', 'images/material/TV_Bronze.png');
+    this.load.image('prod_tv_silver', 'images/material/TV_Silver.png');
+    this.load.image('prod_tv_gold', 'images/material/TV_Gold.png');
+    this.load.image('prod_tv_jade', 'images/material/TV_Jade.png');
+    this.load.image('prod_tv_ruby', 'images/material/TV_Ruby.png');
+
+    this.load.image('prod_computer', 'images/material/Computer_Base.png');
+    this.load.image('prod_computer_bronze', 'images/material/Computer_Bronze.png');
+    this.load.image('prod_computer_silver', 'images/material/Computer_Silver.png');
+    this.load.image('prod_computer_gold', 'images/material/Computer_Gold.png');
+    this.load.image('prod_computer_jade', 'images/material/Computer_Jade.png');
+    this.load.image('prod_computer_ruby', 'images/material/Computer_Ruby.png');
+
+    this.load.image('prod_vr', 'images/material/VRHeadset_Base.png');
+    this.load.image('prod_vr_bronze', 'images/material/VRHeadset_Bronze.png');
+    this.load.image('prod_vr_silver', 'images/material/VRHeadset_Silver.png');
+    this.load.image('prod_vr_gold', 'images/material/VRHeadset_Gold.png');
+    this.load.image('prod_vr_jade', 'images/material/VRHeadset_Jade.png');
+    this.load.image('prod_vr_ruby', 'images/material/VRHeadset_Ruby.png');
+
+    // aluminium
+    this.load.image('prod_engine', 'images/material/Engine_Base.png');
+    this.load.image('prod_engine_bronze', 'images/material/Engine_Bronze.png');
+    this.load.image('prod_engine_silver', 'images/material/Engine_Silver.png');
+    this.load.image('prod_engine_gold', 'images/material/Engine_Gold.png');
+    this.load.image('prod_engine_jade', 'images/material/Engine_Jade.png');
+    this.load.image('prod_engine_ruby', 'images/material/Engine_Ruby.png');
+
+    this.load.image('prod_solarPanel', 'images/material/SolarPanel_Base.png');
+    this.load.image('prod_solarPanel_bronze', 'images/material/SolarPanel_Bronze.png');
+    this.load.image('prod_solarPanel_silver', 'images/material/SolarPanel_Silver.png');
+    this.load.image('prod_solarPanel_gold', 'images/material/SolarPanel_Gold.png');
+    this.load.image('prod_solarPanel_jade', 'images/material/SolarPanel_Jade.png');
+    this.load.image('prod_solarPanel_ruby', 'images/material/SolarPanel_Ruby.png');
+
+    this.load.image('prod_car', 'images/material/Car_Base.png');
+    this.load.image('prod_car_bronze', 'images/material/Car_Bronze.png');
+    this.load.image('prod_car_silver', 'images/material/Car_Silver.png');
+    this.load.image('prod_car_gold', 'images/material/Car_Gold.png');
+    this.load.image('prod_car_jade', 'images/material/Car_Jade.png');
+    this.load.image('prod_car_ruby', 'images/material/Car_Ruby.png');
+
+    this.load.image('prod_telescope', 'images/material/Telescope_Base.png');
+    this.load.image('prod_telescope_bronze', 'images/material/Telescope_Bronze.png');
+    this.load.image('prod_telescope_silver', 'images/material/Telescope_Silver.png');
+    this.load.image('prod_telescope_gold', 'images/material/Telescope_Gold.png');
+    this.load.image('prod_telescope_jade', 'images/material/Telescope_Jade.png');
+    this.load.image('prod_telescope_ruby', 'images/material/Telescope_Ruby.png');
+
+    // rubber
+    this.load.image('prod_projector', 'images/material/Projector_Base.png');
+    this.load.image('prod_projector_bronze', 'images/material/Projector_Bronze.png');
+    this.load.image('prod_projector_silver', 'images/material/Projector_Silver.png');
+    this.load.image('prod_projector_gold', 'images/material/Projector_Gold.png');
+    this.load.image('prod_projector_jade', 'images/material/Projector_Jade.png');
+    this.load.image('prod_projector_ruby', 'images/material/Projector_Ruby.png');
+
+    this.load.image('prod_headset', 'images/material/Headset_Base.png');
+    this.load.image('prod_headset_bronze', 'images/material/Headset_Bronze.png');
+    this.load.image('prod_headset_silver', 'images/material/Headset_Silver.png');
+    this.load.image('prod_headset_gold', 'images/material/Headset_Gold.png');
+    this.load.image('prod_headset_jade', 'images/material/Headset_Jade.png');
+    this.load.image('prod_headset_ruby', 'images/material/Headset_Ruby.png');
+
+    this.load.image('prod_walkieTalkie', 'images/material/WalkieTalkie_Base.png');
+    this.load.image('prod_walkieTalkie_bronze', 'images/material/WalkieTalkie_Bronze.png');
+    this.load.image('prod_walkieTalkie_silver', 'images/material/WalkieTalkie_Silver.png');
+    this.load.image('prod_walkieTalkie_gold', 'images/material/WalkieTalkie_Gold.png');
+    this.load.image('prod_walkieTalkie_jade', 'images/material/WalkieTalkie_Jade.png');
+    this.load.image('prod_walkieTalkie_ruby', 'images/material/WalkieTalkie_Ruby.png');
+
+    this.load.image('prod_radio', 'images/material/Radio_Base.png');
+    this.load.image('prod_radio_bronze', 'images/material/Radio_Bronze.png');
+    this.load.image('prod_radio_silver', 'images/material/Radio_Silver.png');
+    this.load.image('prod_radio_gold', 'images/material/Radio_Gold.png');
+    this.load.image('prod_radio_jade', 'images/material/Radio_Jade.png');
+    this.load.image('prod_radio_ruby', 'images/material/Radio_Ruby.png');
 
     this.load.image('test_ground', 'test/Ground00_88400421.png');
     this.load.image('test_wall', 'test/WallWide_88400188.png');

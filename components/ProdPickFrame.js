@@ -4,10 +4,10 @@ import ProdPickItem from './ProdPickItem.js';
 const RESO_LIST_MAP = {
   ore: ['steel', 'can', 'drill', 'toaster'],
   copper: ['battery', 'coffee_machine', 'mp3', 'speaker'],
-  oilBarrel: [],
-  plug: [],
-  aluminium: [],
-  rubber: []
+  barrel: ['plasticBar', 'wheel', 'screen', 'phone'],
+  plug: ['circuit', 'tv', 'computer', 'vr'],
+  aluminium: ['engine', 'solarPanel', 'car', 'telescope'],
+  rubber: ['projector', 'headset', 'walkieTalkie', 'radio']
 };
 
 const CONFIG = {
@@ -20,13 +20,15 @@ const CONFIG = {
   tagImgScale: 34 / 128,
   frameWidth: 553,
   frameHeight: 405,
-  gap: 100
+  lockedBgColor: 0xa49a95,
+  lockedBgHeight: 327,
+  scaleFactor: 55 / 128
 };
 
 const RESO_TAGNAME_MAP = {
   ore: '铁矿',
   copper: '黄铜',
-  oilBarrel: '油桶',
+  barrel: '油桶',
   plug: '电器',
   aluminium: '铝器',
   rubber: '橡胶'
@@ -45,14 +47,16 @@ function getFontStyle(fSize, color, align, weight) {
 
 
 class ProdPickFrame extends window.Phaser.Group {
-  constructor({game, reso, parentWidth, offsetTop}) {
+  constructor({game, reso, parentWidth, offsetTop, unlocked}) {
     super(game);
     this.parentWidth = parentWidth;
     this.reso = reso;
     this.tagCnName = RESO_TAGNAME_MAP[reso];
-    this.unlocked = false; // should has a method 2 set 2 true
     this.list = RESO_LIST_MAP[reso];
     this.offsetTop = offsetTop ? offsetTop : 0;
+
+    this.lockDes = '请在仓库购买进口' + this.tagCnName + '原材料\n解锁生产这些产品，赚更多的钱';
+    this.unlocked = unlocked; // should has a method 2 set 2 true
 
     this._getInit();
   }
@@ -62,6 +66,8 @@ class ProdPickFrame extends window.Phaser.Group {
     this._drawTag();
     this._drawTableHeading();
     this._drawItems();
+    this._drawLockedItems();
+    this._getFrameStateInit();
     this._addAllChildren();
   }
 
@@ -141,9 +147,37 @@ class ProdPickFrame extends window.Phaser.Group {
   }
 
   _drawLockedItems = () => {
-    this.lockedTxt = this.game.make.text();
+    this.lockedGroup = this.game.make.group();
 
-    // 4个outputs + 一个txt + 一个bg
+    this.lockBg = this.game.make.graphics(0, 0);
+    this.lockBg.beginFill(CONFIG.lockedBgColor);
+    this.lockBg.drawRect(0, 0, CONFIG.frameWidth, CONFIG.lockedBgHeight);
+    this.lockBg.endFill();
+    this.lockBg.alignTo(this.thBg, Phaser.BOTTOM_LEFT, 0, 10);
+
+    this.lockDesTxt = this.game.make.text(0, 0, this.lockDes, getFontStyle('22px', '', '', 'normal'));
+    this.lockDesTxt.setTextBounds(0, 0, CONFIG.frameWidth, CONFIG.lockedBgHeight / 3);
+    this.lockDesTxt.alignTo(this.lockBg, Phaser.TOP_LEFT, 0, -100);
+
+    let gap = CONFIG.frameWidth / 8;
+    this.prodGroup = this.game.make.group();
+    this.list.forEach((item, index) => {
+      this[`prod${index}`] = this.game.make.image(0, 0, `prod_${item}`);
+      this[`prod${index}`].scale.x = CONFIG.scaleFactor;
+      this[`prod${index}`].scale.y = CONFIG.scaleFactor;
+      this[`prod${index}`].alignTo(this.lockDesTxt, Phaser.BOTTOM_LEFT, - gap*(1.4 + 1.5 * index), 45);
+      this.prodGroup.addChild(this[`prod${index}`]);
+    });
+
+    this.lockedGroup.addChild(this.lockBg);
+    this.lockedGroup.addChild(this.lockDesTxt);
+    this.lockedGroup.addChild(this.prodGroup);
+  }
+
+  _getFrameStateInit = () => {
+    if (this.unlocked === true) {
+      this.lockedGroup.visible = false;
+    }
   }
 
   _addAllChildren = () => {
@@ -158,7 +192,18 @@ class ProdPickFrame extends window.Phaser.Group {
     range(4).forEach(item => {
       this.addChild(this[`item${item}`]);
     });
+    this.addChild(this.lockedGroup);
 
+  }
+
+  getUnlocked = () => {
+    this.lockedGroup.visible = false;
+  }
+
+  getAllItemCashBtnUpdated = (currCoin) => {
+     range(4).forEach((item) => {
+      this[`item${item}`].getCashBtnUpdated(currCoin);
+    });
   }
 }
 

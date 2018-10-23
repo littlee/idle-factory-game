@@ -111,14 +111,12 @@ class BtnBuy extends window.Phaser.Group {
   }
 
   _handleClick = () => {
-    // let currCoin = 0; // fetch
-    // console.log('点击resouce modal购买按钮');
     if (this.can === true) {
-      // console.log('减coin，update当前btnUI，变成tick，最外面的原料桌子上要有新的resource', this.target2buy);
       this.resourcesTable.addGood(this.target2buy);
       this._setBoughtFlagTrue();
-      // 这里去拿state的方法
+      // 这里去拿state的方法，减coin + 让modalProdPick的frame解锁
       this.state.subtractCash(this._data.coinNeeded);
+      this.state.updateWhateverNeed2KnowCurrAvailableResos();
       return true;
     }
     return false;

@@ -1,11 +1,13 @@
 import { OUTPUT_INPUT_MAP, PROD_DES, PROD_INFO } from '../js/config.js';
+import Big from '../js/libs/big.min';
+import { formatBigNum } from '../utils';
 
 const CONFIG = {
   veilWidth: 552,
   veilHeight: 70,
   basedBgColor: '0x000000',
   hightLightedColor: '0xb7f8ba',
-  veilAlpha: 0.4,
+  veilAlpha: 0.6,
   basedAlpha: 0.1,
   scaleFactor:  55 / 128,
 };
@@ -24,6 +26,8 @@ function getFontStyle(fSize, color, align, weight) {
 class ProdPickItem extends window.Phaser.Group {
   constructor({game, output, prodOrder}) {
     super(game);
+    this.state = this.game.state.states[this.game.state.current];
+
     this.flagBought = PROD_INFO[output].bought;
     this.flagActivated = PROD_INFO[output].activated;
 
@@ -31,8 +35,8 @@ class ProdPickItem extends window.Phaser.Group {
     this.outputKey = output; // 需要根据product的等级来变化UI
     this.inputKeyList = OUTPUT_INPUT_MAP[output];
 
-    this.price = PROD_INFO[output].price;
-    this.coinNeeded = PROD_INFO[output].coinNeeded;
+    this.price = Big(PROD_INFO[output].price);
+    this.coinNeeded = Big(PROD_INFO[output].coinNeeded);
     this.cashNeeded = PROD_INFO[output].cashNeeded;
     this.prodDes = PROD_DES[output];
 
@@ -53,6 +57,25 @@ class ProdPickItem extends window.Phaser.Group {
     this._drawBtnLocked();
     this._add2ThisGroup();
     this._showInitUI();
+  }
+
+
+  _updateOutputUI = () => {
+    // loadTexture()
+    // this.output.loadTexture('')
+
+  }
+
+  _updateInputUI = () => {
+     // this.input.forEach() loadTexture('')
+  }
+
+  _getFomattedPrice = () => {
+    return formatBigNum(this.price);
+  }
+
+  _getFormattedCoinNeeded = () => {
+    return formatBigNum(this.coinNeeded);
   }
 
   _drawBaseBg = () => {
@@ -108,13 +131,12 @@ class ProdPickItem extends window.Phaser.Group {
   }
   _drawPricePanel = () => {
     // price
-
     this.priceGroup = this.game.make.group();
     this.panelPrice = this.game.make.image(0, 0, 'panel_prod_price');
     this.panelPrice.alignTo(this.output, Phaser.LEFT_BOTTOM, -372, 7);
 
     this.prodDesTxt = this.game.make.text(0, 0, this.prodDes, getFontStyle(undefined, '#f4f78e'));
-    this.priceTxt = this.game.make.text(0, 0, this.price, getFontStyle(undefined, '#f4f78e'));
+    this.priceTxt = this.game.make.text(0, 0, this._getFomattedPrice(), getFontStyle(undefined, '#f4f78e'));
     this.prodDesTxt.alignTo(this.panelPrice, Phaser.TOP_CENTER, 0, -33);
     this.priceTxt.alignTo(this.panelPrice, Phaser.RIGHT_BOTTOM, -50, -5);
 
@@ -150,7 +172,7 @@ class ProdPickItem extends window.Phaser.Group {
     // change texture
     this.btnCoin = this.game.make.image(0, 0, 'btn_prod_coin');
     this.btnCoin.alignTo(this.baseBg, Phaser.RIGHT_BOTTOM, -95);
-    this.coinTxt = this.game.make.text(0, 0, this.coinNeeded, getFontStyle(undefined, 'white'));
+    this.coinTxt = this.game.make.text(0, 0, this._getFormattedCoinNeeded(), getFontStyle(undefined, 'white'));
     this.coinTxt.alignTo(this.btnCoin, Phaser.TOP_LEFT, -32, -32);
 
     this.btnCoinGroup.addChild(this.btnCoin);
@@ -206,17 +228,8 @@ class ProdPickItem extends window.Phaser.Group {
       // 紧跟着最后一个bought===true的item后面，coinBtn是要shown的，这里不做处理，让外面的frame处理
       this.setItem2LockedUI();
     }
-  }
-
-
-  _updateOutputUI = () => {
-    // loadTexture()
-    // this.output.loadTexture('')
-
-  }
-
-  _updateInputUI = () => {
-     // this.input.forEach() loadTexture('')
+    // let currCoin = Big(this.state.getCurrCoin());
+    // this._shownInitBtnCashTexture(currCoin);
   }
 
   _showActivatedTick = () => {
@@ -224,9 +237,13 @@ class ProdPickItem extends window.Phaser.Group {
     this.panelTick.visible = false;
   }
 
+  // FIX ME!!!
+
   _showTheRightBtnCoinUI = (currCoin) => {
-    if (currCoin.lt(this.price)) {
+    if (currCoin.lt(this.coinNeeded)) {
       this.btnCash.loadTexture('btn_prod_coin_disable', true);
+    } else {
+      this.btnCash.loadTexture('btn_prod_coin', true);
     }
   }
 
@@ -244,8 +261,12 @@ class ProdPickItem extends window.Phaser.Group {
     this.veil.visible = true;
     this.panelTick.visible = false;
     this.panelTickActivated.visible = false;
-    this.btnCoinGroup.visible = false;
-    this.btnLocked.visible = true;
+
+    // this.btnCoinGroup.visible = false;
+    // this.btnLocked.visible = true;
+    // dev
+    this.btnCoinGroup.visible = true;
+    this.btnLocked.visible = false;
   }
 
 
@@ -282,17 +303,14 @@ class ProdPickItem extends window.Phaser.Group {
     this._showActivatedTick();
   }
 
-
-
-
   getUpgradedItemUI = () => {
 
   }
 
-  getItemCashBtnUpdated = () => {
+  getCashBtnUpdated = (currCoin) => {
     // if item's this.flagBought is false, do this. otherwise avoid
     if (this.flagBought !== true) {
-      this._showTheRightBtnCoinUI();
+      this._showTheRightBtnCoinUI(currCoin);
     }
   }
 }
