@@ -5,7 +5,7 @@ const CONFIG = {
   veilHeight: 70,
   basedBgColor: '0x000000',
   hightLightedColor: '0xb7f8ba',
-  veilAlpha: 0.4,
+  veilAlpha: 0.6,
   basedAlpha: 0.1,
   scaleFactor:  55 / 128,
 };

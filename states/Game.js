@@ -654,6 +654,15 @@ class Game extends window.Phaser.State {
       });
     }
   }
+
+  // 原材料台购买了新的材料
+  updateWhateverNeed2KnowCurrAvailableResos = () => {
+    let newGoodsList = this.warehouse.getCurrentGoods();
+
+    this.workstationGroup.children.forEach(item => {
+      item.modalProdPick.updateResoList(newGoodsList);
+    });
+  }
 }
 
 export default Game;

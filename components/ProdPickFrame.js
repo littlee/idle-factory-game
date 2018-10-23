@@ -20,7 +20,8 @@ const CONFIG = {
   tagImgScale: 34 / 128,
   frameWidth: 553,
   frameHeight: 405,
-  gap: 100
+  lockedBgColor: 0xa49a95,
+  lockedBgHeight: 327
 };
 
 const RESO_TAGNAME_MAP = {
@@ -45,14 +46,15 @@ function getFontStyle(fSize, color, align, weight) {
 
 
 class ProdPickFrame extends window.Phaser.Group {
-  constructor({game, reso, parentWidth, offsetTop}) {
+  constructor({game, reso, parentWidth, offsetTop, unlocked}) {
     super(game);
     this.parentWidth = parentWidth;
     this.reso = reso;
     this.tagCnName = RESO_TAGNAME_MAP[reso];
-    this.unlocked = false; // should has a method 2 set 2 true
     this.list = RESO_LIST_MAP[reso];
     this.offsetTop = offsetTop ? offsetTop : 0;
+
+    this.unlocked = unlocked; // should has a method 2 set 2 true
 
     this._getInit();
   }
@@ -62,6 +64,8 @@ class ProdPickFrame extends window.Phaser.Group {
     this._drawTag();
     this._drawTableHeading();
     this._drawItems();
+    this._drawLockedItems();
+    this._getFrameStateInit();
     this._addAllChildren();
   }
 
@@ -141,9 +145,23 @@ class ProdPickFrame extends window.Phaser.Group {
   }
 
   _drawLockedItems = () => {
-    this.lockedTxt = this.game.make.text();
+    this.lockedGroup = this.game.make.group();
+    // this.lockedTxt = this.game.make.text();
+    this.lockBg = this.game.make.graphics(0, 0);
+    this.lockBg.beginFill(CONFIG.lockedBgColor);
+    this.lockBg.drawRect(0, 0, CONFIG.frameWidth, CONFIG.lockedBgHeight);
+    this.lockBg.endFill();
+    this.lockBg.alignTo(this.thBg, Phaser.BOTTOM_LEFT, 0, 10);
+
+    this.lockedGroup.addChild(this.lockBg);
 
     // 4个outputs + 一个txt + 一个bg
+  }
+
+  _getFrameStateInit = () => {
+    if (this.unlocked === true) {
+      this.lockedGroup.visible = false;
+    }
   }
 
   _addAllChildren = () => {
@@ -158,7 +176,12 @@ class ProdPickFrame extends window.Phaser.Group {
     range(4).forEach(item => {
       this.addChild(this[`item${item}`]);
     });
+    this.addChild(this.lockedGroup);
 
+  }
+
+  getUnlocked = () => {
+    this.lockedGroup.visible = false;
   }
 }
 

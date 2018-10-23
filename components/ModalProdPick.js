@@ -26,20 +26,51 @@ class ModalProdPick extends ModalRaw {
       contentMargin
     );
     // has inherited this.w this.h
-
+    this.activatedProd = null;
+    this.resoList = [
+      { name: 'ore',
+        unlocked: true
+      },
+      { name: 'copper',
+        unlocked: false
+      },
+      { name: 'barrel',
+        unlocked: false
+      },
+      { name: 'plug',
+        unlocked: false
+      },
+      { name: 'aluminium',
+        unlocked: false
+      },
+      { name: 'rubber',
+        unlocked: false
+      }
+    ];
     this._getInit();
   }
 
+  _getInit = () => {
+    this._prepBeforeContentGroup();
+    /* real content goes here */
+    this._getContextGroupInit();
+    this._prepAfterContentGroup();
+  };
+
+  _addAllChildren = () => {
+    this.contentGroup.addChild(this.frameGroup);
+  };
+
   // 注意modal的属性名称不能和raw的collapse
-  getContextGroupInit = () => {
+  _getContextGroupInit = () => {
     const OFFSET = this.headingH;
-    let resoList = ['ore', 'copper', 'barrel', 'plug', 'aluminium', 'plug'];
     this.frameGroup = this.game.make.group();
 
-    range(6).forEach( item => {
+    range(6).forEach((item) => {
       this[`frame${item}`] = new ProdPickFrame({
         game: this.game,
-        reso: resoList[item],
+        reso: this.resoList[item].name,
+        unlocked: this.resoList[item].unlocked,
         parentWidth: this.w,
         offsetTop: OFFSET * 1.5 + (405 + 50) * item
       });
@@ -48,16 +79,18 @@ class ModalProdPick extends ModalRaw {
     this._addAllChildren();
   };
 
-
-  _addAllChildren = () => {
-    this.contentGroup.addChild(this.frameGroup);
+  updateResoList = (newGoodsList) => {
+    // get curr added reso
+    let currAddedReso = newGoodsList[newGoodsList.length - 1];
+    let targetIdx = this.resoList.findIndex(item => {
+      return item.name === currAddedReso;
+    });
+    this.resoList[targetIdx].unlocked = true;
+    this[`frame${targetIdx}`].getUnlocked();
   };
 
-  _getInit = () => {
-    this._prepBeforeContentGroup();
-    /* real content goes here */
-    this.getContextGroupInit();
-    this._prepAfterContentGroup();
+  getCurrActivatedProd = () => {
+    return this.activatedProd;
   };
 }
 

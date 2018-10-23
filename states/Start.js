@@ -235,12 +235,12 @@ class Start extends window.Phaser.State {
     this.load.image('prod_walkieTalkie_jade', 'images/material/WalkieTalkie_Jade.png');
     this.load.image('prod_walkieTalkie_ruby', 'images/material/WalkieTalkie_Ruby.png');
 
-    this.load.image('prod_raio', 'images/material/Radio_Base.png');
-    this.load.image('prod_raio_bronze', 'images/material/Radio_Bronze.png');
-    this.load.image('prod_raio_silver', 'images/material/Radio_Silver.png');
-    this.load.image('prod_raio_gold', 'images/material/Radio_Gold.png');
-    this.load.image('prod_raio_jade', 'images/material/Radio_Jade.png');
-    this.load.image('prod_raio_ruby', 'images/material/Radio_Ruby.png');
+    this.load.image('prod_radio', 'images/material/Radio_Base.png');
+    this.load.image('prod_radio_bronze', 'images/material/Radio_Bronze.png');
+    this.load.image('prod_radio_silver', 'images/material/Radio_Silver.png');
+    this.load.image('prod_radio_gold', 'images/material/Radio_Gold.png');
+    this.load.image('prod_radio_jade', 'images/material/Radio_Jade.png');
+    this.load.image('prod_radio_ruby', 'images/material/Radio_Ruby.png');
 
     this.load.image('test_ground', 'test/Ground00_88400421.png');
     this.load.image('test_wall', 'test/WallWide_88400188.png');
