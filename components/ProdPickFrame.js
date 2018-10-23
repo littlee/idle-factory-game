@@ -140,6 +140,12 @@ class ProdPickFrame extends window.Phaser.Group {
     });
   }
 
+  _drawLockedItems = () => {
+    this.lockedTxt = this.game.make.text();
+
+    // 4个outputs + 一个txt + 一个bg
+  }
+
   _addAllChildren = () => {
     this.addChild(this.frame);
     this.addChild(this.tag);

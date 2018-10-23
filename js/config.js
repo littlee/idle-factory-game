@@ -45,6 +45,11 @@ export const PROD_DES = {
   vr: '1VR',
 
   // aluminium goes here
+  engine: '2引擎',
+  solarPanel: '3太阳能板',
+  telescope: '1望远镜',
+  // one more
+
   // rubber goes here
 };
 
@@ -105,5 +110,88 @@ export const PROD_INFO = {
     bought: false,
     activated: false,
   },
+
+  plasticBar: {
+    price: 5000,
+    coinNeeded: 10000000,
+    cashNeeded: 350,
+    bought: false,
+    activated: false,
+  },
+  wheel: {
+    price: 5000,
+    coinNeeded: 10000000,
+    cashNeeded: 350,
+    bought: false,
+    activated: false,
+  },
+  screen: {
+    price: 5000,
+    coinNeeded: 10000000,
+    cashNeeded: 350,
+    bought: false,
+    activated: false,
+  },
+  phone: {
+    price: 5000,
+    coinNeeded: 10000000,
+    cashNeeded: 350,
+    bought: false,
+    activated: false,
+  },
+
+  circuit: {
+    price: 5000,
+    coinNeeded: 10000000,
+    cashNeeded: 350,
+    bought: false,
+    activated: false,
+  },
+  tv: {
+    price: 5000,
+    coinNeeded: 10000000,
+    cashNeeded: 350,
+    bought: false,
+    activated: false,
+  },
+  computer: {
+    price: 5000,
+    coinNeeded: 10000000,
+    cashNeeded: 350,
+    bought: false,
+    activated: false,
+  },
+  vr: {
+    price: 5000,
+    coinNeeded: 10000000,
+    cashNeeded: 350,
+    bought: false,
+    activated: false,
+  },
+
+  engine: {
+    price: 5000,
+    coinNeeded: 10000000,
+    cashNeeded: 350,
+    bought: false,
+    activated: false,
+  },
+
+  solarPanel: {
+    price: 5000,
+    coinNeeded: 10000000,
+    cashNeeded: 350,
+    bought: false,
+    activated: false,
+  },
+
+  telescope: {
+    price: 5000,
+    coinNeeded: 10000000,
+    cashNeeded: 350,
+    bought: false,
+    activated: false,
+  }
+
 };
 
