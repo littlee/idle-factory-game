@@ -13,8 +13,7 @@ import WorkerWarehouse from '../components/WorkerWarehouse';
 import WorkerMarket from '../components/WorkerMarket';
 import Scroller from '../components/Scroller.js';
 
-import BellRed from '../components/BellRed';
-import BellYellow from '../components/BellYellow';
+import Bell from '../components/Bell';
 
 import BtnUpgrade from '../components/BtnUpgrade';
 import ModalLevel from '../components/ModalLevel.js';
@@ -65,7 +64,7 @@ class Game extends window.Phaser.State {
     // group 1-5
 
     // 速度提升 3 倍
-    this.bellRed = new BellRed(this.game, 80, 116);
+    this.bellRed = new Bell(this.game, 80, 116, 'red');
     this.bellRed.unlock();
     this.bellRed.onSkill(() => {
       this.workerWarehouseGroup.forEach(worker => {
@@ -91,7 +90,7 @@ class Game extends window.Phaser.State {
     });
 
     // 销售提升 3 倍
-    this.bellYellow = new BellYellow(this.game, 550, 116);
+    this.bellYellow = new Bell(this.game, 550, 116, 'yellow');
     this.bellYellow.unlock();
     this.bellYellow.onSkill(() => {
       this.market.setMultiple(3);
