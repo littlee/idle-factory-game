@@ -593,7 +593,7 @@ class Game extends window.Phaser.State {
     // 更新workstations里头的modal升级按钮
     this.workstationGroup.forEachAlive(item => {
       item.workestationLevelModal.getCoinRelatedStuffsUpdated(currCoin);
-      item.modalProdPick.getAllBtnCash(currCoin);
+      // item.modalProdPick.getAllBtnCash(currCoin);
     });
   }
 

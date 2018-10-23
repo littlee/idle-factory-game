@@ -3,7 +3,7 @@ import Big from '../js/libs/big.min';
 import range from '../js/libs/_/range';
 
 import ModalLevel from './ModalLevel';
-import ModalProdPick from './ModalProdPick.js';
+// import ModalProdPick from './ModalProdPick.js';
 import Worker from './Worker';
 import BtnUpgrade from './BtnUpgrade';
 import ResourceEmitter from './ResourceEmitter';
@@ -178,14 +178,14 @@ class Workstation extends window.Phaser.Group {
     this.productBtn.inputEnabled = true;
     this.productBtn.input.priorityID = PRIORITY_ID;
 
-    this.modalProdPick = new ModalProdPick({
-      game: this.game
-    });
-    this.modalProdPick.visible = false;
+    // this.modalProdPick = new ModalProdPick({
+    //   game: this.game
+    // });
+    // this.modalProdPick.visible = false;
 
     this.productBtn.events.onInputDown.add(() => {
       console.log('点击工作台产品按钮');
-      this.modalProdPick.visible = true;
+      // this.modalProdPick.visible = true;
       // this.setOutput('drill');
       // this.game.state.start('Test');
       // this.outputTimer.delay = 100;
