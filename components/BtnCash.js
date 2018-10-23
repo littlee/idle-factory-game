@@ -9,7 +9,7 @@ const TEXT_STYLE = {
 };
 
 class BtnCash extends window.Phaser.Group {
-  constructor(game, x, y, value = 4000) {
+  constructor(game, x, y, value = 0) {
     super(game);
     this.x = x;
     this.y = y;
@@ -23,6 +23,9 @@ class BtnCash extends window.Phaser.Group {
 
     this.setAllChildren('inputEnabled', true);
     this.setAllChildren('input.priorityID', 888);
+
+    this._onChangeFunc = null;
+    this._onChangeContext = null;
   }
 
   _getformattedCashValue() {
@@ -31,6 +34,10 @@ class BtnCash extends window.Phaser.Group {
 
   _resetCashValueUI() {
     this.text.setText(this._getformattedCashValue(), true);
+
+    if (this._onChangeFunc) {
+      this._onChangeFunc.call(this._onChangeContext, this.value);
+    }
   }
 
   addCashAndUpdate(increment) {
@@ -49,6 +56,11 @@ class BtnCash extends window.Phaser.Group {
 
   getCash() {
     return this.value;
+  }
+
+  onChange(func, context) {
+    this._onChangeFunc = func;
+    this._onChangeContext = context;
   }
 
 }

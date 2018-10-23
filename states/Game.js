@@ -439,6 +439,7 @@ class Game extends window.Phaser.State {
     this.btnCash.onClick(() => {
       console.log('cash clicked');
     });
+    this.btnCash.onChange(this._onCashChange);
 
     // bottom
     this.menuBottom = this.add.graphics();
@@ -594,6 +595,10 @@ class Game extends window.Phaser.State {
     this.workstationGroup.forEachAlive(item => {
       item.workestationLevelModal.getCoinRelatedStuffsUpdated(currCoin);
     });
+  }
+
+  _onCashChange = (value) => {
+    // console.log(this);
   }
 
   subtractCash = (decrement) => {
