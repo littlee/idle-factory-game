@@ -4,10 +4,10 @@ import ProdPickItem from './ProdPickItem.js';
 const RESO_LIST_MAP = {
   ore: ['steel', 'can', 'drill', 'toaster'],
   copper: ['battery', 'coffee_machine', 'mp3', 'speaker'],
-  oilBarrel: [],
-  plug: [],
-  aluminium: [],
-  rubber: []
+  barrel: ['plasticBar', 'wheel', 'screen', 'phone'],
+  plug: ['circuit', 'tv', 'computer', 'vr'],
+  aluminium: ['engine', 'solarPanel', 'car', 'telescope'],
+  rubber: ['projector', 'headset', 'walkieTalkie', 'radio']
 };
 
 const CONFIG = {
@@ -26,7 +26,7 @@ const CONFIG = {
 const RESO_TAGNAME_MAP = {
   ore: '铁矿',
   copper: '黄铜',
-  oilBarrel: '油桶',
+  barrel: '油桶',
   plug: '电器',
   aluminium: '铝器',
   rubber: '橡胶'

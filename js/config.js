@@ -9,8 +9,8 @@ export const OUTPUT_INPUT_MAP = {
   mp3: ['battery'],
   speaker: ['battery', 'mp3'],
 
-  plasticBar: ['oilBarrel'],
-  wheel: ['oilBarrel'],
+  plasticBar: ['barrel'],
+  wheel: ['barrel'],
   screen: ['plasticBar'],
   phone: ['plasticBar', 'screen'],
 
@@ -20,7 +20,16 @@ export const OUTPUT_INPUT_MAP = {
   vr: ['circuit', 'computer'],
 
   // aluminium goes here
+  engine: ['aluminium'],
+  solarPanel: ['aluminium'],
+  car: ['engine'],
+  telescope: ['engine', 'car'],
+
   // rubber goes here
+  projector: ['rubber'],
+  headset: ['rubber'],
+  walkieTalkie: ['projector'],
+  radio: ['projector', 'walkieTalkie'],
 };
 
 export const PROD_DES = {
@@ -47,10 +56,13 @@ export const PROD_DES = {
   // aluminium goes here
   engine: '2引擎',
   solarPanel: '3太阳能板',
+  car: '3汽车',
   telescope: '1望远镜',
-  // one more
 
-  // rubber goes here
+  projector: '1投影仪',
+  headset: '2耳机',
+  walkieTalkie: '3对讲机',
+  radio: '2收音机',
 };
 
 export const PROD_INFO = {
@@ -185,13 +197,50 @@ export const PROD_INFO = {
     activated: false,
   },
 
+  car: {
+    price: 5000,
+    coinNeeded: 10000000,
+    cashNeeded: 350,
+    bought: false,
+    activated: false,
+  },
+
   telescope: {
     price: 5000,
     coinNeeded: 10000000,
     cashNeeded: 350,
     bought: false,
     activated: false,
-  }
+  },
+
+  projector: {
+    price: 5000,
+    coinNeeded: 10000000,
+    cashNeeded: 350,
+    bought: false,
+    activated: false,
+  },
+  headset: {
+    price: 5000,
+    coinNeeded: 10000000,
+    cashNeeded: 350,
+    bought: false,
+    activated: false,
+  },
+  walkieTalkie: {
+    price: 5000,
+    coinNeeded: 10000000,
+    cashNeeded: 350,
+    bought: false,
+    activated: false,
+  },
+  radio: {
+    price: 5000,
+    coinNeeded: 10000000,
+    cashNeeded: 350,
+    bought: false,
+    activated: false,
+  },
 
 };
 

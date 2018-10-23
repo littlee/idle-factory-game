@@ -1,6 +1,8 @@
 import ModalRaw from './ModalRaw.js';
 import ProdPickFrame from './ProdPickFrame.js';
 
+import range from '../js/libs/_/range';
+
 // control the UI of a raw-material-frame
 class ModalProdPick extends ModalRaw {
   constructor({
@@ -31,26 +33,24 @@ class ModalProdPick extends ModalRaw {
   // 注意modal的属性名称不能和raw的collapse
   getContextGroupInit = () => {
     const OFFSET = this.headingH;
-    // frame
-    this.frameOre = new ProdPickFrame({
-      game: this.game,
-      reso: 'ore',
-      parentWidth: this.w,
-      offsetTop: OFFSET * 1.5
-    });
-    this.frameCopper = new ProdPickFrame({
-      game: this.game,
-      reso: 'copper',
-      parentWidth: this.w,
-      offsetTop: OFFSET * 1.5 + 405 + 50
+    let resoList = ['ore', 'copper', 'barrel', 'plug', 'aluminium', 'plug'];
+    this.frameGroup = this.game.make.group();
+
+    range(6).forEach( item => {
+      this[`frame${item}`] = new ProdPickFrame({
+        game: this.game,
+        reso: resoList[item],
+        parentWidth: this.w,
+        offsetTop: OFFSET * 1.5 + (405 + 50) * item
+      });
+      this.frameGroup.addChild(this[`frame${item}`]);
     });
     this._addAllChildren();
   };
 
 
   _addAllChildren = () => {
-    this.contentGroup.addChild(this.frameOre);
-    this.contentGroup.addChild(this.frameCopper);
+    this.contentGroup.addChild(this.frameGroup);
   };
 
   _getInit = () => {
