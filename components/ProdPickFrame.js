@@ -21,7 +21,8 @@ const CONFIG = {
   frameWidth: 553,
   frameHeight: 405,
   lockedBgColor: 0xa49a95,
-  lockedBgHeight: 327
+  lockedBgHeight: 327,
+  scaleFactor: 55 / 128
 };
 
 const RESO_TAGNAME_MAP = {
@@ -54,6 +55,7 @@ class ProdPickFrame extends window.Phaser.Group {
     this.list = RESO_LIST_MAP[reso];
     this.offsetTop = offsetTop ? offsetTop : 0;
 
+    this.lockDes = '请在仓库购买进口' + this.tagCnName + '原材料\n解锁生产这些产品，赚更多的钱';
     this.unlocked = unlocked; // should has a method 2 set 2 true
 
     this._getInit();
@@ -146,16 +148,30 @@ class ProdPickFrame extends window.Phaser.Group {
 
   _drawLockedItems = () => {
     this.lockedGroup = this.game.make.group();
-    // this.lockedTxt = this.game.make.text();
+
     this.lockBg = this.game.make.graphics(0, 0);
     this.lockBg.beginFill(CONFIG.lockedBgColor);
     this.lockBg.drawRect(0, 0, CONFIG.frameWidth, CONFIG.lockedBgHeight);
     this.lockBg.endFill();
     this.lockBg.alignTo(this.thBg, Phaser.BOTTOM_LEFT, 0, 10);
 
-    this.lockedGroup.addChild(this.lockBg);
+    this.lockDesTxt = this.game.make.text(0, 0, this.lockDes, getFontStyle('22px', '', '', 'normal'));
+    this.lockDesTxt.setTextBounds(0, 0, CONFIG.frameWidth, CONFIG.lockedBgHeight / 3);
+    this.lockDesTxt.alignTo(this.lockBg, Phaser.TOP_LEFT, 0, -100);
 
-    // 4个outputs + 一个txt + 一个bg
+    let gap = CONFIG.frameWidth / 8;
+    this.prodGroup = this.game.make.group();
+    this.list.forEach((item, index) => {
+      this[`prod${index}`] = this.game.make.image(0, 0, `prod_${item}`);
+      this[`prod${index}`].scale.x = CONFIG.scaleFactor;
+      this[`prod${index}`].scale.y = CONFIG.scaleFactor;
+      this[`prod${index}`].alignTo(this.lockDesTxt, Phaser.BOTTOM_LEFT, - gap*(1.4 + 1.5 * index), 45);
+      this.prodGroup.addChild(this[`prod${index}`]);
+    });
+
+    this.lockedGroup.addChild(this.lockBg);
+    this.lockedGroup.addChild(this.lockDesTxt);
+    this.lockedGroup.addChild(this.prodGroup);
   }
 
   _getFrameStateInit = () => {
