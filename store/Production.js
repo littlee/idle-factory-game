@@ -25,7 +25,7 @@ class Production {
     };
 
     this._prodLevel = {
-      steel: 1,
+      steel: 0,
       can: 0,
       drill: 0,
       toaster: 0,
