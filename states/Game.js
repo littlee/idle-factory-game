@@ -593,6 +593,7 @@ class Game extends window.Phaser.State {
     // 更新workstations里头的modal升级按钮
     this.workstationGroup.forEachAlive(item => {
       item.workestationLevelModal.getCoinRelatedStuffsUpdated(currCoin);
+      item.modalProdPick.getAllBtnCash(currCoin);
     });
   }
 
@@ -659,7 +660,7 @@ class Game extends window.Phaser.State {
   updateWhateverNeed2KnowCurrAvailableResos = () => {
     let newGoodsList = this.warehouse.getCurrentGoods();
 
-    this.workstationGroup.children.forEach(item => {
+    this.workstationGroup.forEachAlive(item => {
       item.modalProdPick.updateResoList(newGoodsList);
     });
   }

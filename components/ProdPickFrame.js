@@ -199,6 +199,12 @@ class ProdPickFrame extends window.Phaser.Group {
   getUnlocked = () => {
     this.lockedGroup.visible = false;
   }
+
+  getAllItemCashBtnUpdated = (currCoin) => {
+     range(4).forEach((item) => {
+      this[`item${item}`].getCashBtnUpdated(currCoin);
+    });
+  }
 }
 
 export default ProdPickFrame;

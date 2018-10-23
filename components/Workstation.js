@@ -12,6 +12,8 @@ import BoxCollect from './BoxCollect';
 import SourceImg from '../resource/SourceImg';
 import Production from '../store/Production';
 
+import { OUTPUT_INPUT_MAP } from '../js/config.js';
+
 const MAX_INPUT_PILE = 2;
 const A_MINUTE = 60000;
 
@@ -36,16 +38,16 @@ const GROUND_NUM_STYLE = {
 
 const PRIORITY_ID = 999;
 
-const OUTPUT_INPUT_MAP = {
-  steel: ['ore'],
-  can: ['ore'],
-  drill: ['steel'],
-  toaster: ['steel', 'can'],
-  battery: ['copper'],
-  coffee_machine: ['copper'],
-  mp3: ['battery'],
-  speaker: ['battery', 'mp3']
-};
+// const OUTPUT_INPUT_MAP = {
+//   steel: ['ore'],
+//   can: ['ore'],
+//   drill: ['steel'],
+//   toaster: ['steel', 'can'],
+//   battery: ['copper'],
+//   coffee_machine: ['copper'],
+//   mp3: ['battery'],
+//   speaker: ['battery', 'mp3']
+// };
 
 // 单位输入对应的输出数量
 const OUTPUT_PRODUCE_MAP = {
@@ -56,7 +58,28 @@ const OUTPUT_PRODUCE_MAP = {
   battery: 2,
   coffee_machine: 2,
   mp3: 3,
-  speaker: 1
+  speaker: 1,
+  // 对应关系不一定正确
+  plasticBar: 2,
+  wheel: 2,
+  screen: 3,
+  phone: 1,
+
+  circuit: 2,
+  tv: 1,
+  computer: 1,
+  vr: 1,
+
+  // aluminium goes here
+  engine: 2,
+  solarPanel: 3,
+  car: 3,
+  telescope: 1,
+
+  projector: 1,
+  headset: 2,
+  walkieTalkie: 3,
+  radio: 2,
 };
 
 const TEXTURE_SCALE = 0.43;
