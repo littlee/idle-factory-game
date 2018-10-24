@@ -69,6 +69,7 @@ class ProdPickFrame extends window.Phaser.Group {
     this._drawLockedItems();
     this._getFrameStateInit();
     this._addAllChildren();
+    this.showCorrectFrameUI();
   }
 
   _drawFrame = () => {
@@ -137,7 +138,8 @@ class ProdPickFrame extends window.Phaser.Group {
       this[`item${item}`] = new ProdPickItem({
         game: this.game,
         output: this.list[item],
-        prodOrder: item + 1
+        prodOrder: item + 1,
+        parentFrame: this
       });
       if (item === 0) {
         this[`item${item}`].alignTo(this.thBg, Phaser.BOTTOM_LEFT, 0, 10);
@@ -195,6 +197,20 @@ class ProdPickFrame extends window.Phaser.Group {
     this.addChild(this.lockedGroup);
 
   }
+
+  _getNextAvailableLockedItem = () => {
+    let targetItem = this.itemGroup.children.findIndex(item => {
+      return item.flagBought === false;
+    });
+    return targetItem === -1 ? null : this.itemGroup.children[targetItem];
+  }
+
+  showCorrectFrameUI = () => {
+    let nextAvailableItem = this._getNextAvailableLockedItem();
+    if (nextAvailableItem === null) return true;
+    nextAvailableItem.setItem2BuyableUI();
+  }
+
 
   getUnlocked = () => {
     this.lockedGroup.visible = false;

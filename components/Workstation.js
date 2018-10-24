@@ -172,16 +172,12 @@ class Workstation extends window.Phaser.Group {
     this.buyBtnGroup.visible = false;
 
     // 生产相关
+
     this.productGroup = this.game.make.group();
     this.productBtn = this.game.make.sprite(0, 0, 'btn_product_holder');
     this.productBtn.alignIn(this.table, window.Phaser.TOP_RIGHT, -15, -15);
     this.productBtn.inputEnabled = true;
     this.productBtn.input.priorityID = PRIORITY_ID;
-
-    this.modalProdPick = new ModalProdPick({
-      game: this.game
-    });
-    this.modalProdPick.visible = false;
 
     this.productBtn.events.onInputDown.add(() => {
       console.log('点击工作台产品按钮');
@@ -309,6 +305,9 @@ class Workstation extends window.Phaser.Group {
       type: 'workstation',
       coupledBtn: this.upBtn,
       workstation: this // more to go
+    });
+    this.modalProdPick = new ModalProdPick({
+      game: this.game
     });
 
     // for simple z-depth

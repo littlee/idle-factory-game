@@ -24,8 +24,10 @@ function getFontStyle(fSize, color, align, weight) {
 }
 
 class ProdPickItem extends window.Phaser.Group {
-  constructor({game, output, prodOrder}) {
+  constructor({game, output, prodOrder, parentFrame}) {
     super(game);
+    this.state = this.game.state.states[this.game.state.current];
+    this.parentFrame = parentFrame;
 
     this.flagBought = PROD_INFO[output].bought;
     this.flagActivated = PROD_INFO[output].activated;
@@ -55,6 +57,7 @@ class ProdPickItem extends window.Phaser.Group {
     this._drawBtnCoin();
     this._drawBtnLocked();
     this._add2ThisGroup();
+    this._makeBtnCoinResponds2Click();
     this._showInitUI();
   }
 
@@ -218,6 +221,38 @@ class ProdPickItem extends window.Phaser.Group {
     this.addChild(this.btnLocked);
   }
 
+  _makeBtnCoinResponds2Click = () => {
+    this.btnCoin.inputEnabled = true;
+    this.btnCoin.input.priorityID = 1001;
+    this.btnCoin.events.onInputDown.add(() => {
+      if (this.btnCoin.key === 'btn_prod_coin_disable') return false;
+      this.state.subtractCash(this.coinNeeded);
+      this._makeFlagBoughtTrue();
+      this.setItem2BoughtNotActivatedUI();
+      this.parentFrame.showCorrectFrameUI();
+    });
+  }
+
+  _makeFlagBoughtTrue = () => {
+    this.flagBought = true;
+  }
+
+  _handleTickClick = () => {
+    // parent 关闭全部activated
+    // 自己开自己的activated
+    // set到activated的UI
+  }
+
+
+  activatedItem = () => {
+    this.flagActivated = true;
+  }
+
+  deactivatedItem = () => {
+    this.flagActivated = false;
+  }
+
+
   _showInitUI = () => {
     if (this.flagActivated === true) {
       this.setItem2Activated();
@@ -271,6 +306,7 @@ class ProdPickItem extends window.Phaser.Group {
     this.hightlightedVeil.visible = false;
     this.btnCashGroup.visible = false;
     this.btnCoinGroup.visible = false;
+    this.priceGroup.visible = true;
     this.panelTick.visible = true;
     this.btnLocked.visible = false;
   }

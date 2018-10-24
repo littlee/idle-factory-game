@@ -592,12 +592,12 @@ class Game extends window.Phaser.State {
     this.modalWarehose.getCoinRelatedStuffsUpdated(currCoin);
     this.modalProdUpgrade.updateModalAllBtnBuyUI(currCoin);
     // 更新workstations里头的modal升级按钮
-    this.workstationGroup.forEachAlive((item, index) => {
-      item.workestationLevelModal.getCoinRelatedStuffsUpdated(currCoin);
-      item.modalProdPick.getAllBtnCoinUpdated(currCoin);
-    });
-    // this.workstationGroup.children[0].workestationLevelModal.getCoinRelatedStuffsUpdated(currCoin);
-    // this.workstationGroup.children[0].modalProdPick.getAllBtnCoinUpdated(currCoin);
+    // this.workstationGroup.forEachAlive((item, index) => {
+    //   item.workestationLevelModal.getCoinRelatedStuffsUpdated(currCoin);
+    //   item.modalProdPick.getAllBtnCoinUpdated(currCoin);
+    // });
+    this.workstationGroup.children[0].workestationLevelModal.getCoinRelatedStuffsUpdated(currCoin);
+    this.workstationGroup.children[0].modalProdPick.getAllBtnCoinUpdated(currCoin);
   }
 
   _onCashChange = (value) => {
