@@ -293,20 +293,20 @@ class ProdPickItem extends window.Phaser.Group {
     this.panelTick.visible = false;
     this.panelTickActivated.visible = false;
 
-    // this.btnCoinGroup.visible = false;
-    // this.btnLocked.visible = true;
-    // dev
-    this.btnCoinGroup.visible = true;
-    this.btnLocked.visible = false;
+    this.btnCoinGroup.visible = false;
+    this.btnLocked.visible = true;
   }
 
 
   setItem2BoughtNotActivatedUI = () => {
     this.veil.visible = false;
     this.hightlightedVeil.visible = false;
+
     this.btnCashGroup.visible = false;
-    this.btnCoinGroup.visible = false;
     this.priceGroup.visible = true;
+
+    this.btnCoinGroup.visible = false;
+    this.panelTickActivated.visible = false;
     this.panelTick.visible = true;
     this.btnLocked.visible = false;
   }
@@ -320,6 +320,7 @@ class ProdPickItem extends window.Phaser.Group {
 
     this.panelTick.visible = false;
     this.panelTickActivated.visible = false;
+    this.btnLocked.visible = false;
     this.btnCoinGroup.visible = true;
   }
 
