@@ -53,7 +53,7 @@ class ModalProdUpgrade extends ModalRaw {
   _getInit = () => {
     this._prepBeforeContentGroup();
     /* real content goes here */
-    this.getContextGroupInit();
+    this._getContextGroupInit();
     this._prepAfterContentGroup();
   };
 
@@ -65,7 +65,7 @@ class ModalProdUpgrade extends ModalRaw {
     return this.activatedProduct;
   }
 
-  getContextGroupInit = () => {
+  _getContextGroupInit = () => {
     const OFFSET = this.headingH * 1.5;
     const LEFT = (this.w - CONFIG.frameWidth) / 2;
 

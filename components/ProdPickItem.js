@@ -26,7 +26,6 @@ function getFontStyle(fSize, color, align, weight) {
 class ProdPickItem extends window.Phaser.Group {
   constructor({game, output, prodOrder}) {
     super(game);
-    this.state = this.game.state.states[this.game.state.current];
 
     this.flagBought = PROD_INFO[output].bought;
     this.flagActivated = PROD_INFO[output].activated;
@@ -228,8 +227,6 @@ class ProdPickItem extends window.Phaser.Group {
       // 紧跟着最后一个bought===true的item后面，coinBtn是要shown的，这里不做处理，让外面的frame处理
       this.setItem2LockedUI();
     }
-    // let currCoin = Big(this.state.getCurrCoin());
-    // this._shownInitBtnCashTexture(currCoin);
   }
 
   _showActivatedTick = () => {
@@ -238,12 +235,11 @@ class ProdPickItem extends window.Phaser.Group {
   }
 
   // FIX ME!!!
-
   _showTheRightBtnCoinUI = (currCoin) => {
     if (currCoin.lt(this.coinNeeded)) {
-      this.btnCash.loadTexture('btn_prod_coin_disable', true);
+      this.btnCoin.loadTexture('btn_prod_coin_disable', true);
     } else {
-      this.btnCash.loadTexture('btn_prod_coin', true);
+      this.btnCoin.loadTexture('btn_prod_coin', true);
     }
   }
 
@@ -307,7 +303,7 @@ class ProdPickItem extends window.Phaser.Group {
 
   }
 
-  getCashBtnUpdated = (currCoin) => {
+  getBtnCoinUpdated = (currCoin) => {
     // if item's this.flagBought is false, do this. otherwise avoid
     if (this.flagBought !== true) {
       this._showTheRightBtnCoinUI(currCoin);
