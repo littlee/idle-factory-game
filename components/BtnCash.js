@@ -9,7 +9,7 @@ const TEXT_STYLE = {
 };
 
 class BtnCash extends window.Phaser.Group {
-  constructor(game, x, y, value = 0) {
+  constructor(game, x, y, value = 4000) {
     super(game);
     this.x = x;
     this.y = y;

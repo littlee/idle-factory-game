@@ -138,7 +138,7 @@ class Game extends window.Phaser.State {
     const WORKSTATION_START_Y = 915;
     const WORKSTATION_HEIGHT = 340;
     this.workstationGroup = this.add.group();
-    range(30).forEach(index => {
+    range(1).forEach(index => {
       let workstation = new Workstation(
         this.game,
         0,
@@ -150,6 +150,7 @@ class Game extends window.Phaser.State {
     });
     this.workstationGroup.children[0].beAbleToBuy();
     this.workstationGroup.children[0].buy('cash');
+    // this.workstationGroup.children[0].setOutput('toaster');
     // this.workstationGroup.children[0].setCollectType(COLLECT_TYPES.PROD);
     // this.workstationGroup.children[1].beAbleToBuy();
     // this.workstationGroup.children[1].buy('cash');
@@ -209,6 +210,10 @@ class Game extends window.Phaser.State {
       if (!worker.getIsOnRoutine()) {
         let workstations = this._getBoughtStations();
         let neededKeys = this._getStationsNeededKeys(workstations);
+        if (!neededKeys.length) {
+          return;
+        }
+        
         this.warehouse.outputGoods(neededKeys);
 
         let stationAmountKeyMap = this._getStationAmountKeyMap(
@@ -384,6 +389,9 @@ class Game extends window.Phaser.State {
   }
 
   _getWorkerWarehouseCarry(neededKeys, capacity, staAmtKeyMap) {
+    if (!neededKeys.length) {
+      return {};
+    }
     let amountPerKey = capacity.div(neededKeys.length);
     let carry = neededKeys.reduce((acc, key) => {
       acc[key] = {
