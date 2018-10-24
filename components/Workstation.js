@@ -307,7 +307,8 @@ class Workstation extends window.Phaser.Group {
       workstation: this // more to go
     });
     this.modalProdPick = new ModalProdPick({
-      game: this.game
+      game: this.game,
+      workstation: this
     });
 
     // for simple z-depth

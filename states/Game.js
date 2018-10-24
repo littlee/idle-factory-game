@@ -671,6 +671,7 @@ class Game extends window.Phaser.State {
       item.modalProdPick.updateResoList(newGoodsList);
     });
   }
+
 }
 
 export default Game;

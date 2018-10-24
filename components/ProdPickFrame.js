@@ -47,8 +47,10 @@ function getFontStyle(fSize, color, align, weight) {
 
 
 class ProdPickFrame extends window.Phaser.Group {
-  constructor({game, reso, parentWidth, offsetTop, unlocked}) {
+  constructor({game, reso, parentWidth, offsetTop, unlocked, modal}) {
     super(game);
+    this.modal = modal;
+
     this.parentWidth = parentWidth;
     this.reso = reso;
     this.tagCnName = RESO_TAGNAME_MAP[reso];
@@ -57,6 +59,7 @@ class ProdPickFrame extends window.Phaser.Group {
 
     this.lockDes = '请在仓库购买进口' + this.tagCnName + '原材料\n解锁生产这些产品，赚更多的钱';
     this.unlocked = unlocked; // should has a method 2 set 2 true
+    this.active = false;
 
     this._getInit();
   }
@@ -70,6 +73,7 @@ class ProdPickFrame extends window.Phaser.Group {
     this._getFrameStateInit();
     this._addAllChildren();
     this.showCorrectFrameUI();
+    this._initCorrectActiveValue();
   }
 
   _drawFrame = () => {
@@ -205,6 +209,25 @@ class ProdPickFrame extends window.Phaser.Group {
     return targetItem === -1 ? null : targetItem;
   }
 
+  activateFrame = () => {
+    this.active = true;
+  }
+
+  deactivateFrame = () => {
+    this.active = false;
+  }
+
+  _initCorrectActiveValue = () => {
+    let bool = this.itemGroup.children.some(item => {
+      return item.flagActivated === true;
+    });
+    if (bool === true) {
+      this.active = true;
+    } else {
+      this.active = false;
+    }
+  }
+
   showCorrectFrameUI = () => {
     let targetIdx = this._getNextAvailableLockedItemIdx();
 
@@ -214,6 +237,7 @@ class ProdPickFrame extends window.Phaser.Group {
       this.itemGroup.children[targetIdx + 1].setItem2LockedUI();
     }
   }
+
 
 
   getUnlocked = () => {
@@ -230,12 +254,14 @@ class ProdPickFrame extends window.Phaser.Group {
     let item = this.itemGroup.children.find(item => item.flagActivated === true);
     item.setItem2BoughtNotActivatedUI();
     item.flagActivated = false;
+    return this;
   }
 
   showCurrActivatedItem = () => {
     this.itemGroup.children
       .find(item => item.flagActivated === true)
       .setItem2Activated();
+    this.activateFrame();
   }
 }
 
