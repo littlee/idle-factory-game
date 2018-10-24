@@ -58,6 +58,7 @@ class ProdPickItem extends window.Phaser.Group {
     this._drawBtnLocked();
     this._add2ThisGroup();
     this._makeBtnCoinResponds2Click();
+    this._makeBtnTickResponds2Click();
     this._showInitUI();
   }
 
@@ -233,6 +234,16 @@ class ProdPickItem extends window.Phaser.Group {
     });
   }
 
+  _makeBtnTickResponds2Click = () => {
+    this.panelTick.inputEnabled = true;
+    this.panelTick.input.priorityID = 1001;
+    this.panelTick.events.onInputDown.add(() => {
+      if (this.panelTick.visible === true) {
+        this._handleTickClick();
+      }
+    });
+  }
+
   _makeFlagBoughtTrue = () => {
     this.flagBought = true;
   }
@@ -241,14 +252,17 @@ class ProdPickItem extends window.Phaser.Group {
     // parent 关闭全部activated
     // 自己开自己的activated
     // set到activated的UI
+    this.parentFrame.deactivateCurrActiveItem();
+    this.getActivated();
+    this.parentFrame.showCurrActivatedItem();
   }
 
 
-  activatedItem = () => {
+  getActivated = () => {
     this.flagActivated = true;
   }
 
-  deactivatedItem = () => {
+  getDeactivated = () => {
     this.flagActivated = false;
   }
 
@@ -293,20 +307,20 @@ class ProdPickItem extends window.Phaser.Group {
     this.panelTick.visible = false;
     this.panelTickActivated.visible = false;
 
-    // this.btnCoinGroup.visible = false;
-    // this.btnLocked.visible = true;
-    // dev
-    this.btnCoinGroup.visible = true;
-    this.btnLocked.visible = false;
+    this.btnCoinGroup.visible = false;
+    this.btnLocked.visible = true;
   }
 
 
   setItem2BoughtNotActivatedUI = () => {
     this.veil.visible = false;
     this.hightlightedVeil.visible = false;
+
     this.btnCashGroup.visible = false;
-    this.btnCoinGroup.visible = false;
     this.priceGroup.visible = true;
+
+    this.btnCoinGroup.visible = false;
+    this.panelTickActivated.visible = false;
     this.panelTick.visible = true;
     this.btnLocked.visible = false;
   }
@@ -320,6 +334,7 @@ class ProdPickItem extends window.Phaser.Group {
 
     this.panelTick.visible = false;
     this.panelTickActivated.visible = false;
+    this.btnLocked.visible = false;
     this.btnCoinGroup.visible = true;
   }
 

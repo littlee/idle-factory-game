@@ -198,17 +198,21 @@ class ProdPickFrame extends window.Phaser.Group {
 
   }
 
-  _getNextAvailableLockedItem = () => {
+  _getNextAvailableLockedItemIdx = () => {
     let targetItem = this.itemGroup.children.findIndex(item => {
       return item.flagBought === false;
     });
-    return targetItem === -1 ? null : this.itemGroup.children[targetItem];
+    return targetItem === -1 ? null : targetItem;
   }
 
   showCorrectFrameUI = () => {
-    let nextAvailableItem = this._getNextAvailableLockedItem();
-    if (nextAvailableItem === null) return true;
-    nextAvailableItem.setItem2BuyableUI();
+    let targetIdx = this._getNextAvailableLockedItemIdx();
+
+    if (targetIdx === null) return true;
+    this.itemGroup.children[targetIdx].setItem2BuyableUI();
+    if (targetIdx + 1 <= this.itemGroup.children.length - 1) {
+      this.itemGroup.children[targetIdx + 1].setItem2LockedUI();
+    }
   }
 
 
@@ -220,6 +224,18 @@ class ProdPickFrame extends window.Phaser.Group {
      this.itemGroup.children.forEach((item) => {
       item.getBtnCoinUpdated(currCoin);
     });
+  }
+
+  deactivateCurrActiveItem = () => {
+    let item = this.itemGroup.children.find(item => item.flagActivated === true);
+    item.setItem2BoughtNotActivatedUI();
+    item.flagActivated = false;
+  }
+
+  showCurrActivatedItem = () => {
+    this.itemGroup.children
+      .find(item => item.flagActivated === true)
+      .setItem2Activated();
   }
 }
 
