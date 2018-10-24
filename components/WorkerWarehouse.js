@@ -126,6 +126,7 @@ class WorkerWarehouse extends window.Phaser.Group {
   }
 
   carryFromWarehouse(carry) {
+    // console.log(carry);
     return new Promise(resolve => {
       this.setIsOnRoutine(true);
       this.walkWithBox();

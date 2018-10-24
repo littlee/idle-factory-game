@@ -1,6 +1,7 @@
 import { formatBigNum } from '../utils';
 import Big from '../js/libs/big.min';
 import range from '../js/libs/_/range';
+import pick from '../js/libs/_/pick';
 
 import ModalLevel from './ModalLevel';
 import ModalProdPick from './ModalProdPick.js';
@@ -578,7 +579,10 @@ class Workstation extends window.Phaser.Group {
   }
 
   getInputKeys() {
-    return Object.keys(this._data.input);
+    let { input } = this._data;
+    // return Object.keys(input);
+    // console.log('xx', pick(input, ['ore']));
+    return Object.keys(pick(input, OUTPUT_INPUT_MAP[this._data.output]));
   }
 
   setOutput(outputKey) {
@@ -589,12 +593,23 @@ class Workstation extends window.Phaser.Group {
     this._data.outputAmount.prod = Big(0);
 
     let nextInitInput = getInitInput(this._data.output);
+    // Object.keys(nextInitInput).forEach(key => {
+    //   // merge existing input amount;
+    //   if (this._data.input[key]) {
+    //     nextInitInput[key].amount = this._data.input[key].amount;
+    //     nextInitInput[key].amountHu = this._data.input[key].amountHu;
+    //   }
+    // });
+    // this._data.input = nextInitInput;
+    // console.log(this._data.input);
+
     Object.keys(nextInitInput).forEach(key => {
       // only merge new keys
       if (!this._data.input[key]) {
         this._data.input[key] = nextInitInput[key];
       }
     });
+
 
     let outputTexture = SourceImg.get(outputKey);
     this.outputItems.changeTexture(outputKey);
@@ -605,7 +620,7 @@ class Workstation extends window.Phaser.Group {
     this.productBtnItem.loadTexture(outputTexture);
 
     let { input } = this._data;
-    let inputKeys = Object.keys(input);
+    let inputKeys = OUTPUT_INPUT_MAP[this._data.output];
     this.inputItemGroup.forEach(inItem => {
       let index = this.inputItemGroup.getChildIndex(inItem);
       if (inputKeys[index]) {
