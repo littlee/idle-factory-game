@@ -14,7 +14,7 @@ class BtnIdleCash extends window.Phaser.Group {
     this.img = this.gameRef.make.image(0, 0, 'btn_idle_cash');
     this.add(this.img);
 
-    this.text = this.gameRef.make.text(55, 45, '124', TEXT_STYLE);
+    this.text = this.gameRef.make.text(55, 45, '0', TEXT_STYLE);
     this.add(this.text);
   }
 
