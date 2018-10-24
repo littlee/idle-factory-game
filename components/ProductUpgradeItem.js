@@ -420,7 +420,7 @@ class ProductUpgradeItem extends window.Phaser.Group {
     }
     let timeString = formatRemainedSecond(Math.round(this.remainedMiliSeconds / 1000));
     this.countDownTxt.setText(timeString);
-    this.parent.parent.modal.handleCountdown4AllFrames(timeString);
+    this.parent.frame.modal.handleCountdown4AllFrames(timeString);
     this.txtTimer = setTimeout(this._updateDurationTxtUI, this.txtTimeout);
   }
 

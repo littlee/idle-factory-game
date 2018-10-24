@@ -25,8 +25,8 @@ function getFontStyle(fSize, color, align, weight) {
 */
 
 class ProductUpgradeLine extends window.Phaser.Group {
-  constructor({game, parent, offsetTop, offsetLeft, product}) {
-    super(game, parent);
+  constructor({game, frame, offsetTop, offsetLeft, product}) {
+    super(game);
     this.offsetTop = offsetTop + CONFIG.halfItemLineHeight;
     this.offsetLeft = offsetLeft;
     this.product = product;
@@ -34,11 +34,13 @@ class ProductUpgradeLine extends window.Phaser.Group {
     this.active = false;
     this.activatedProduct = '钢筋';
     this.timeRemained = '3h30m';
+    this.frame = frame;
 
     this._getInit();
     this._addAllChildren();
     this._initUI();
   }
+
 
   _getInit = () => {
     this.y = this.offsetTop;
@@ -215,14 +217,15 @@ class ProductUpgradeLine extends window.Phaser.Group {
     this.becomeActive();
     this.makeBigVeilInvisible();
     // 需要，否则当升级非首个frame的item时，该frame之上的frames因为没有this.modal.getActivatedProduct()非null的值而变成无big veils
-    this.parent.setBigVeil4Children();
-    this.parent.modal.handleBigVeils4AllFrames();
+    // console.log('this.parent', this.parent);
+    this.frame.setBigVeil4Children();
+    this.frame.modal.handleBigVeils4AllFrames();
   }
 
   handleNoneActivatedItem = () => {
     this.becomeInactive();
-    this.parent.modal.setActivatedProduct(null);
-    this.parent.modal.handleBigVeils4AllFrames();
+    this.frame.modal.setActivatedProduct(null);
+    this.frame.modal.handleBigVeils4AllFrames();
   }
 
   resetBigCountdownTxt = (timeString, prod) => {

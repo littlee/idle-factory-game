@@ -100,6 +100,7 @@ class ModalProdUpgrade extends ModalRaw {
     });
   }
 
+
   handleCountdown4AllFrames = (timestring) => {
     // should be invoked after this.handleBigVeils4AllFrames()
     this.frameGroup.children.forEach(item => {

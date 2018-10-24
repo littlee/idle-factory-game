@@ -114,7 +114,7 @@ class ProductUpgradeFrame extends window.Phaser.Group {
       this[`prod${index}`] = new ProductUpgradeLine({
         // 名字取成和product的一致
         game: this.game,
-        parent: this,
+        frame: this,
         offsetTop: this.offsetTop + CONFIG.productLineHeight * index,
         offsetLeft: this.offsetLeft,
         product: this.prodList[index]
