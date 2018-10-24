@@ -225,6 +225,18 @@ class ProdPickFrame extends window.Phaser.Group {
       item.getBtnCoinUpdated(currCoin);
     });
   }
+
+  deactivateCurrActiveItem = () => {
+    let item = this.itemGroup.children.find(item => item.flagActivated === true);
+    item.setItem2BoughtNotActivatedUI();
+    item.flagActivated = false;
+  }
+
+  showCurrActivatedItem = () => {
+    this.itemGroup.children
+      .find(item => item.flagActivated === true)
+      .setItem2Activated();
+  }
 }
 
 export default ProdPickFrame;

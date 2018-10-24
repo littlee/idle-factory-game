@@ -58,6 +58,7 @@ class ProdPickItem extends window.Phaser.Group {
     this._drawBtnLocked();
     this._add2ThisGroup();
     this._makeBtnCoinResponds2Click();
+    this._makeBtnTickResponds2Click();
     this._showInitUI();
   }
 
@@ -233,6 +234,16 @@ class ProdPickItem extends window.Phaser.Group {
     });
   }
 
+  _makeBtnTickResponds2Click = () => {
+    this.panelTick.inputEnabled = true;
+    this.panelTick.input.priorityID = 1001;
+    this.panelTick.events.onInputDown.add(() => {
+      if (this.panelTick.visible === true) {
+        this._handleTickClick();
+      }
+    });
+  }
+
   _makeFlagBoughtTrue = () => {
     this.flagBought = true;
   }
@@ -241,14 +252,17 @@ class ProdPickItem extends window.Phaser.Group {
     // parent 关闭全部activated
     // 自己开自己的activated
     // set到activated的UI
+    this.parentFrame.deactivateCurrActiveItem();
+    this.getActivated();
+    this.parentFrame.showCurrActivatedItem();
   }
 
 
-  activatedItem = () => {
+  getActivated = () => {
     this.flagActivated = true;
   }
 
-  deactivatedItem = () => {
+  getDeactivated = () => {
     this.flagActivated = false;
   }
 
