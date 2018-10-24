@@ -132,6 +132,7 @@ class ProdPickFrame extends window.Phaser.Group {
   }
 
   _drawItems = () => {
+    this.itemGroup = this.game.make.group();
     range(4).forEach((item) => {
       this[`item${item}`] = new ProdPickItem({
         game: this.game,
@@ -143,6 +144,7 @@ class ProdPickFrame extends window.Phaser.Group {
       } else {
         this[`item${item}`].alignTo(this[`item${item - 1}`], Phaser.BOTTOM_LEFT, 0, 10);
       }
+      this.itemGroup.addChild( this[`item${item}`]);
     });
   }
 
@@ -189,9 +191,7 @@ class ProdPickFrame extends window.Phaser.Group {
     range(4).forEach((item) => {
       this.addChild(this[`th${item+1}`]);
     });
-    range(4).forEach(item => {
-      this.addChild(this[`item${item}`]);
-    });
+    this.addChild(this.itemGroup);
     this.addChild(this.lockedGroup);
 
   }
@@ -200,9 +200,9 @@ class ProdPickFrame extends window.Phaser.Group {
     this.lockedGroup.visible = false;
   }
 
-  getAllItemCashBtnUpdated = (currCoin) => {
-     range(4).forEach((item) => {
-      this[`item${item}`].getCashBtnUpdated(currCoin);
+  getAllItemBtnCoinUpdated = (currCoin) => {
+     this.itemGroup.children.forEach((item) => {
+      item.getBtnCoinUpdated(currCoin);
     });
   }
 }

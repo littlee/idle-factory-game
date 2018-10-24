@@ -39,7 +39,6 @@ class BtnCash extends window.Phaser.Group {
       this._onChangeFunc.call(this._onChangeContext, this.value);
     }
   }
-
   addCashAndUpdate(increment) {
     this.value = this.value.plus(increment);
     this._resetCashValueUI();

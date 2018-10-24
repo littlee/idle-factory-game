@@ -93,9 +93,9 @@ class ModalProdPick extends ModalRaw {
     return this.activatedProd;
   };
 
-  getAllBtnCash = (currCoin) => {
-    range(6).forEach(item => {
-      this[`frame${item}`].getAllItemCashBtnUpdated(currCoin);
+  getAllBtnCoinUpdated = (currCoin) => {
+    this.frameGroup.children.forEach(item => {
+      item.getAllItemBtnCoinUpdated(currCoin);
     });
   }
 }
