@@ -152,6 +152,16 @@ class ProdPickFrame extends window.Phaser.Group {
       }
       this.itemGroup.addChild( this[`item${item}`]);
     });
+
+    // devinginging...
+    // this.item0 = new ProdPickItem({
+    //   game: this.game,
+    //   output: this.list[0],
+    //   prodOrder: 0 + 1,
+    //   parentFrame: this
+    // });
+    // this.item0.alignTo(this.thBg, Phaser.BOTTOM_LEFT, 0, 10);
+    // this.itemGroup.addChild(this.item0);
   }
 
   _drawLockedItems = () => {

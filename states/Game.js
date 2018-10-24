@@ -138,7 +138,7 @@ class Game extends window.Phaser.State {
     const WORKSTATION_START_Y = 915;
     const WORKSTATION_HEIGHT = 340;
     this.workstationGroup = this.add.group();
-    range(30).forEach(index => {
+    range(10).forEach(index => {
       let workstation = new Workstation(
         this.game,
         0,
@@ -199,11 +199,18 @@ class Game extends window.Phaser.State {
 
     this._createFastScrollArrow(wholeGameScroller);
 
+    // deving....
+    this.game.time.advancedTiming = true;
+    this.fps = this.add.text(20, 100, this.game.time.fps + '', {fontSize: '50px'});
+
+
     // for cash-value-responsive-UI-related
     this._updateWhateverNeed2KnowCoinValue();
+    // 看帧数
   }
 
   update() {
+    this.fps.setText(this.game.time.fps + '');
     // return ;
     this.workerWarehouseGroup.forEachAlive(async worker => {
       if (!worker.getIsOnRoutine()) {
@@ -591,12 +598,12 @@ class Game extends window.Phaser.State {
     this.modalWarehose.getCoinRelatedStuffsUpdated(currCoin);
     this.modalProdUpgrade.updateModalAllBtnBuyUI(currCoin);
     // 更新workstations里头的modal升级按钮
-    // this.workstationGroup.forEachAlive((item, index) => {
-    //   item.workestationLevelModal.getCoinRelatedStuffsUpdated(currCoin);
-    //   item.modalProdPick.getAllBtnCoinUpdated(currCoin);
-    // });
-    this.workstationGroup.children[0].workestationLevelModal.getCoinRelatedStuffsUpdated(currCoin);
-    this.workstationGroup.children[0].modalProdPick.getAllBtnCoinUpdated(currCoin);
+    this.workstationGroup.forEachAlive((item, index) => {
+      item.workestationLevelModal.getCoinRelatedStuffsUpdated(currCoin);
+      item.modalProdPick.getAllBtnCoinUpdated(currCoin);
+    });
+    // this.workstationGroup.children[0].workestationLevelModal.getCoinRelatedStuffsUpdated(currCoin);
+    // this.workstationGroup.children[0].modalProdPick.getAllBtnCoinUpdated(currCoin);
   }
 
   subtractCash = (decrement) => {

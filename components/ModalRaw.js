@@ -249,7 +249,6 @@ class ModalRaw extends window.Phaser.Group {
     this.addChild(this.subGroup);
     this.addChild(this.veilTop);
     this.addChild(this.veilDown);
-
   };
 
   // for improve, not use yet
