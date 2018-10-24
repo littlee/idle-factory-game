@@ -10,7 +10,8 @@ class ModalProdPick extends ModalRaw {
     headingTxt = '选择生产',
     scrollable = true,
     boost = false,
-    contentMargin = 100
+    contentMargin = 100,
+    workstation
   }) {
     super(
       game,
@@ -26,7 +27,8 @@ class ModalProdPick extends ModalRaw {
       contentMargin
     );
     // has inherited this.w this.h
-    this.activatedProd = null;
+    this.activatedProdKey = null;
+    this.workstation = workstation;
     this.resoList = [
       { name: 'ore',
         unlocked: true
@@ -72,7 +74,8 @@ class ModalProdPick extends ModalRaw {
         reso: this.resoList[item].name,
         unlocked: this.resoList[item].unlocked,
         parentWidth: this.w,
-        offsetTop: OFFSET * 1.5 + (405 + 50) * item
+        offsetTop: OFFSET * 1.5 + (405 + 50) * item,
+        modal: this
       });
       this.frameGroup.addChild(this[`frame${item}`]);
     });
@@ -90,13 +93,26 @@ class ModalProdPick extends ModalRaw {
   };
 
   getCurrActivatedProd = () => {
-    return this.activatedProd;
+    return this.activatedProdKey;
   };
 
   getAllBtnCoinUpdated = (currCoin) => {
     this.frameGroup.children.forEach(item => {
       item.getAllItemBtnCoinUpdated(currCoin);
     });
+  };
+
+  deactivateCurrActiveFrame = () => {
+    let frame = this.frameGroup.children.find(item => item.active === true);
+    if (frame === undefined) return false;
+    frame
+      .deactivateCurrActiveItem()
+      .deactivateFrame();
+  }
+
+  setCurrActivatedProd = (item) => {
+    this.activatedProdKey = item;
+    this.workstation.setOutput(this.activatedProdKey);
   }
 }
 

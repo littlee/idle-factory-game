@@ -252,9 +252,10 @@ class ProdPickItem extends window.Phaser.Group {
     // parent 关闭全部activated
     // 自己开自己的activated
     // set到activated的UI
-    this.parentFrame.deactivateCurrActiveItem();
+    this.parentFrame.modal.deactivateCurrActiveFrame();
     this.getActivated();
     this.parentFrame.showCurrActivatedItem();
+    this.parentFrame.modal.setCurrActivatedProd(this.outputKey);
   }
 
 
