@@ -15,10 +15,6 @@
 		"ignore": [
 			{
 				"type": "folder",
-				"value": "__static"
-			},
-			{
-				"type": "folder",
 				"value": "node_modules"
 			}
 		]

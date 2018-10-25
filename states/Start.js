@@ -11,7 +11,8 @@ class Start extends window.Phaser.State {
   }
 
   preload() {
-    this.load.baseURL = serverConfig.BASE_URL;
+    // this.load.baseURL = serverConfig.BASE_URL;
+    this.load.baseURL = './__static/';
 
     this.load.image('arrow', 'images/icon_level_up.png');
     this.load.image('bell_base', 'images/bell_base.png');
@@ -242,11 +243,7 @@ class Start extends window.Phaser.State {
     this.load.image('prod_radio_jade', 'images/material/Radio_Jade.png');
     this.load.image('prod_radio_ruby', 'images/material/Radio_Ruby.png');
 
-    this.load.image('test_ground', 'test/Ground00_88400421.png');
-    this.load.image('test_wall', 'test/WallWide_88400188.png');
     this.load.image('test_iconEgg', 'test/Egg_Base.png');
-    this.load.image('test_panel', 'test/act_rule_frame.png');
-    this.load.image('test_txt', 'test/act_rule_text.png');
     // try
     this.load.image('ad_campaign', 'images/ad_campaign.png');
     this.load.image('arrow_levelUp', 'images/arrow_level_upgrade.png');
