@@ -50,6 +50,7 @@ class ModalProdUpgrade extends ModalRaw {
       close
     );
     this.state = this.game.state.states[this.game.state.current];
+    this.activeItem = null;
 
     this.activatedProduct = null;
     this.upgradeMap = upgradeMap;
@@ -76,6 +77,9 @@ class ModalProdUpgrade extends ModalRaw {
     target.forEach(item => {
       item.events.onInputDown.add(() => {
         console.log('inherited first');
+        if (this.activeItem !== null) {
+          this.activeItem.clearAllTimer();
+        }
       }, this, 1000);
     });
   }
@@ -131,6 +135,9 @@ class ModalProdUpgrade extends ModalRaw {
     });
   }
 
+  setActiveItem = (item) => {
+    this.activeItem = item;
+  }
 }
 
 export default ModalProdUpgrade;

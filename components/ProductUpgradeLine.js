@@ -32,8 +32,8 @@ class ProductUpgradeLine extends window.Phaser.Group {
     this.product = product;
     this.highlightedIndex = null;
     this.active = false;
-    this.activatedProduct = '钢筋';
-    this.timeRemained = '3h30m';
+    this.activatedProduct = '';
+    this.timeRemained = '...';
     this.frame = frame;
 
     this._getInit();
@@ -123,7 +123,6 @@ class ProductUpgradeLine extends window.Phaser.Group {
     this.bigVeilGroup.addChild(this.bigCountdownTxt);
     // this.bigVeilGroup.setAllChildren('inputEnabled', 'true');
     // this.bigVeilGroup.setAllChildren('input.priorityID', CONFIG.bigVeilPriorityID);
-
     this.bigVeilGroup.visible = false;
 
   }
@@ -235,6 +234,10 @@ class ProductUpgradeLine extends window.Phaser.Group {
 
   getProdLineProductName = () => {
     return this.product;
+  }
+
+  beIntermediate2PassActiveItem2Modal = (item) => {
+    this.frame.modal.setActiveItem(item);
   }
 
   updateLineBtnBuyUI = (currCoin) => {

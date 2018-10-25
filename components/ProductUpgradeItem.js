@@ -287,6 +287,7 @@ class ProductUpgradeItem extends window.Phaser.Group {
     // 外加让parent去掉原本是hightlighted的item的stroke
     this.parent.setProperHighlightedChild();
     this.parent.handleOwnItemBeingActivated();
+    this.parent.beIntermediate2PassActiveItem2Modal(this);
 
     this._data.pieActivatedTimestamp = moment.utc().format('x');
     // 存下正确的时间戳
@@ -310,7 +311,6 @@ class ProductUpgradeItem extends window.Phaser.Group {
     this.upgraded = true;
     clearInterval(this.timer);
     clearTimeout(this.txtTimer);
-    this.updateProdUIAndValue();
     this.parent.makeNextItemBtnsShowUp();
     this.parent.handleNoneActivatedItem();
     // 更新product UI的key
@@ -352,7 +352,13 @@ class ProductUpgradeItem extends window.Phaser.Group {
     this.btnSkipGroup.visible = true;
     this.countDownTxt.setText(formattedRemainedTimeTxt);
     this.drawCount = Math.round(elapsedMiliseconds / (this._data.step * 1000));
-    // console.log('drawCount:', this.drawCount);
+    // deving -start
+    setTimeout(() => {
+      this.parent.handleOwnItemBeingActivated();
+      this.parent.beIntermediate2PassActiveItem2Modal(this);
+    }, 100);
+
+    // deving -end
     this._reDrawPie();
     this._updateDurationTxtUI();
     this.timer = setInterval(this._reDrawPie, this._data.step * 1000);
@@ -462,6 +468,14 @@ class ProductUpgradeItem extends window.Phaser.Group {
       this.btnBuyGroup.setAllChildren('inputEnabled', false);
     }
 
+  }
+  clearAllTimer = () => {
+    if (this.timer) {
+      clearInterval(this.timer);
+    }
+    if (this.txtTimer) {
+      clearTimeout(this.txtTimer);
+    }
   }
 
   getIncrementPercentage = () => {
