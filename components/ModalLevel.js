@@ -98,7 +98,11 @@ class ModalLevel extends ModalRaw {
 
     this._data = {
       type,
-      currLevel: currLevel === null ? INIT.currLevel : currLevel,
+      currLevel: currLevel === null
+        ? type === 'workstation'
+          ? this.workstation.getLevel()
+          : INIT.currLevel
+        : currLevel,
       desLevel: null
     };
     this.prevLevel = this._data.currLevel;
@@ -628,6 +632,7 @@ class ModalLevel extends ModalRaw {
   setCurrLevel = level => {
     this.prevLevel = this._data.currLevel;
     this._data.currLevel += level;
+    this.workstation.setLevel(this._data.currLevel);
   };
 }
 
