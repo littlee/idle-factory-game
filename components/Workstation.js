@@ -101,11 +101,13 @@ class Workstation extends window.Phaser.Group {
     this.x = x;
     this.y = y;
 
+    const initOutput = 'steel';
+
     this._data = {
       isBought: false,
       isWorking: false,
-      input: getInitInput('steel'),
-      output: 'steel',
+      input: getInitInput(initOutput),
+      output: initOutput,
       outputAmount: {
         cash: Big(0),
         prod: Big(0)
@@ -113,14 +115,16 @@ class Workstation extends window.Phaser.Group {
       producePerMin: Big(10000),
       outputDelay: INIT_OUTPUT_DELAY,
       price: {
-        cash: Big(123),
-        superCash: Big(456)
+        cash: Big(0),
+        superCash: Big(0)
       },
       level: 1,
       collectType: 'cash'
     };
+    this._onAfterBuyFunc = null;
+    this._onAfterBuyContext = null;
+
     this.outputTimer = null;
-    // this.outputTimer = this.game.time.events.loop(1000, this.incOutput, this);
 
     this.ground = this.game.make.image(0, 0, `ground_level_${stationLevel}`);
 
@@ -144,7 +148,7 @@ class Workstation extends window.Phaser.Group {
       this.buy.bind(this, 'super_cash')
     );
 
-    this.buyBtnSuperCashText = this.game.make.text(0, 0, '123', BTN_TEXT_STYLE);
+    this.buyBtnSuperCashText = this.game.make.text(0, 0, '0', BTN_TEXT_STYLE);
     this.buyBtnSuperCashText.alignIn(
       this.buyBtnSuperCash,
       window.Phaser.TOP_LEFT,
@@ -158,7 +162,7 @@ class Workstation extends window.Phaser.Group {
     this.buyBtnCash.input.priorityID = PRIORITY_ID;
     this.buyBtnCash.events.onInputDown.add(this.buy.bind(this, 'cash'));
 
-    this.buyBtnCashText = this.game.make.text(0, 0, '123', BTN_TEXT_STYLE);
+    this.buyBtnCashText = this.game.make.text(0, 0, '0', BTN_TEXT_STYLE);
     this.buyBtnCashText.alignIn(
       this.buyBtnCash,
       window.Phaser.TOP_LEFT,
@@ -411,6 +415,11 @@ class Workstation extends window.Phaser.Group {
     this.buyBtnGroup.visible = true;
   }
 
+  onAfterBuy(func, context) {
+    this._onAfterBuyFunc = func;
+    this._onAfterBuyContext = context;
+  }
+
   buy(type) {
     // 计算消耗金币
     console.log('this buy: ', type);
@@ -423,7 +432,18 @@ class Workstation extends window.Phaser.Group {
     this.worker.visible = true;
     this.productGroup.visible = true;
 
-    // this.startWork();
+    if (this._onAfterBuyFunc) {
+      this._onAfterBuyFunc.call(this._onAfterBuyContext);
+    }
+  }
+
+  setPrice({cash, superCash}) {
+    this._data.price = {
+      cash,
+      superCash
+    };
+    this.buyBtnCashText.setText(formatBigNum(cash));
+    this.buyBtnSuperCashText.setText(formatBigNum(superCash));
   }
 
   getIsBought() {

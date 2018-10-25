@@ -34,6 +34,29 @@ import Big from '../js/libs/big.min';
 
 const PRIORITY_ID = 999;
 
+let workstationPrice = [
+  {
+    cash: '0',
+    superCash: '0',
+  },
+  {
+    cash: '1000',
+    superCash: '100'
+  },
+  {
+    cash: '2000',
+    superCash: '200'
+  },
+  {
+    cash: '3000',
+    superCash: '300'
+  },
+  {
+    cash: '4000',
+    superCash: '400'
+  }
+];
+
 class Game extends window.Phaser.State {
   // create(): execution order inside MATTERS!!
   create() {
@@ -138,7 +161,7 @@ class Game extends window.Phaser.State {
     const WORKSTATION_START_Y = 915;
     const WORKSTATION_HEIGHT = 340;
     this.workstationGroup = this.add.group();
-    range(30).forEach(index => {
+    range(5).forEach(index => {
       let workstation = new Workstation(
         this.game,
         0,
@@ -146,6 +169,9 @@ class Game extends window.Phaser.State {
         Math.floor(index / 5) + 1,
         index + 1
       );
+      workstation.setPrice(workstationPrice[index]);
+      // workstation.beAbleToBuy();
+      workstation.onAfterBuy(this._afterBuyWorkstation, this);
       this.workstationGroup.add(workstation);
     });
     this.workstationGroup.children[0].beAbleToBuy();
@@ -316,6 +342,19 @@ class Game extends window.Phaser.State {
         }
       }
     });
+  }
+
+  _getFirstLockWorkstation() {
+    return this.workstationGroup.children.find((item) => {
+      return !item.getIsBought();
+    });
+  }
+
+  _afterBuyWorkstation() {
+    let firstLockWS = this._getFirstLockWorkstation();
+    if (firstLockWS) {
+      firstLockWS.beAbleToBuy();
+    }
   }
 
   _getShouldWorkerMarketTake(worker, station) {
@@ -617,6 +656,8 @@ class Game extends window.Phaser.State {
 
   _onCashChange = (value) => {
     // console.log(this);
+    // let lockWorkstation = this._getFirstLockWorkstation();
+    // console.log(lockWorkstation);
   }
 
   subtractCash = (decrement) => {
