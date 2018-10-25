@@ -157,19 +157,10 @@ class Game extends window.Phaser.State {
         index + 1
       );
       workstation.setPrice(workstationPrice[index]);
-      // workstation.beAbleToBuy();
+      workstation.onValidateBuy(this._validateBuyWorkstation, this);
       workstation.onAfterBuy(this._afterBuyWorkstation, this);
       this.workstationGroup.add(workstation);
     });
-    this.workstationGroup.children[0].beAbleToBuy();
-    this.workstationGroup.children[0].buy('cash');
-    // this.workstationGroup.children[0].setOutput('toaster');
-    // this.workstationGroup.children[0].setCollectType(COLLECT_TYPES.PROD);
-    // this.workstationGroup.children[1].beAbleToBuy();
-    // this.workstationGroup.children[1].buy('cash');
-    // this.workstationGroup.children[1].setOutput('drill');
-    // this.workstationGroup.children[2].beAbleToBuy();
-    window.wsg = this.workstationGroup;
 
     this.workerWarehouseGroup = this.add.group();
     range(10).forEach(index => {
@@ -221,6 +212,10 @@ class Game extends window.Phaser.State {
     // for cash-value-responsive-UI-related
     this._updateWhateverNeed2KnowCoinValue();
     // 看帧数
+
+    // after create all object
+    this.workstationGroup.children[0].beAbleToBuy();
+    this.workstationGroup.children[0].buy('cash');
   }
 
   update() {
@@ -335,6 +330,15 @@ class Game extends window.Phaser.State {
     return this.workstationGroup.children.find((item) => {
       return !item.getIsBought();
     });
+  }
+
+  _validateBuyWorkstation(type, price) {
+    if (type === 'cash') {
+      let currentCash = this.btnCash.getCash();
+      return currentCash.gte(price);
+    }
+    // 还差超级现金校验
+    return false;
   }
 
   _afterBuyWorkstation() {
