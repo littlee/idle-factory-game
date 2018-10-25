@@ -278,7 +278,7 @@ export let upgradedMap = {
     {
       name: 'speaker',
       bought: false
-    },
+    }
   ],
   barrel: [
     {
@@ -296,7 +296,7 @@ export let upgradedMap = {
     {
       name: 'phone',
       bought: false
-    },
+    }
   ],
   plug: [
     {
@@ -314,7 +314,7 @@ export let upgradedMap = {
     {
       name: 'vr',
       bought: false
-    },
+    }
   ],
   aluminium: [
     {
@@ -332,7 +332,7 @@ export let upgradedMap = {
     {
       name: 'telescope',
       bought: false
-    },
+    }
   ],
   rubber: [
     {
@@ -346,9 +346,37 @@ export let upgradedMap = {
     {
       name: 'walkieTalkie',
       bought: false
-    },{
+    },
+    {
       name: 'radio',
       bought: false
-    },
+    }
   ]
 };
+
+export let resoList = [
+  {
+    name: 'ore',
+    unlocked: true
+  },
+  {
+    name: 'copper',
+    unlocked: false
+  },
+  {
+    name: 'barrel',
+    unlocked: false
+  },
+  {
+    name: 'plug',
+    unlocked: false
+  },
+  {
+    name: 'aluminium',
+    unlocked: false
+  },
+  {
+    name: 'rubber',
+    unlocked: false
+  }
+];
