@@ -29,7 +29,7 @@ export const OUTPUT_INPUT_MAP = {
   projector: ['rubber'],
   headset: ['rubber'],
   walkieTalkie: ['projector'],
-  radio: ['projector', 'walkieTalkie'],
+  radio: ['projector', 'walkieTalkie']
 };
 
 export const PROD_DES = {
@@ -62,7 +62,7 @@ export const PROD_DES = {
   projector: '1投影仪',
   headset: '2耳机',
   walkieTalkie: '3对讲机',
-  radio: '2收音机',
+  radio: '2收音机'
 };
 
 export const PROD_INFO = {
@@ -71,56 +71,56 @@ export const PROD_INFO = {
     coinNeeded: 0,
     cashNeeded: 0,
     bought: true,
-    activated: true,
+    activated: true
   },
   can: {
     price: 10,
     coinNeeded: 1000,
     cashNeeded: 100,
     bought: false,
-    activated: false,
+    activated: false
   },
   drill: {
     price: 250,
     coinNeeded: 1000,
     cashNeeded: 200,
     bought: false,
-    activated: false,
+    activated: false
   },
   toaster: {
     price: 1000,
     coinNeeded: 1000,
     cashNeeded: 250,
     bought: false,
-    activated: false,
+    activated: false
   },
   battery: {
     price: 1000,
     coinNeeded: 1500,
-    cashNeeded:  200,
+    cashNeeded: 200,
     bought: false,
-    activated: false,
+    activated: false
   },
   coffee_machine: {
     price: 1000,
     coinNeeded: 1000,
     cashNeeded: 300,
     bought: false,
-    activated: false,
+    activated: false
   },
   mp3: {
     price: 1000,
     coinNeeded: 1000,
     cashNeeded: 350,
     bought: false,
-    activated: false,
+    activated: false
   },
   speaker: {
     price: 10000,
     coinNeeded: 10500000,
     cashNeeded: 350,
     bought: false,
-    activated: false,
+    activated: false
   },
 
   plasticBar: {
@@ -128,28 +128,28 @@ export const PROD_INFO = {
     coinNeeded: 10000000,
     cashNeeded: 350,
     bought: false,
-    activated: false,
+    activated: false
   },
   wheel: {
     price: 5000,
     coinNeeded: 10000000,
     cashNeeded: 350,
     bought: false,
-    activated: false,
+    activated: false
   },
   screen: {
     price: 5000,
     coinNeeded: 10000000,
     cashNeeded: 350,
     bought: false,
-    activated: false,
+    activated: false
   },
   phone: {
     price: 5000,
     coinNeeded: 10000000,
     cashNeeded: 350,
     bought: false,
-    activated: false,
+    activated: false
   },
 
   circuit: {
@@ -157,28 +157,28 @@ export const PROD_INFO = {
     coinNeeded: 10000000,
     cashNeeded: 350,
     bought: false,
-    activated: false,
+    activated: false
   },
   tv: {
     price: 5000,
     coinNeeded: 10000000,
     cashNeeded: 350,
     bought: false,
-    activated: false,
+    activated: false
   },
   computer: {
     price: 5000,
     coinNeeded: 10000000,
     cashNeeded: 350,
     bought: false,
-    activated: false,
+    activated: false
   },
   vr: {
     price: 5000,
     coinNeeded: 10000000,
     cashNeeded: 350,
     bought: false,
-    activated: false,
+    activated: false
   },
 
   engine: {
@@ -186,7 +186,7 @@ export const PROD_INFO = {
     coinNeeded: 10000000,
     cashNeeded: 350,
     bought: false,
-    activated: false,
+    activated: false
   },
 
   solarPanel: {
@@ -194,7 +194,7 @@ export const PROD_INFO = {
     coinNeeded: 10000000,
     cashNeeded: 350,
     bought: false,
-    activated: false,
+    activated: false
   },
 
   car: {
@@ -202,7 +202,7 @@ export const PROD_INFO = {
     coinNeeded: 10000000,
     cashNeeded: 350,
     bought: false,
-    activated: false,
+    activated: false
   },
 
   telescope: {
@@ -210,7 +210,7 @@ export const PROD_INFO = {
     coinNeeded: 10000000,
     cashNeeded: 350,
     bought: false,
-    activated: false,
+    activated: false
   },
 
   projector: {
@@ -218,29 +218,137 @@ export const PROD_INFO = {
     coinNeeded: 10000000,
     cashNeeded: 350,
     bought: false,
-    activated: false,
+    activated: false
   },
   headset: {
     price: 5000,
     coinNeeded: 10000000,
     cashNeeded: 350,
     bought: false,
-    activated: false,
+    activated: false
   },
   walkieTalkie: {
     price: 5000,
     coinNeeded: 10000000,
     cashNeeded: 350,
     bought: false,
-    activated: false,
+    activated: false
   },
   radio: {
     price: 5000,
     coinNeeded: 10000000,
     cashNeeded: 350,
     bought: false,
-    activated: false,
-  },
-
+    activated: false
+  }
 };
 
+export let upgradedMap = {
+  ore: [
+    {
+      name: 'steel',
+      bought: true
+    },
+    {
+      name: 'can',
+      bought: false
+    },
+    {
+      name: 'drill',
+      bought: false
+    },
+    {
+      name: 'toaster',
+      bought: false
+    }
+  ],
+  copper: [
+    {
+      name: 'battery',
+      bought: false
+    },
+    {
+      name: 'coffee_machine',
+      bought: false
+    },
+    {
+      name: 'mp3',
+      bought: false
+    },
+    {
+      name: 'speaker',
+      bought: false
+    },
+  ],
+  barrel: [
+    {
+      name: 'plasticBar',
+      bought: false
+    },
+    {
+      name: 'wheel',
+      bought: false
+    },
+    {
+      name: 'screen',
+      bought: false
+    },
+    {
+      name: 'phone',
+      bought: false
+    },
+  ],
+  plug: [
+    {
+      name: 'circuit',
+      bought: false
+    },
+    {
+      name: 'tv',
+      bought: false
+    },
+    {
+      name: 'computer',
+      bought: false
+    },
+    {
+      name: 'vr',
+      bought: false
+    },
+  ],
+  aluminium: [
+    {
+      name: 'engine',
+      bought: false
+    },
+    {
+      name: 'solarPanel',
+      bought: false
+    },
+    {
+      name: 'car',
+      bought: false
+    },
+    {
+      name: 'telescope',
+      bought: false
+    },
+  ],
+  rubber: [
+    {
+      name: 'projector',
+      bought: false
+    },
+    {
+      name: 'headset',
+      bought: false
+    },
+    {
+      name: 'walkieTalkie',
+      bought: false
+    },{
+      name: 'radio',
+      bought: false
+    },
+  ]
+};

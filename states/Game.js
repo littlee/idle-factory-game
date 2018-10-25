@@ -25,23 +25,17 @@ import range from '../js/libs/_/range';
 import { arrayIntersect } from '../utils';
 import Big from '../js/libs/big.min';
 
+import { upgradedMap } from '../js/config.js';
+
 // let upgradedMap = {
-//   ore: ['steel'],
-//   copper: [],
-//   oilBarrel: [],
-//   plug: [],
-//   aluminium: [],
-//   rubber: []
+//   ore: ['steel', 'can', 'drill', 'toaster'],
+//   copper: ['battery', 'coffee_machine', 'mp3', 'speaker'],
+//   barrel: ['plasticBar', 'wheel', 'screen', 'phone'],
+//   plug: ['circuit', 'tv', 'computer', 'vr'],
+//   aluminium: ['engine', 'solarPanel', 'car', 'telescope'],
+//   rubber: ['projector', 'headset', 'walkieTalkie', 'radio']
 // };
 
-let upgradedMap = {
-  ore: ['steel', 'can', 'drill', 'toaster'],
-  copper: ['battery', 'coffee_machine', 'mp3', 'speaker'],
-  barrel: ['plasticBar', 'wheel', 'screen', 'phone'],
-  plug: ['circuit', 'tv', 'computer', 'vr'],
-  aluminium: ['engine', 'solarPanel', 'car', 'telescope'],
-  rubber: ['projector', 'headset', 'walkieTalkie', 'radio']
-};
 
 
 /*
@@ -757,6 +751,10 @@ class Game extends window.Phaser.State {
     this.workstationGroup.forEachAlive(item => {
       item.modalProdPick.updateResoList(newGoodsList);
     });
+  }
+
+  changeUpgradedMapValue = (value) => {
+    this.upgradedMap = value;
   }
 
 }

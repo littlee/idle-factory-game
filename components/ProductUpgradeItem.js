@@ -352,13 +352,11 @@ class ProductUpgradeItem extends window.Phaser.Group {
     this.btnSkipGroup.visible = true;
     this.countDownTxt.setText(formattedRemainedTimeTxt);
     this.drawCount = Math.round(elapsedMiliseconds / (this._data.step * 1000));
-    // deving -start
+    // 因为在这个执行的时候，handleOwnItemBeingActivated执行的时候，this.bigVeilGroup还没定义，这里暂时这样做避免保错
     setTimeout(() => {
       this.parent.handleOwnItemBeingActivated();
       this.parent.beIntermediate2PassActiveItem2Modal(this);
     }, 100);
-
-    // deving -end
     this._reDrawPie();
     this._updateDurationTxtUI();
     this.timer = setInterval(this._reDrawPie, this._data.step * 1000);

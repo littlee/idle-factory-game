@@ -98,7 +98,8 @@ class ModalProdUpgrade extends ModalRaw {
 
     this.frameGroup = this.game.make.group();
     this.resoList.forEach((item, index) => {
-      if (this.upgradeMap[item].length > 0) {
+      let valid = this.upgradeMap[item].some(item => item.bought === true);
+      if (valid) {
         this[`frame${index}`] = new ProductUpgradeFrame({
           game: this.game,
           parent: this.contentGroup,

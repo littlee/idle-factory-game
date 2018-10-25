@@ -2,6 +2,8 @@ import { OUTPUT_INPUT_MAP, PROD_DES, PROD_INFO } from '../js/config.js';
 import Big from '../js/libs/big.min';
 import { formatBigNum } from '../utils';
 
+import { upgradedMap } from '../js/config.js';
+
 const CONFIG = {
   veilWidth: 552,
   veilHeight: 70,
@@ -28,6 +30,7 @@ class ProdPickItem extends window.Phaser.Group {
     super(game);
     this.state = this.game.state.states[this.game.state.current];
     this.parentFrame = parentFrame;
+    this.itemMap = upgradedMap[parentFrame.reso].find(item => item.name === output);
 
     this.flagBought = PROD_INFO[output].bought;
     this.flagActivated = PROD_INFO[output].activated;
@@ -246,6 +249,7 @@ class ProdPickItem extends window.Phaser.Group {
 
   _makeFlagBoughtTrue = () => {
     this.flagBought = true;
+    this.itemMap.bought = true;
   }
 
   _handleTickClick = () => {

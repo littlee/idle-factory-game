@@ -114,6 +114,7 @@ class ModalProdPick extends ModalRaw {
     this.activatedProdKey = item;
     this.workstation.setOutput(this.activatedProdKey);
   }
+
 }
 
 export default ModalProdPick;
