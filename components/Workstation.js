@@ -592,7 +592,11 @@ class Workstation extends window.Phaser.Group {
 
   setLevel(level) {
     this._data.level = level;
-    this.levelText.setText(level);
+    // this.levelText.setText(level);
+  }
+
+  getLevel() {
+    return this._data.level;
   }
 
   getInput() {
