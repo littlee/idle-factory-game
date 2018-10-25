@@ -148,7 +148,7 @@ class Game extends window.Phaser.State {
     const WORKSTATION_START_Y = 915;
     const WORKSTATION_HEIGHT = 340;
     this.workstationGroup = this.add.group();
-    range(5).forEach(index => {
+    range(30).forEach(index => {
       let workstation = new Workstation(
         this.game,
         0,
@@ -648,14 +648,14 @@ class Game extends window.Phaser.State {
     // 更新workstations里头的modal升级按钮
     this.workstationGroup.forEachAlive((item, index) => {
       if (item.workestationLevelModal) {
+        console.log('跑');
         item.workestationLevelModal.getCoinRelatedStuffsUpdated(currCoin);
       }
       if (item.modalProdPick) {
+        console.log('item.modalProdPick');
         item.modalProdPick.getAllBtnCoinUpdated(currCoin);
       }
     });
-    // this.workstationGroup.children[0].workestationLevelModal.getCoinRelatedStuffsUpdated(currCoin);
-    // this.workstationGroup.children[0].modalProdPick.getAllBtnCoinUpdated(currCoin);
   }
 
   _onCashChange = (value) => {

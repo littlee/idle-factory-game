@@ -182,6 +182,10 @@ class Workstation extends window.Phaser.Group {
         game: this.game,
         workstation: this,
       });
+      this.modalProdPick.onDestroy.add(() => {
+        console.log('destroy done modalProdPick');
+        this.modalProdPick = null;
+      });
       this.modalProdPick.visible = true;
     });
     this.productBtnItem = this.game.make.sprite(
@@ -280,6 +284,17 @@ class Workstation extends window.Phaser.Group {
     this.upBtn.alignIn(this.table, window.Phaser.BOTTOM_CENTER, 0, 30);
     this.upBtn.onClick(() => {
       console.log('点击工作台升级按钮');
+      this.workestationLevelModal = new ModalLevel({
+        game: this.game,
+        type: 'workstation',
+        coupledBtn: this.upBtn,
+        workstation: this,// more to go
+        close: 'destory'
+      });
+      this.workestationLevelModal.onDestroy.add(() => {
+        console.log('destroy done');
+        this.workestationLevelModal = null;
+      });
       this.workestationLevelModal.visible = true;
     });
 
@@ -298,12 +313,12 @@ class Workstation extends window.Phaser.Group {
     this.productGroup.visible = false;
 
     // modal
-    this.workestationLevelModal = new ModalLevel({
-      game: this.game,
-      type: 'workstation',
-      coupledBtn: this.upBtn,
-      workstation: this // more to go
-    });
+    // this.workestationLevelModal = new ModalLevel({
+    //   game: this.game,
+    //   type: 'workstation',
+    //   coupledBtn: this.upBtn,
+    //   workstation: this // more to go
+    // });
     // for simple z-depth
     this.add(this.ground);
     this.add(this.groundNum);
