@@ -68,9 +68,23 @@ class ModalLevel extends ModalRaw {
     coupledBtn = null,
     currLevel = null,
     desLevel = null,
-    workstation = null
+    workstation = null,
+    close
   }) {
-    super(game);
+    super(
+      game,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      close
+    );
     this.state = this.game.state.states[this.game.state.current];
 
     this.MAP = LevelMap[type];
@@ -632,6 +646,7 @@ class ModalLevel extends ModalRaw {
   setCurrLevel = level => {
     this.prevLevel = this._data.currLevel;
     this._data.currLevel += level;
+    if (this.type !== 'workstation') return false;
     this.workstation.setLevel(this._data.currLevel);
   };
 }

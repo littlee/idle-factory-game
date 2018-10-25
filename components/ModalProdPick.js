@@ -35,6 +35,10 @@ class ModalProdPick extends ModalRaw {
     this.workstation = workstation;
     this.resoList = resoList;
     this._getInit();
+
+    // 因为现在是关闭就destroy, 所以，在init的时候，需要自行先去初始化所有btn的正确UI。
+    let currCoin = this.state.getCurrCoin();
+    this.getAllBtnCoinUpdated(currCoin);
   }
 
   _getInit = () => {
