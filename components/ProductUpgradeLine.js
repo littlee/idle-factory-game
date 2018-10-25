@@ -41,7 +41,6 @@ class ProductUpgradeLine extends window.Phaser.Group {
     this._initUI();
   }
 
-
   _getInit = () => {
     this.y = this.offsetTop;
     this.x = this.offsetLeft;

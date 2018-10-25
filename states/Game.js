@@ -172,11 +172,12 @@ class Game extends window.Phaser.State {
       game: this.game
     });
 
-    this.modalProdUpgrade = new ModalProdUpgrade({
-      game: this.game,
-      headingTxt: '生产产品升级',
-      upgradeMap: this.upgradedMap
-    });
+    // this.modalProdUpgrade = new ModalProdUpgrade({
+    //   game: this.game,
+    //   headingTxt: '生产产品升级',
+    //   upgradeMap: this.upgradedMap,
+    //   close: 'destroy'
+    // });
 
     // TODO: make 30 workstations
     const WORKSTATION_START_Y = 915;
@@ -540,6 +541,12 @@ class Game extends window.Phaser.State {
     this.btnBlueprint.input.priorityID = PRIORITY_ID;
     this.btnBlueprint.events.onInputDown.add(() => {
       console.log('click btn blueprint');
+      this.modalProdUpgrade = new ModalProdUpgrade({
+        game: this.game,
+        headingTxt: '生产产品升级',
+        upgradeMap: this.upgradedMap,
+        close: 'destroy'
+      });
       this.modalProdUpgrade.visible = true;
     });
 
@@ -665,7 +672,9 @@ class Game extends window.Phaser.State {
     this.modalRescources.updateBtnBuyUI(currCoin);
     this.modalMarket.getCoinRelatedStuffsUpdated(currCoin);
     this.modalWarehose.getCoinRelatedStuffsUpdated(currCoin);
-    this.modalProdUpgrade.updateModalAllBtnBuyUI(currCoin);
+    if (this.modalProdUpgrade) {
+      this.modalProdUpgrade.updateModalAllBtnBuyUI(currCoin);
+    }
     // 更新workstations里头的modal升级按钮
     this.workstationGroup.forEachAlive((item, index) => {
       item.workestationLevelModal.getCoinRelatedStuffsUpdated(currCoin);
@@ -694,6 +703,7 @@ class Game extends window.Phaser.State {
   getCurrCoin = () => {
     return this.btnCash.getCash();
   }
+
 
   // 看完视频后btnXCash显示countdown
   getBtnXCashUpdated = (timeString) => {

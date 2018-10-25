@@ -31,7 +31,8 @@ class ModalProdUpgrade extends ModalRaw {
     scrollable = true,
     boost = false,
     contentMargin = 100,
-    upgradeMap
+    upgradeMap,
+    close
   }) {
     // parems
     super(
@@ -45,12 +46,19 @@ class ModalProdUpgrade extends ModalRaw {
       headingH,
       subHeading,
       boost,
-      contentMargin
+      contentMargin,
+      close
     );
+    this.state = this.game.state.states[this.game.state.current];
+
     this.activatedProduct = null;
     this.upgradeMap = upgradeMap;
     this.resoList = Object.keys(upgradeMap);
     this._getInit();
+
+    // 因为现在是关闭就destroy, 所以，在init的时候，需要自行先去初始化所有btn的正确UI。
+    let currCoin = this.state.getCurrCoin();
+    this.updateModalAllBtnBuyUI(currCoin);
   }
 
   _getInit = () => {
