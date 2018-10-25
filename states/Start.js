@@ -12,7 +12,7 @@ class Start extends window.Phaser.State {
 
   preload() {
     // this.load.baseURL = serverConfig.BASE_URL;
-    this.load.baseURL = './__static/';
+    this.load.baseURL = '__static/';
 
     this.load.image('arrow', 'images/icon_level_up.png');
     this.load.image('bell_base', 'images/bell_base.png');
