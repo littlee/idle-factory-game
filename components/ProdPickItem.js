@@ -1,4 +1,4 @@
-import { OUTPUT_INPUT_MAP, PROD_DES, PROD_INFO } from '../js/config.js';
+import { OUTPUT_INPUT_MAP, PROD_DES, prod_info } from '../js/config.js';
 import Big from '../js/libs/big.min';
 import { formatBigNum } from '../utils';
 
@@ -32,16 +32,16 @@ class ProdPickItem extends window.Phaser.Group {
     this.parentFrame = parentFrame;
     this.itemMap = upgradedMap[parentFrame.reso].find(item => item.name === output);
 
-    this.flagBought = PROD_INFO[output].bought;
-    this.flagActivated = PROD_INFO[output].activated;
+    this.flagBought = prod_info[output].bought; // share
+    this.flagActivated = prod_info[output].activated; // private
 
     this.prodOrder = prodOrder;
     this.outputKey = output; // 需要根据product的等级来变化UI
     this.inputKeyList = OUTPUT_INPUT_MAP[output];
 
-    this.price = Big(PROD_INFO[output].price);
-    this.coinNeeded = Big(PROD_INFO[output].coinNeeded);
-    this.cashNeeded = PROD_INFO[output].cashNeeded;
+    this.price = Big(prod_info[output].price);
+    this.coinNeeded = Big(prod_info[output].coinNeeded);
+    this.cashNeeded = prod_info[output].cashNeeded;
     this.prodDes = PROD_DES[output];
 
     this._getInit();
@@ -250,6 +250,7 @@ class ProdPickItem extends window.Phaser.Group {
   _makeFlagBoughtTrue = () => {
     this.flagBought = true;
     this.itemMap.bought = true;
+    prod_info[this.outputKey].bought = true;
   }
 
   _handleTickClick = () => {

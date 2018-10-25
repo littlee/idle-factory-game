@@ -47,28 +47,12 @@ import { upgradedMap } from '../js/config.js';
 
 const PRIORITY_ID = 999;
 
-let workstationPrice = [
-  {
-    cash: '0',
-    superCash: '0',
-  },
-  {
-    cash: '1000',
-    superCash: '100'
-  },
-  {
-    cash: '2000',
-    superCash: '200'
-  },
-  {
-    cash: '3000',
-    superCash: '300'
-  },
-  {
-    cash: '4000',
-    superCash: '400'
+let workstationPrice = range(30).map(index => {
+  if (index === 0) {
+    return {cash:`${index}000`,superCash:`${index}00`};
   }
-];
+  return {cash:`${index}000`,superCash:`${index}00`};
+});
 
 class Game extends window.Phaser.State {
   // create(): execution order inside MATTERS!!
@@ -166,18 +150,11 @@ class Game extends window.Phaser.State {
       game: this.game
     });
 
-    // this.modalProdUpgrade = new ModalProdUpgrade({
-    //   game: this.game,
-    //   headingTxt: '生产产品升级',
-    //   upgradeMap: this.upgradedMap,
-    //   close: 'destroy'
-    // });
-
     // TODO: make 30 workstations
     const WORKSTATION_START_Y = 915;
     const WORKSTATION_HEIGHT = 340;
     this.workstationGroup = this.add.group();
-    range(5).forEach(index => {
+    range(30).forEach(index => {
       let workstation = new Workstation(
         this.game,
         0,
@@ -672,7 +649,9 @@ class Game extends window.Phaser.State {
     // 更新workstations里头的modal升级按钮
     this.workstationGroup.forEachAlive((item, index) => {
       item.workestationLevelModal.getCoinRelatedStuffsUpdated(currCoin);
-      item.modalProdPick.getAllBtnCoinUpdated(currCoin);
+      if (item.modalProdPick) {
+        item.modalProdPick.getAllBtnCoinUpdated(currCoin);
+      }
     });
     // this.workstationGroup.children[0].workestationLevelModal.getCoinRelatedStuffsUpdated(currCoin);
     // this.workstationGroup.children[0].modalProdPick.getAllBtnCoinUpdated(currCoin);

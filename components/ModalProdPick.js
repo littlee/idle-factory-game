@@ -11,7 +11,8 @@ class ModalProdPick extends ModalRaw {
     scrollable = true,
     boost = false,
     contentMargin = 100,
-    workstation
+    workstation,
+    close = 'destory'
   }) {
     super(
       game,
@@ -24,7 +25,8 @@ class ModalProdPick extends ModalRaw {
       undefined,
       undefined,
       boost,
-      contentMargin
+      contentMargin,
+      close
     );
     // has inherited this.w this.h
     this.activatedProdKey = null;

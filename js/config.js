@@ -65,7 +65,7 @@ export const PROD_DES = {
   radio: '2收音机'
 };
 
-export const PROD_INFO = {
+export let prod_info = {
   steel: {
     price: 5,
     coinNeeded: 0,
