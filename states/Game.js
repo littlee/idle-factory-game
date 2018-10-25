@@ -148,7 +148,7 @@ class Game extends window.Phaser.State {
     const WORKSTATION_START_Y = 915;
     const WORKSTATION_HEIGHT = 340;
     this.workstationGroup = this.add.group();
-    range(30).forEach(index => {
+    range(5).forEach(index => {
       let workstation = new Workstation(
         this.game,
         0,

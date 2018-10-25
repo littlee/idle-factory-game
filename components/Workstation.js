@@ -312,11 +312,6 @@ class Workstation extends window.Phaser.Group {
       coupledBtn: this.upBtn,
       workstation: this // more to go
     });
-    // this.modalProdPick = new ModalProdPick({
-    //   game: this.game,
-    //   workstation: this
-    // });
-
     // for simple z-depth
     this.add(this.ground);
     this.add(this.groundNum);

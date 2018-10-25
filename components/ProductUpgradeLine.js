@@ -174,6 +174,7 @@ class ProductUpgradeLine extends window.Phaser.Group {
   }
 
   makeNextItemBtnsShowUp = () => {
+    console.log('啦啦啦啦啦');
     let children = [this.base, this.copper, this.silver, this.gold, this.jade, this.rubber];
     let targetIndex = this.highlightedIndex + 1;
     // 剔除最后一个升级的情况
