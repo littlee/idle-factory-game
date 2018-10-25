@@ -39,17 +39,6 @@ const GROUND_NUM_STYLE = {
 
 const PRIORITY_ID = 999;
 
-// const OUTPUT_INPUT_MAP = {
-//   steel: ['ore'],
-//   can: ['ore'],
-//   drill: ['steel'],
-//   toaster: ['steel', 'can'],
-//   battery: ['copper'],
-//   coffee_machine: ['copper'],
-//   mp3: ['battery'],
-//   speaker: ['battery', 'mp3']
-// };
-
 // 单位输入对应的输出数量
 const OUTPUT_PRODUCE_MAP = {
   steel: 2,
@@ -124,6 +113,9 @@ class Workstation extends window.Phaser.Group {
     this._onAfterBuyFunc = null;
     this._onAfterBuyContext = null;
 
+    this._onValidateBuyFunc = () => true;
+    this._onValidateBuyContext = null;
+
     this.outputTimer = null;
 
     this.ground = this.game.make.image(0, 0, `ground_level_${stationLevel}`);
@@ -145,7 +137,7 @@ class Workstation extends window.Phaser.Group {
     this.buyBtnSuperCash.inputEnabled = true;
     this.buyBtnSuperCash.input.priorityID = PRIORITY_ID;
     this.buyBtnSuperCash.events.onInputDown.add(
-      this.buy.bind(this, 'super_cash')
+      this.buy.bind(this, 'superCash')
     );
 
     this.buyBtnSuperCashText = this.game.make.text(0, 0, '0', BTN_TEXT_STYLE);
@@ -187,9 +179,6 @@ class Workstation extends window.Phaser.Group {
     this.productBtn.events.onInputDown.add(() => {
       console.log('点击工作台产品按钮');
       this.modalProdPick.visible = true;
-      // this.setOutput('drill');
-      // this.game.state.start('Test');
-      // this.outputTimer.delay = 100;
     });
     this.productBtnItem = this.game.make.sprite(
       0,
@@ -415,6 +404,12 @@ class Workstation extends window.Phaser.Group {
     this.buyBtnGroup.visible = true;
   }
 
+
+  onValidateBuy(func, context) {
+    this._onValidateBuyFunc = func;
+    this._onValidateBuyContext = context;
+  }
+
   onAfterBuy(func, context) {
     this._onAfterBuyFunc = func;
     this._onAfterBuyContext = context;
@@ -423,6 +418,11 @@ class Workstation extends window.Phaser.Group {
   buy(type) {
     // 计算消耗金币
     console.log('this buy: ', type);
+    let priceOfType = this._data.price[type];
+    let canBuy = this._onValidateBuyFunc.call(this._onValidateBuyContext, type, priceOfType);
+    if (!canBuy) {
+      return;
+    }
     this._data.isBought = true;
 
     this.buyBtnGroup.visible = false;
