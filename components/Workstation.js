@@ -394,10 +394,12 @@ class Workstation extends window.Phaser.Group {
   }
 
   _getHasNoInput() {
-    let { input } = this._data;
-    let inputAmt = Object.keys(input).map(key => {
+    let { input, output } = this._data;
+
+    let inputAmt = Object.keys(pick(input, OUTPUT_INPUT_MAP[output])).map(key => {
       return input[key].amount;
     });
+
     return inputAmt.some(amount => {
       return amount.lte(0);
     });
