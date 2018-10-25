@@ -60,7 +60,8 @@ class ModalRaw extends window.Phaser.Group {
     headingH = 100,
     subHeading = false,
     boost = true,
-    contentMargin = 0
+    contentMargin = 0,
+    close = 'visible'
   ) {
     // params
     super(game);
@@ -74,6 +75,7 @@ class ModalRaw extends window.Phaser.Group {
     this.headingH = headingH;
     this.headingStyles = Object.assign({}, FONT_STYLE, headingStyles);
     this.subHeadingTxt = subHeading ? CONFIG.subHeading : '';
+    this.close = close;
 
     // shortcuts
     this.cameraView = this.game.camera.view;
@@ -284,7 +286,12 @@ class ModalRaw extends window.Phaser.Group {
 
   _handleClose = () => {
     // console.log('close modal');
-    this.visible = false;
+    if (this.close === 'visible') {
+      this.visible = false;
+    } else {
+      this.destroy();
+    }
+
   };
 
   _setMask4ContentGroup = () => {
