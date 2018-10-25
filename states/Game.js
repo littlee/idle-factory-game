@@ -25,6 +25,15 @@ import range from '../js/libs/_/range';
 import { arrayIntersect } from '../utils';
 import Big from '../js/libs/big.min';
 
+let UpgradedMap = {
+  ore: ['steel'],
+  copper: [],
+  oilBarrel: [],
+  plug: [],
+  aluminium: [],
+  rubber: []
+};
+
 /*
 关于priorityID:
 -1- 让整个屏幕滑动的veil是0，屏幕中其他有自己input事件的game object是999.
@@ -37,7 +46,8 @@ const PRIORITY_ID = 999;
 class Game extends window.Phaser.State {
   // create(): execution order inside MATTERS!!
   create() {
-    this.result = true;
+    // this.result = true;
+    this.upgradedMap = UpgradedMap;
 
     this.physics.startSystem(window.Phaser.Physics.ARCADE);
     // bg of warehouse of raw material

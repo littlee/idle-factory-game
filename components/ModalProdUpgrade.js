@@ -30,7 +30,8 @@ class ModalProdUpgrade extends ModalRaw {
     subHeading = true,
     scrollable = true,
     boost = false,
-    contentMargin = 100
+    contentMargin = 100,
+    upgradeMap
   }) {
     // parems
     super(
@@ -47,6 +48,7 @@ class ModalProdUpgrade extends ModalRaw {
       contentMargin
     );
     this.activatedProduct = null;
+    this.upgradeMap = upgradeMap;
     this._getInit();
   }
 
@@ -79,17 +81,17 @@ class ModalProdUpgrade extends ModalRaw {
       reso: 'ore'
     });
 
-    this.frameCopper = new ProductUpgradeFrame({
-      game: this.game,
-      parent: this.contentGroup,
-      offsetTop: OFFSET + CONFIG.frameHeight * 1 + CONFIG.gap * 1,
-      offsetLeft: LEFT,
-      modalRef: this,
-      reso: 'copper'
-    });
+    // this.frameCopper = new ProductUpgradeFrame({
+    //   game: this.game,
+    //   parent: this.contentGroup,
+    //   offsetTop: OFFSET + CONFIG.frameHeight * 1 + CONFIG.gap * 1,
+    //   offsetLeft: LEFT,
+    //   modalRef: this,
+    //   reso: 'copper'
+    // });
 
     this.frameGroup.addChild(this.frameOre);
-    this.frameGroup.addChild(this.frameCopper);
+    // this.frameGroup.addChild(this.frameCopper);
     this.contentGroup.addChild(this.frameGroup);
   };
 

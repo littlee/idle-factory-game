@@ -30,12 +30,12 @@ function getFontStyle(fSize, color, align, weight) {
 
 // 这个表需要每个workstation都有，然后这里可以去拿到。how？作为这里group的属性之一，然后父modal可以来改动它？
 const RESO_PRODLIST_MAP = {
-  ore: ['steel', 'can', 'drill', 'toaster'],
-  copper: ['battery', 'coffee_machine'],
-  oilBarrel: [],
-  plug: [],
-  aluminium: [],
-  rubber: []
+  ore: ['steel', 'can'],
+  // copper: ['battery', 'coffee_machine'],
+  // oilBarrel: ['plasticBar', 'wheel', 'screen', 'phone'],
+  // plug: ['circuit', 'tv', 'computer', 'vr'],
+  // aluminium: ['engine', 'solarPanel', 'car', 'telescope'],
+  // rubber: ['projector', 'headset', 'walkieTalkie', 'radio']
 };
 
 const RESO_TAGNAME_MAP = {
@@ -52,6 +52,7 @@ class ProductUpgradeFrame extends window.Phaser.Group {
   constructor({ game, parent, offsetTop, offsetLeft, modalRef, reso }) {
     super(game, parent);
     this.modal = modalRef;
+    this.state = this.game.state.states[this.game.state.current];
     this.prodList = RESO_PRODLIST_MAP[reso]; // 格式 ['steel', 'can', 'drill', 'toaster']
     this.reso = reso;
     this.tagCnName = RESO_TAGNAME_MAP[reso];
@@ -155,7 +156,7 @@ class ProductUpgradeFrame extends window.Phaser.Group {
       this.activatedProduct = this.activatedChild[0].getProdLineProductName();
       this.modal.setActivatedProduct(this.activatedProduct);
     }
-    if (this.inactiveChildren.length === 4) {
+    if (this.activatedChild.length === 0) {
       // children中没有一个有active的pie，则不需要veil
       this.becomeInactive();
       if (this.modal.getActivatedProduct() !== null) {
@@ -163,7 +164,7 @@ class ProductUpgradeFrame extends window.Phaser.Group {
       } else {
         children.forEach(item => item.makeBigVeilInvisible());
       }
-    } else if (this.inactiveChildren.length === 3) {
+    } else if (this.activatedChild.length === 1) {
       // 有一个active的child, 其他的要有veil+countdown
       this.becomeActive();
       this.inactiveChildren.forEach(item => item.makeBigVeilVisible());
