@@ -47,7 +47,7 @@ class ModalSkills extends ModalRaw {
   _getInit = () => {
     this._prepBeforeContentGroup();
     /* real content goes here */
-    this.getContextGroupInit();
+    this._getContextGroupInit();
 
     this._prepAfterContentGroup();
   };
@@ -216,13 +216,10 @@ class ModalSkills extends ModalRaw {
 
   }
 
-  getContextGroupInit = () => {
+  _getContextGroupInit = () => {
     // 这里因为没有heading, 所以内容不需要有offset
-
     this._drawFrameBells();
     this._drawFrameSkill();
-
-
   }
 }
 

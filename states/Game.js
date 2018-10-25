@@ -20,6 +20,7 @@ import ModalLevel from '../components/ModalLevel.js';
 import ModalRescources from '../components/ModalResources.js';
 import ModalAdCampaign from '../components/ModalAdCampaign';
 import ModalProdUpgrade from '../components/ModalProdUpgrade';
+import ModalSkill from '../components/ModalSkills.js';
 
 import range from '../js/libs/_/range';
 import { arrayIntersect } from '../utils';
@@ -137,6 +138,10 @@ class Game extends window.Phaser.State {
 
     this.modalAdCampaign = new ModalAdCampaign({
       game: this.game
+    });
+
+   this.modalSkill = new ModalSkill({
+      game: this.game,
     });
 
     // TODO: make 30 workstations
@@ -539,6 +544,7 @@ class Game extends window.Phaser.State {
     this.btnWheelCoin.input.priorityID = PRIORITY_ID;
     this.btnWheelCoin.events.onInputDown.add(() => {
       console.log('click btn wheel coin');
+      this.modalSkill.visible = true;
     });
   };
 
