@@ -178,6 +178,10 @@ class Workstation extends window.Phaser.Group {
 
     this.productBtn.events.onInputDown.add(() => {
       console.log('点击工作台产品按钮');
+      this.modalProdPick = new ModalProdPick({
+        game: this.game,
+        workstation: this,
+      });
       this.modalProdPick.visible = true;
     });
     this.productBtnItem = this.game.make.sprite(
@@ -300,10 +304,10 @@ class Workstation extends window.Phaser.Group {
       coupledBtn: this.upBtn,
       workstation: this // more to go
     });
-    this.modalProdPick = new ModalProdPick({
-      game: this.game,
-      workstation: this
-    });
+    // this.modalProdPick = new ModalProdPick({
+    //   game: this.game,
+    //   workstation: this
+    // });
 
     // for simple z-depth
     this.add(this.ground);

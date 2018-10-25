@@ -61,7 +61,7 @@ class ModalRaw extends window.Phaser.Group {
     subHeading = false,
     boost = true,
     contentMargin = 0,
-    close = 'visible'
+    close = 'visible',
   ) {
     // params
     super(game);
@@ -181,13 +181,13 @@ class ModalRaw extends window.Phaser.Group {
     this.frame.lineTo(0, 0);
 
     // btn_close ...should be a sprite rather than img
-    this.btnClose = this.game.make.button(
+    this.btnClose = this.game.make.image(
       this.w - 1,
       0 + 1,
       'btn_close',
-      this._handleClose
     );
     this.btnClose.anchor.set(1, 0);
+    this.btnClose.events.onInputDown.add(this._handleClose);
 
     if (
       typeof this.subHeadingTxt === 'string' &&
@@ -266,7 +266,7 @@ class ModalRaw extends window.Phaser.Group {
     this.veilTop.drawRect(x, y, w, h);
     this.veilTop.endFill();
 
-    this.veilTop.events.onInputDown.add(this._handleClose);;
+    this.veilTop.events.onInputDown.add(this._handleClose);
   };
 
   _createVeilDown = () => {
@@ -289,9 +289,9 @@ class ModalRaw extends window.Phaser.Group {
     if (this.close === 'visible') {
       this.visible = false;
     } else {
+      console.log('raw close');
       this.destroy();
     }
-
   };
 
   _setMask4ContentGroup = () => {

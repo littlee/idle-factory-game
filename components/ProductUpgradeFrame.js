@@ -29,31 +29,50 @@ function getFontStyle(fSize, color, align, weight) {
 }
 
 // 这个表需要每个workstation都有，然后这里可以去拿到。how？作为这里group的属性之一，然后父modal可以来改动它？
-const RESO_PRODLIST_MAP = {
-  ore: ['steel', 'can'],
-  // copper: ['battery', 'coffee_machine'],
-  // oilBarrel: ['plasticBar', 'wheel', 'screen', 'phone'],
-  // plug: ['circuit', 'tv', 'computer', 'vr'],
-  // aluminium: ['engine', 'solarPanel', 'car', 'telescope'],
-  // rubber: ['projector', 'headset', 'walkieTalkie', 'radio']
-};
+// const RESO_PRODLIST_MAP = {
+//   ore: ['steel', 'can'],
+//   copper: ['battery', 'coffee_machine'],
+//   oilBarrel: ['plasticBar', 'wheel', 'screen', 'phone'],
+//   plug: ['circuit', 'tv', 'computer', 'vr'],
+//   aluminium: ['engine', 'solarPanel', 'car', 'telescope'],
+//   rubber: ['projector', 'headset', 'walkieTalkie', 'radio']
+// };
 
 const RESO_TAGNAME_MAP = {
   ore: '铁矿',
   copper: '黄铜',
-  oilBarrel: '油桶',
+  barrel: '油桶',
   plug: '电器',
   aluminium: '铝器',
   rubber: '橡胶'
 };
 
+function filterResoList(list) {
+  let arr = [];
+  list.forEach(item => {
+    if (item.bought === true) {
+      arr.push(item.name);
+    }
+  });
+  return arr;
+}
+
 // 控制big veil的出现和消失
 class ProductUpgradeFrame extends window.Phaser.Group {
-  constructor({ game, parent, offsetTop, offsetLeft, modalRef, reso }) {
+  constructor({
+    game,
+    parent,
+    offsetTop,
+    offsetLeft,
+    modalRef,
+    reso,
+    upgradeMap
+  }) {
     super(game, parent);
     this.modal = modalRef;
     this.state = this.game.state.states[this.game.state.current];
-    this.prodList = RESO_PRODLIST_MAP[reso]; // 格式 ['steel', 'can', 'drill', 'toaster']
+    // this.prodList = RESO_PRODLIST_MAP[reso]; // 格式 ['steel', 'can', 'drill', 'toaster']
+    this.prodList = filterResoList(upgradeMap[reso]); // 格式 ['steel', 'can', 'drill', 'toaster']
     this.reso = reso;
     this.tagCnName = RESO_TAGNAME_MAP[reso];
 
@@ -73,7 +92,12 @@ class ProductUpgradeFrame extends window.Phaser.Group {
     this.frame = this.game.make.graphics(this.offsetLeft, this.offsetTop);
     this.frame.beginFill(CONFIG.frameColor);
     // this.frame.drawRect(0, 0, CONFIG.frameWidth, CONFIG.frameHeight);
-    this.frame.drawRect(0, 0, CONFIG.frameWidth, CONFIG.frameHeightUnit * this.prodList.length);
+    this.frame.drawRect(
+      0,
+      0,
+      CONFIG.frameWidth,
+      CONFIG.frameHeightUnit * this.prodList.length
+    );
     this.frame.endFill();
 
     // tag bg
@@ -97,12 +121,7 @@ class ProductUpgradeFrame extends window.Phaser.Group {
       this.tagCnName,
       getFontStyle('28px', '', '', 'bold')
     ); // fSize, color, align, weight
-    this.tagName.alignTo(
-      this.tag,
-      Phaser.BOTTOM_LEFT,
-      -20,
-      -CONFIG.frameTagH
-    );
+    this.tagName.alignTo(this.tag, Phaser.BOTTOM_LEFT, -20, -CONFIG.frameTagH);
 
     // tag img
     this.tagImg = this.game.make.image(0, 0, `reso_${this.reso}`);
@@ -183,7 +202,7 @@ class ProductUpgradeFrame extends window.Phaser.Group {
     return this.activatedProduct;
   };
 
-  updateFrameBtnBuyUI = (currCoin) => {
+  updateFrameBtnBuyUI = currCoin => {
     let children = this.prodGroup.children;
     children.forEach(item => {
       item.updateLineBtnBuyUI(currCoin);

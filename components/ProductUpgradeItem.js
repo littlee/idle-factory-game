@@ -5,6 +5,8 @@ import { prodUpgradeMap } from './puedoLevelMap.js';
 import Big from '../js/libs/big.min';
 import { formatBigNum } from '../utils';
 
+const TIMESTAMP = 1538820968140;
+
 const CONFIG = {
   prodStrokeWidth: 4,
   prodRegularStrokeColor: 0x03832e, // 0x03832e
@@ -285,8 +287,11 @@ class ProductUpgradeItem extends window.Phaser.Group {
     // 外加让parent去掉原本是hightlighted的item的stroke
     this.parent.setProperHighlightedChild();
     this.parent.handleOwnItemBeingActivated();
+    this.parent.beIntermediate2PassActiveItem2Modal(this);
 
     this._data.pieActivatedTimestamp = moment.utc().format('x');
+    // 存下正确的时间戳
+    prodUpgradeMap[this.product][this.prodTexture].pieActivatedTimestamp = this._data.pieActivatedTimestamp;
     this._updateDurationTxtUI();
     // this.txtTimer = setTimeout(this._updateDurationTxtUI, this.txtTimeout);
     this._reDrawPie();
@@ -306,12 +311,13 @@ class ProductUpgradeItem extends window.Phaser.Group {
     this.upgraded = true;
     clearInterval(this.timer);
     clearTimeout(this.txtTimer);
-    this.updateProdUIAndValue();
     this.parent.makeNextItemBtnsShowUp();
     this.parent.handleNoneActivatedItem();
     // 更新product UI的key
     let currLevel = TEXTURE_LEVEL_MAP[this.prodTexture];
     Production.setLevelByKey(this.product, currLevel);
+    // 改变prodUpgradeMap的值 稍等，应该没事
+    prodUpgradeMap[this.product][this.prodTexture].pieActivatedTimestamp = TIMESTAMP;
     this.state.updateProdTextureAfterUpgrade();
   }
 
@@ -346,7 +352,11 @@ class ProductUpgradeItem extends window.Phaser.Group {
     this.btnSkipGroup.visible = true;
     this.countDownTxt.setText(formattedRemainedTimeTxt);
     this.drawCount = Math.round(elapsedMiliseconds / (this._data.step * 1000));
-    // console.log('drawCount:', this.drawCount);
+    // 因为在这个执行的时候，handleOwnItemBeingActivated执行的时候，this.bigVeilGroup还没定义，这里暂时这样做避免保错
+    setTimeout(() => {
+      this.parent.handleOwnItemBeingActivated();
+      this.parent.beIntermediate2PassActiveItem2Modal(this);
+    }, 100);
     this._reDrawPie();
     this._updateDurationTxtUI();
     this.timer = setInterval(this._reDrawPie, this._data.step * 1000);
@@ -456,6 +466,14 @@ class ProductUpgradeItem extends window.Phaser.Group {
       this.btnBuyGroup.setAllChildren('inputEnabled', false);
     }
 
+  }
+  clearAllTimer = () => {
+    if (this.timer) {
+      clearInterval(this.timer);
+    }
+    if (this.txtTimer) {
+      clearTimeout(this.txtTimer);
+    }
   }
 
   getIncrementPercentage = () => {

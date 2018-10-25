@@ -20,19 +20,13 @@ import ModalLevel from '../components/ModalLevel.js';
 import ModalRescources from '../components/ModalResources.js';
 import ModalAdCampaign from '../components/ModalAdCampaign';
 import ModalProdUpgrade from '../components/ModalProdUpgrade';
+import ModalSkill from '../components/ModalSkills.js';
 
 import range from '../js/libs/_/range';
 import { arrayIntersect } from '../utils';
 import Big from '../js/libs/big.min';
 
-let UpgradedMap = {
-  ore: ['steel'],
-  copper: [],
-  oilBarrel: [],
-  plug: [],
-  aluminium: [],
-  rubber: []
-};
+import { upgradedMap } from '../js/config.js';
 
 /*
 关于priorityID:
@@ -43,34 +37,18 @@ let UpgradedMap = {
 
 const PRIORITY_ID = 999;
 
-let workstationPrice = [
-  {
-    cash: '0',
-    superCash: '0',
-  },
-  {
-    cash: '1000',
-    superCash: '100'
-  },
-  {
-    cash: '2000',
-    superCash: '200'
-  },
-  {
-    cash: '3000',
-    superCash: '300'
-  },
-  {
-    cash: '4000',
-    superCash: '400'
+let workstationPrice = range(30).map(index => {
+  if (index === 0) {
+    return {cash:`${index}000`,superCash:`${index}00`};
   }
-];
+  return {cash:`${index}000`,superCash:`${index}00`};
+});
 
 class Game extends window.Phaser.State {
   // create(): execution order inside MATTERS!!
   create() {
     // this.result = true;
-    this.upgradedMap = UpgradedMap;
+    this.upgradedMap = upgradedMap;
 
     this.physics.startSystem(window.Phaser.Physics.ARCADE);
     // bg of warehouse of raw material
@@ -162,16 +140,15 @@ class Game extends window.Phaser.State {
       game: this.game
     });
 
-    this.modalProdUpgrade = new ModalProdUpgrade({
+   this.modalSkill = new ModalSkill({
       game: this.game,
-      headingTxt: '生产产品升级',
     });
 
     // TODO: make 30 workstations
     const WORKSTATION_START_Y = 915;
     const WORKSTATION_HEIGHT = 340;
     this.workstationGroup = this.add.group();
-    range(5).forEach(index => {
+    range(30).forEach(index => {
       let workstation = new Workstation(
         this.game,
         0,
@@ -533,6 +510,12 @@ class Game extends window.Phaser.State {
     this.btnBlueprint.input.priorityID = PRIORITY_ID;
     this.btnBlueprint.events.onInputDown.add(() => {
       console.log('click btn blueprint');
+      this.modalProdUpgrade = new ModalProdUpgrade({
+        game: this.game,
+        headingTxt: '生产产品升级',
+        upgradeMap: this.upgradedMap,
+        close: 'destroy',
+      });
       this.modalProdUpgrade.visible = true;
     });
 
@@ -565,6 +548,7 @@ class Game extends window.Phaser.State {
     this.btnWheelCoin.input.priorityID = PRIORITY_ID;
     this.btnWheelCoin.events.onInputDown.add(() => {
       console.log('click btn wheel coin');
+      this.modalSkill.visible = true;
     });
   };
 
@@ -658,11 +642,15 @@ class Game extends window.Phaser.State {
     this.modalRescources.updateBtnBuyUI(currCoin);
     this.modalMarket.getCoinRelatedStuffsUpdated(currCoin);
     this.modalWarehose.getCoinRelatedStuffsUpdated(currCoin);
-    this.modalProdUpgrade.updateModalAllBtnBuyUI(currCoin);
+    if (this.modalProdUpgrade) {
+      this.modalProdUpgrade.updateModalAllBtnBuyUI(currCoin);
+    }
     // 更新workstations里头的modal升级按钮
     this.workstationGroup.forEachAlive((item, index) => {
       item.workestationLevelModal.getCoinRelatedStuffsUpdated(currCoin);
-      item.modalProdPick.getAllBtnCoinUpdated(currCoin);
+      if (item.modalProdPick) {
+        item.modalProdPick.getAllBtnCoinUpdated(currCoin);
+      }
     });
     // this.workstationGroup.children[0].workestationLevelModal.getCoinRelatedStuffsUpdated(currCoin);
     // this.workstationGroup.children[0].modalProdPick.getAllBtnCoinUpdated(currCoin);
@@ -687,6 +675,7 @@ class Game extends window.Phaser.State {
   getCurrCoin = () => {
     return this.btnCash.getCash();
   }
+
 
   // 看完视频后btnXCash显示countdown
   getBtnXCashUpdated = (timeString) => {
@@ -733,13 +722,8 @@ class Game extends window.Phaser.State {
     }
   }
 
-  // 原材料台购买了新的材料
-  updateWhateverNeed2KnowCurrAvailableResos = () => {
-    let newGoodsList = this.warehouse.getCurrentGoods();
-
-    this.workstationGroup.forEachAlive(item => {
-      item.modalProdPick.updateResoList(newGoodsList);
-    });
+  changeUpgradedMapValue = (value) => {
+    this.upgradedMap = value;
   }
 
 }

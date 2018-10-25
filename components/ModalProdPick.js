@@ -2,6 +2,7 @@ import ModalRaw from './ModalRaw.js';
 import ProdPickFrame from './ProdPickFrame.js';
 
 import range from '../js/libs/_/range';
+import { resoList } from '../js/config.js';
 
 // control the UI of a raw-material-frame
 class ModalProdPick extends ModalRaw {
@@ -11,7 +12,8 @@ class ModalProdPick extends ModalRaw {
     scrollable = true,
     boost = false,
     contentMargin = 100,
-    workstation
+    workstation,
+    close = 'destory'
   }) {
     super(
       game,
@@ -24,31 +26,14 @@ class ModalProdPick extends ModalRaw {
       undefined,
       undefined,
       boost,
-      contentMargin
+      contentMargin,
+      close
     );
     // has inherited this.w this.h
+    this.state = this.game.state.states[this.game.state.current];
     this.activatedProdKey = null;
     this.workstation = workstation;
-    this.resoList = [
-      { name: 'ore',
-        unlocked: true
-      },
-      { name: 'copper',
-        unlocked: false
-      },
-      { name: 'barrel',
-        unlocked: false
-      },
-      { name: 'plug',
-        unlocked: false
-      },
-      { name: 'aluminium',
-        unlocked: false
-      },
-      { name: 'rubber',
-        unlocked: false
-      }
-    ];
+    this.resoList = resoList;
     this._getInit();
   }
 
@@ -114,6 +99,7 @@ class ModalProdPick extends ModalRaw {
     this.activatedProdKey = item;
     this.workstation.setOutput(this.activatedProdKey);
   }
+
 }
 
 export default ModalProdPick;

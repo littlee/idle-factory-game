@@ -31,7 +31,8 @@ class ModalProdUpgrade extends ModalRaw {
     scrollable = true,
     boost = false,
     contentMargin = 100,
-    upgradeMap
+    upgradeMap,
+    close
   }) {
     // parems
     super(
@@ -45,11 +46,21 @@ class ModalProdUpgrade extends ModalRaw {
       headingH,
       subHeading,
       boost,
-      contentMargin
+      contentMargin,
+      close
     );
+    this.state = this.game.state.states[this.game.state.current];
+    this.activeItem = null;
+
     this.activatedProduct = null;
     this.upgradeMap = upgradeMap;
+    this.resoList = Object.keys(upgradeMap);
     this._getInit();
+    this._addMoreModalCloseHandler();
+
+    // 因为现在是关闭就destroy, 所以，在init的时候，需要自行先去初始化所有btn的正确UI。
+    let currCoin = this.state.getCurrCoin();
+    this.updateModalAllBtnBuyUI(currCoin);
   }
 
   _getInit = () => {
@@ -58,6 +69,20 @@ class ModalProdUpgrade extends ModalRaw {
     this._getContextGroupInit();
     this._prepAfterContentGroup();
   };
+
+ // 扩展关闭modal的handlers
+  _addMoreModalCloseHandler = () => {
+    // 吧当前draw的指引拿到。。。。
+    let target = [this.btnClose, this.veilTop, this.veilDown, this.veil];
+    target.forEach(item => {
+      item.events.onInputDown.add(() => {
+        console.log('inherited first');
+        if (this.activeItem !== null) {
+          this.activeItem.clearAllTimer();
+        }
+      }, this, 1000);
+    });
+  }
 
   setActivatedProduct = (prod) => {
     this.activatedProduct = prod;
@@ -72,26 +97,21 @@ class ModalProdUpgrade extends ModalRaw {
     const LEFT = (this.w - CONFIG.frameWidth) / 2;
 
     this.frameGroup = this.game.make.group();
-    this.frameOre = new ProductUpgradeFrame({
-      game: this.game,
-      parent: this.contentGroup,
-      offsetTop: OFFSET,
-      offsetLeft: LEFT,
-      modalRef: this,
-      reso: 'ore'
+    this.resoList.forEach((item, index) => {
+      let valid = this.upgradeMap[item].some(item => item.bought === true);
+      if (valid) {
+        this[`frame${index}`] = new ProductUpgradeFrame({
+          game: this.game,
+          parent: this.contentGroup,
+          offsetTop: OFFSET + CONFIG.frameHeight * index + CONFIG.gap * index,
+          offsetLeft: LEFT,
+          modalRef: this,
+          reso: item,
+          upgradeMap: this.upgradeMap,
+        });
+        this.frameGroup.addChild(this[`frame${index}`]);
+      }
     });
-
-    // this.frameCopper = new ProductUpgradeFrame({
-    //   game: this.game,
-    //   parent: this.contentGroup,
-    //   offsetTop: OFFSET + CONFIG.frameHeight * 1 + CONFIG.gap * 1,
-    //   offsetLeft: LEFT,
-    //   modalRef: this,
-    //   reso: 'copper'
-    // });
-
-    this.frameGroup.addChild(this.frameOre);
-    // this.frameGroup.addChild(this.frameCopper);
     this.contentGroup.addChild(this.frameGroup);
   };
 
@@ -105,7 +125,7 @@ class ModalProdUpgrade extends ModalRaw {
 
   handleCountdown4AllFrames = (timestring) => {
     // should be invoked after this.handleBigVeils4AllFrames()
-    this.frameGroup.children.forEach(item => {
+    this.frameGroup.children.forEach((item, index) => {
       item.syncCountdown4relatedChildren(timestring);
     });
   }
@@ -116,6 +136,9 @@ class ModalProdUpgrade extends ModalRaw {
     });
   }
 
+  setActiveItem = (item) => {
+    this.activeItem = item;
+  }
 }
 
 export default ModalProdUpgrade;

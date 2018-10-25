@@ -1,5 +1,6 @@
-import Big from '../js/libs/big.min';
+// import Big from '../js/libs/big.min';
 import { formatBigNum } from '../utils';
+import { resoList } from '../js/config.js';
 /*
 处理成组件，显示的金额通过传入显示，调用fn来实现改动。可以实时反映当前coin的数目够不够买东西。
 【问题】功能是相似的，但是购买按钮的尺寸大小不一。
@@ -36,6 +37,8 @@ class BtnBuy extends window.Phaser.Group {
 
   }) {
     super(game, undefined);
+    this.resoList = resoList;
+
     this.alignToObj = alignToObj;
     this.resourcesTable = resourcesTable;
     this.can = false;
@@ -116,7 +119,7 @@ class BtnBuy extends window.Phaser.Group {
       this._setBoughtFlagTrue();
       // 这里去拿state的方法，减coin + 让modalProdPick的frame解锁
       this.state.subtractCash(this._data.coinNeeded);
-      this.state.updateWhateverNeed2KnowCurrAvailableResos();
+      this.resoList.find(item => item.name === this.target2buy).unlocked = true;
       return true;
     }
     return false;
