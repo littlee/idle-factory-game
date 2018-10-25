@@ -49,6 +49,7 @@ class ModalProdUpgrade extends ModalRaw {
     );
     this.activatedProduct = null;
     this.upgradeMap = upgradeMap;
+    this.resoList = Object.keys(upgradeMap);
     this._getInit();
   }
 
@@ -72,26 +73,20 @@ class ModalProdUpgrade extends ModalRaw {
     const LEFT = (this.w - CONFIG.frameWidth) / 2;
 
     this.frameGroup = this.game.make.group();
-    this.frameOre = new ProductUpgradeFrame({
-      game: this.game,
-      parent: this.contentGroup,
-      offsetTop: OFFSET,
-      offsetLeft: LEFT,
-      modalRef: this,
-      reso: 'ore'
+    this.resoList.forEach((item, index) => {
+      if (this.upgradeMap[item].length > 0) {
+        this[`frame${index}`] = new ProductUpgradeFrame({
+          game: this.game,
+          parent: this.contentGroup,
+          offsetTop: OFFSET + CONFIG.frameHeight * index + CONFIG.gap * index,
+          offsetLeft: LEFT,
+          modalRef: this,
+          reso: item,
+          upgradeMap: this.upgradeMap,
+        });
+        this.frameGroup.addChild(this[`frame${index}`]);
+      }
     });
-
-    // this.frameCopper = new ProductUpgradeFrame({
-    //   game: this.game,
-    //   parent: this.contentGroup,
-    //   offsetTop: OFFSET + CONFIG.frameHeight * 1 + CONFIG.gap * 1,
-    //   offsetLeft: LEFT,
-    //   modalRef: this,
-    //   reso: 'copper'
-    // });
-
-    this.frameGroup.addChild(this.frameOre);
-    // this.frameGroup.addChild(this.frameCopper);
     this.contentGroup.addChild(this.frameGroup);
   };
 
@@ -105,7 +100,7 @@ class ModalProdUpgrade extends ModalRaw {
 
   handleCountdown4AllFrames = (timestring) => {
     // should be invoked after this.handleBigVeils4AllFrames()
-    this.frameGroup.children.forEach(item => {
+    this.frameGroup.children.forEach((item, index) => {
       item.syncCountdown4relatedChildren(timestring);
     });
   }

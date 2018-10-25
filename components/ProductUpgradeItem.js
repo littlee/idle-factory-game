@@ -5,6 +5,8 @@ import { prodUpgradeMap } from './puedoLevelMap.js';
 import Big from '../js/libs/big.min';
 import { formatBigNum } from '../utils';
 
+// const TIMESTAMP = 1538820968140;
+
 const CONFIG = {
   prodStrokeWidth: 4,
   prodRegularStrokeColor: 0x03832e, // 0x03832e
@@ -312,6 +314,8 @@ class ProductUpgradeItem extends window.Phaser.Group {
     // 更新product UI的key
     let currLevel = TEXTURE_LEVEL_MAP[this.prodTexture];
     Production.setLevelByKey(this.product, currLevel);
+    // 改变prodUpgradeMap的值 稍等，应该没事
+    // prodUpgradeMap[this.product][this.prodTexture].pieActivatedTimestamp = TIMESTAMP;
     this.state.updateProdTextureAfterUpgrade();
   }
 

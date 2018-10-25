@@ -25,14 +25,24 @@ import range from '../js/libs/_/range';
 import { arrayIntersect } from '../utils';
 import Big from '../js/libs/big.min';
 
-let UpgradedMap = {
-  ore: ['steel'],
-  copper: [],
-  oilBarrel: [],
-  plug: [],
-  aluminium: [],
-  rubber: []
+// let upgradedMap = {
+//   ore: ['steel'],
+//   copper: [],
+//   oilBarrel: [],
+//   plug: [],
+//   aluminium: [],
+//   rubber: []
+// };
+
+let upgradedMap = {
+  ore: ['steel', 'can', 'drill', 'toaster'],
+  copper: ['battery', 'coffee_machine', 'mp3', 'speaker'],
+  barrel: ['plasticBar', 'wheel', 'screen', 'phone'],
+  plug: ['circuit', 'tv', 'computer', 'vr'],
+  aluminium: ['engine', 'solarPanel', 'car', 'telescope'],
+  rubber: ['projector', 'headset', 'walkieTalkie', 'radio']
 };
+
 
 /*
 关于priorityID:
@@ -47,7 +57,7 @@ class Game extends window.Phaser.State {
   // create(): execution order inside MATTERS!!
   create() {
     // this.result = true;
-    this.upgradedMap = UpgradedMap;
+    this.upgradedMap = upgradedMap;
 
     this.physics.startSystem(window.Phaser.Physics.ARCADE);
     // bg of warehouse of raw material
@@ -142,6 +152,7 @@ class Game extends window.Phaser.State {
     this.modalProdUpgrade = new ModalProdUpgrade({
       game: this.game,
       headingTxt: '生产产品升级',
+      upgradeMap: this.upgradedMap
     });
 
     // TODO: make 30 workstations

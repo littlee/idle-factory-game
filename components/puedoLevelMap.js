@@ -345,7 +345,7 @@ export const LevelMap = {
   }
 };
 
-export const prodUpgradeMap = {
+export let prodUpgradeMap = {
   steel: {
     base: {
       duration: '0s',
@@ -649,5 +649,613 @@ export const prodUpgradeMap = {
       cash: 50,
       pieActivatedTimestamp: null
     }
-  }
+  },
+  plasticBar: {
+    base: {
+      duration: '0s',
+      coin: 0,
+      cash: 0,
+      pieActivatedTimestamp: 1538820968140
+    },
+    bronze: {
+      duration: '30s',
+      coin: 2000,
+      cash: 10,
+      pieActivatedTimestamp: null
+    },
+    silver: {
+      duration: '40s',
+      coin: 300000,
+      cash: 20,
+      pieActivatedTimestamp: null
+    },
+    gold: {
+      duration: '50s',
+      coin: 4000000,
+      cash: 30,
+      pieActivatedTimestamp: null
+    },
+    jade: {
+      duration: '1m',
+      coin: 500000000,
+      cash: 40,
+      pieActivatedTimestamp: null
+    },
+    ruby: {
+      duration: '1m10s',
+      coin: 60000000000,
+      cash: 50,
+      pieActivatedTimestamp: null
+    }
+  },
+  wheel: {
+    base: {
+      duration: '0s',
+      coin: 0,
+      cash: 0,
+      pieActivatedTimestamp: 1538820968140
+    },
+    bronze: {
+      duration: '30s',
+      coin: 2000,
+      cash: 10,
+      pieActivatedTimestamp: null
+    },
+    silver: {
+      duration: '40s',
+      coin: 300000,
+      cash: 20,
+      pieActivatedTimestamp: null
+    },
+    gold: {
+      duration: '50s',
+      coin: 4000000,
+      cash: 30,
+      pieActivatedTimestamp: null
+    },
+    jade: {
+      duration: '1m',
+      coin: 500000000,
+      cash: 40,
+      pieActivatedTimestamp: null
+    },
+    ruby: {
+      duration: '1m10s',
+      coin: 60000000000,
+      cash: 50,
+      pieActivatedTimestamp: null
+    }
+  },
+  screen: {
+    base: {
+      duration: '0s',
+      coin: 0,
+      cash: 0,
+      pieActivatedTimestamp: 1538820968140
+    },
+    bronze: {
+      duration: '30s',
+      coin: 2000,
+      cash: 10,
+      pieActivatedTimestamp: null
+    },
+    silver: {
+      duration: '40s',
+      coin: 300000,
+      cash: 20,
+      pieActivatedTimestamp: null
+    },
+    gold: {
+      duration: '50s',
+      coin: 4000000,
+      cash: 30,
+      pieActivatedTimestamp: null
+    },
+    jade: {
+      duration: '1m',
+      coin: 500000000,
+      cash: 40,
+      pieActivatedTimestamp: null
+    },
+    ruby: {
+      duration: '1m10s',
+      coin: 60000000000,
+      cash: 50,
+      pieActivatedTimestamp: null
+    }
+  },
+  phone: {
+    base: {
+      duration: '0s',
+      coin: 0,
+      cash: 0,
+      pieActivatedTimestamp: 1538820968140
+    },
+    bronze: {
+      duration: '30s',
+      coin: 2000,
+      cash: 10,
+      pieActivatedTimestamp: null
+    },
+    silver: {
+      duration: '40s',
+      coin: 300000,
+      cash: 20,
+      pieActivatedTimestamp: null
+    },
+    gold: {
+      duration: '50s',
+      coin: 4000000,
+      cash: 30,
+      pieActivatedTimestamp: null
+    },
+    jade: {
+      duration: '1m',
+      coin: 500000000,
+      cash: 40,
+      pieActivatedTimestamp: null
+    },
+    ruby: {
+      duration: '1m10s',
+      coin: 60000000000,
+      cash: 50,
+      pieActivatedTimestamp: null
+    }
+  },
+  circuit: {
+    base: {
+      duration: '0s',
+      coin: 0,
+      cash: 0,
+      pieActivatedTimestamp: 1538820968140
+    },
+    bronze: {
+      duration: '30s',
+      coin: 2000,
+      cash: 10,
+      pieActivatedTimestamp: null
+    },
+    silver: {
+      duration: '40s',
+      coin: 300000,
+      cash: 20,
+      pieActivatedTimestamp: null
+    },
+    gold: {
+      duration: '50s',
+      coin: 4000000,
+      cash: 30,
+      pieActivatedTimestamp: null
+    },
+    jade: {
+      duration: '1m',
+      coin: 500000000,
+      cash: 40,
+      pieActivatedTimestamp: null
+    },
+    ruby: {
+      duration: '1m10s',
+      coin: 60000000000,
+      cash: 50,
+      pieActivatedTimestamp: null
+    }
+  },
+  tv: {
+    base: {
+      duration: '0s',
+      coin: 0,
+      cash: 0,
+      pieActivatedTimestamp: 1538820968140
+    },
+    bronze: {
+      duration: '30s',
+      coin: 2000,
+      cash: 10,
+      pieActivatedTimestamp: null
+    },
+    silver: {
+      duration: '40s',
+      coin: 300000,
+      cash: 20,
+      pieActivatedTimestamp: null
+    },
+    gold: {
+      duration: '50s',
+      coin: 4000000,
+      cash: 30,
+      pieActivatedTimestamp: null
+    },
+    jade: {
+      duration: '1m',
+      coin: 500000000,
+      cash: 40,
+      pieActivatedTimestamp: null
+    },
+    ruby: {
+      duration: '1m10s',
+      coin: 60000000000,
+      cash: 50,
+      pieActivatedTimestamp: null
+    }
+  },
+  computer: {
+    base: {
+      duration: '0s',
+      coin: 0,
+      cash: 0,
+      pieActivatedTimestamp: 1538820968140
+    },
+    bronze: {
+      duration: '30s',
+      coin: 2000,
+      cash: 10,
+      pieActivatedTimestamp: null
+    },
+    silver: {
+      duration: '40s',
+      coin: 300000,
+      cash: 20,
+      pieActivatedTimestamp: null
+    },
+    gold: {
+      duration: '50s',
+      coin: 4000000,
+      cash: 30,
+      pieActivatedTimestamp: null
+    },
+    jade: {
+      duration: '1m',
+      coin: 500000000,
+      cash: 40,
+      pieActivatedTimestamp: null
+    },
+    ruby: {
+      duration: '1m10s',
+      coin: 60000000000,
+      cash: 50,
+      pieActivatedTimestamp: null
+    }
+  },
+  vr: {
+    base: {
+      duration: '0s',
+      coin: 0,
+      cash: 0,
+      pieActivatedTimestamp: 1538820968140
+    },
+    bronze: {
+      duration: '30s',
+      coin: 2000,
+      cash: 10,
+      pieActivatedTimestamp: null
+    },
+    silver: {
+      duration: '40s',
+      coin: 300000,
+      cash: 20,
+      pieActivatedTimestamp: null
+    },
+    gold: {
+      duration: '50s',
+      coin: 4000000,
+      cash: 30,
+      pieActivatedTimestamp: null
+    },
+    jade: {
+      duration: '1m',
+      coin: 500000000,
+      cash: 40,
+      pieActivatedTimestamp: null
+    },
+    ruby: {
+      duration: '1m10s',
+      coin: 60000000000,
+      cash: 50,
+      pieActivatedTimestamp: null
+    }
+  },
+  engine: {
+    base: {
+      duration: '0s',
+      coin: 0,
+      cash: 0,
+      pieActivatedTimestamp: 1538820968140
+    },
+    bronze: {
+      duration: '30s',
+      coin: 2000,
+      cash: 10,
+      pieActivatedTimestamp: null
+    },
+    silver: {
+      duration: '40s',
+      coin: 300000,
+      cash: 20,
+      pieActivatedTimestamp: null
+    },
+    gold: {
+      duration: '50s',
+      coin: 4000000,
+      cash: 30,
+      pieActivatedTimestamp: null
+    },
+    jade: {
+      duration: '1m',
+      coin: 500000000,
+      cash: 40,
+      pieActivatedTimestamp: null
+    },
+    ruby: {
+      duration: '1m10s',
+      coin: 60000000000,
+      cash: 50,
+      pieActivatedTimestamp: null
+    }
+  },
+  solarPanel: {
+    base: {
+      duration: '0s',
+      coin: 0,
+      cash: 0,
+      pieActivatedTimestamp: 1538820968140
+    },
+    bronze: {
+      duration: '30s',
+      coin: 2000,
+      cash: 10,
+      pieActivatedTimestamp: null
+    },
+    silver: {
+      duration: '40s',
+      coin: 300000,
+      cash: 20,
+      pieActivatedTimestamp: null
+    },
+    gold: {
+      duration: '50s',
+      coin: 4000000,
+      cash: 30,
+      pieActivatedTimestamp: null
+    },
+    jade: {
+      duration: '1m',
+      coin: 500000000,
+      cash: 40,
+      pieActivatedTimestamp: null
+    },
+    ruby: {
+      duration: '1m10s',
+      coin: 60000000000,
+      cash: 50,
+      pieActivatedTimestamp: null
+    }
+  },
+  car: {
+    base: {
+      duration: '0s',
+      coin: 0,
+      cash: 0,
+      pieActivatedTimestamp: 1538820968140
+    },
+    bronze: {
+      duration: '30s',
+      coin: 2000,
+      cash: 10,
+      pieActivatedTimestamp: null
+    },
+    silver: {
+      duration: '40s',
+      coin: 300000,
+      cash: 20,
+      pieActivatedTimestamp: null
+    },
+    gold: {
+      duration: '50s',
+      coin: 4000000,
+      cash: 30,
+      pieActivatedTimestamp: null
+    },
+    jade: {
+      duration: '1m',
+      coin: 500000000,
+      cash: 40,
+      pieActivatedTimestamp: null
+    },
+    ruby: {
+      duration: '1m10s',
+      coin: 60000000000,
+      cash: 50,
+      pieActivatedTimestamp: null
+    }
+  },
+  telescope: {
+    base: {
+      duration: '0s',
+      coin: 0,
+      cash: 0,
+      pieActivatedTimestamp: 1538820968140
+    },
+    bronze: {
+      duration: '30s',
+      coin: 2000,
+      cash: 10,
+      pieActivatedTimestamp: null
+    },
+    silver: {
+      duration: '40s',
+      coin: 300000,
+      cash: 20,
+      pieActivatedTimestamp: null
+    },
+    gold: {
+      duration: '50s',
+      coin: 4000000,
+      cash: 30,
+      pieActivatedTimestamp: null
+    },
+    jade: {
+      duration: '1m',
+      coin: 500000000,
+      cash: 40,
+      pieActivatedTimestamp: null
+    },
+    ruby: {
+      duration: '1m10s',
+      coin: 60000000000,
+      cash: 50,
+      pieActivatedTimestamp: null
+    }
+  },
+  projector: {
+    base: {
+      duration: '0s',
+      coin: 0,
+      cash: 0,
+      pieActivatedTimestamp: 1538820968140
+    },
+    bronze: {
+      duration: '30s',
+      coin: 2000,
+      cash: 10,
+      pieActivatedTimestamp: null
+    },
+    silver: {
+      duration: '40s',
+      coin: 300000,
+      cash: 20,
+      pieActivatedTimestamp: null
+    },
+    gold: {
+      duration: '50s',
+      coin: 4000000,
+      cash: 30,
+      pieActivatedTimestamp: null
+    },
+    jade: {
+      duration: '1m',
+      coin: 500000000,
+      cash: 40,
+      pieActivatedTimestamp: null
+    },
+    ruby: {
+      duration: '1m10s',
+      coin: 60000000000,
+      cash: 50,
+      pieActivatedTimestamp: null
+    }
+  },
+  headset: {
+    base: {
+      duration: '0s',
+      coin: 0,
+      cash: 0,
+      pieActivatedTimestamp: 1538820968140
+    },
+    bronze: {
+      duration: '30s',
+      coin: 2000,
+      cash: 10,
+      pieActivatedTimestamp: null
+    },
+    silver: {
+      duration: '40s',
+      coin: 300000,
+      cash: 20,
+      pieActivatedTimestamp: null
+    },
+    gold: {
+      duration: '50s',
+      coin: 4000000,
+      cash: 30,
+      pieActivatedTimestamp: null
+    },
+    jade: {
+      duration: '1m',
+      coin: 500000000,
+      cash: 40,
+      pieActivatedTimestamp: null
+    },
+    ruby: {
+      duration: '1m10s',
+      coin: 60000000000,
+      cash: 50,
+      pieActivatedTimestamp: null
+    }
+  },
+  walkieTalkie: {
+    base: {
+      duration: '0s',
+      coin: 0,
+      cash: 0,
+      pieActivatedTimestamp: 1538820968140
+    },
+    bronze: {
+      duration: '30s',
+      coin: 2000,
+      cash: 10,
+      pieActivatedTimestamp: null
+    },
+    silver: {
+      duration: '40s',
+      coin: 300000,
+      cash: 20,
+      pieActivatedTimestamp: null
+    },
+    gold: {
+      duration: '50s',
+      coin: 4000000,
+      cash: 30,
+      pieActivatedTimestamp: null
+    },
+    jade: {
+      duration: '1m',
+      coin: 500000000,
+      cash: 40,
+      pieActivatedTimestamp: null
+    },
+    ruby: {
+      duration: '1m10s',
+      coin: 60000000000,
+      cash: 50,
+      pieActivatedTimestamp: null
+    }
+  },
+  radio: {
+    base: {
+      duration: '0s',
+      coin: 0,
+      cash: 0,
+      pieActivatedTimestamp: 1538820968140
+    },
+    bronze: {
+      duration: '30s',
+      coin: 2000,
+      cash: 10,
+      pieActivatedTimestamp: null
+    },
+    silver: {
+      duration: '40s',
+      coin: 300000,
+      cash: 20,
+      pieActivatedTimestamp: null
+    },
+    gold: {
+      duration: '50s',
+      coin: 4000000,
+      cash: 30,
+      pieActivatedTimestamp: null
+    },
+    jade: {
+      duration: '1m',
+      coin: 500000000,
+      cash: 40,
+      pieActivatedTimestamp: null
+    },
+    ruby: {
+      duration: '1m10s',
+      coin: 60000000000,
+      cash: 50,
+      pieActivatedTimestamp: null
+    }
+  },
 };
