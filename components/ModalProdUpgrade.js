@@ -55,6 +55,7 @@ class ModalProdUpgrade extends ModalRaw {
     this.upgradeMap = upgradeMap;
     this.resoList = Object.keys(upgradeMap);
     this._getInit();
+    this._addMoreModalCloseHandler();
 
     // 因为现在是关闭就destroy, 所以，在init的时候，需要自行先去初始化所有btn的正确UI。
     let currCoin = this.state.getCurrCoin();
@@ -67,6 +68,17 @@ class ModalProdUpgrade extends ModalRaw {
     this._getContextGroupInit();
     this._prepAfterContentGroup();
   };
+
+ // 扩展关闭modal的handlers
+  _addMoreModalCloseHandler = () => {
+    // 吧当前draw的指引拿到。。。。
+    let target = [this.btnClose, this.veilTop, this.veilDown, this.veil];
+    target.forEach(item => {
+      item.events.onInputDown.add(() => {
+        console.log('inherited first');
+      }, this, 1000);
+    });
+  }
 
   setActivatedProduct = (prod) => {
     this.activatedProduct = prod;

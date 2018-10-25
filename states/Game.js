@@ -545,7 +545,7 @@ class Game extends window.Phaser.State {
         game: this.game,
         headingTxt: '生产产品升级',
         upgradeMap: this.upgradedMap,
-        close: 'destroy'
+        close: 'destroy',
       });
       this.modalProdUpgrade.visible = true;
     });

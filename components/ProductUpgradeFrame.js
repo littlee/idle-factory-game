@@ -146,7 +146,6 @@ class ProductUpgradeFrame extends window.Phaser.Group {
   };
 
   setBigVeil4Children = () => {
-    console.log('zou???', this.tagCnName);
     let children = this.prodGroup.children;
     this.inactiveChildren = children.filter(
       item => item.getActiveValue() === false

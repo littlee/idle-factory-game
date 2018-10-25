@@ -289,6 +289,8 @@ class ProductUpgradeItem extends window.Phaser.Group {
     this.parent.handleOwnItemBeingActivated();
 
     this._data.pieActivatedTimestamp = moment.utc().format('x');
+    // 存下正确的时间戳
+    prodUpgradeMap[this.product][this.prodTexture].pieActivatedTimestamp = this._data.pieActivatedTimestamp;
     this._updateDurationTxtUI();
     // this.txtTimer = setTimeout(this._updateDurationTxtUI, this.txtTimeout);
     this._reDrawPie();
