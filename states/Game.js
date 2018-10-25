@@ -27,17 +27,6 @@ import Big from '../js/libs/big.min';
 
 import { upgradedMap } from '../js/config.js';
 
-// let upgradedMap = {
-//   ore: ['steel', 'can', 'drill', 'toaster'],
-//   copper: ['battery', 'coffee_machine', 'mp3', 'speaker'],
-//   barrel: ['plasticBar', 'wheel', 'screen', 'phone'],
-//   plug: ['circuit', 'tv', 'computer', 'vr'],
-//   aluminium: ['engine', 'solarPanel', 'car', 'telescope'],
-//   rubber: ['projector', 'headset', 'walkieTalkie', 'radio']
-// };
-
-
-
 /*
 关于priorityID:
 -1- 让整个屏幕滑动的veil是0，屏幕中其他有自己input事件的game object是999.

@@ -407,7 +407,6 @@ class ModalLevel extends ModalRaw {
 
   _getLastBoostLevelThreshold = () => {
     let currCount = this._getCurrLevelInfoFromMap().count;
-    // let targetCount = currCount - 1;
     let decrement = -1;
     let lastBoostLevel = null;
 
@@ -425,7 +424,6 @@ class ModalLevel extends ModalRaw {
 
   _getCurrBoostLevelThreshold = () => {
     let currCount = this._getCurrLevelInfoFromMap().count;
-    // let targetCount = currCount + 1;
     let increment = 1;
     let currBoostLevel = null;
 
@@ -465,14 +463,19 @@ class ModalLevel extends ModalRaw {
 
   // 拿点击当时可以升级的值, 留住这个值，因为maxAvailableLevel的值是一直在变的
   _getLevelIncrement = () => {
+    let devLength = Object.keys(this.MAP).length;
     let multiplier = this.upgradePanel.getMultiplier();
     if (Object.is(multiplier, NaN)) {
       // 和点击其他按钮为不同在于，x1之类的升级幅度由可视的multiplier直接拿到，max则是需要modal用自己的map和当前的coin来计算得出升级的差值。
       multiplier = this.maxAvailableLevel - this._data.currLevel;
     }
-    multiplier =
-      this._data.currLevel >= Object.keys(this.MAP).length ? 0 : multiplier;
+    if (this._data.currLevel >= devLength) {
+      multiplier = 0;
+    } else if (this._data.currLevel + multiplier > devLength) {
+      multiplier = devLength - this._data.currLevel;
+    }
     this.levelIncrement = multiplier;
+    // console.log('multiplier: ', multiplier);
     return multiplier;
   };
 
