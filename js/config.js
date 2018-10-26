@@ -110,7 +110,7 @@ export let prod_info = {
     coinNeeded: 0,
     cashNeeded: 0,
     bought: true,
-    activated: true
+    activated: false
   },
   can: {
     price: 10,

@@ -274,7 +274,10 @@ class ProdPickItem extends window.Phaser.Group {
 
 
   _showInitUI = () => {
-    if (this.flagActivated === true) {
+    let targetKey = this.parentFrame.modal.workstationOutput;
+
+    if (this.outputKey === targetKey) {
+      this.getActivated();
       this.setItem2Activated();
     } else if (this.flagBought === true) {
       this.setItem2BoughtNotActivatedUI();
@@ -302,9 +305,6 @@ class ProdPickItem extends window.Phaser.Group {
     this.flagBought = true;
   }
 
-  _setFlagActivated2True = () => {
-    this.flagActivated = true;
-  }
 
   setItem2LockedUI = () => {
     this.priceGroup.visible = true;

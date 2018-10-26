@@ -33,6 +33,8 @@ class ModalProdPick extends ModalRaw {
     this.state = this.game.state.states[this.game.state.current];
     this.activatedProdKey = null;
     this.workstation = workstation;
+    this.workstationOutput = this.workstation.getOutputKey();
+
     this.resoList = resoList;
     this._getInit();
 
