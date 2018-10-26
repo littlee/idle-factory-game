@@ -25,6 +25,7 @@ class Start extends window.Phaser.State {
     this.load.spritesheet('box_collect_holder', 'images/box_collect_holder.png', 75, 75);
     this.load.image('box_collect', 'images/box_collect.png');
     this.load.image('btn_blueprint', 'images/btn_blueprint.png');
+    this.load.image('btn_buy_ws_cash_disable', 'images/btn_buy_ws_cash_disable.png');
     this.load.image('btn_buy_ws_cash', 'images/btn_buy_ws_cash.png');
     this.load.image('btn_buy_ws_super_cash', 'images/btn_buy_ws_super_cash.png');
     this.load.image('btn_cash', 'images/btn_cash.png');

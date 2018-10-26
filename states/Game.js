@@ -39,9 +39,9 @@ const PRIORITY_ID = 999;
 
 let workstationPrice = range(30).map(index => {
   if (index === 0) {
-    return {cash:`${index}000`,superCash:`${index}00`};
+    return { cash: `${index}`, superCash: `${index}` };
   }
-  return {cash:`${index}000`,superCash:`${index}00`};
+  return { cash: `${index}0000`, superCash: `${index}00` };
 });
 
 class Game extends window.Phaser.State {
@@ -140,15 +140,15 @@ class Game extends window.Phaser.State {
       game: this.game
     });
 
-   this.modalSkill = new ModalSkill({
-      game: this.game,
+    this.modalSkill = new ModalSkill({
+      game: this.game
     });
 
     // TODO: make 30 workstations
     const WORKSTATION_START_Y = 915;
     const WORKSTATION_HEIGHT = 340;
     this.workstationGroup = this.add.group();
-    range(30).forEach(index => {
+    range(10).forEach(index => {
       let workstation = new Workstation(
         this.game,
         0,
@@ -194,7 +194,6 @@ class Game extends window.Phaser.State {
     // add stuff to bg to enable scroll
     this._addAllRelatedStuff2Bg();
 
-
     // with bg fills with stull, scrolling now is all set
     let wholeGameScroller = new Scroller({
       targetToScroll: this.bgGroup,
@@ -206,8 +205,9 @@ class Game extends window.Phaser.State {
 
     // deving....
     this.game.time.advancedTiming = true;
-    this.fps = this.add.text(20, 100, this.game.time.fps + '', {fontSize: '50px'});
-
+    this.fps = this.add.text(20, 100, this.game.time.fps + '', {
+      fontSize: '50px'
+    });
 
     // for cash-value-responsive-UI-related
     this._updateWhateverNeed2KnowCoinValue();
@@ -327,8 +327,14 @@ class Game extends window.Phaser.State {
   }
 
   _getFirstLockWorkstation() {
-    return this.workstationGroup.children.find((item) => {
-      return !item.getIsBought();
+    return this.workstationGroup.children.find(item => {
+      return item.getIsLocked();
+    });
+  }
+
+  _getFirstNotWorkingWorkstation() {
+    return this.workstationGroup.children.find(item => {
+      return !item.getIsLocked() && !item.getIsBought();
     });
   }
 
@@ -345,6 +351,8 @@ class Game extends window.Phaser.State {
     let firstLockWS = this._getFirstLockWorkstation();
     if (firstLockWS) {
       firstLockWS.beAbleToBuy();
+      let currCash = this.btnCash.getCash();
+      firstLockWS.updateCashBtnTexture(currCash);
     }
   }
 
@@ -514,7 +522,7 @@ class Game extends window.Phaser.State {
         game: this.game,
         headingTxt: '生产产品升级',
         upgradeMap: this.upgradedMap,
-        close: 'destroy',
+        close: 'destroy'
       });
       this.modalProdUpgrade.visible = true;
     });
@@ -532,7 +540,11 @@ class Game extends window.Phaser.State {
       console.log('click btn x cash');
       this.modalAdCampaign.visible = true;
     });
-    this.btnXCashTxt = this.add.text(0, 0, '视频', {fontSize: '38px', fill: 'white', fontWeight: 'normal'});
+    this.btnXCashTxt = this.add.text(0, 0, '视频', {
+      fontSize: '38px',
+      fill: 'white',
+      fontWeight: 'normal'
+    });
     this.btnXCashTxt.alignTo(this.btnXCash, Phaser.TOP_LEFT, -70, -65);
 
     this.btnXCashGroup.addChild(this.btnXCash);
@@ -637,52 +649,56 @@ class Game extends window.Phaser.State {
 
   // 在全部game objects初始化后inovke
   _updateWhateverNeed2KnowCoinValue = () => {
-    let currCoin = this.btnCash.getCash();
+    let currCash = this.btnCash.getCash();
 
-    this.modalRescources.updateBtnBuyUI(currCoin);
-    this.modalMarket.getCoinRelatedStuffsUpdated(currCoin);
-    this.modalWarehose.getCoinRelatedStuffsUpdated(currCoin);
+    this.modalRescources.updateBtnBuyUI(currCash);
+    this.modalMarket.getCoinRelatedStuffsUpdated(currCash);
+    this.modalWarehose.getCoinRelatedStuffsUpdated(currCash);
     if (this.modalProdUpgrade) {
-      this.modalProdUpgrade.updateModalAllBtnBuyUI(currCoin);
+      this.modalProdUpgrade.updateModalAllBtnBuyUI(currCash);
     }
     // 更新workstations里头的modal升级按钮
     this.workstationGroup.forEachAlive((item, index) => {
       if (item.workestationLevelModal) {
         console.log('跑');
-        item.workestationLevelModal.getCoinRelatedStuffsUpdated(currCoin);
+        item.workestationLevelModal.getCoinRelatedStuffsUpdated(currCash);
       }
       if (item.modalProdPick) {
         console.log('item.modalProdPick');
-        item.modalProdPick.getAllBtnCoinUpdated(currCoin);
+        item.modalProdPick.getAllBtnCoinUpdated(currCash);
       }
     });
-  }
 
-  _onCashChange = (value) => {
+    let firstNotWorkingWS = this._getFirstLockWorkstation();
+    if (firstNotWorkingWS) {
+      firstNotWorkingWS.updateCashBtnTexture(currCash);
+    }
+  };
+
+  _onCashChange = value => {
     // console.log(this);
     // let lockWorkstation = this._getFirstLockWorkstation();
     // console.log(lockWorkstation);
-  }
+  };
 
-  subtractCash = (decrement) => {
+  subtractCash = decrement => {
     this.btnCash.subtractCashAndUpdate(decrement);
     this._updateWhateverNeed2KnowCoinValue();
-  }
+  };
 
-  addCash = (increment) => {
+  addCash = increment => {
     this.btnCash.addCashAndUpdate(increment);
     this._updateWhateverNeed2KnowCoinValue();
-  }
+  };
 
   getCurrCoin = () => {
     return this.btnCash.getCash();
-  }
-
+  };
 
   // 看完视频后btnXCash显示countdown
-  getBtnXCashUpdated = (timeString) => {
+  getBtnXCashUpdated = timeString => {
     this.btnXCashTxt.setText(timeString);
-  }
+  };
 
   // 升级好产品之后workstation的UI改，这里也要改工作台弹窗里头的UI
   updateProdTextureAfterUpgrade = () => {
@@ -690,7 +706,7 @@ class Game extends window.Phaser.State {
       // console.log('workstation: ', index, ' update prod UI');
       item.updateTexture();
     });
-  }
+  };
 
   // 升级搬运工和workstation的等级资料
   updateWarehouseWorkersInfoAndHC = (opts, addHC = 0) => {
@@ -707,7 +723,7 @@ class Game extends window.Phaser.State {
         this.workerWarehouseGroup.getFirstDead().revive();
       });
     }
-  }
+  };
   updateMarketWorkersInfoAndHC = (opts, addHC = 0) => {
     let formattedObj = {
       capacity: Big(opts.capacity),
@@ -722,12 +738,11 @@ class Game extends window.Phaser.State {
         this.workerMarketGroup.getFirstDead().revive();
       });
     }
-  }
+  };
 
-  changeUpgradedMapValue = (value) => {
+  changeUpgradedMapValue = value => {
     this.upgradedMap = value;
-  }
-
+  };
 }
 
 export default Game;
