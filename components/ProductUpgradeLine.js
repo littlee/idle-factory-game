@@ -163,6 +163,8 @@ class ProductUpgradeLine extends window.Phaser.Group {
     } else if (highlightedChild.length === 1) {
       // 当前有有一个active的pie
       this.highlightedIndex = upgradedChildren.length;
+      // 让pie在active的时候，关闭了modal，再打开modal的时候，hightlighted的item后面的item不会开btn
+      children[this.highlightedIndex + 1].closeBtns();
     }
     children.forEach((item, index) => {
       if (index > this.highlightedIndex + 1) {
@@ -174,7 +176,6 @@ class ProductUpgradeLine extends window.Phaser.Group {
   }
 
   makeNextItemBtnsShowUp = () => {
-    console.log('啦啦啦啦啦');
     let children = [this.base, this.copper, this.silver, this.gold, this.jade, this.rubber];
     let targetIndex = this.highlightedIndex + 1;
     // 剔除最后一个升级的情况

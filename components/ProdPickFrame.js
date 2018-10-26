@@ -254,7 +254,7 @@ class ProdPickFrame extends window.Phaser.Group {
   deactivateCurrActiveItem = () => {
     let item = this.itemGroup.children.find(item => item.flagActivated === true);
     item.setItem2BoughtNotActivatedUI();
-    item.flagActivated = false;
+    item.getDeactivated();
     return this;
   }
 

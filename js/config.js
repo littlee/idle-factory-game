@@ -65,13 +65,52 @@ export const PROD_DES = {
   radio: '2收音机'
 };
 
+export const CN_NAME_MAP = {
+  ore: '铁矿',
+  copper: '黄铜',
+  aluminium: '铝器',
+  plug: '电器',
+  barrel: '油桶',
+  rubber: '橡胶',
+
+  steel: '钢筋',
+  can: '罐子',
+  drill: '电砖',
+  toaster: '烤箱',
+
+  battery: '电池',
+  coffee_machine: '咖啡机',
+  mp3: 'MP3',
+  speaker: '扩音器',
+
+  plasticBar: '塑料条',
+  wheel: '车轮',
+  screen: '屏幕',
+  phone: '手机',
+
+  circuit: '芯片',
+  tv: 'TV',
+  computer: '电脑',
+  vr: 'VR',
+
+  engine: '引擎',
+  solarPanel: '太阳能板',
+  car: '汽车',
+  telescope: '望远镜',
+
+  projector: '投影仪',
+  headset: '耳机',
+  walkieTalkie: '对讲机',
+  radio: '收音机'
+};
+
 export let prod_info = {
   steel: {
     price: 5,
     coinNeeded: 0,
     cashNeeded: 0,
     bought: true,
-    activated: true
+    activated: false
   },
   can: {
     price: 10,
