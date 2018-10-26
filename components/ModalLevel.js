@@ -130,6 +130,11 @@ class ModalLevel extends ModalRaw {
 
     this._getInit();
     this._updateAvatarGainedBar();
+    // mimic the init data prep as with warehouse and market, since they are done by GameState automatically
+    if (this._data.type === 'workstation') {
+      let currCoin = this.state.getCurrCoin();
+      this.getCoinRelatedStuffsUpdated(currCoin);
+    }
   }
 
   _getInit = () => {
@@ -320,6 +325,7 @@ class ModalLevel extends ModalRaw {
         increment: initDiffs.input,
         panelUpgradeInstance: this.upgradePanel
       });
+      this.need2 = null;
 
       if (this.workstationInput.length === 2) {
         this.need2 = new LevelUpgradeItem({
@@ -509,6 +515,7 @@ class ModalLevel extends ModalRaw {
     let multiplier = this.upgradePanel.getMultiplier();
     if (Object.is(multiplier, NaN)) {
       // 和点击其他按钮为不同在于，x1之类的升级幅度由可视的multiplier直接拿到，max则是需要modal用自己的map和当前的coin来计算得出升级的差值。
+      console.log('this.maxAvailableLevel, curr: ', this.maxAvailableLevel, this._data.currLevel);
       multiplier = this.maxAvailableLevel - this._data.currLevel;
     }
     if (this._data.currLevel >= devLength) {
@@ -603,12 +610,14 @@ class ModalLevel extends ModalRaw {
   handleLevelBtnsChoosing = () => {
     // 拿到最新的点击升级数 || 可升级数， 可为0
     let levelIncrement = this._getLevelIncrement();
+    console.log('type: increment: ', this._data.type, levelIncrement);
     if (
       levelIncrement === 0 &&
       this._data.currLevel < Object.keys(this.MAP).length
     ) {
       // 这个出现在点击max之后，不够升级1级时候，做升级1级处理
       levelIncrement = 1;
+      console.log('完全不够升级，但是级数没到阈值，做x1处理');
     } else if (
       levelIncrement === 0 &&
       this._data.currLevel >= Object.keys(this.MAP).length
