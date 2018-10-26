@@ -178,7 +178,6 @@ class ProductUpgradeLine extends window.Phaser.Group {
   makeNextItemBtnsShowUp = () => {
     let children = [this.base, this.copper, this.silver, this.gold, this.jade, this.rubber];
     let targetIndex = this.highlightedIndex + 1;
-    console.log('makeNextItemBtnsShowUp 开启btn buy，index: ', targetIndex);
     // 剔除最后一个升级的情况
     if (targetIndex === children.length) return true;
     children[targetIndex].reopenBtns();

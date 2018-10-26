@@ -4,7 +4,7 @@ import ProdPickFrame from './ProdPickFrame.js';
 import range from '../js/libs/_/range';
 import { resoList } from '../js/config.js';
 
-// control the UI of a raw-material-frame
+// TODO: production Upgrade texture changing
 class ModalProdPick extends ModalRaw {
   constructor({
     game,

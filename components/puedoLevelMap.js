@@ -119,6 +119,46 @@ export const LevelMap = {
       loadingSpeed: '16000',
       walkSpeed: 0.1 * 2.4,
       coinNeeded: 14000
+    },
+    level16: {
+      level: 16,
+      count: 6,
+      capacity: '16004',
+      loadingSpeed: '16000',
+      walkSpeed: 0.1 * 2.4,
+      coinNeeded: 1000 * 14
+    },
+    level17: {
+      level: 17,
+      count: 6,
+      capacity: '17004',
+      loadingSpeed: '17000',
+      walkSpeed: 0.1 * 2.5,
+      coinNeeded: 1000 * 15
+    },
+    level18: {
+      level: 18,
+      count: 7,
+      capacity: '16004',
+      loadingSpeed: '16000',
+      walkSpeed: 0.1 * 2.6,
+      coinNeeded: 1000 * 15
+    },
+    level19: {
+      level: 19,
+      count: 7,
+      capacity: '16004',
+      loadingSpeed: '16000',
+      walkSpeed: 0.1 * 2.7,
+      coinNeeded: 1000 * 15
+    },
+    level20: {
+      level: 20,
+      count: 7,
+      capacity: '16004',
+      loadingSpeed: '16000',
+      walkSpeed: 0.1 * 2.8,
+      coinNeeded: 1000 * 15
     }
   },
 
@@ -181,7 +221,7 @@ export const LevelMap = {
     },
     level8: {
       level: 8,
-      count: 2,
+      count: 3,
       capacity: '9600',
       loadingSpeed: '9000',
       walkSpeed: 0.1 * 1.7,
@@ -189,7 +229,7 @@ export const LevelMap = {
     },
     level9: {
       level: 9,
-      count: 2,
+      count: 3,
       capacity: '10004',
       loadingSpeed: '10000',
       walkSpeed: 0.1 * 1.8,
@@ -242,6 +282,46 @@ export const LevelMap = {
       loadingSpeed: '16000',
       walkSpeed: 0.1 * 2.4,
       coinNeeded: 1000 * 14
+    },
+    level16: {
+      level: 16,
+      count: 6,
+      capacity: '16004',
+      loadingSpeed: '16000',
+      walkSpeed: 0.1 * 2.4,
+      coinNeeded: 1000 * 14
+    },
+    level17: {
+      level: 17,
+      count: 6,
+      capacity: '17004',
+      loadingSpeed: '17000',
+      walkSpeed: 0.1 * 2.5,
+      coinNeeded: 1000 * 15
+    },
+    level18: {
+      level: 18,
+      count: 7,
+      capacity: '16004',
+      loadingSpeed: '16000',
+      walkSpeed: 0.1 * 2.6,
+      coinNeeded: 1000 * 15
+    },
+    level19: {
+      level: 19,
+      count: 7,
+      capacity: '16004',
+      loadingSpeed: '16000',
+      walkSpeed: 0.1 * 2.7,
+      coinNeeded: 1000 * 15
+    },
+    level20: {
+      level: 20,
+      count: 7,
+      capacity: '16004',
+      loadingSpeed: '16000',
+      walkSpeed: 0.1 * 2.8,
+      coinNeeded: 1000 * 15
     }
   },
 

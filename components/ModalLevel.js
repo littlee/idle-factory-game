@@ -6,6 +6,7 @@ import PanelUpgrade from './PanelUpgrade.js';
 
 import { LevelMap } from './puedoLevelMap.js';
 import range from '../js/libs/_/range';
+import { CN_NAME_MAP } from '../js/config.js';
 
 const LEVEL = {
   aWidth: 537,
@@ -54,6 +55,11 @@ function getFontStyle(fSize, color, align, weight) {
     boundsAlignV: 'middle',
     align: align || 'left'
   };
+}
+
+function getValidImgKey(name) {
+  let resoList = ['ore', 'copper', 'barrel', 'plug', 'aluminium', 'rubber'];
+  return resoList.indexOf(name) > -1 ? `reso_${name}` : `prod_${name}`;
 }
 
 /*
@@ -112,11 +118,12 @@ class ModalLevel extends ModalRaw {
 
     this._data = {
       type,
-      currLevel: currLevel === null
-        ? type === 'workstation'
-          ? this.workstation.getLevel()
-          : INIT.currLevel
-        : currLevel,
+      currLevel:
+        currLevel === null
+          ? type === 'workstation'
+            ? this.workstation.getLevel()
+            : INIT.currLevel
+          : currLevel,
       desLevel: null
     };
     this.prevLevel = this._data.currLevel;
@@ -181,7 +188,12 @@ class ModalLevel extends ModalRaw {
 
     this.avatarBarGained = this.game.make.graphics(0, 0);
     this.avatarBarGained.beginFill(0x38ec43, 1);
-    this.avatarBarGained.drawRect(0, 0, this.barFullWidth, CONFIG.avatarBar_height);
+    this.avatarBarGained.drawRect(
+      0,
+      0,
+      this.barFullWidth,
+      CONFIG.avatarBar_height
+    );
     this.avatarBarGained.endFill();
     this.avatarBarGained.alignTo(this.avatarHeading, Phaser.BOTTOM_LEFT, 0, 70);
 
@@ -288,6 +300,7 @@ class ModalLevel extends ModalRaw {
       this.workstationInput = this.workstation.getInputKeys();
 
       this.needGroup = this.game.make.group();
+
       this.needTxt = this.game.make.text(
         (this.w - LEVEL.aWidth) / 2,
         290,
@@ -297,8 +310,8 @@ class ModalLevel extends ModalRaw {
       this.need1 = new LevelUpgradeItem({
         game: this.game,
         parent: this.needGroup, //this.mainGroup,
-        key: 'reso_ore', // 改，下同
-        txt: '铁矿',
+        key: getValidImgKey(this.workstationInput[0]), // 改，下同
+        txt: CN_NAME_MAP[this.workstationInput[0]],
         x: (this.w - LEVEL.aWidth) / 2,
         y: 330,
         levelType: this._data.type,
@@ -307,21 +320,27 @@ class ModalLevel extends ModalRaw {
         increment: initDiffs.input,
         panelUpgradeInstance: this.upgradePanel
       });
-      this.need2 = new LevelUpgradeItem({
-        game: this.game,
-        parent: this.needGroup, // this.mainGroup,
-        key: 'reso_plug',
-        txt: '铁矿',
-        levelType: this._data.type,
-        itemName: 'input',
-        value: initOpts.input,
-        increment: initDiffs.input,
-        panelUpgradeInstance: this.upgradePanel
-      });
-      this.need2.alignTo(this.need1, Phaser.BOTTOM_LEFT, 0, 20);
+
+      if (this.workstationInput.length === 2) {
+        this.need2 = new LevelUpgradeItem({
+          game: this.game,
+          parent: this.needGroup, // this.mainGroup,
+          key: getValidImgKey(this.workstationInput[1]),
+          txt: CN_NAME_MAP[this.workstationInput[1]],
+          levelType: this._data.type,
+          itemName: 'input',
+          value: initOpts.input,
+          increment: initDiffs.input,
+          panelUpgradeInstance: this.upgradePanel
+        });
+        this.need2.alignTo(this.need1, Phaser.BOTTOM_LEFT, 0, 20);
+      }
+
       this.needGroup.addChild(this.needTxt);
       this.needGroup.addChild(this.need1);
-      this.needGroup.addChild(this.need2);
+      if (this.workstationInput.length === 2) {
+        this.needGroup.addChild(this.need2);
+      }
 
       this.prodTxt = this.game.make.text(0, 0, '生产', getFontStyle('30px')); // 330 + 85 * 2 + 44
       this.prodTxt.alignTo(
@@ -334,7 +353,7 @@ class ModalLevel extends ModalRaw {
         game: this.game,
         parent: this.mainGroup, // this.mainGroup,
         key: `prod_${this.workstationOutput}`,
-        txt: '铁矿',
+        txt: CN_NAME_MAP[this.workstationOutput],
         levelType: this._data.type,
         itemName: 'output',
         value: initOpts.output,
@@ -372,7 +391,10 @@ class ModalLevel extends ModalRaw {
     keys.forEach(item => {
       if (item === 'coinNeeded') {
         // tmp[item] = Big(futureOpts[item]);
-        tmp[item] = this.levelIncrement > 1 ? this._getAccumulatedDiffs() : Big(futureOpts[item]);
+        tmp[item] =
+          this.levelIncrement > 1
+            ? this._getAccumulatedDiffs()
+            : Big(futureOpts[item]);
       } else {
         tmp[item] = Big(futureOpts[item]).minus(Big(currOpts[item]));
       }
@@ -393,7 +415,7 @@ class ModalLevel extends ModalRaw {
       return prev.plus(curr);
     });
     return amassedCoinNeeded;
-  }
+  };
 
   // 应该整合下不同level的item值，这里定义了4个item的。
   _getAllItemsInitOpts = () => {
@@ -460,7 +482,8 @@ class ModalLevel extends ModalRaw {
 
   _getMaxLevelNowCanGet2 = currCoin => {
     let increment = 1;
-    let futureOptCoin = this._getCustomizedLevelInfoFromMap(increment).coinNeeded;
+    let futureOptCoin = this._getCustomizedLevelInfoFromMap(increment)
+      .coinNeeded;
     let tmpBig = Big(futureOptCoin);
 
     while (
@@ -468,7 +491,8 @@ class ModalLevel extends ModalRaw {
       this._data.currLevel + increment <= Object.keys(this.MAP).length
     ) {
       increment = increment + 1;
-      futureOptCoin += this._getCustomizedLevelInfoFromMap(increment).coinNeeded;
+      futureOptCoin += this._getCustomizedLevelInfoFromMap(increment)
+        .coinNeeded;
       tmpBig = Big(futureOptCoin);
     }
     // console.log('settled for curr vs needed: ', currCoin.valueOf(), tmpBig.minus(this._getCustomizedLevelInfoFromMap(increment).coinNeeded).valueOf());
@@ -553,8 +577,6 @@ class ModalLevel extends ModalRaw {
     this.avatarBarGained.scale.x = scaleFactor;
   };
 
-
-
   // 点击level升级btn之后所有要处理的更新，在点击这里之前，一定是点过x1 || max的按钮，即，itemDes本身就是显示前期available level up的信息
   handleUpgradation = () => {
     this._updateAllItemsValues();
@@ -576,8 +598,6 @@ class ModalLevel extends ModalRaw {
     this.handleLevelBtnsChoosing();
     this._updateAvatarGainedBar();
   };
-
-
 
   // 点击 x1 x10 ... btns时候, 需要一起更新的东西【需要的coin数值不归在这里更新】
   handleLevelBtnsChoosing = () => {
