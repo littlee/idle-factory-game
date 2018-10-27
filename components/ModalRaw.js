@@ -289,7 +289,7 @@ class ModalRaw extends window.Phaser.Group {
     if (this.close === 'visible') {
       this.visible = false;
     } else {
-      console.log('raw close');
+      console.log('raw destroy');
       this.destroy();
     }
   };

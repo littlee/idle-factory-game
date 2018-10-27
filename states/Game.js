@@ -23,8 +23,8 @@ import ModalProdUpgrade from '../components/ModalProdUpgrade';
 import ModalSkill from '../components/ModalSkills.js';
 
 import range from '../js/libs/_/range';
-import { arrayIntersect } from '../utils';
 import Big from '../js/libs/big.min';
+import { arrayIntersect, getCashProduceSpeed } from '../utils';
 
 import { upgradedMap } from '../js/config.js';
 

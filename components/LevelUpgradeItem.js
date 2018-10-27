@@ -123,10 +123,11 @@ class LevelUpgradeItem extends window.Phaser.Group {
     return this._data;
   }
 
+  // maxTransported logic 未添加
   updateItemValue = () => {
     // 在更新等级之前改好item的curr值
     if (this._data.itemName === 'maxTransported') {
-      // 公式推算
+      // 公式推算, 需要拿到其他item的值，或者直接让modal计算好传到这里。
     } else {
       this._data.value = this.increment.plus(this._data.value);
     }
@@ -136,34 +137,17 @@ class LevelUpgradeItem extends window.Phaser.Group {
     );
   }
 
-  getDesUpdated = (diffs = null, furtherDiffs = null, upgraded = false) => {
+  getDesUpdated = (diffs = null) => {
     // diffs = {
     //   capacity: 0, // big
     //   count: 0, // big
     //   loadingSpeed: 0, // big
     //   walkSpeed: 0, // big
-    //   coinNeeded: 0, // big
+    //   coinNeeded: 0, // big,
+    //   maxTransported: 0, // big NEW!!
     // };
-
-    let keys = Object.keys(diffs);
-      if (keys.indexOf(this._data.itemName) > -1) {
-        this.increment = diffs[this._data.itemName];
-        this.txtFuture.setText(`+${formatBigNum(this.increment)}${this._data.unit}`);
-
-        if (upgraded === true) {
-          this._data.value = this.increment.plus(this._data.value);
-          this.txtCurr.setText(
-            formatBigNum(this._data.value) + this._data.unit
-          );
-          this.txtFuture.setText(
-            `+ ${formatBigNum(
-              furtherDiffs[this._data.itemName]
-            )}`
-          );
-        }
-      } else {
-        // 'maxTransported' 或者 workstation的
-      }
+    this.increment = diffs[this._data.itemName];
+    this.txtFuture.setText(`+${formatBigNum(this.increment)}${this._data.unit}`);
   };
 }
 

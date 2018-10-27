@@ -46,6 +46,25 @@ const CONFIG = {
   }
 };
 
+// all Big 一分钟每个market || warehouse worker的最大运输现金
+function getMaxTransportedSpeed(allTime, transCapacity) {
+  return Big(60).div(allTime).times(transCapacity); // eslint-disable-line
+}
+
+// 单位是s
+function getMrtWorkerTimePerRound(workstationCount, transCapacity, loadSpeed, walkSpeed) {
+  let loadingTime = Big(transCapacity).div(Big(loadSpeed)).times(2);
+  let walkTime = Big(workstationCount).div(Big(walkSpeed)).times(2);
+  return loadingTime.plus(walkTime);
+}
+
+// 单位是s
+function getWhsWorkerTimePerRound(workstationCount, transCapacity, loadSpeed, walkSpeed) {
+  let loadingTime = Big(transCapacity).div(Big(loadSpeed)).times(workstationCount+1);
+  let walkTime = Big(workstationCount).div(Big(walkSpeed)).times(2);
+  return loadingTime.plus(walkTime);
+}
+
 function getFontStyle(fSize, color, align, weight) {
   return {
     fontWeight: weight || 'bold',
@@ -230,6 +249,7 @@ class ModalLevel extends ModalRaw {
     let initFutureOpts = this._getCustomizedLevelInfoFromMap(1);
     let initDiffs = this._getDiffOpts4LevelBtns(initFutureOpts, initOpts);
     if (this._data.type === 'market' || this._data.type === 'warehouse') {
+      let initMaxDiff = this._getMaxTransportedDiff(initFutureOpts, initOpts.maxTransported);
       // gap 17
       this.item1 = new LevelUpgradeItem({
         game: this.game,
@@ -240,8 +260,8 @@ class ModalLevel extends ModalRaw {
         y: 290,
         levelType: this._data.type,
         itemName: 'maxTransported',
-        // value: '',
-        // increment: '',
+        value: initOpts.maxTransported,
+        increment: initMaxDiff,
         panelUpgradeInstance: this.upgradePanel
       });
       this.item2 = new LevelUpgradeItem({
@@ -401,7 +421,7 @@ class ModalLevel extends ModalRaw {
           this.levelIncrement > 1
             ? this._getAccumulatedDiffs()
             : Big(futureOpts[item]);
-      } else {
+      } else if (item !== 'maxTransported') {
         tmp[item] = Big(futureOpts[item]).minus(Big(currOpts[item]));
       }
     });
@@ -423,9 +443,11 @@ class ModalLevel extends ModalRaw {
     return amassedCoinNeeded;
   };
 
-  // 应该整合下不同level的item值，这里定义了4个item的。
+  // 应该整合下不同level的item值，这里定义了4个item的。已经补充最后一个item
   _getAllItemsInitOpts = () => {
-    return this._getCurrLevelInfoFromMap();
+    let opts = Object.assign({}, this._getCurrLevelInfoFromMap());
+    opts.maxTransported = this._getMaxTransportedValue(opts);
+    return opts;
   };
 
   _getCurrLevelInfoFromMap = () => {
@@ -515,7 +537,6 @@ class ModalLevel extends ModalRaw {
     let multiplier = this.upgradePanel.getMultiplier();
     if (Object.is(multiplier, NaN)) {
       // 和点击其他按钮为不同在于，x1之类的升级幅度由可视的multiplier直接拿到，max则是需要modal用自己的map和当前的coin来计算得出升级的差值。
-      console.log('this.maxAvailableLevel, curr: ', this.maxAvailableLevel, this._data.currLevel);
       multiplier = this.maxAvailableLevel - this._data.currLevel;
     }
     if (this._data.currLevel >= devLength) {
@@ -558,9 +579,14 @@ class ModalLevel extends ModalRaw {
   _updateAllItemsValues = () => {
     if (this._data.type === 'market' || this._data.type === 'warehouse') {
       // update item的描述数据
-      range(5).forEach(item => {
-        this[`item${item + 1}`].updateItemValue();
+      // 可以在这里计算'maxTransported'的值，然后再传下去
+      range(4).forEach(item => {
+        this[`item${item + 2}`].updateItemValue();
       });
+      // dev-ing start
+      // let value = '';
+      // this.item1.updateItemValue(value);
+      // dev-ing end
     } else if (this._data.type === 'workstation') {
       this.need1.updateItemValue();
       if (this.need2 !== null) {
@@ -584,7 +610,30 @@ class ModalLevel extends ModalRaw {
     this.avatarBarGained.scale.x = scaleFactor;
   };
 
-  // 点击level升级btn之后所有要处理的更新，在点击这里之前，一定是点过x1 || max的按钮，即，itemDes本身就是显示前期available level up的信息
+  // return a big
+  _getMaxTransportedDiff = (futureOpts, currOpts) => {
+    if (currOpts instanceof Big) {
+      return this._getMaxTransportedValue(futureOpts).minus(currOpts);
+    }
+    return this._getMaxTransportedValue(futureOpts).minus(this._getMaxTransportedValue(currOpts));
+  }
+
+  // 注意，这里的参数5是应该是curr active workstation count, 这里是hardcoded to 5
+  _getMaxTransportedValue = (opts) => {
+    if (this._data.type === 'market') {
+      let allTime = getMrtWorkerTimePerRound(5, opts.capacity, opts.loadingSpeed, opts.walkSpeed);
+      return getMaxTransportedSpeed(allTime, opts.capacity);
+    } else if (this._data.type === 'warehouse') {
+      let allTime = getWhsWorkerTimePerRound(5, opts.capacity, opts.loadingSpeed, opts.walkSpeed);
+      return getMaxTransportedSpeed(allTime, opts.capacity);
+    }
+  }
+
+
+  /*
+  点击level升级btn之后所有要处理的更新，在点击这里之前，一定是点过x1 || max的按钮，即，itemDes本身就是显示前期available level up的信息
+  market 和 warehouse 的第一个item的logic未加
+  */
   handleUpgradation = () => {
     this._updateAllItemsValues();
     // all set, we are good to update value of currLevel
@@ -610,7 +659,6 @@ class ModalLevel extends ModalRaw {
   handleLevelBtnsChoosing = () => {
     // 拿到最新的点击升级数 || 可升级数， 可为0
     let levelIncrement = this._getLevelIncrement();
-    console.log('type: increment: ', this._data.type, levelIncrement);
     if (
       levelIncrement === 0 &&
       this._data.currLevel < Object.keys(this.MAP).length
@@ -629,15 +677,20 @@ class ModalLevel extends ModalRaw {
     let futureOpts = this._getCustomizedLevelInfoFromMap(levelIncrement);
     let diffs = this._getDiffOpts4LevelBtns(futureOpts, currOpts);
 
+
     if (levelIncrement === 0) {
       diffs.coinNeeded = Big(0); // 当当前级数已经>=配置表给出数目时
     }
 
     if (this._data.type === 'market' || this._data.type === 'warehouse') {
       // update item的描述数据
+      // dev-ing start 先都写死工作台的数量是5个
+      let MaxTransportedDiff = this._getMaxTransportedDiff(futureOpts, currOpts);
+      diffs.maxTransported = MaxTransportedDiff;
       range(5).forEach(item => {
         this[`item${item + 1}`].getDesUpdated(diffs);
       });
+       // dev-ing end
     } else if (this._data.type === 'workstation') {
       this.need1.getDesUpdated(diffs);
       if (this.need2 !== null) {
