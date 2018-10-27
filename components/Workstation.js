@@ -69,7 +69,7 @@ const OUTPUT_PRODUCE_MAP = {
   projector: 1,
   headset: 2,
   walkieTalkie: 3,
-  radio: 2,
+  radio: 2
 };
 
 const TEXTURE_SCALE = 0.43;
@@ -93,6 +93,7 @@ class Workstation extends window.Phaser.Group {
     const initOutput = 'steel';
 
     this._data = {
+      isLocked: true,
       isBought: false,
       isWorking: false,
       input: getInitInput(initOutput),
@@ -180,7 +181,7 @@ class Workstation extends window.Phaser.Group {
       console.log('点击工作台产品按钮');
       this.modalProdPick = new ModalProdPick({
         game: this.game,
-        workstation: this,
+        workstation: this
       });
       this.modalProdPick.onDestroy.add(() => {
         console.log('destroy done modalProdPick');
@@ -288,7 +289,7 @@ class Workstation extends window.Phaser.Group {
         game: this.game,
         type: 'workstation',
         coupledBtn: this.upBtn,
-        workstation: this,// more to go
+        workstation: this, // more to go
         close: 'destory'
       });
       this.workestationLevelModal.onDestroy.add(() => {
@@ -406,9 +407,11 @@ class Workstation extends window.Phaser.Group {
   _getHasNoInput() {
     let { input, output } = this._data;
 
-    let inputAmt = Object.keys(pick(input, OUTPUT_INPUT_MAP[output])).map(key => {
-      return input[key].amount;
-    });
+    let inputAmt = Object.keys(pick(input, OUTPUT_INPUT_MAP[output])).map(
+      key => {
+        return input[key].amount;
+      }
+    );
 
     return inputAmt.some(amount => {
       return amount.lte(0);
@@ -417,9 +420,21 @@ class Workstation extends window.Phaser.Group {
 
   // public methods
   beAbleToBuy() {
+    this._data.isLocked = false;
     this.buyBtnGroup.visible = true;
   }
 
+  updateCashBtnTexture(currCash) {
+    if (currCash.gte(this._data.price.cash)) {
+      if (this.buyBtnCash.key !== 'btn_buy_ws_cash') {
+        this.buyBtnCash.loadTexture('btn_buy_ws_cash');
+      }
+    } else {
+      if (this.buyBtnCash.key !== 'btn_buy_ws_cash_disable') {
+        this.buyBtnCash.loadTexture('btn_buy_ws_cash_disable');
+      }
+    }
+  }
 
   onValidateBuy(func, context) {
     this._onValidateBuyFunc = func;
@@ -435,7 +450,11 @@ class Workstation extends window.Phaser.Group {
     // 计算消耗金币
     console.log('this buy: ', type);
     let priceOfType = this._data.price[type];
-    let canBuy = this._onValidateBuyFunc.call(this._onValidateBuyContext, type, priceOfType);
+    let canBuy = this._onValidateBuyFunc.call(
+      this._onValidateBuyContext,
+      type,
+      priceOfType
+    );
     if (!canBuy) {
       return;
     }
@@ -453,13 +472,17 @@ class Workstation extends window.Phaser.Group {
     }
   }
 
-  setPrice({cash, superCash}) {
+  setPrice({ cash, superCash }) {
     this._data.price = {
       cash,
       superCash
     };
     this.buyBtnCashText.setText(formatBigNum(cash));
     this.buyBtnSuperCashText.setText(formatBigNum(superCash));
+  }
+
+  getIsLocked() {
+    return this._data.isLocked;
   }
 
   getIsBought() {
@@ -508,8 +531,7 @@ class Workstation extends window.Phaser.Group {
 
     if (this._data.outputDelay === INIT_OUTPUT_DELAY) {
       this.worker.work();
-    }
-    else {
+    } else {
       this.worker.multipleSpeed(3);
     }
 
@@ -649,7 +671,6 @@ class Workstation extends window.Phaser.Group {
         this._data.input[key] = nextInitInput[key];
       }
     });
-
 
     let outputTexture = SourceImg.get(outputKey);
     this.outputItems.changeTexture(outputKey);
