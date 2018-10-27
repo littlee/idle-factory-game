@@ -579,14 +579,10 @@ class ModalLevel extends ModalRaw {
   _updateAllItemsValues = () => {
     if (this._data.type === 'market' || this._data.type === 'warehouse') {
       // update item的描述数据
-      // 可以在这里计算'maxTransported'的值，然后再传下去
-      range(4).forEach(item => {
-        this[`item${item + 2}`].updateItemValue();
+      // 'maxTransported'的值，在modal init以及btn-choosing的时候，就已经算好了值和存下了increment 这里直接相加更新，和其他item一样
+      range(5).forEach(item => {
+        this[`item${item + 1}`].updateItemValue();
       });
-      // dev-ing start
-      // let value = '';
-      // this.item1.updateItemValue(value);
-      // dev-ing end
     } else if (this._data.type === 'workstation') {
       this.need1.updateItemValue();
       if (this.need2 !== null) {

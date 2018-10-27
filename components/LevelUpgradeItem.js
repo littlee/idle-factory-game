@@ -123,15 +123,10 @@ class LevelUpgradeItem extends window.Phaser.Group {
     return this._data;
   }
 
-  // maxTransported logic 未添加
+  // maxTransported logic 添加，5个items completed
   updateItemValue = () => {
     // 在更新等级之前改好item的curr值
-    if (this._data.itemName === 'maxTransported') {
-      // 公式推算, 需要拿到其他item的值，或者直接让modal计算好传到这里。
-    } else {
-      this._data.value = this.increment.plus(this._data.value);
-    }
-
+    this._data.value = this.increment.plus(this._data.value);
     this.txtCurr.setText(
       formatBigNum(this._data.value) + this._data.unit
     );
