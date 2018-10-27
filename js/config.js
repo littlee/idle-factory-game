@@ -419,3 +419,9 @@ export let resoList = [
     unlocked: false
   }
 ];
+
+export let bellRedInfo = {
+  boughtCount: 1,
+  level: 1,
+  point: 0,
+};

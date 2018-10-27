@@ -1,6 +1,8 @@
 import Big from '../js/libs/big.min';
 import { formatBigNum } from '../utils';
 
+import { bellRedInfo } from '../js/config.js';
+
 import ModalRaw from './ModalRaw.js';
 
 const CONFIG = {
@@ -29,22 +31,22 @@ function getFontStyle(fSize, color, align, weight) {
 const SKILL_PRICE_MAP = {
   red: {
     bought1: {
-      coinNeeded: '1000'
+      coinNeeded: '100'
     },
     bought2: {
-      coinNeeded: '2000'
+      coinNeeded: '200'
     },
     bought3: {
-      coinNeeded: '3000'
+      coinNeeded: '300'
     },
     bought4: {
-      coinNeeded: '4000'
+      coinNeeded: '400'
     },
     bought5: {
-      coinNeeded: '5000'
+      coinNeeded: '500'
     },
     bought6: {
-      coinNeeded: '6000'
+      coinNeeded: '600'
     }
   },
   yellow: {}
@@ -54,10 +56,10 @@ const BELL_LEVEL_MAP = {
   red: {
     level1: 1,
     level2: 1,
-    level3: 2,
-    level4: 2,
-    level5: 3,
-    level6: 3
+    level3: 1,
+    level4: 1,
+    level5: 1,
+    level6: 1
   },
   yellow: {
     level1: 1,
@@ -69,6 +71,8 @@ const BELL_LEVEL_MAP = {
   }
 };
 
+// 如果变成close-destroy, bell的level, boughtCount, point都要存着, 存了。
+// 这里还没去测试阈值的情况， 测了红色的。
 class ModalSkills extends ModalRaw {
   constructor({
     game,
@@ -95,16 +99,16 @@ class ModalSkills extends ModalRaw {
 
     this.state = this.game.state.states[this.game.state.current];
     // curr upgraded level, 需要可以被初始化到指定的级数，对应的bell也是要可以实现对应的初始化
-    this.levelRed = 1;
+    this.levelRed = bellRedInfo.level;
     this.levelYellow = 1;
-    this.boughtRedCount = 1;
+    this.boughtRedCount = bellRedInfo.boughtCount;
     // skills point bought but haven't used
-    this.pointRed = 0;
+    this.pointRed = bellRedInfo.point;
     this.pointYellow = 0;
     // coinNeeded to buy
-    this.coin4BellRed = SKILL_PRICE_MAP.red[`bought${this.boughtRedCount}`].coinNeeded;
+    this.coin4BellRed = SKILL_PRICE_MAP.red[`bought${this.boughtRedCount}`] ? SKILL_PRICE_MAP.red[`bought${this.boughtRedCount}`].coinNeeded : 0;
     this.coin4BellYellow = 0;
-    this.point4BellRed = BELL_LEVEL_MAP.red[`level${this.levelRed}`];
+    this.point4BellRed = BELL_LEVEL_MAP.red[`level${this.levelRed}`] ? BELL_LEVEL_MAP.red[`level${this.levelRed}`] : 0;
     this.point4BellYellow = BELL_LEVEL_MAP.yellow[`level${this.levelYellow}`];
 
     this._getInit();
@@ -347,13 +351,17 @@ class ModalSkills extends ModalRaw {
   };
 
   _updateBtnBuySkill1Value = () => {
-    this.coin4BellRed = SKILL_PRICE_MAP.red[`bought${this.boughtRedCount}`].coinNeeded;
+    if (this.boughtRedCount > Object.keys(SKILL_PRICE_MAP.red).length) {
+      this.coin4BellRed = 0;
+    } else {
+      this.coin4BellRed = SKILL_PRICE_MAP.red[`bought${this.boughtRedCount}`].coinNeeded;
+    }
     this.coin4RedTxt.setText(formatBigNum(this.coin4BellRed), true);
     this.state.subtractCash(0);
   }
 
   _updateSpeedUpgradeBtnUI = () => {
-    if (this.pointRed >= this.point4BellRed) {
+    if (this.pointRed >= this.point4BellRed && this.levelRed <= Object.keys(BELL_LEVEL_MAP.red).length) {
       this.speedUpgradeBtn.loadTexture('btn_skill_upgrade_able');
     } else {
       this.speedUpgradeBtn.loadTexture('btn_skill_upgrade_disable');
@@ -363,7 +371,9 @@ class ModalSkills extends ModalRaw {
   _buySkillRed = () => {
     // 相关技能点数目增加
     this.pointRed += 1;
+    bellRedInfo.point += 1;
     this.boughtRedCount += 1; // key!!!
+    bellRedInfo.boughtCount += 1;
     this.skillCountTxt1.setText(this.pointRed);
     // 更新够不够点去升级铃铃
     this._updateSpeedUpgradeBtnUI();
@@ -377,10 +387,17 @@ class ModalSkills extends ModalRaw {
     console.log('红铃铃升级');
     // point要减少点数，外部的bell的数字增加，自身的UI变，btnUI也要变
     this.pointRed -= this.point4BellRed;
+    bellRedInfo.point -= this.point4BellRed;
     this.skillCountTxt1.setText(this.pointRed);
     this.levelRed += 1;
+    bellRedInfo.level += 1;
     this.redLevelTxt.setText(`${this.levelRed}级`);
-    this.point4BellRed = BELL_LEVEL_MAP.red[`level${this.levelRed}`];
+    // 更新下一次升级需要的点书
+    if (this.levelRed <= Object.keys(BELL_LEVEL_MAP.red).length ) {
+      this.point4BellRed = BELL_LEVEL_MAP.red[`level${this.levelRed}`];
+    } else {
+      this.point4BellRed = 0;
+    }
     this.redPointTxt.setText(this.point4BellRed);
     this._updateSpeedUpgradeBtnUI();
     // 接增加红色铃铃的方法
@@ -395,7 +412,7 @@ class ModalSkills extends ModalRaw {
 
   // 只是update bellRed部分
   updateBtnBuySkill1UI = (currCoin) => {
-    if (currCoin.lt(this.coin4BellRed) || this.levelRed > 6) {
+    if (currCoin.lt(this.coin4BellRed) || this.boughtRedCount > 6) {
       this.btnBuySkill1.loadTexture('btn_skill_buy_disable');
     } else {
       this.btnBuySkill1.loadTexture('btn_skill_buy_able');
