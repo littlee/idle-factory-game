@@ -108,9 +108,10 @@ class ModalSkills extends ModalRaw {
     this.point4BellYellow = BELL_LEVEL_MAP.yellow[`level${this.levelYellow}`];
 
     this._getInit();
-    // 初始化buyBuySkill1
+    // 初始化buyBuySkill1, 和speedUpgradeBtn
     let currenCoin = this.state.getCurrCoin();
     this.updateBtnBuySkill1UI(currenCoin);
+    this._updateSpeedUpgradeBtnUI();
   }
 
   _getInit = () => {
@@ -197,6 +198,8 @@ class ModalSkills extends ModalRaw {
       getFontStyle('26px')
     );
     this.redPointTxt.alignTo(this.speedUpgradeBtn, Phaser.RIGHT_TOP, -65, -6);
+    this.speedUpgradeBtn.events.onInputDown.add(this._handleBtnSpeedUpgradeClick);
+    this.redPointTxt.events.onInputDown.add(this._handleBtnSpeedUpgradeClick);
 
     // sale upgrade
     this.saleUpgradeBtn = this.game.make.image(0, 0, 'btn_sale_upgrade_disable'); // 'btn_sale_upgrade_disable btn_sale_upgrade_able'
@@ -349,28 +352,44 @@ class ModalSkills extends ModalRaw {
     this.state.subtractCash(0);
   }
 
+  _updateSpeedUpgradeBtnUI = () => {
+    if (this.pointRed >= this.point4BellRed) {
+      this.speedUpgradeBtn.loadTexture('btn_skill_upgrade_able');
+    } else {
+      this.speedUpgradeBtn.loadTexture('btn_skill_upgrade_disable');
+    }
+  }
+
   _buySkillRed = () => {
     // 相关技能点数目增加
     this.pointRed += 1;
-    this.boughtRedCount += 1;
+    this.boughtRedCount += 1; // key!!!
     this.skillCountTxt1.setText(this.pointRed);
+    // 更新够不够点去升级铃铃
+    this._updateSpeedUpgradeBtnUI();
     // btnCash的值减少
     this.state.subtractCash(this.coin4BellRed);
     this._updateBtnBuySkill1Value();
   }
 
-  _upgradeBellRed = () => {
-    this.pointRed = this.pointRed - 1;
-    this.levelRed = this.levelRed + 1;
+  _handleBtnSpeedUpgradeClick = () => {
+    if (this.speedUpgradeBtn.key === 'btn_skill_upgrade_disable') return false;
+    console.log('红铃铃升级');
+    // point要减少点数，外部的bell的数字增加，自身的UI变，btnUI也要变
+    this.pointRed -= this.point4BellRed;
     this.skillCountTxt1.setText(this.pointRed);
+    this.levelRed += 1;
     this.redLevelTxt.setText(`${this.levelRed}级`);
+    this.point4BellRed = BELL_LEVEL_MAP.red[`level${this.levelRed}`];
+    this.redPointTxt.setText(this.point4BellRed);
+    this._updateSpeedUpgradeBtnUI();
     // 接增加红色铃铃的方法
     this.state.upgradeBellRed();
   }
 
   _handleBtnBuySkillClick = () => {
     if (this.btnBuySkill1.key === 'btn_skill_buy_disable') return false;
-    console.log('buy skill');
+    console.log('买舵舵');
     this._buySkillRed();
   }
 

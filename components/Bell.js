@@ -164,6 +164,7 @@ class Bell extends window.Phaser.Group {
 
   _increaseDuration() {
     this._data.skillDuration += 10;
+    this._data.skillRestSec += 10;
   }
 
   _mute() {
