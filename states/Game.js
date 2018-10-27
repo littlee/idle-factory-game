@@ -24,7 +24,7 @@ import ModalSkill from '../components/ModalSkills.js';
 
 import range from '../js/libs/_/range';
 import Big from '../js/libs/big.min';
-import { arrayIntersect, getCashProduceSpeed } from '../utils';
+import { arrayIntersect } from '../utils';
 
 import { upgradedMap } from '../js/config.js';
 
@@ -211,7 +211,7 @@ class Game extends window.Phaser.State {
 
     // for cash-value-responsive-UI-related
     this._updateWhateverNeed2KnowCoinValue();
-    // 看帧数
+    this.updateIdleCash();
 
     // after create all object
     this.workstationGroup.children[0].beAbleToBuy();
@@ -660,11 +660,9 @@ class Game extends window.Phaser.State {
     // 更新workstations里头的modal升级按钮
     this.workstationGroup.forEachAlive((item, index) => {
       if (item.workestationLevelModal) {
-        console.log('跑');
         item.workestationLevelModal.getCoinRelatedStuffsUpdated(currCash);
       }
       if (item.modalProdPick) {
-        console.log('item.modalProdPick');
         item.modalProdPick.getAllBtnCoinUpdated(currCash);
       }
     });
@@ -680,6 +678,18 @@ class Game extends window.Phaser.State {
     // let lockWorkstation = this._getFirstLockWorkstation();
     // console.log(lockWorkstation);
   };
+
+  // 闲置现金计算, 没用excel的。根据一分钟每个market worker的最大运输现金 * marker worker的HC得出, return个big
+  _getCashProduceSpeed() {
+    let mWorkerCount = this.modalMarket.getMarketWorkerNumber();
+    let marketMaxCash = this.modalMarket.getMarketMaxTransported();
+    return marketMaxCash.times(mWorkerCount);
+  }
+
+  updateIdleCash () {
+    let newBigValue = this._getCashProduceSpeed();
+    this.btnIdleCash.setText(newBigValue);
+  }
 
   subtractCash = decrement => {
     this.btnCash.subtractCashAndUpdate(decrement);
@@ -743,6 +753,8 @@ class Game extends window.Phaser.State {
   changeUpgradedMapValue = value => {
     this.upgradedMap = value;
   };
+
+
 }
 
 export default Game;

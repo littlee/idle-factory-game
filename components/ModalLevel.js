@@ -583,6 +583,9 @@ class ModalLevel extends ModalRaw {
       range(5).forEach(item => {
         this[`item${item + 1}`].updateItemValue();
       });
+      if (this._data.type === 'market') {
+       this._updateBtnIdleCash();
+      }
     } else if (this._data.type === 'workstation') {
       this.need1.updateItemValue();
       if (this.need2 !== null) {
@@ -592,6 +595,10 @@ class ModalLevel extends ModalRaw {
       this.iconPower.updateItemValue();
     }
   };
+
+  _updateBtnIdleCash () {
+    this.state.updateIdleCash();
+  }
 
   _getAcaleFactor4AvatarGainedBarWidth = () => {
     let lastEnd = this._getLastBoostLevelThreshold();
@@ -720,6 +727,18 @@ class ModalLevel extends ModalRaw {
   getLevelIncrement = () => {
     return this.levelIncrement;
   };
+
+  // 拿到个big
+  getMarketWorkerNumber = () => {
+    return this.item2.getValue();
+  }
+
+  // 拿到个big
+  getMarketMaxTransported = () => {
+    if (this._data.type === 'market') {
+      return this.item1.getValue();
+    }
+  }
 
   setCurrLevel = level => {
     this.prevLevel = this._data.currLevel;

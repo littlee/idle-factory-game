@@ -123,6 +123,10 @@ class LevelUpgradeItem extends window.Phaser.Group {
     return this._data;
   }
 
+  getValue = () => {
+    return this._data.value;
+  }
+
   // maxTransported logic 添加，5个items completed
   updateItemValue = () => {
     // 在更新等级之前改好item的curr值

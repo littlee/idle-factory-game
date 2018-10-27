@@ -1,7 +1,10 @@
+// import Big from '../js/libs/big.min';
+import { formatBigNum } from '../utils';
+
 const TEXT_STYLE = {
   font: 'Arial',
-  fontSize: 36,
-  fill: '#fbf36d'
+  fontSize: 26,
+  fill: '#fbf36d',
 };
 
 class BtnIdleCash extends window.Phaser.Group {
@@ -9,17 +12,17 @@ class BtnIdleCash extends window.Phaser.Group {
     super(game);
     this.x = x;
     this.y = y;
-    this.gameRef = game;
+    this.unit = '/min';
 
-    this.img = this.gameRef.make.image(0, 0, 'btn_idle_cash');
+    this.img = this.game.make.image(0, 0, 'btn_idle_cash');
     this.add(this.img);
 
-    this.text = this.gameRef.make.text(55, 45, '0', TEXT_STYLE);
+    this.text = this.game.make.text(55, 50, '0' + this.unit, TEXT_STYLE);
     this.add(this.text);
   }
 
   setText(text) {
-    this.text.setText(text);
+    this.text.setText(formatBigNum(text) + this.unit, true);
   }
 
   onClick(func, context) {
