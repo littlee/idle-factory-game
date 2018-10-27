@@ -42,8 +42,3 @@ export function formatSec(sec) {
 export function arrayIntersect(a, b) {
   return a.filter(item => b.indexOf(item) !== -1);
 }
-
-// 闲置现金计算, 没用excel的。根据一分钟每个market worker的最大运输现金 * marker worker的HC得出
-export function getCashProduceSpeed(marketMaxCash, mWorkerCount) {
-  return marketMaxCash.times(mWorkerCount);
-}

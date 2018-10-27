@@ -99,7 +99,7 @@ class Bell extends window.Phaser.Group {
   _getCanClick() {
     return !this._data.isOnCooldown && !this._data.isOnSkill;
   }
-  
+
   _clickBell() {
     if (!this._getCanClick()) {
       return;
@@ -162,6 +162,10 @@ class Bell extends window.Phaser.Group {
     this.bellBodyTwn.start();
   }
 
+  _increaseDuration() {
+    this._data.skillDuration += 10;
+  }
+
   _mute() {
     this.bellHandle.angle = 0;
     this.bellHandleTwn.stop();
@@ -179,10 +183,10 @@ class Bell extends window.Phaser.Group {
     this._onSkillEndContext = context;
   }
 
-  setSkillDuration(duration) {
-    this._data.skillDuration = duration;
+  upgradeSkillDuration() {
+    this._increaseDuration();
     if (this._getCanClick()) {
-      this.bellTimerText.setText(formatSec(this._data.skillDuration));
+      this.bellTimerText.setText(formatSec(this._data.skillDuration), true);
     };
   }
 

@@ -1,4 +1,5 @@
-// import Big from '../js/libs/big.min';
+import Big from '../js/libs/big.min';
+import { formatBigNum } from '../utils';
 
 import ModalRaw from './ModalRaw.js';
 
@@ -11,7 +12,7 @@ const CONFIG = {
   bgWidth: 567,
   bgHeight: 437,
   redTip: '在90秒内，每个\n人的工作速度快3倍',
-  yellowTip: '在90秒内，总的\n销售额会提升3倍',
+  yellowTip: '在90秒内，总的\n销售额会提升3倍'
 };
 
 function getFontStyle(fSize, color, align, weight) {
@@ -25,23 +26,91 @@ function getFontStyle(fSize, color, align, weight) {
   };
 }
 
+const SKILL_PRICE_MAP = {
+  red: {
+    bought1: {
+      coinNeeded: '1000'
+    },
+    bought2: {
+      coinNeeded: '2000'
+    },
+    bought3: {
+      coinNeeded: '3000'
+    },
+    bought4: {
+      coinNeeded: '4000'
+    },
+    bought5: {
+      coinNeeded: '5000'
+    },
+    bought6: {
+      coinNeeded: '6000'
+    }
+  },
+  yellow: {}
+};
+
+const BELL_LEVEL_MAP = {
+  red: {
+    level1: 1,
+    level2: 1,
+    level3: 2,
+    level4: 2,
+    level5: 3,
+    level6: 3
+  },
+  yellow: {
+    level1: 1,
+    level2: 1,
+    level3: 2,
+    level4: 2,
+    level5: 3,
+    level6: 3
+  }
+};
+
 class ModalSkills extends ModalRaw {
   constructor({
     game,
     headingH = CONFIG.headingH,
     headingTxt = CONFIG.headingTxt,
     height = CONFIG.modalHeight,
-    width = CONFIG.modalWidth
+    width = CONFIG.modalWidth,
+    close
   }) {
-    super(game, headingTxt, height, width, undefined, undefined, undefined, headingH);
-    this.levelRed = 0;
-    this.levelYellow = 0;
+    super(
+      game,
+      headingTxt,
+      height,
+      width,
+      undefined,
+      undefined,
+      undefined,
+      headingH,
+      undefined,
+      undefined,
+      undefined,
+      close
+    );
+
+    this.state = this.game.state.states[this.game.state.current];
+    // curr upgraded level, 需要可以被初始化到指定的级数，对应的bell也是要可以实现对应的初始化
+    this.levelRed = 1;
+    this.levelYellow = 1;
+    this.boughtRedCount = 1;
+    // skills point bought but haven't used
     this.pointRed = 0;
     this.pointYellow = 0;
-    this.coin4BellRed = 0;
+    // coinNeeded to buy
+    this.coin4BellRed = SKILL_PRICE_MAP.red[`bought${this.boughtRedCount}`].coinNeeded;
     this.coin4BellYellow = 0;
+    this.point4BellRed = BELL_LEVEL_MAP.red[`level${this.levelRed}`];
+    this.point4BellYellow = BELL_LEVEL_MAP.yellow[`level${this.levelYellow}`];
 
     this._getInit();
+    // 初始化buyBuySkill1
+    let currenCoin = this.state.getCurrCoin();
+    this.updateBtnBuySkill1UI(currenCoin);
   }
 
   _getInit = () => {
@@ -62,7 +131,11 @@ class ModalSkills extends ModalRaw {
     this.bellFrame.drawRect(left, 100, CONFIG.bgWidth, CONFIG.bgHeight);
     this.bellFrame.endFill();
 
-    this.bellHeading = this.game.make.image(this.w / 2, 50, 'bell_panel_heading');
+    this.bellHeading = this.game.make.image(
+      this.w / 2,
+      50,
+      'bell_panel_heading'
+    );
     this.bellHeading.anchor.setTo(0.5, 0);
 
     this.bellBg0 = this.game.make.image(0, 0, 'bg_bell');
@@ -74,46 +147,68 @@ class ModalSkills extends ModalRaw {
     // two bells
     this.redBell = this.game.make.image(0, 0, 'bell_red_whole');
     this.redBell.alignTo(this.bellBg1, Phaser.TOP_CENTER, 0, -153);
-    this.redLevelTxt = this.game.make.text(0, 0, `${this.levelRed}级`, getFontStyle());
+    this.redLevelTxt = this.game.make.text(
+      0,
+      0,
+      `${this.levelRed}级`,
+      getFontStyle()
+    );
     this.redLevelTxt.setTextBounds(0, 0, 85, 34);
     this.redLevelTxt.alignTo(this.redBell, Phaser.BOTTOM_LEFT, -20, -42);
 
     this.yellowBell = this.game.make.image(0, 0, 'bell_yellow_whole');
     this.yellowBell.alignTo(this.bellBg0, Phaser.TOP_CENTER, 0, -153);
-    this.yellowLevelTxt = this.game.make.text(0, 0, `${this.levelYellow}级`, getFontStyle());
+    this.yellowLevelTxt = this.game.make.text(
+      0,
+      0,
+      `${this.levelYellow}级`,
+      getFontStyle()
+    );
     this.yellowLevelTxt.setTextBounds(0, 0, 85, 34);
     this.yellowLevelTxt.alignTo(this.yellowBell, Phaser.BOTTOM_LEFT, -20, -42);
 
     // two tip txt 217*60
-    this.redTipTxt = this.game.make.text(0, 0, CONFIG.redTip, getFontStyle('22px', '#9a3010'));
+    this.redTipTxt = this.game.make.text(
+      0,
+      0,
+      CONFIG.redTip,
+      getFontStyle('22px', '#9a3010')
+    );
     this.redTipTxt.setTextBounds(0, 0, 217, 60);
     this.redTipTxt.alignTo(this.redBell, Phaser.BOTTOM_LEFT, 43, 10);
 
-    this.yellowTipTxt = this.game.make.text(0, 0, CONFIG.yellowTip, getFontStyle('22px', '#9a3010'));
+    this.yellowTipTxt = this.game.make.text(
+      0,
+      0,
+      CONFIG.yellowTip,
+      getFontStyle('22px', '#9a3010')
+    );
     this.yellowTipTxt.setTextBounds(0, 0, 217, 60);
     this.yellowTipTxt.alignTo(this.yellowBell, Phaser.BOTTOM_LEFT, 43, 10);
 
     // speed upgrade
-    this.speedUpgradeAbleBtn = this.game.make.image(0, 0, 'btn_skill_upgrade_able');
-    this.speedUpgradeAbleBtn.alignTo(this.redTipTxt, Phaser.BOTTOM_CENTER, 12, 5);
-    this.speedUpgradeAbleBtn.visible = false;
+    this.speedUpgradeBtn = this.game.make.image(0, 0, 'btn_skill_upgrade_able'); // 'btn_skill_upgrade_disable'
+    this.speedUpgradeBtn.alignTo(this.redTipTxt, Phaser.BOTTOM_CENTER, 12, 5);
 
-    this.speedUpgradeDisableBtn = this.game.make.image(0, 0, 'btn_skill_upgrade_disable');
-    this.speedUpgradeDisableBtn.alignTo(this.redTipTxt, Phaser.BOTTOM_CENTER, 12, 5);
-    // this.speedUpgradeDisableBtn.visible = false;
-
-    this.redPointTxt = this.game.make.text(0, 0, this.pointRed, getFontStyle('26px'));
-    this.redPointTxt.alignTo(this.speedUpgradeAbleBtn, Phaser.RIGHT_TOP, -65, -6);
+    this.redPointTxt = this.game.make.text(
+      0,
+      0,
+      this.point4BellRed,
+      getFontStyle('26px')
+    );
+    this.redPointTxt.alignTo(this.speedUpgradeBtn, Phaser.RIGHT_TOP, -65, -6);
 
     // sale upgrade
-    this.saleUpgradeAbleBtn = this.game.make.image(0, 0, 'btn_sale_upgrade_able');
-    this.saleUpgradeAbleBtn.alignTo(this.yellowTipTxt, Phaser.BOTTOM_CENTER, 22, 5);
+    this.saleUpgradeBtn = this.game.make.image(0, 0, 'btn_sale_upgrade_disable'); // 'btn_sale_upgrade_disable btn_sale_upgrade_able'
+    this.saleUpgradeBtn.alignTo(this.yellowTipTxt, Phaser.BOTTOM_CENTER, 22, 5);
 
-    this.saleUpgradeDisableBtn = this.game.make.image(0, 0, 'btn_sale_upgrade_disable');
-    this.saleUpgradeDisableBtn.alignTo(this.yellowTipTxt, Phaser.BOTTOM_CENTER, 22, 5);
-
-    this.yellowPointTxt = this.game.make.text(0, 0, this.pointYellow, getFontStyle('26px'));
-    this.yellowPointTxt.alignTo(this.saleUpgradeAbleBtn, Phaser.RIGHT_TOP, -65, -6);
+    this.yellowPointTxt = this.game.make.text(
+      0,
+      0,
+      this.point4BellYellow,
+      getFontStyle('26px')
+    );
+    this.yellowPointTxt.alignTo(this.saleUpgradeBtn, Phaser.RIGHT_TOP, -65, -6);
 
     // bellGroup
     this.bellGroup.addChild(this.bellFrame);
@@ -126,16 +221,14 @@ class ModalSkills extends ModalRaw {
     this.bellGroup.addChild(this.yellowBell);
     this.bellGroup.addChild(this.yellowLevelTxt);
     this.bellGroup.addChild(this.yellowTipTxt);
-    this.bellGroup.addChild(this.speedUpgradeAbleBtn);
-    this.bellGroup.addChild(this.speedUpgradeDisableBtn);
+    this.bellGroup.addChild(this.speedUpgradeBtn);
     this.bellGroup.addChild(this.redPointTxt);
-    this.bellGroup.addChild(this.saleUpgradeAbleBtn);
-    this.bellGroup.addChild(this.saleUpgradeDisableBtn);
+    this.bellGroup.addChild(this.saleUpgradeBtn);
     this.bellGroup.addChild(this.yellowPointTxt);
 
     // contentGroup
     this.contentGroup.addChild(this.bellGroup);
-  }
+  };
 
   _drawFrameSkill = () => {
     this.skillGroup = this.game.make.group();
@@ -147,7 +240,11 @@ class ModalSkills extends ModalRaw {
     this.skillFrame.drawRect(0, 80, CONFIG.bgWidth, CONFIG.bgHeight);
     this.skillFrame.endFill();
 
-    this.skillHeading = this.game.make.image(this.w / 2 - left, 30, 'skill_panel_heading');
+    this.skillHeading = this.game.make.image(
+      this.w / 2 - left,
+      30,
+      'skill_panel_heading'
+    );
     this.skillHeading.anchor.setTo(0.5, 0);
 
     this.skillBg0 = this.game.make.image(0, 0, 'bg_skill');
@@ -159,13 +256,33 @@ class ModalSkills extends ModalRaw {
     // two skill count panel
     this.panelSkillCount1 = this.game.make.image(0, 0, 'panel_skill_counts');
     this.panelSkillCount1.alignTo(this.skillBg1, Phaser.TOP_CENTER, 0, -33);
-    this.skillCountTxt1 = this.game.make.text(0, 0, this.pointRed, getFontStyle());
-    this.skillCountTxt1.alignTo(this.panelSkillCount1, Phaser.BOTTOM_CENTER, 0, -33);
+    this.skillCountTxt1 = this.game.make.text(
+      0,
+      0,
+      this.pointRed,
+      getFontStyle()
+    );
+    this.skillCountTxt1.alignTo(
+      this.panelSkillCount1,
+      Phaser.BOTTOM_CENTER,
+      0,
+      -33
+    );
 
     this.panelSkillCount2 = this.game.make.image(0, 0, 'panel_skill_counts');
     this.panelSkillCount2.alignTo(this.skillBg0, Phaser.TOP_CENTER, 0, -33);
-    this.skillCountTxt2 = this.game.make.text(0, 0, this.pointRed, getFontStyle());
-    this.skillCountTxt2.alignTo(this.panelSkillCount2, Phaser.BOTTOM_CENTER, 0, -33);
+    this.skillCountTxt2 = this.game.make.text(
+      0,
+      0,
+      this.pointYellow,
+      getFontStyle()
+    );
+    this.skillCountTxt2.alignTo(
+      this.panelSkillCount2,
+      Phaser.BOTTOM_CENTER,
+      0,
+      -33
+    );
 
     // two skill icons
     this.iconFactory1 = this.game.make.image(0, 0, 'icon_skill_factory1');
@@ -175,24 +292,31 @@ class ModalSkills extends ModalRaw {
     this.iconFactory2.alignTo(this.skillBg0, Phaser.TOP_CENTER, 0, -223);
 
     // buy-able btn & disable btn
-    this.btnBuyAble1 = this.game.make.image(0, 0, 'btn_skill_buy_able');
-    this.btnBuyAble1.alignTo(this.iconFactory1, Phaser.BOTTOM_LEFT, -7, 10);
-    this.btnBuyDisable1 = this.game.make.image(0, 0, 'btn_skill_buy_disable');
-    this.btnBuyDisable1.alignTo(this.iconFactory1, Phaser.BOTTOM_LEFT, -7, 10);
+    this.btnBuySkill1 = this.game.make.image(0, 0, 'btn_skill_buy_able'); // 'btn_skill_buy_disable'
+    this.btnBuySkill1.alignTo(this.iconFactory1, Phaser.BOTTOM_LEFT, -7, 10);
+    this.btnBuySkill1.events.onInputDown.add(this._handleBtnBuySkillClick);
 
     // coin value need to be Big-gified
-    this.coin4RedTxt = this.game.make.text(0, 0, this.coin4BellRed, getFontStyle());
-    this.coin4RedTxt.alignTo(this.btnBuyAble1, Phaser.RIGHT_TOP, -90, -6);
+    this.coin4RedTxt = this.game.make.text(
+      0,
+      0,
+      formatBigNum(this.coin4BellRed),
+      getFontStyle()
+    );
+    this.coin4RedTxt.alignTo(this.btnBuySkill1, Phaser.RIGHT_TOP, -90, -6);
+    this.coin4RedTxt.events.onInputDown.add(this._handleBtnBuySkillClick);
 
-
-    this.btnBuyAble2 = this.game.make.image(0, 0, 'btn_skill_buy_able');
-    this.btnBuyAble2.alignTo(this.iconFactory2, Phaser.BOTTOM_LEFT, -7, 10);
-    this.btnBuyDisable2 = this.game.make.image(0, 0, 'btn_skill_buy_disable');
-    this.btnBuyDisable2.alignTo(this.iconFactory1, Phaser.BOTTOM_LEFT, -7, 10);
+    this.btnBuySkill2 = this.game.make.image(0, 0, 'btn_skill_buy_disable'); // 'btn_skill_buy_able btn_skill_buy_disable'
+    this.btnBuySkill2.alignTo(this.iconFactory2, Phaser.BOTTOM_LEFT, -7, 10);
 
     // coin value need to be Big-gified
-    this.coin4YellowTxt = this.game.make.text(0, 0, this.coin4BellYellow, getFontStyle());
-    this.coin4YellowTxt.alignTo(this.btnBuyAble2, Phaser.RIGHT_TOP, -90, -6);
+    this.coin4YellowTxt = this.game.make.text(
+      0,
+      0,
+      formatBigNum(this.coin4BellYellow),
+      getFontStyle()
+    );
+    this.coin4YellowTxt.alignTo(this.btnBuySkill2, Phaser.RIGHT_TOP, -90, -6);
 
     this.skillGroup.addChild(this.skillFrame);
     this.skillGroup.addChild(this.skillHeading);
@@ -204,24 +328,60 @@ class ModalSkills extends ModalRaw {
     this.skillGroup.addChild(this.skillCountTxt2);
     this.skillGroup.addChild(this.iconFactory1);
     this.skillGroup.addChild(this.iconFactory2);
-    this.skillGroup.addChild(this.btnBuyAble1);
-    this.skillGroup.addChild(this.btnBuyAble2);
-    this.skillGroup.addChild(this.btnBuyDisable1);
-    this.skillGroup.addChild(this.btnBuyDisable2);
+    this.skillGroup.addChild(this.btnBuySkill1);
+    this.skillGroup.addChild(this.btnBuySkill2);
     this.skillGroup.addChild(this.coin4RedTxt);
     this.skillGroup.addChild(this.coin4YellowTxt);
 
     // contentGroup
     this.contentGroup.addChild(this.skillGroup);
-
-  }
+  };
 
   _getContextGroupInit = () => {
     // 这里因为没有heading, 所以内容不需要有offset
     this._drawFrameBells();
     this._drawFrameSkill();
+  };
+
+  _updateBtnBuySkill1Value = () => {
+    this.coin4BellRed = SKILL_PRICE_MAP.red[`bought${this.boughtRedCount}`].coinNeeded;
+    this.coin4RedTxt.setText(formatBigNum(this.coin4BellRed), true);
+    this.state.subtractCash(0);
+  }
+
+  _buySkillRed = () => {
+    // 相关技能点数目增加
+    this.pointRed += 1;
+    this.boughtRedCount += 1;
+    this.skillCountTxt1.setText(this.pointRed);
+    // btnCash的值减少
+    this.state.subtractCash(this.coin4BellRed);
+    this._updateBtnBuySkill1Value();
+  }
+
+  _upgradeBellRed = () => {
+    this.pointRed = this.pointRed - 1;
+    this.levelRed = this.levelRed + 1;
+    this.skillCountTxt1.setText(this.pointRed);
+    this.redLevelTxt.setText(`${this.levelRed}级`);
+    // 接增加红色铃铃的方法
+    this.state.upgradeBellRed();
+  }
+
+  _handleBtnBuySkillClick = () => {
+    if (this.btnBuySkill1.key === 'btn_skill_buy_disable') return false;
+    console.log('buy skill');
+    this._buySkillRed();
+  }
+
+  // 只是update bellRed部分
+  updateBtnBuySkill1UI = (currCoin) => {
+    if (currCoin.lt(this.coin4BellRed) || this.levelRed > 6) {
+      this.btnBuySkill1.loadTexture('btn_skill_buy_disable');
+    } else {
+      this.btnBuySkill1.loadTexture('btn_skill_buy_able');
+    }
   }
 }
-
 
 export default ModalSkills;

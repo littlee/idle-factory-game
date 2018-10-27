@@ -140,10 +140,6 @@ class Game extends window.Phaser.State {
       game: this.game
     });
 
-    this.modalSkill = new ModalSkill({
-      game: this.game
-    });
-
     // TODO: make 30 workstations
     const WORKSTATION_START_Y = 915;
     const WORKSTATION_HEIGHT = 340;
@@ -560,6 +556,13 @@ class Game extends window.Phaser.State {
     this.btnWheelCoin.input.priorityID = PRIORITY_ID;
     this.btnWheelCoin.events.onInputDown.add(() => {
       console.log('click btn wheel coin');
+      this.modalSkill = new ModalSkill({
+        game: this.game,
+        close: 'destory'
+      });
+      this.modalSkill.onDestroy.add(() => {
+        this.modalSkill = null;
+      });
       this.modalSkill.visible = true;
     });
   };
@@ -654,6 +657,9 @@ class Game extends window.Phaser.State {
     this.modalRescources.updateBtnBuyUI(currCash);
     this.modalMarket.getCoinRelatedStuffsUpdated(currCash);
     this.modalWarehose.getCoinRelatedStuffsUpdated(currCash);
+    if (this.modalSkill) {
+      this.modalSkill.updateBtnBuySkill1UI(currCash);
+    }
     if (this.modalProdUpgrade) {
       this.modalProdUpgrade.updateModalAllBtnBuyUI(currCash);
     }
@@ -683,7 +689,7 @@ class Game extends window.Phaser.State {
   _getCashProduceSpeed() {
     let mWorkerCount = this.modalMarket.getMarketWorkerNumber();
     let marketMaxCash = this.modalMarket.getMarketMaxTransported();
-    return marketMaxCash.times(mWorkerCount);
+    return marketMaxCash.times(mWorkerCount).div(20);
   }
 
   updateIdleCash () {
@@ -734,6 +740,7 @@ class Game extends window.Phaser.State {
       });
     }
   };
+
   updateMarketWorkersInfoAndHC = (opts, addHC = 0) => {
     let formattedObj = {
       capacity: Big(opts.capacity),
@@ -754,6 +761,10 @@ class Game extends window.Phaser.State {
     this.upgradedMap = value;
   };
 
+  // this.bellRed
+  upgradeBellRed() {
+    this.bellRed.upgradeSkillDuration();
+  }
 
 }
 
