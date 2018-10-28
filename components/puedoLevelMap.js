@@ -616,7 +616,7 @@ export let prodUpgradeMap = {
       pieActivatedTimestamp: null
     }
   },
-  coffee_machine: {
+  coffeeMachine: {
     base: {
       duration: '0s',
       coin: 0,

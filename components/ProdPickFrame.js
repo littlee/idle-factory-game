@@ -3,7 +3,7 @@ import ProdPickItem from './ProdPickItem.js';
 
 const RESO_LIST_MAP = {
   ore: ['steel', 'can', 'drill', 'toaster'],
-  copper: ['battery', 'coffee_machine', 'mp3', 'speaker'],
+  copper: ['battery', 'coffeeMachine', 'mp3', 'speaker'],
   barrel: ['plasticBar', 'wheel', 'screen', 'phone'],
   plug: ['circuit', 'tv', 'computer', 'vr'],
   aluminium: ['engine', 'solarPanel', 'car', 'telescope'],

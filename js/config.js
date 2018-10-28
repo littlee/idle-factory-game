@@ -5,7 +5,7 @@ export const OUTPUT_INPUT_MAP = {
   toaster: ['steel', 'can'],
 
   battery: ['copper'],
-  coffee_machine: ['copper'],
+  coffeeMachine: ['copper'],
   mp3: ['battery'],
   speaker: ['battery', 'mp3'],
 
@@ -39,7 +39,7 @@ export const PROD_DES = {
   toaster: '1烤箱',
 
   battery: '2电池',
-  coffee_machine: '2咖啡机',
+  coffeeMachine: '2咖啡机',
   mp3: '3MP3',
   speaker: '1扩音器',
 
@@ -79,7 +79,7 @@ export const CN_NAME_MAP = {
   toaster: '烤箱',
 
   battery: '电池',
-  coffee_machine: '咖啡机',
+  coffeeMachine: '咖啡机',
   mp3: 'MP3',
   speaker: '扩音器',
 
@@ -140,7 +140,7 @@ export let prod_info = {
     bought: false,
     activated: false
   },
-  coffee_machine: {
+  coffeeMachine: {
     price: 1000,
     coinNeeded: 1000,
     cashNeeded: 300,
@@ -307,7 +307,7 @@ export let upgradedMap = {
       bought: false
     },
     {
-      name: 'coffee_machine',
+      name: 'coffeeMachine',
       bought: false
     },
     {

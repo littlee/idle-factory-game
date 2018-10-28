@@ -46,7 +46,7 @@ const OUTPUT_PRODUCE_MAP = {
   drill: 1,
   toaster: 1,
   battery: 2,
-  coffee_machine: 2,
+  coffeeMachine: 2,
   mp3: 3,
   speaker: 1,
   // 对应关系不一定正确
@@ -170,7 +170,6 @@ class Workstation extends window.Phaser.Group {
     this.buyBtnGroup.visible = false;
 
     // 生产相关
-
     this.productGroup = this.game.make.group();
     this.productBtn = this.game.make.sprite(0, 0, 'btn_product_holder');
     this.productBtn.alignIn(this.table, window.Phaser.TOP_RIGHT, -15, -15);

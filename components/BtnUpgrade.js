@@ -17,8 +17,12 @@ class BtnUpgrade extends window.Phaser.Group {
     };
 
     this.btn = this.game.make.sprite(0, 0, 'btn_level');
-    this.arrow = this.game.make.sprite(0, 0, 'icon_level_up');
-    this.arrow.alignIn(this.btn, window.Phaser.TOP_RIGHT, 10, 10);
+    // this.arrow1 = this.game.make.sprite(0, 0, 'icon_level_up');
+    // this.arrow1.alignIn(this.btn, window.Phaser.TOP_RIGHT, 10, 10);
+    // this.arrow10 = this.game.make.sprite(0, 0, 'icon_level_up');
+    // this.arrow10.alignIn(this.btn, window.Phaser.TOP_RIGHT, 10, 2);
+    // this.arrow50 = this.game.make.sprite(0, 0, 'icon_level_up');
+    // this.arrow50.alignIn(this.btn, window.Phaser.TOP_RIGHT, 10, -6);
 
     this.btnText = this.game.make.text(0, 0, '等级', BTN_TEXT_STYLE);
     this.btnText.alignIn(this.btn, window.Phaser.TOP_CENTER, 0, -15);
@@ -26,7 +30,7 @@ class BtnUpgrade extends window.Phaser.Group {
     this.levelText = this.game.make.text(0, 0, '', BTN_TEXT_STYLE);
 
     this.add(this.btn);
-    this.add(this.arrow);
+    // this.add(this.arrow1);
     this.add(this.btnText);
     this.add(this.levelText);
 

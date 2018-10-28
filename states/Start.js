@@ -107,12 +107,12 @@ class Start extends window.Phaser.State {
     this.load.image('prod_battery_jade', 'images/material/Battery_Jade.png');
     this.load.image('prod_battery_ruby', 'images/material/Battery_Ruby.png');
 
-    this.load.image('prod_coffee_machine', 'images/material/CoffeeMachine_Base.png');
-    this.load.image('prod_coffee_machine_bronze', 'images/material/CoffeeMachine_Bronze.png');
-    this.load.image('prod_coffee_machine_silver', 'images/material/CoffeeMachine_Silver.png');
-    this.load.image('prod_coffee_machine_gold', 'images/material/CoffeeMachine_Gold.png');
-    this.load.image('prod_coffee_machine_jade', 'images/material/CoffeeMachine_Jade.png');
-    this.load.image('prod_coffee_machine_ruby', 'images/material/CoffeeMachine_Ruby.png');
+    this.load.image('prod_coffeeMachine', 'images/material/CoffeeMachine_Base.png');
+    this.load.image('prod_coffeeMachine_bronze', 'images/material/CoffeeMachine_Bronze.png');
+    this.load.image('prod_coffeeMachine_silver', 'images/material/CoffeeMachine_Silver.png');
+    this.load.image('prod_coffeeMachine_gold', 'images/material/CoffeeMachine_Gold.png');
+    this.load.image('prod_coffeeMachine_jade', 'images/material/CoffeeMachine_Jade.png');
+    this.load.image('prod_coffeeMachine_ruby', 'images/material/CoffeeMachine_Ruby.png');
 
     this.load.image('prod_mp3', 'images/material/MP3_Base.png');
     this.load.image('prod_mp3_bronze', 'images/material/MP3_Bronze.png');

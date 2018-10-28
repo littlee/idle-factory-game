@@ -31,7 +31,7 @@ function getFontStyle(fSize, color, align, weight) {
 // 这个表需要每个workstation都有，然后这里可以去拿到。how？作为这里group的属性之一，然后父modal可以来改动它？
 // const RESO_PRODLIST_MAP = {
 //   ore: ['steel', 'can'],
-//   copper: ['battery', 'coffee_machine'],
+//   copper: ['battery', 'coffeeMachine'],
 //   oilBarrel: ['plasticBar', 'wheel', 'screen', 'phone'],
 //   plug: ['circuit', 'tv', 'computer', 'vr'],
 //   aluminium: ['engine', 'solarPanel', 'car', 'telescope'],
