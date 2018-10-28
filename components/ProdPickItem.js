@@ -144,7 +144,7 @@ class ProdPickItem extends window.Phaser.Group {
     this.prodDesTxt = this.game.make.text(0, 0, this.prodDes, getFontStyle(undefined, '#f4f78e'));
     this.priceTxt = this.game.make.text(0, 0, this._getFomattedPrice(), getFontStyle(undefined, '#f4f78e'));
     this.prodDesTxt.alignTo(this.panelPrice, Phaser.TOP_CENTER, 0, -33);
-    this.priceTxt.alignTo(this.panelPrice, Phaser.RIGHT_BOTTOM, -50, -5);
+    this.priceTxt.alignTo(this.panelPrice, Phaser.RIGHT_BOTTOM, -65, -5);
 
     this.priceGroup.addChild(this.panelPrice);
     this.priceGroup.addChild(this.prodDesTxt);
@@ -179,7 +179,7 @@ class ProdPickItem extends window.Phaser.Group {
     this.btnCoin = this.game.make.image(0, 0, 'btn_prod_coin');
     this.btnCoin.alignTo(this.baseBg, Phaser.RIGHT_BOTTOM, -95);
     this.coinTxt = this.game.make.text(0, 0, this._getFormattedCoinNeeded(), getFontStyle(undefined, 'white'));
-    this.coinTxt.alignTo(this.btnCoin, Phaser.TOP_LEFT, -32, -32);
+    this.coinTxt.alignTo(this.btnCoin, Phaser.TOP_LEFT, -24, -32);
 
     this.btnCoinGroup.addChild(this.btnCoin);
     this.btnCoinGroup.addChild(this.coinTxt);
