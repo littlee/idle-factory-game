@@ -152,6 +152,7 @@ class Game extends window.Phaser.State {
         Math.floor(index / 5) + 1,
         index + 1
       );
+      workstation.setIndex(index);
       workstation.setPrice(workstationPrice[index]);
       workstation.onValidateBuy(this._validateBuyWorkstation, this);
       workstation.onAfterBuy(this._afterBuyWorkstation, this);
@@ -320,6 +321,14 @@ class Game extends window.Phaser.State {
         }
       }
     });
+  }
+
+  _getLastBoughtWorkstation() {
+    let fws = this._getFirstNotWorkingWorkstation();
+    if (fws) {
+      return this.workstationGroup.getChildAt(fws.getIndex() - 1);
+    }
+    return null;
   }
 
   _getFirstLockWorkstation() {
@@ -678,7 +687,8 @@ class Game extends window.Phaser.State {
       }
     });
 
-    let firstNotWorkingWS = this._getFirstLockWorkstation();
+    let firstNotWorkingWS = this._getFirstNotWorkingWorkstation();
+    // console.log(firstNotWorkingWS && firstNotWorkingWS.debugIndex);
     if (firstNotWorkingWS) {
       firstNotWorkingWS.updateCashBtnTexture(currCash);
     }

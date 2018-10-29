@@ -109,7 +109,8 @@ class Workstation extends window.Phaser.Group {
         superCash: Big(0)
       },
       level: 1,
-      collectType: 'cash'
+      collectType: 'cash',
+      index: null
     };
     this._onAfterBuyFunc = null;
     this._onAfterBuyContext = null;
@@ -479,6 +480,14 @@ class Workstation extends window.Phaser.Group {
     this.buyBtnCashText.setText(formatBigNum(cash));
     this.buyBtnSuperCashText.setText(formatBigNum(superCash));
   }
+
+  getIndex() {
+    return this._data.index;
+  }
+
+  setIndex(index) {
+    this._data.index = index;
+  } 
 
   getIsLocked() {
     return this._data.isLocked;
