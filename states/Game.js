@@ -191,13 +191,13 @@ class Game extends window.Phaser.State {
     this._addAllRelatedStuff2Bg();
 
     // with bg fills with stull, scrolling now is all set
-    let wholeGameScroller = new Scroller({
+    this.wholeGameScroller = new Scroller({
       targetToScroll: this.bgGroup,
       priority: 0 // 区别弹窗的scroll
     });
-    wholeGameScroller.enableScroll();
+    this.wholeGameScroller.enableScroll();
 
-    this._createFastScrollArrow(wholeGameScroller);
+    this._createFastScrollArrow(this.wholeGameScroller);
 
     // deving....
     this.game.time.advancedTiming = true;
@@ -647,8 +647,13 @@ class Game extends window.Phaser.State {
     this.arrowFastUp.input.priorityID = PRIORITY_ID;
     this.arrowFastDown.input.priorityID = PRIORITY_ID;
     this.arrowFastUp.events.onInputUp.add(scroller.scrollToTop);
-    this.arrowFastDown.events.onInputUp.add(scroller.scrollTo.bind(this, 1000));
+    this.arrowFastDown.events.onInputUp.add(this._fastScroll2lastWorkingWs);
   };
+
+  _fastScroll2lastWorkingWs = () => {
+    let targetY = 1000;
+    this.wholeGameScroller.scrollTo(targetY);
+  }
 
   // 在全部game objects初始化后inovke
   _updateWhateverNeed2KnowCoinValue = () => {
