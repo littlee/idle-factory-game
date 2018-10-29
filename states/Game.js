@@ -326,7 +326,7 @@ class Game extends window.Phaser.State {
   _getLastBoughtWorkstation() {
     let fws = this._getFirstNotWorkingWorkstation();
     if (fws) {
-      this.workstationGroup.getChildAt(fws.getIndex() - 1);
+      return this.workstationGroup.getChildAt(fws.getIndex() - 1);
     }
     return null;
   }
