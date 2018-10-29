@@ -111,14 +111,14 @@ class Game extends window.Phaser.State {
       this.market.resetMultiple();
     });
 
-    this.upBtnWarehouse = new BtnUpgrade(this.game, 0, 0, 'Warehouse');
+    this.upBtnWarehouse = new BtnUpgrade(this.game, 0, 0, 'warehouse');
     this.upBtnWarehouse.alignIn(this.wall, window.Phaser.LEFT_CENTER, -60, -10);
     this.upBtnWarehouse.onClick(() => {
       console.log('仓库升级按钮');
       this.modalWarehose.visible = true;
     });
 
-    this.upBtnMarket = new BtnUpgrade(this.game, 0, 0, 'Market');
+    this.upBtnMarket = new BtnUpgrade(this.game, 0, 0, 'market');
     this.upBtnMarket.alignIn(this.wall, window.Phaser.RIGHT_CENTER, -50, -10);
     this.upBtnMarket.onClick(() => {
       console.log('市场升级按钮');
@@ -682,8 +682,9 @@ class Game extends window.Phaser.State {
     this.modalRescources.updateBtnBuyUI(currCash);
     this.modalMarket.getCoinRelatedStuffsUpdated(currCash);
     this.modalWarehose.getCoinRelatedStuffsUpdated(currCash);
-    this._check2ShowAllArrows('Market', currCash);
-    this._check2ShowAllArrows('Warehouse', currCash);
+    this.upBtnMarket.check2ShowAllArrows(currCash);
+    this.upBtnWarehouse.check2ShowAllArrows(currCash);
+    // this._check2ShowAllArrows('Warehouse', currCash);
 
     if (this.modalSkill) {
       this.modalSkill.updateBtnBuySkill1UI(currCash);
