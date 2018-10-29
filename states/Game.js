@@ -666,7 +666,10 @@ class Game extends window.Phaser.State {
     if (ref !== null) {
       let bottomY = ref.y + ref.height - 84;
       targetY = bottomY - cameraHeight;
-      if (targetY < 0) return false;
+      if (targetY < 0) {
+        this.wholeGameScroller.scrollToTop();
+        return false;
+      }
     }
     this.wholeGameScroller.scrollTo(targetY);
   }
