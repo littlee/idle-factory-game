@@ -281,7 +281,7 @@ class Workstation extends window.Phaser.Group {
       this.setCollectType.bind(this, COLLECT_TYPES.CASH)
     );
 
-    this.upBtn = new BtnUpgrade(this.game, 0, 0);
+    this.upBtn = new BtnUpgrade(this.game, 0, 0, 'workstation');
     this.upBtn.alignIn(this.table, window.Phaser.BOTTOM_CENTER, 0, 30);
     this.upBtn.onClick(() => {
       console.log('点击工作台升级按钮');
@@ -487,7 +487,7 @@ class Workstation extends window.Phaser.Group {
 
   setIndex(index) {
     this._data.index = index;
-  } 
+  }
 
   getIsLocked() {
     return this._data.isLocked;

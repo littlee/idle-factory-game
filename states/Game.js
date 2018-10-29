@@ -693,17 +693,20 @@ class Game extends window.Phaser.State {
       this.modalProdUpgrade.updateModalAllBtnBuyUI(currCash);
     }
     // 更新workstations里头的modal升级按钮
-    this.workstationGroup.forEachAlive((item, index) => {
+    let workingWsGroup = this.workstationGroup.children.filter(item => {
+      return item.getIsBought();
+    });
+    workingWsGroup.forEach((item) => {
       if (item.workestationLevelModal) {
         item.workestationLevelModal.getCoinRelatedStuffsUpdated(currCash);
       }
       if (item.modalProdPick) {
         item.modalProdPick.getAllBtnCoinUpdated(currCash);
       }
+      item.upBtn.check2ShowAllArrows(currCash);
     });
 
     let firstNotWorkingWS = this._getFirstNotWorkingWorkstation();
-    // console.log(firstNotWorkingWS && firstNotWorkingWS.debugIndex);
     if (firstNotWorkingWS) {
       firstNotWorkingWS.updateCashBtnTexture(currCash);
     }
@@ -720,67 +723,6 @@ class Game extends window.Phaser.State {
     let mWorkerCount = this.modalMarket.getMarketWorkerNumber();
     let marketMaxCash = this.modalMarket.getMarketMaxTransported();
     return marketMaxCash.times(mWorkerCount).div(20);
-  }
-
-  _check2ShowAllArrows = (levelType, currCoin) => {
-    let one = this._check2ShowSingleArrow(levelType, 1, currCoin);
-    if (one === true) {
-      let ten = this._check2ShowSingleArrow(levelType, 10, currCoin);
-      if (ten !== true) return false;
-      this._check2ShowSingleArrow(levelType, 50, currCoin);
-    } else {
-      this.upBtnMarket.hideAllArrows();
-    }
-  }
-
-  // cater for warehouse and market for now
-  _check2ShowSingleArrow = (levelType, multiplier, currCoin) => {
-    let level = this[`upBtn${levelType}`].getLevel();
-    let map = LevelMap[levelType.toLowerCase()];
-    let mapLength = Object.keys(map).length;
-    if (level >= mapLength) {
-      this[`upBtn${levelType}`].hideArrowByName(multiplier);
-      return false;
-    }
-    let coinNeeded = this._getCustomizedLevelCoinNeededAccumulated(multiplier, level, map, mapLength);
-    // console.log('coinNeeded: ', coinNeeded.toString());
-    if (coinNeeded.eq(0) || currCoin.lt(coinNeeded)) {
-      this[`upBtn${levelType}`].hideArrowByName(multiplier);
-      return false;
-    } else {
-      this[`upBtn${levelType}`].showArrowByName(multiplier);
-      return true;
-    }
-  }
-
-  _getCustomizedLevelCoinNeededAccumulated = (upCount, currLevel, map, maxLength) => {
-    // recursive, can't, iterative
-    let arr = [];
-    let fullRange = range(upCount).every(item => {
-      let tmp = this._getCustomizedLevelCoinNeeded(item+1, currLevel, map, maxLength);
-      arr.push(Big(tmp));
-      if (tmp === 0) return false;
-      return true;
-    });
-    // console.log('fullRange: ', fullRange);
-    if (fullRange) {
-      return arr.reduce((prev, curr) => {
-        return prev.plus(curr);
-      });
-    } else {
-      return Big(0);
-    }
-  }
-
-  _getCustomizedLevelCoinNeeded = (upCount, currLevel, map, maxLength) => {
-    let targetLevel = upCount + currLevel;
-    if (currLevel >= maxLength || targetLevel > maxLength) {
-      return 0;
-    } else if (targetLevel === maxLength) {
-      return map[`level${maxLength}`].coinNeeded;
-    } else {
-      return map[`level${targetLevel}`].coinNeeded;
-    }
   }
 
   updateIdleCash () {
