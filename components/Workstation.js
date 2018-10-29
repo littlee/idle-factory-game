@@ -313,13 +313,6 @@ class Workstation extends window.Phaser.Group {
     this.productGroup.add(this.upBtn);
     this.productGroup.visible = false;
 
-    // modal
-    // this.workestationLevelModal = new ModalLevel({
-    //   game: this.game,
-    //   type: 'workstation',
-    //   coupledBtn: this.upBtn,
-    //   workstation: this // more to go
-    // });
     // for simple z-depth
     this.add(this.ground);
     this.add(this.groundNum);
@@ -487,6 +480,14 @@ class Workstation extends window.Phaser.Group {
 
   setIndex(index) {
     this._data.index = index;
+  }
+
+  setProducePerMin = (value) => {
+    this._data.producePerMin = Big(value);
+  }
+
+  getProducePerMin = () => {
+    return  this._data.producePerMin;
   }
 
   getIsLocked() {

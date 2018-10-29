@@ -564,7 +564,7 @@ class ModalLevel extends ModalRaw {
     } else if (type === 'market') {
       this.state.updateMarketWorkersInfoAndHC(opts, addHC);
     } else if (type === 'workstation') {
-      // 不需要加人，所以不用做什么
+      // 不需要加人，所以不用做什么。。。要
     }
   };
 
