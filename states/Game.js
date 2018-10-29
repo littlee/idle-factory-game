@@ -742,30 +742,33 @@ class Game extends window.Phaser.State {
       return false;
     }
     let coinNeeded = this._getCustomizedLevelCoinNeededAccumulated(multiplier, level, map, mapLength);
-    // console.log('multiplier, coinNeeded: ', multiplier, coinNeeded.toString());
-    if (coinNeeded.eq(0)) return false;
-    if (currCoin.gte(coinNeeded)) {
-      this[`upBtn${levelType}`].showArrowByName(multiplier);
-      return true;
-    } else {
+    // console.log('coinNeeded: ', coinNeeded.toString());
+    if (coinNeeded.eq(0) || currCoin.lt(coinNeeded)) {
       this[`upBtn${levelType}`].hideArrowByName(multiplier);
       return false;
+    } else {
+      this[`upBtn${levelType}`].showArrowByName(multiplier);
+      return true;
     }
   }
 
   _getCustomizedLevelCoinNeededAccumulated = (upCount, currLevel, map, maxLength) => {
     // recursive, can't, iterative
     let arr = [];
-    range(upCount).every(item => {
+    let fullRange = range(upCount).every(item => {
       let tmp = this._getCustomizedLevelCoinNeeded(item+1, currLevel, map, maxLength);
       arr.push(Big(tmp));
       if (tmp === 0) return false;
       return true;
     });
-
-    return arr.reduce((prev, curr) => {
-      return prev.plus(curr);
-    });
+    // console.log('fullRange: ', fullRange);
+    if (fullRange) {
+      return arr.reduce((prev, curr) => {
+        return prev.plus(curr);
+      });
+    } else {
+      return Big(0);
+    }
   }
 
   _getCustomizedLevelCoinNeeded = (upCount, currLevel, map, maxLength) => {
