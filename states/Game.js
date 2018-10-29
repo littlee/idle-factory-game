@@ -660,7 +660,14 @@ class Game extends window.Phaser.State {
   };
 
   _fastScroll2lastWorkingWs = () => {
-    let targetY = 1000;
+    let ref = this._getLastBoughtWorkstation();
+    let cameraHeight = this.game.camera.height;
+    let targetY = 0;
+    if (ref !== null) {
+      let bottomY = ref.y + ref.height - 84;
+      targetY = bottomY - cameraHeight;
+      if (targetY < 0) return false;
+    }
     this.wholeGameScroller.scrollTo(targetY);
   }
 
