@@ -14,7 +14,7 @@ export const LevelMap = {
       capacity: '4800',
       loadingSpeed: '3000',
       walkSpeed: 0.1 * 1.1,
-      coinNeeded: 1000
+      coinNeeded: 1000 * 1
     },
     level3: {
       level: 3,
@@ -22,7 +22,8 @@ export const LevelMap = {
       capacity: '5600',
       loadingSpeed: '4000',
       walkSpeed: 0.1 * 1.2,
-      coinNeeded: 2000
+      // coinNeeded: 2000,
+      coinNeeded: 1000 * 1
     },
     level4: {
       level: 4,
@@ -30,7 +31,8 @@ export const LevelMap = {
       capacity: '6400',
       loadingSpeed: '5000',
       walkSpeed: 0.1 * 1.3,
-      coinNeeded: 3000
+      // coinNeeded: 3000,
+      coinNeeded: 1000 * 1
     },
     level5: {
       level: 5,
@@ -38,7 +40,8 @@ export const LevelMap = {
       capacity: '7200',
       loadingSpeed: '6000',
       walkSpeed: 0.1 * 1.4,
-      coinNeeded: 4000
+      // coinNeeded: 4000,
+      coinNeeded: 1000 * 1
     },
     level6: {
       level: 6,
@@ -46,7 +49,8 @@ export const LevelMap = {
       capacity: '8000',
       loadingSpeed: '7000',
       walkSpeed: 0.1 * 1.5,
-      coinNeeded: 5000
+      // coinNeeded: 5000,
+      coinNeeded: 1000 * 1
     },
     level7: {
       level: 7,
@@ -54,7 +58,8 @@ export const LevelMap = {
       capacity: '8800',
       loadingSpeed: '8000',
       walkSpeed: 0.1 * 1.6,
-      coinNeeded: 6000
+      // coinNeeded: 6000,
+      coinNeeded: 1000 * 1
     },
     level8: {
       level: 8,
@@ -62,7 +67,8 @@ export const LevelMap = {
       capacity: '9600',
       loadingSpeed: '9000',
       walkSpeed: 0.1 * 1.7,
-      coinNeeded: 7000
+      // coinNeeded: 7000,
+      coinNeeded: 1000 * 1
     },
     level9: {
       level: 9,
@@ -70,7 +76,8 @@ export const LevelMap = {
       capacity: '10004',
       loadingSpeed: '10000',
       walkSpeed: 0.1 * 1.8,
-      coinNeeded: 8000
+      // coinNeeded: 8000,
+      coinNeeded: 1000 * 1
     },
     level10: {
       level: 10,
@@ -78,7 +85,8 @@ export const LevelMap = {
       capacity: '11004',
       loadingSpeed: '11000',
       walkSpeed: 0.1 * 1.9,
-      coinNeeded: 9000
+      // coinNeeded: 9000,
+      coinNeeded: 1000 * 1
     },
     level11: {
       level: 11,
@@ -86,7 +94,8 @@ export const LevelMap = {
       capacity: '12004',
       loadingSpeed: '12000',
       walkSpeed: 0.1 * 2,
-      coinNeeded: 10000
+      // coinNeeded: 10000,
+      coinNeeded: 1000 * 1
     },
     level12: {
       level: 12,
@@ -94,7 +103,8 @@ export const LevelMap = {
       capacity: '13004',
       loadingSpeed: '13000',
       walkSpeed: 0.1 * 2.1,
-      coinNeeded: 11000
+      // coinNeeded: 11000,
+      coinNeeded: 1000 * 1
     },
     level13: {
       level: 13,
@@ -102,7 +112,8 @@ export const LevelMap = {
       capacity: '14004',
       loadingSpeed: '14000',
       walkSpeed: 0.1 * 2.2,
-      coinNeeded: 12000
+      // coinNeeded: 12000,
+      coinNeeded: 1000 * 1
     },
     level14: {
       level: 14,
@@ -110,7 +121,8 @@ export const LevelMap = {
       capacity: '15004',
       loadingSpeed: '15000',
       walkSpeed: 0.1 * 2.3,
-      coinNeeded: 13000
+      // coinNeeded: 13000,
+      coinNeeded: 100 * 1
     },
     level15: {
       level: 15,
@@ -118,7 +130,8 @@ export const LevelMap = {
       capacity: '16004',
       loadingSpeed: '16000',
       walkSpeed: 0.1 * 2.4,
-      coinNeeded: 14000
+      // coinNeeded: 14000,
+      coinNeeded: 100 * 1
     },
     level16: {
       level: 16,
@@ -126,7 +139,8 @@ export const LevelMap = {
       capacity: '16004',
       loadingSpeed: '16000',
       walkSpeed: 0.1 * 2.4,
-      coinNeeded: 1000 * 14
+      // coinNeeded: 1000 * 14,
+      coinNeeded: 100 * 1
     },
     level17: {
       level: 17,
@@ -134,7 +148,8 @@ export const LevelMap = {
       capacity: '17004',
       loadingSpeed: '17000',
       walkSpeed: 0.1 * 2.5,
-      coinNeeded: 1000 * 15
+      // coinNeeded: 1000 * 15,
+      coinNeeded: 100 * 1
     },
     level18: {
       level: 18,
@@ -142,7 +157,8 @@ export const LevelMap = {
       capacity: '16004',
       loadingSpeed: '16000',
       walkSpeed: 0.1 * 2.6,
-      coinNeeded: 1000 * 15
+      // coinNeeded: 1000 * 15,
+      coinNeeded: 100 * 1
     },
     level19: {
       level: 19,
@@ -150,7 +166,8 @@ export const LevelMap = {
       capacity: '16004',
       loadingSpeed: '16000',
       walkSpeed: 0.1 * 2.7,
-      coinNeeded: 1000 * 15
+      // coinNeeded: 1000 * 15,
+      coinNeeded: 100 * 1
     },
     level20: {
       level: 20,
@@ -158,7 +175,8 @@ export const LevelMap = {
       capacity: '16004',
       loadingSpeed: '16000',
       walkSpeed: 0.1 * 2.8,
-      coinNeeded: 1000 * 15
+      // coinNeeded: 1000 * 15,
+      coinNeeded: 1000 * 1
     }
   },
 
@@ -185,7 +203,9 @@ export const LevelMap = {
       capacity: '5600',
       loadingSpeed: '4000',
       walkSpeed: 0.1 * 1.2,
-      coinNeeded: 1000 * 2
+      // coinNeeded: 1000 * 2,
+      coinNeeded: 1000 * 1
+
     },
     level4: {
       level: 4,
@@ -193,7 +213,9 @@ export const LevelMap = {
       capacity: '6400',
       loadingSpeed: '5000',
       walkSpeed: 0.1 * 1.3,
-      coinNeeded: 1000 * 3
+      // coinNeeded: 1000 * 3,
+      coinNeeded: 1000 * 1
+
     },
     level5: {
       level: 5,
@@ -201,7 +223,9 @@ export const LevelMap = {
       capacity: '7200',
       loadingSpeed: '6000',
       walkSpeed: 0.1 * 1.4,
-      coinNeeded: 1000 * 4
+      // coinNeeded: 1000 * 4,
+      coinNeeded: 1000 * 1
+
     },
     level6: {
       level: 6,
@@ -209,7 +233,9 @@ export const LevelMap = {
       capacity: '8000',
       loadingSpeed: '7000',
       walkSpeed: 0.1 * 1.5,
-      coinNeeded: 1000 * 5
+      // coinNeeded: 1000 * 5,
+      coinNeeded: 1000 * 1
+
     },
     level7: {
       level: 7,
@@ -217,7 +243,9 @@ export const LevelMap = {
       capacity: '8800',
       loadingSpeed: '8000',
       walkSpeed: 0.1 * 1.6,
-      coinNeeded: 1000 * 6
+      // coinNeeded: 1000 * 6,
+      coinNeeded: 1000 * 1
+
     },
     level8: {
       level: 8,
@@ -225,7 +253,9 @@ export const LevelMap = {
       capacity: '9600',
       loadingSpeed: '9000',
       walkSpeed: 0.1 * 1.7,
-      coinNeeded: 1000 * 7
+      // coinNeeded: 1000 * 7,
+      coinNeeded: 1000 * 1
+
     },
     level9: {
       level: 9,
@@ -233,15 +263,19 @@ export const LevelMap = {
       capacity: '10004',
       loadingSpeed: '10000',
       walkSpeed: 0.1 * 1.8,
-      coinNeeded: 1000 * 8
+      // coinNeeded: 1000 * 8,
+      coinNeeded: 1000 * 1
     },
+
     level10: {
       level: 10,
       count: 4,
       capacity: '11004',
       loadingSpeed: '11000',
       walkSpeed: 0.1 * 1.9,
-      coinNeeded: 1000 * 9
+      // coinNeeded: 1000 * 9,
+      coinNeeded: 1000 * 1
+
     },
     level11: {
       level: 11,
@@ -249,7 +283,9 @@ export const LevelMap = {
       capacity: '12004',
       loadingSpeed: '12000',
       walkSpeed: 0.1 * 2,
-      coinNeeded: 1000 * 10
+      // coinNeeded: 1000 * 10,
+      coinNeeded: 1000 * 1
+
     },
     level12: {
       level: 12,
@@ -257,7 +293,8 @@ export const LevelMap = {
       capacity: '13004',
       loadingSpeed: '13000',
       walkSpeed: 0.1 * 2.1,
-      coinNeeded: 1000 * 11
+      // coinNeeded: 1000 * 11,
+      coinNeeded: 1000 * 1
     },
     level13: {
       level: 13,
@@ -265,7 +302,8 @@ export const LevelMap = {
       capacity: '14004',
       loadingSpeed: '14000',
       walkSpeed: 0.1 * 2.2,
-      coinNeeded: 1000 * 12
+      // coinNeeded: 1000 * 12,
+      coinNeeded: 1000 * 1
     },
     level14: {
       level: 14,
@@ -273,7 +311,8 @@ export const LevelMap = {
       capacity: '15004',
       loadingSpeed: '15000',
       walkSpeed: 0.1 * 2.3,
-      coinNeeded: 1000 * 13
+      // coinNeeded: 1000 * 13,
+      coinNeeded: 1000 * 1
     },
     level15: {
       level: 15,
@@ -281,7 +320,8 @@ export const LevelMap = {
       capacity: '16004',
       loadingSpeed: '16000',
       walkSpeed: 0.1 * 2.4,
-      coinNeeded: 1000 * 14
+      // coinNeeded: 1000 * 14,
+      coinNeeded: 1000 * 1
     },
     level16: {
       level: 16,
@@ -289,7 +329,8 @@ export const LevelMap = {
       capacity: '16004',
       loadingSpeed: '16000',
       walkSpeed: 0.1 * 2.4,
-      coinNeeded: 1000 * 14
+      // coinNeeded: 1000 * 14,
+      coinNeeded: 100 * 1
     },
     level17: {
       level: 17,
@@ -297,7 +338,8 @@ export const LevelMap = {
       capacity: '17004',
       loadingSpeed: '17000',
       walkSpeed: 0.1 * 2.5,
-      coinNeeded: 1000 * 15
+      // coinNeeded: 1000 * 15,
+      coinNeeded: 100 * 1
     },
     level18: {
       level: 18,
@@ -305,7 +347,8 @@ export const LevelMap = {
       capacity: '16004',
       loadingSpeed: '16000',
       walkSpeed: 0.1 * 2.6,
-      coinNeeded: 1000 * 15
+      // coinNeeded: 1000 * 15,
+      coinNeeded: 100 * 1
     },
     level19: {
       level: 19,
@@ -313,7 +356,8 @@ export const LevelMap = {
       capacity: '16004',
       loadingSpeed: '16000',
       walkSpeed: 0.1 * 2.7,
-      coinNeeded: 1000 * 15
+      // coinNeeded: 1000 * 15,
+      coinNeeded: 100 * 1
     },
     level20: {
       level: 20,
@@ -321,7 +365,8 @@ export const LevelMap = {
       capacity: '16004',
       loadingSpeed: '16000',
       walkSpeed: 0.1 * 2.8,
-      coinNeeded: 1000 * 15
+      // coinNeeded: 1000 * 15,
+      coinNeeded: 100 * 1
     }
   },
 

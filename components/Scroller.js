@@ -266,7 +266,6 @@ export default class Scroller {
 
   scrollTo = pos => {
     // resolve the final pos from its valid range, assign to posSettled
-    console.log('scrollTo invoke');
     let posSettled =
       this.direction === 'vertical'
         ? pos > this.targetToScroll.height
