@@ -11,6 +11,7 @@ const CARRY_NUM_STYLE = {
   strokeThickness: 5
 };
 
+
 class WorkerMarket extends window.Phaser.Group {
   constructor(game, x, y) {
     super(game);
@@ -18,9 +19,9 @@ class WorkerMarket extends window.Phaser.Group {
     this._data = {
       carry: Big(0),
       onRoutine: false,
-      capacity: Big(2000),
-      loadingSpeed: Big(1000),
-      walkSpeed: 0.2,
+      capacity: Big(4000),
+      loadingSpeed: Big(2000),
+      walkSpeed: 0.1,
       prevSpeed: null
     };
 
