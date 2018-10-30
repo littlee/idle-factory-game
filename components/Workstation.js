@@ -288,6 +288,7 @@ class Workstation extends window.Phaser.Group {
       this.workestationLevelModal = new ModalLevel({
         game: this.game,
         type: 'workstation',
+        currLevel: this.upBtn.getLevel(),
         coupledBtn: this.upBtn,
         workstation: this, // more to go
         close: 'destory'
@@ -483,6 +484,7 @@ class Workstation extends window.Phaser.Group {
   }
 
   setProducePerMin = (value) => {
+    console.log('producePerMin set!', value);
     this._data.producePerMin = Big(value);
   }
 

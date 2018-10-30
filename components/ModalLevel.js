@@ -140,7 +140,7 @@ class ModalLevel extends ModalRaw {
       currLevel:
         currLevel === null
           ? type === 'workstation'
-            ? this.workstation.getLevel()
+            ? this.coupledBtn.getLevel()
             : INIT.currLevel
           : currLevel,
       desLevel: null
@@ -564,9 +564,15 @@ class ModalLevel extends ModalRaw {
     } else if (type === 'market') {
       this.state.updateMarketWorkersInfoAndHC(opts, addHC);
     } else if (type === 'workstation') {
-      // 不需要加人，所以不用做什么。。。要
+      // 不需要加人，所以不用做什么。。。
     }
   };
+
+  _updateProducePerMin4Ws = () => {
+    if (this._data.type !== 'workstation') return false;
+    let value = this.MAP[`level${this._data.currLevel}`].output;
+    this.workstation.setProducePerMin(value);
+  }
 
   _UpdateAvatarDesLevel = () => {
     // 更新avatarDesTxt的值, 要有最新的currLevel的值
@@ -650,6 +656,8 @@ class ModalLevel extends ModalRaw {
 
     // update workers info, check whether to add worker or not
     this._handleWorkerAddingIfNeeded();
+    // increase the ProducePerMin for workstation
+    this._updateProducePerMin4Ws();
     // pay the bill
     let coinNeeded = this.upgradePanel.getCoinNeeded();
     this.state.subtractCash(coinNeeded);
