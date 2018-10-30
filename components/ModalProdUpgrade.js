@@ -78,7 +78,8 @@ class ModalProdUpgrade extends ModalRaw {
       item.events.onInputDown.add(() => {
         console.log('inherited first');
         if (this.activeItem !== null) {
-          this.activeItem.clearAllTimer();
+
+          this.activeItem.leaveGracefully();
         }
       }, this, 1000);
     });

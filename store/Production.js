@@ -63,6 +63,35 @@ class Production {
       walkieTalkie: 0,
       radio: 0
     };
+
+    this._prodTexture = {
+      steel: ['', 'bronze', 'silver', 'gold', 'jade', 'ruby'],
+      can: ['', 'bronze', 'silver', 'gold', 'jade', 'ruby'],
+      drill: ['', 'bronze', 'silver', 'gold', 'jade', 'ruby'],
+      toaster: ['', 'bronze', 'silver', 'gold', 'jade', 'ruby'],
+      battery: ['', 'bronze', 'silver', 'gold', 'jade', 'ruby'],
+      coffeeMachine: ['', 'bronze', 'silver', 'gold', 'jade', 'ruby'],
+      mp3: ['', 'bronze', 'silver', 'gold', 'jade', 'ruby'],
+      speaker: ['', 'bronze', 'silver', 'gold', 'jade', 'ruby'],
+      plasticBar: ['', 'bronze', 'silver', 'gold', 'jade', 'ruby'],
+      wheel: ['', 'bronze', 'silver', 'gold', 'jade', 'ruby'],
+      screen: ['', 'bronze', 'silver', 'gold', 'jade', 'ruby'],
+      phone: ['', 'bronze', 'silver', 'gold', 'jade', 'ruby'],
+      circuit: ['', 'bronze', 'silver', 'gold', 'jade', 'ruby'],
+      tv: ['', 'bronze', 'silver', 'gold', 'jade', 'ruby'],
+      computer: ['', 'bronze', 'silver', 'gold', 'jade', 'ruby'],
+      vr: ['', 'bronze', 'silver', 'gold', 'jade', 'ruby'],
+      // aluminium
+      engine: ['', 'bronze', 'silver', 'gold', 'jade', 'ruby'],
+      solarPanel: ['', 'bronze', 'silver', 'gold', 'jade', 'ruby'],
+      car: ['', 'bronze', 'silver', 'gold', 'jade', 'ruby'],
+      telescope: ['', 'bronze', 'silver', 'gold', 'jade', 'ruby'],
+      // rubber
+      projector: ['', 'bronze', 'silver', 'gold', 'jade', 'ruby'],
+      headset: ['', 'bronze', 'silver', 'gold', 'jade', 'ruby'],
+      walkieTalkie: ['', 'bronze', 'silver', 'gold', 'jade', 'ruby'],
+      radio: ['', 'bronze', 'silver', 'gold', 'jade', 'ruby']
+    };
   }
 
   setPrice(config) {
@@ -76,6 +105,11 @@ class Production {
 
   getLevelByKey(key) {
     return this._prodLevel[key];
+  }
+
+  getLatestTextureByKey(key) {
+    let idx = this._prodLevel[key];
+    return idx ? `prod_${key}_${this._prodTexture[key][idx]}` : `prod_${key}`;
   }
 
   setLevelByKey(key, level) {

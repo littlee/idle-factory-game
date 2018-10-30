@@ -83,6 +83,13 @@ class ModalProdPick extends ModalRaw {
     this[`frame${targetIdx}`].getUnlocked();
   };
 
+  updateTexture = (prodName) => {
+    range(6).forEach((item) => {
+      console.log('modal prodPick update');
+      this[`frame${item}`].updateItemTexture(prodName);
+    });
+  }
+
   getCurrActivatedProd = () => {
     return this.activatedProdKey;
   };

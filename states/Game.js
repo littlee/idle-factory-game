@@ -27,7 +27,9 @@ import Big from '../js/libs/big.min';
 import { arrayIntersect } from '../utils';
 
 import { upgradedMap } from '../js/config.js';
-import { LevelMap } from '../components/puedoLevelMap.js';
+import { LevelMap, prodUpgradeMap } from '../components/puedoLevelMap.js';
+import Production from '../store/Production.js';
+import moment from '../js/libs/moment.min.js';
 
 /*
 关于priorityID:
@@ -750,9 +752,18 @@ class Game extends window.Phaser.State {
   };
 
   // 升级好产品之后workstation的UI改，这里也要改工作台弹窗里头的UI
-  updateProdTextureAfterUpgrade = () => {
-    this.workstationGroup.children.filter(item => item.getIsBought()).forEach((item, index) => {
+  updateProdTextureAfterUpgrade = (prodName) => {
+    let workingGroup = this.workstationGroup.children.filter(item => item.getIsBought());
+    console.log('workingGroup.length: ', workingGroup.length);
+    workingGroup.forEach((item, index) => {
       item.updateTexture();
+      if (item.modalProdPick) {
+        console.log('modal prodPick update');
+        item.modalProdPick.updateTexture(prodName);
+      }
+      if (item.workestationLevelModal) {
+        // item.workestationLevelModal.updateTexture(prodName);
+      }
     });
   };
 
@@ -798,6 +809,29 @@ class Game extends window.Phaser.State {
     this.bellRed.upgradeSkillDuration();
   }
 
+  reviveProdUpgradeTimer = (productName, prodLevelIdx, prodTexture, deadTs, durationMilis) => {
+    // setTimeout
+    // after timeout done, do upgrade for
+    // when modal inits, clear this timer is the timer is still active
+    let ts = prodUpgradeMap[productName][prodTexture].pieActivatedTimestamp;
+    let now = moment.utc().format('x');
+    let miliRemained = now - ts;
+    if (durationMilis >= miliRemained) {
+      let timeout = durationMilis - miliRemained;
+      this.upgradeModalTimer = setTimeout(this.upgradeOnBehalfOfModal.bind(this, productName, prodLevelIdx, prodTexture, deadTs), timeout);
+    }
+  }
+
+  clearProdUpgradeTimer = () => {
+    if (this.upgradeModalTimer) clearTimeout(this.upgradeModalTimer);
+  }
+
+  upgradeOnBehalfOfModal = (productName, prodLevelIdx, prodTexture, deadTs) => {
+    console.log('modal关闭, timer接力');
+    Production.setLevelByKey(productName, prodLevelIdx);
+    prodUpgradeMap[productName][prodTexture].pieActivatedTimestamp = deadTs;
+    this.updateProdTextureAfterUpgrade(productName);
+  }
 }
 
 export default Game;

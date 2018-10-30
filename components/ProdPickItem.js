@@ -3,6 +3,7 @@ import Big from '../js/libs/big.min';
 import { formatBigNum } from '../utils';
 
 import { upgradedMap } from '../js/config.js';
+import Production from '../store/Production.js';
 
 const CONFIG = {
   veilWidth: 552,
@@ -45,7 +46,6 @@ class ProdPickItem extends window.Phaser.Group {
     this.prodDes = PROD_DES[output];
 
     this._getInit();
-
   }
 
   _getInit = () => {
@@ -63,17 +63,26 @@ class ProdPickItem extends window.Phaser.Group {
     this._makeBtnCoinResponds2Click();
     this._makeBtnTickResponds2Click();
     this._showInitUI();
+    this.updateTexture();
   }
 
 
   _updateOutputUI = () => {
-    // loadTexture()
-    // this.output.loadTexture('')
-
+    let latestKey = Production.getLatestTextureByKey(this.outputKey);
+    if (this.output.key === latestKey) return false;
+    this.output.loadTexture(latestKey, true);
   }
 
   _updateInputUI = () => {
+    let reso = ['reso_ore', 'reso_copper', 'reso_aluminium', 'reso_rubber', 'reso_barrel', 'reso_plug'];
      // this.input.forEach() loadTexture('')
+     this.inputGroup.children.forEach((item, index) => {
+      if (reso.indexOf(item.key) === -1) {
+        let latestKey = Production.getLatestTextureByKey(this.inputKeyList[index]);
+        if (item.key === latestKey) return false;
+        item.loadTexture(latestKey, true);
+      }
+     });
   }
 
   _getFomattedPrice = () => {
@@ -305,6 +314,11 @@ class ProdPickItem extends window.Phaser.Group {
     this.flagBought = true;
   }
 
+  updateTexture = () => {
+    this._updateOutputUI();
+    this._updateInputUI();
+  }
+
 
   setItem2LockedUI = () => {
     this.priceGroup.visible = true;
@@ -354,10 +368,6 @@ class ProdPickItem extends window.Phaser.Group {
     this.btnLocked.visible = false;
     this.btnCoinGroup.visible = false;
     this._showActivatedTick();
-  }
-
-  getUpgradedItemUI = () => {
-
   }
 
   getBtnCoinUpdated = (currCoin) => {

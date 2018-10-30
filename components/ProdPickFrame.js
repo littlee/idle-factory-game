@@ -210,6 +210,15 @@ class ProdPickFrame extends window.Phaser.Group {
     return targetItem === -1 ? null : targetItem;
   }
 
+  updateItemTexture = (prodName) => {
+    let idx = this.list.indexOf(prodName);
+    if (idx === -1) return;
+    console.log('frame prodPick update');
+    range(4).forEach((item) => {
+      this[`item${item}`].updateTexture();
+    });
+  }
+
   activateFrame = () => {
     this.active = true;
   }

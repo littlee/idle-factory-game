@@ -318,7 +318,7 @@ class ProductUpgradeItem extends window.Phaser.Group {
     Production.setLevelByKey(this.product, currLevel);
     // 改变prodUpgradeMap的值 稍等，应该没事
     prodUpgradeMap[this.product][this.prodTexture].pieActivatedTimestamp = TIMESTAMP;
-    this.state.updateProdTextureAfterUpgrade();
+    this.state.updateProdTextureAfterUpgrade(this.product);
   }
 
 
@@ -352,15 +352,14 @@ class ProductUpgradeItem extends window.Phaser.Group {
     this.btnSkipGroup.visible = true;
     this.countDownTxt.setText(formattedRemainedTimeTxt);
     this.drawCount = Math.round(elapsedMiliseconds / (this._data.step * 1000));
-    // 因为在这个执行的时候，handleOwnItemBeingActivated执行的时候，this.bigVeilGroup还没定义，这里暂时这样做避免保错
+    // 因为在这个执行的时候，handleOwnItemBeingActivated执行的时候，部分item, copper, silver等可能还没定义，这里暂时这样做避免报错
     setTimeout(() => {
       this.parent.handleOwnItemBeingActivated();
       this.parent.beIntermediate2PassActiveItem2Modal(this);
-    }, 100);
+    }, 10);
     this._reDrawPie();
     this._updateDurationTxtUI();
     this.timer = setInterval(this._reDrawPie, this._data.step * 1000);
-    // this.txtTimer = setTimeout(this._updateDurationTxtUI, this.txtTimeout);
   }
 
   _computePieDrawingFrequencyNStuff = durationTxt => {
@@ -467,13 +466,19 @@ class ProductUpgradeItem extends window.Phaser.Group {
     }
 
   }
-  clearAllTimer = () => {
+  _clearAllTimer = () => {
     if (this.timer) {
       clearInterval(this.timer);
     }
     if (this.txtTimer) {
       clearTimeout(this.txtTimer);
     }
+  }
+
+  leaveGracefully = () => {
+    this._clearAllTimer();
+    let idx = TEXTURE_LEVEL_MAP[this.prodTexture];
+    this.state.reviveProdUpgradeTimer(this.product, idx, this.prodTexture, TIMESTAMP, this.durationInMiliSeconds);
   }
 
   getIncrementPercentage = () => {

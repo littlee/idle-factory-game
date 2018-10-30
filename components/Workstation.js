@@ -180,8 +180,6 @@ class Workstation extends window.Phaser.Group {
     // for simple z-depth
     this.add(this.ground);
     this.add(this.groundNum);
-    // this.add(this.manager);
-    // this.add(this.worker);
     this.add(this.table);
     this.add(this.tableCover);
 
@@ -191,9 +189,6 @@ class Workstation extends window.Phaser.Group {
       this._addTheRest();
       this._init();
     }
-    // this.add(this.productGroup);
-
-    // this._init();
   }
 
   _drawProductProduceStuffs = () => {

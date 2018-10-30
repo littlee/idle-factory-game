@@ -44,6 +44,9 @@ class ProductUpgradeLine extends window.Phaser.Group {
   _getInit = () => {
     this.y = this.offsetTop;
     this.x = this.offsetLeft;
+
+    this.bigVeilGroup = this.game.make.group();
+
     this.base = new ProductUpgradeItem({
       game: this.game,
       parent: this,
@@ -105,8 +108,6 @@ class ProductUpgradeLine extends window.Phaser.Group {
       incrementPercentage: '400%'
     });
 
-    this.bigVeilGroup = this.game.make.group();
-
     this.bigVeil = this.game.make.graphics(0, 0);
     this.bigVeil.beginFill(0x000000, 0.7);
     this.bigVeil.drawRect(0, -80, CONFIG.frameWidth, CONFIG.halfItemLineHeight * 2 - 20);
@@ -121,8 +122,7 @@ class ProductUpgradeLine extends window.Phaser.Group {
     this.bigVeilGroup.addChild(this.bigVeil);
     this.bigVeilGroup.addChild(this.bigVeilClock);
     this.bigVeilGroup.addChild(this.bigCountdownTxt);
-    // this.bigVeilGroup.setAllChildren('inputEnabled', 'true');
-    // this.bigVeilGroup.setAllChildren('input.priorityID', CONFIG.bigVeilPriorityID);
+
     this.bigVeilGroup.visible = false;
 
   }
