@@ -94,7 +94,7 @@ class Workstation extends window.Phaser.Group {
 
     this._data = {
       isLocked: true,
-      isBought: false,
+      isBought: index === 1 ? true : false,
       isWorking: false,
       input: getInitInput(initOutput),
       output: initOutput,
@@ -171,6 +171,33 @@ class Workstation extends window.Phaser.Group {
     this.buyBtnGroup.visible = false;
 
     // 生产相关
+    if (index === 1) {
+      this._drawProductProduceStuffs();
+      this._drawWorkerManager();
+      this._addProductionStuffs();
+    }
+
+    // for simple z-depth
+    this.add(this.ground);
+    this.add(this.groundNum);
+    // this.add(this.manager);
+    // this.add(this.worker);
+    this.add(this.table);
+    this.add(this.tableCover);
+
+    this.add(this.buyBtnGroup);
+
+    if (index === 1) {
+      this._addTheRest();
+      this._init();
+    }
+    // this.add(this.productGroup);
+
+    // this._init();
+  }
+
+  _drawProductProduceStuffs = () => {
+    // 生产相关
     this.productGroup = this.game.make.group();
     this.productBtn = this.game.make.sprite(0, 0, 'btn_product_holder');
     this.productBtn.alignIn(this.table, window.Phaser.TOP_RIGHT, -15, -15);
@@ -244,14 +271,6 @@ class Workstation extends window.Phaser.Group {
       100
     );
 
-    this.worker = new Worker(this.game, 0, 0);
-    this.worker.alignTo(this.table, window.Phaser.TOP_CENTER, 20, -10);
-    this.worker.visible = false;
-
-    this.manager = this.game.make.sprite(0, 0, 'mgr_worker');
-    this.manager.alignIn(this.table, window.Phaser.TOP_LEFT, -15, 100);
-    this.manager.visible = false;
-
     this.boxCollect = new BoxCollect(this.game);
     let { collectType, outputAmount } = this._data;
     this.boxCollect.setNum(formatBigNum(outputAmount[collectType]));
@@ -272,7 +291,6 @@ class Workstation extends window.Phaser.Group {
       -100,
       -30
     );
-
 
     this.boxHolderCash = this.game.make.sprite(0, 0, 'box_collect_holder');
     this.boxHolderCash.alignTo(this.table, window.Phaser.BOTTOM_RIGHT, -20, -5);
@@ -299,7 +317,19 @@ class Workstation extends window.Phaser.Group {
       });
       this.workestationLevelModal.visible = true;
     });
+  };
 
+  _drawWorkerManager = () => {
+    this.worker = new Worker(this.game, 0, 0);
+    this.worker.alignTo(this.table, window.Phaser.TOP_CENTER, 20, -10);
+    this.worker.visible = false;
+
+    this.manager = this.game.make.sprite(0, 0, 'mgr_worker');
+    this.manager.alignIn(this.table, window.Phaser.TOP_LEFT, -15, 100);
+    this.manager.visible = false;
+  };
+
+  _addProductionStuffs = () => {
     this.productGroup.add(this.productBtn);
     this.productGroup.add(this.productBtnItem);
     this.productGroup.add(this.inputItemGroup);
@@ -313,21 +343,13 @@ class Workstation extends window.Phaser.Group {
     this.productGroup.add(this.outputGiveAni);
     this.productGroup.add(this.upBtn);
     this.productGroup.visible = false;
+  };
 
-    // for simple z-depth
-    this.add(this.ground);
-    this.add(this.groundNum);
+  _addTheRest = () => {
     this.add(this.manager);
     this.add(this.worker);
-    this.add(this.table);
-    this.add(this.tableCover);
-
-    this.add(this.buyBtnGroup);
-
     this.add(this.productGroup);
-
-    this._init();
-  }
+  };
 
   _init() {
     this.setCollectType(COLLECT_TYPES.CASH);
@@ -443,6 +465,13 @@ class Workstation extends window.Phaser.Group {
   buy(type) {
     // 计算消耗金币
     console.log('this buy: ', type);
+    // 在桌子被购买时候才去render以下objects
+    this._drawProductProduceStuffs();
+    this._drawWorkerManager();
+    this._addProductionStuffs();
+    this._addTheRest();
+    this._init();
+
     let priceOfType = this._data.price[type];
     let canBuy = this._onValidateBuyFunc.call(
       this._onValidateBuyContext,
@@ -483,14 +512,14 @@ class Workstation extends window.Phaser.Group {
     this._data.index = index;
   }
 
-  setProducePerMin = (value) => {
+  setProducePerMin = value => {
     console.log('producePerMin set!', value);
     this._data.producePerMin = Big(value);
-  }
+  };
 
   getProducePerMin = () => {
-    return  this._data.producePerMin;
-  }
+    return this._data.producePerMin;
+  };
 
   getIsLocked() {
     return this._data.isLocked;

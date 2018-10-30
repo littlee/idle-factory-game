@@ -101,7 +101,6 @@ class BtnUpgrade extends window.Phaser.Group {
   }
 
   check2ShowAllArrows = (currCoin) => {
-    if (this.type === 'workstation') console.log('check');
     let one = this._check2ShowSingleArrow(1, currCoin);
     if (one === true) {
       let ten = this._check2ShowSingleArrow(10, currCoin);
