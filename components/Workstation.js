@@ -491,7 +491,7 @@ class Workstation extends window.Phaser.Group {
     this.productGroup.visible = true;
 
     if (this._onAfterBuyFunc) {
-      this._onAfterBuyFunc.call(this._onAfterBuyContext);
+      this._onAfterBuyFunc.call(this._onAfterBuyContext, type, priceOfType);
     }
   }
 

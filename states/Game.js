@@ -353,7 +353,11 @@ class Game extends window.Phaser.State {
     return false;
   }
 
-  _afterBuyWorkstation() {
+  _afterBuyWorkstation(type, priceOfType) {
+    if (type === 'cash') {
+      this.subtractCash(priceOfType);
+    }
+
     let firstLockWS = this._getFirstLockWorkstation();
     if (firstLockWS) {
       firstLockWS.beAbleToBuy();
