@@ -755,8 +755,7 @@ class Game extends window.Phaser.State {
 
   // 升级好产品之后workstation的UI改，这里也要改工作台弹窗里头的UI
   updateProdTextureAfterUpgrade = () => {
-    this.workstationGroup.children.forEach((item, index) => {
-      // console.log('workstation: ', index, ' update prod UI');
+    this.workstationGroup.children.filter(item => item.getIsBought()).forEach((item, index) => {
       item.updateTexture();
     });
   };
