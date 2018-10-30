@@ -48,20 +48,40 @@ const CONFIG = {
 
 // all Big 一分钟每个market || warehouse worker的最大运输现金
 function getMaxTransportedSpeed(allTime, transCapacity) {
-  return Big(60).div(allTime).times(transCapacity); // eslint-disable-line
+  return Big(60)
+    .div(allTime)
+    .times(transCapacity); // eslint-disable-line
 }
 
 // 单位是s
-function getMrtWorkerTimePerRound(workstationCount, transCapacity, loadSpeed, walkSpeed) {
-  let loadingTime = Big(transCapacity).div(Big(loadSpeed)).times(2);
-  let walkTime = Big(workstationCount).div(Big(walkSpeed)).times(2);
+function getMrtWorkerTimePerRound(
+  workstationCount,
+  transCapacity,
+  loadSpeed,
+  walkSpeed
+) {
+  let loadingTime = Big(transCapacity)
+    .div(Big(loadSpeed))
+    .times(2);
+  let walkTime = Big(workstationCount)
+    .div(Big(walkSpeed))
+    .times(2);
   return loadingTime.plus(walkTime);
 }
 
 // 单位是s
-function getWhsWorkerTimePerRound(workstationCount, transCapacity, loadSpeed, walkSpeed) {
-  let loadingTime = Big(transCapacity).div(Big(loadSpeed)).times(workstationCount+1);
-  let walkTime = Big(workstationCount).div(Big(walkSpeed)).times(2);
+function getWhsWorkerTimePerRound(
+  workstationCount,
+  transCapacity,
+  loadSpeed,
+  walkSpeed
+) {
+  let loadingTime = Big(transCapacity)
+    .div(Big(loadSpeed))
+    .times(workstationCount + 1);
+  let walkTime = Big(workstationCount)
+    .div(Big(walkSpeed))
+    .times(2);
   return loadingTime.plus(walkTime);
 }
 
@@ -249,7 +269,10 @@ class ModalLevel extends ModalRaw {
     let initFutureOpts = this._getCustomizedLevelInfoFromMap(1);
     let initDiffs = this._getDiffOpts4LevelBtns(initFutureOpts, initOpts);
     if (this._data.type === 'market' || this._data.type === 'warehouse') {
-      let initMaxDiff = this._getMaxTransportedDiff(initFutureOpts, initOpts.maxTransported);
+      let initMaxDiff = this._getMaxTransportedDiff(
+        initFutureOpts,
+        initOpts.maxTransported
+      );
       // gap 17
       this.item1 = new LevelUpgradeItem({
         game: this.game,
@@ -416,7 +439,6 @@ class ModalLevel extends ModalRaw {
     let tmp = {};
     keys.forEach(item => {
       if (item === 'coinNeeded') {
-        // tmp[item] = Big(futureOpts[item]);
         tmp[item] =
           this.levelIncrement > 1
             ? this._getAccumulatedDiffs()
@@ -572,7 +594,7 @@ class ModalLevel extends ModalRaw {
     if (this._data.type !== 'workstation') return false;
     let value = this.MAP[`level${this._data.currLevel}`].output;
     this.workstation.setProducePerMin(value);
-  }
+  };
 
   _UpdateAvatarDesLevel = () => {
     // 更新avatarDesTxt的值, 要有最新的currLevel的值
@@ -590,7 +612,7 @@ class ModalLevel extends ModalRaw {
         this[`item${item + 1}`].updateItemValue();
       });
       if (this._data.type === 'market') {
-       this._updateBtnIdleCash();
+        this._updateBtnIdleCash();
       }
     } else if (this._data.type === 'workstation') {
       this.need1.updateItemValue();
@@ -602,7 +624,7 @@ class ModalLevel extends ModalRaw {
     }
   };
 
-  _updateBtnIdleCash () {
+  _updateBtnIdleCash() {
     this.state.updateIdleCash();
   }
 
@@ -624,24 +646,34 @@ class ModalLevel extends ModalRaw {
     if (currOpts instanceof Big) {
       return this._getMaxTransportedValue(futureOpts).minus(currOpts);
     }
-    return this._getMaxTransportedValue(futureOpts).minus(this._getMaxTransportedValue(currOpts));
-  }
+    return this._getMaxTransportedValue(futureOpts).minus(
+      this._getMaxTransportedValue(currOpts)
+    );
+  };
 
   // 注意，这里的参数5是应该是curr active workstation count, 这里是hardcoded to 5
-  _getMaxTransportedValue = (opts) => {
+  _getMaxTransportedValue = opts => {
     if (this._data.type === 'market') {
-      let allTime = getMrtWorkerTimePerRound(5, opts.capacity, opts.loadingSpeed, opts.walkSpeed);
+      let allTime = getMrtWorkerTimePerRound(
+        5,
+        opts.capacity,
+        opts.loadingSpeed,
+        opts.walkSpeed
+      );
       return getMaxTransportedSpeed(allTime, opts.capacity);
     } else if (this._data.type === 'warehouse') {
-      let allTime = getWhsWorkerTimePerRound(5, opts.capacity, opts.loadingSpeed, opts.walkSpeed);
+      let allTime = getWhsWorkerTimePerRound(
+        5,
+        opts.capacity,
+        opts.loadingSpeed,
+        opts.walkSpeed
+      );
       return getMaxTransportedSpeed(allTime, opts.capacity);
     }
-  }
-
+  };
 
   /*
   点击level升级btn之后所有要处理的更新，在点击这里之前，一定是点过x1 || max的按钮，即，itemDes本身就是显示前期available level up的信息
-  market 和 warehouse 的第一个item的logic未加
   */
   handleUpgradation = () => {
     this._updateAllItemsValues();
@@ -666,7 +698,7 @@ class ModalLevel extends ModalRaw {
     this._updateAvatarGainedBar();
   };
 
-  // 点击 x1 x10 ... btns时候, 需要一起更新的东西【需要的coin数值不归在这里更新】
+  // 点击 x1 x10 ... btns时候, 需要一起更新的东西【需要的coin数值不归在这里更新】这里对可升级数<点击按钮multiplier数的时候的处理和箭头的处理是不一样的。
   handleLevelBtnsChoosing = () => {
     // 拿到最新的点击升级数 || 可升级数， 可为0
     let levelIncrement = this._getLevelIncrement();
@@ -688,7 +720,6 @@ class ModalLevel extends ModalRaw {
     let futureOpts = this._getCustomizedLevelInfoFromMap(levelIncrement);
     let diffs = this._getDiffOpts4LevelBtns(futureOpts, currOpts);
 
-
     if (levelIncrement === 0) {
       diffs.coinNeeded = Big(0); // 当当前级数已经>=配置表给出数目时
     }
@@ -696,12 +727,15 @@ class ModalLevel extends ModalRaw {
     if (this._data.type === 'market' || this._data.type === 'warehouse') {
       // update item的描述数据
       // dev-ing start 先都写死工作台的数量是5个
-      let MaxTransportedDiff = this._getMaxTransportedDiff(futureOpts, currOpts);
+      let MaxTransportedDiff = this._getMaxTransportedDiff(
+        futureOpts,
+        currOpts
+      );
       diffs.maxTransported = MaxTransportedDiff;
       range(5).forEach(item => {
         this[`item${item + 1}`].getDesUpdated(diffs);
       });
-       // dev-ing end
+      // dev-ing end
     } else if (this._data.type === 'workstation') {
       this.need1.getDesUpdated(diffs);
       if (this.need2 !== null) {
@@ -739,14 +773,14 @@ class ModalLevel extends ModalRaw {
   // 拿到个big
   getMarketWorkerNumber = () => {
     return this.item2.getValue();
-  }
+  };
 
   // 拿到个big
   getMarketMaxTransported = () => {
     if (this._data.type === 'market') {
       return this.item1.getValue();
     }
-  }
+  };
 
   setCurrLevel = level => {
     this.prevLevel = this._data.currLevel;

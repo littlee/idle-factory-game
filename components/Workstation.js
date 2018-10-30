@@ -273,6 +273,7 @@ class Workstation extends window.Phaser.Group {
       -30
     );
 
+
     this.boxHolderCash = this.game.make.sprite(0, 0, 'box_collect_holder');
     this.boxHolderCash.alignTo(this.table, window.Phaser.BOTTOM_RIGHT, -20, -5);
     this.boxHolderCash.inputEnabled = true;
@@ -290,11 +291,10 @@ class Workstation extends window.Phaser.Group {
         type: 'workstation',
         currLevel: this.upBtn.getLevel(),
         coupledBtn: this.upBtn,
-        workstation: this, // more to go
+        workstation: this,
         close: 'destory'
       });
       this.workestationLevelModal.onDestroy.add(() => {
-        console.log('destroy done');
         this.workestationLevelModal = null;
       });
       this.workestationLevelModal.visible = true;

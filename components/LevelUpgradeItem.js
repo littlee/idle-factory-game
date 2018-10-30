@@ -25,7 +25,6 @@ function getFontStyle(fSize, color, align, weight) {
     boundsAlignH: 'right',
     boundsAlignV: 'middle',
     align: align || 'left'
-    // backgroundColor: '#CCCCCC'
   };
 }
 
