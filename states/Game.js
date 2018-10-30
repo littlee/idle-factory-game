@@ -756,7 +756,7 @@ class Game extends window.Phaser.State {
   };
 
   // 升级好产品之后workstation的UI改，这里也要改工作台弹窗里头的UI
-  updateProdTextureAfterUpgrade = (prodName) => {
+  updateProdTextureAfterUpgrade = (prodName, lastestKey) => {
     let workingGroup = this.workstationGroup.children.filter(item => item.getIsBought());
     console.log('workingGroup.length: ', workingGroup.length);
     workingGroup.forEach((item, index) => {
@@ -765,9 +765,7 @@ class Game extends window.Phaser.State {
         console.log('modal prodPick update');
         item.modalProdPick.updateTexture(prodName);
       }
-      if (item.workestationLevelModal) {
-        // item.workestationLevelModal.updateTexture(prodName);
-      }
+      // level的modal就不管
     });
   };
 
@@ -834,7 +832,8 @@ class Game extends window.Phaser.State {
     console.log('modal关闭, timer接力');
     Production.setLevelByKey(productName, prodLevelIdx);
     prodUpgradeMap[productName][prodTexture].pieActivatedTimestamp = deadTs;
-    this.updateProdTextureAfterUpgrade(productName);
+    let lastestKey = Production.getLatestTextureByKey(productName);
+    this.updateProdTextureAfterUpgrade(productName, lastestKey);
   }
 }
 

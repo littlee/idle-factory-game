@@ -8,6 +8,8 @@ import { LevelMap } from './puedoLevelMap.js';
 import range from '../js/libs/_/range';
 import { CN_NAME_MAP } from '../js/config.js';
 
+import Production from '../store/Production.js';
+
 const LEVEL = {
   aWidth: 537,
   aHeight: 178,
@@ -398,10 +400,11 @@ class ModalLevel extends ModalRaw {
         0,
         20
       );
+      let lastestOutputKey = Production.getLatestTextureByKey(this.workstationOutput);
       this.prod = new LevelUpgradeItem({
         game: this.game,
         parent: this.mainGroup, // this.mainGroup,
-        key: `prod_${this.workstationOutput}`,
+        key: lastestOutputKey,
         txt: CN_NAME_MAP[this.workstationOutput],
         levelType: this._data.type,
         itemName: 'output',
