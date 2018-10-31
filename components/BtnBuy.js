@@ -84,8 +84,8 @@ class BtnBuy extends window.Phaser.Group {
   _getInit = () => {
     this._drawUI();
 
-    this.btn.events.onInputDown.add(this._handleClick);
-    this.coinNeededTxt.events.onInputDown.add(this._handleClick);
+    this.btn.events.onInputUp.add(this._handleClick);
+    this.coinNeededTxt.events.onInputUp.add(this._handleClick);
 
     this.addChild(this.btn);
     this.addChild(this.coinNeededTxt);
@@ -113,7 +113,8 @@ class BtnBuy extends window.Phaser.Group {
     return this._data.boughtFlag;
   }
 
-  _handleClick = () => {
+  _handleClick = (target, pointer, isOver) => {
+    if (!isOver) return false;
     if (this.can === true) {
       this.resourcesTable.addGood(this.target2buy);
       this._setBoughtFlagTrue();

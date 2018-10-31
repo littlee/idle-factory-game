@@ -96,7 +96,8 @@ class PanelUpgrade extends window.Phaser.Group {
     this.btnUpgradeGroup.addChild(this.txtUpgradeCoinNeeded);
     this.btnUpgradeGroup.addChild(this.txtBtnDes);
 
-    this.btnUpgradeGroup.onChildInputDown.add(() => {
+    this.btnUpgradeGroup.onChildInputUp.add((target, pointer, isOver) => {
+      if (!isOver) return false;
       this.modal.handleUpgradation();
     });
 
@@ -123,7 +124,8 @@ class PanelUpgrade extends window.Phaser.Group {
     ];
     tmp.forEach(
       (item, index) => {
-        this[item.key].events.onInputDown.add(() => {
+        this[item.key].events.onInputUp.add((target, pointer, isOver) => {
+          if (!isOver) return false;
           let curr = item.key;
           this._data.multiplier = item.num;
           this[item.key].alpha = 1;
@@ -136,7 +138,8 @@ class PanelUpgrade extends window.Phaser.Group {
           this.modal.handleLevelBtnsChoosing();
 
         });
-        this[item.txt].events.onInputDown.add(() => {
+        this[item.txt].events.onInputUp.add((target, pointer, isOver) => {
+          if (!isOver) return false;
           let curr = item.key;
           this._data.multiplier = item.num;
           this[item.key].alpha = 1;
