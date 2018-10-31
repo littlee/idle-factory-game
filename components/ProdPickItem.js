@@ -237,7 +237,8 @@ class ProdPickItem extends window.Phaser.Group {
   _makeBtnCoinResponds2Click = () => {
     this.btnCoin.inputEnabled = true;
     this.btnCoin.input.priorityID = 1001;
-    this.btnCoin.events.onInputDown.add(() => {
+    this.btnCoin.events.onInputUp.add((target, pointer, isOver) => {
+      if (!isOver) return false;
       if (this.btnCoin.key === 'btn_prod_coin_disable') return false;
       this.state.subtractCash(this.coinNeeded);
       this._makeFlagBoughtTrue();
@@ -249,7 +250,8 @@ class ProdPickItem extends window.Phaser.Group {
   _makeBtnTickResponds2Click = () => {
     this.panelTick.inputEnabled = true;
     this.panelTick.input.priorityID = 1001;
-    this.panelTick.events.onInputDown.add(() => {
+    this.panelTick.events.onInputUp.add((target, pointer, isOver) => {
+      if (!isOver) return false;
       if (this.panelTick.visible === true) {
         this._handleTickClick();
       }

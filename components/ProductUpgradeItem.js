@@ -243,7 +243,7 @@ class ProductUpgradeItem extends window.Phaser.Group {
     this.btnBuyGroup.addChild(this.btnBuyTxt);
     this.btnBuyGroup.setAllChildren('inputEnabled', true);
     this.btnBuyGroup.setAllChildren('input.priorityID', 1001);
-    this.btnBuyGroup.onChildInputDown.add(this._handleBtnBuyClicked);
+    this.btnBuyGroup.onChildInputUp.add(this._handleBtnBuyClicked);
 
     // btn*skip
     this.btnSkipGroup = this.game.make.group();
@@ -263,7 +263,7 @@ class ProductUpgradeItem extends window.Phaser.Group {
     this.btnSkipGroup.setAllChildren('input.priorityID', 1001);
     this.btnSkipGroup.visible = false;
 
-    this.btnSkipGroup.onChildInputDown.add(this._handleBtnSkipClicked);
+    this.btnSkipGroup.onChildInputUp.add(this._handleBtnSkipClicked);
 
     this._addAllChildren();
   };
@@ -279,7 +279,8 @@ class ProductUpgradeItem extends window.Phaser.Group {
     this.addChild(this.btnSkipGroup);
   };
 
-  _handleBtnBuyClicked = () => {
+  _handleBtnBuyClicked = (target, pointer, isOver) => {
+    if (!isOver) return false;
     this.makeStrokeHighlightedOnly();
     this.btnBuyGroup.visible = false;
     this.btnSkipGroup.visible = true;
@@ -299,13 +300,14 @@ class ProductUpgradeItem extends window.Phaser.Group {
     this.state.subtractCash(this.coin);
   }
 
-  _handleBtnSkipClicked = () => {
+  _handleBtnSkipClicked = (target, pointer, isOver) => {
     /*
     1）其他的大蒙层消失，自己的小蒙层也消失，倒计时也消失。
     2) 下一个item的btns出现
     3）workstation上面的product UI变化，外加卖出价格变化
     4) 减少主界面里头，cash的数额
     */
+    if (!isOver) return false;
     this.btnSkipGroup.visible = false;
     this.countDownGroup.visible = false;
     this.upgraded = true;
