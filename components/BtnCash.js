@@ -8,8 +8,10 @@ const TEXT_STYLE = {
   fill: '#fbf36d'
 };
 
+const INIT_CASH = 0;
+
 class BtnCash extends window.Phaser.Group {
-  constructor(game, x, y, value = 4000) {
+  constructor(game, x, y, value = INIT_CASH) {
     super(game);
     this.x = x;
     this.y = y;

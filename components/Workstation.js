@@ -714,7 +714,7 @@ class Workstation extends window.Phaser.Group {
     this.outputItemsAniRight.changeTexture(outputTexture);
     this.outputGiveAni.changeTexture(outputTexture);
 
-    this.productBtnItem.loadTexture(outputTexture);
+    this.productBtnItem.loadTexture('material', outputTexture);
 
     let { input } = this._data;
     let inputKeys = OUTPUT_INPUT_MAP[this._data.output];
