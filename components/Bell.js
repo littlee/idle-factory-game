@@ -18,7 +18,9 @@ class Bell extends window.Phaser.Group {
       skillRestSec: 30,
       isOnCooldown: false,
       cooldownDuration: 15 * 60,
-      cooldownRestSec: 15 * 60
+      cooldownRestSec: 15 * 60,
+
+      nextSkillDuration: 30
     };
 
     this._onSkillFunc = null;
@@ -46,7 +48,12 @@ class Bell extends window.Phaser.Group {
     this.bellTimer.input.priorityID = 999;
     this.bellTimer.events.onInputDown.add(this._clickBell, this);
 
-    this.bellTimerText = this.game.make.text(0, 0, formatSec(this._data.skillDuration), TIMER_TEXT_STYLE);
+    this.bellTimerText = this.game.make.text(
+      0,
+      0,
+      formatSec(this._data.skillDuration),
+      TIMER_TEXT_STYLE
+    );
     this.bellTimerText.alignIn(this.bellTimer, window.Phaser.CENTER, 0, 5);
 
     this.bellHandle = this.game.make.sprite(0, 0, `bell_handle_${color}`);
@@ -115,18 +122,24 @@ class Bell extends window.Phaser.Group {
     this.bellTimerText.setText(formatSec(this._data.skillRestSec));
     this._ring();
 
-    this.game.time.events.repeat(REPEAT_INTERVAL, this._data.skillDuration, () => {
-      this._data.skillRestSec--;
-      this.bellTimerText.setText(formatSec(this._data.skillRestSec));
+    this.game.time.events.repeat(
+      REPEAT_INTERVAL,
+      this._data.skillDuration,
+      () => {
+        this._data.skillRestSec--;
+        this.bellTimerText.setText(formatSec(this._data.skillRestSec));
 
-      if (this._data.skillRestSec <= 0) {
-        this._data.isOnSkill = false;
-        this._data.skillRestSec = this._data.skillDuration;
-        this._onSkillEndFunc && this._onSkillEndFunc.call(this._onSkillEndContext);
-        this._mute();
-        this._triggerCooldown();
+        if (this._data.skillRestSec <= 0) {
+          this._data.isOnSkill = false;
+          this._data.skillDuration = this._data.nextSkillDuration;
+          this._data.skillRestSec = this._data.nextSkillDuration;
+          this._onSkillEndFunc &&
+            this._onSkillEndFunc.call(this._onSkillEndContext);
+          this._mute();
+          this._triggerCooldown();
+        }
       }
-    });
+    );
   }
 
   _triggerCooldown() {
@@ -134,17 +147,21 @@ class Bell extends window.Phaser.Group {
     this.bellTimerText.setText(formatSec(this._data.cooldownRestSec));
     this._disable();
 
-    this.game.time.events.repeat(REPEAT_INTERVAL, this._data.cooldownDuration, () => {
-      this._data.cooldownRestSec--;
-      this.bellTimerText.setText(formatSec(this._data.cooldownRestSec));
+    this.game.time.events.repeat(
+      REPEAT_INTERVAL,
+      this._data.cooldownDuration,
+      () => {
+        this._data.cooldownRestSec--;
+        this.bellTimerText.setText(formatSec(this._data.cooldownRestSec));
 
-      if (this._data.cooldownRestSec <= 0) {
-        this._data.isOnCooldown = false;
-        this._data.cooldownRestSec = this._data.cooldownDuration;
-
-        this._enable();
+        if (this._data.cooldownRestSec <= 0) {
+          this._data.isOnCooldown = false;
+          this._data.cooldownRestSec = this._data.cooldownDuration;
+          this.bellTimerText.setText(formatSec(this._data.skillDuration), true);
+          this._enable();
+        }
       }
-    });
+    );
   }
 
   _enable() {
@@ -157,21 +174,24 @@ class Bell extends window.Phaser.Group {
 
   _ring() {
     this.bellHandle.angle = -15;
-    this.bellHandleTwn.start();
+    if (this.bellHandleTwn.isPaused) {
+      this.bellHandleTwn.resume();
+    } else {
+      this.bellHandleTwn.start();
+    }
     this.bellBody.x -= 5;
-    this.bellBodyTwn.start();
-  }
-
-  _increaseDuration() {
-    this._data.skillDuration += 10;
-    this._data.skillRestSec += 10;
+    if (this.bellBodyTwn.isPaused) {
+      this.bellBodyTwn.resume();
+    } else {
+      this.bellBodyTwn.start();
+    }
   }
 
   _mute() {
+    this.bellHandleTwn.pause();
     this.bellHandle.angle = 0;
-    this.bellHandleTwn.stop();
+    this.bellBodyTwn.pause();
     this.bellBody.x = this.bellBody.oldX;
-    this.bellBodyTwn.stop();
   }
 
   onSkill(func, context) {
@@ -185,10 +205,12 @@ class Bell extends window.Phaser.Group {
   }
 
   upgradeSkillDuration() {
-    this._increaseDuration();
+    this._data.nextSkillDuration += 10;
     if (this._getCanClick()) {
+      this._data.skillDuration = this._data.nextSkillDuration;
+      this._data.skillRestSec = this._data.nextSkillDuration;
       this.bellTimerText.setText(formatSec(this._data.skillDuration), true);
-    };
+    }
   }
 
   unlock() {

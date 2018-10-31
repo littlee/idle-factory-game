@@ -774,12 +774,16 @@ class Workstation extends window.Phaser.Group {
 
   multipleSpeed(times) {
     this._data.outputDelay = this._data.outputDelay / times;
-    this.startWork();
+    if (this._data.isBought) {
+      this.startWork();
+    }
   }
 
   resetSpeed() {
     this._data.outputDelay = INIT_OUTPUT_DELAY;
-    this.startWork();
+    if (this._data.isBought) {
+      this.startWork();
+    }
   }
 }
 
