@@ -114,7 +114,7 @@ class BtnUpgrade extends window.Phaser.Group {
   onClick(func, context) {
     this.btn.inputEnabled = true;
     this.btn.input.priorityID = 999;
-    this.btn.events.onInputDown.add(func, context);
+    this.btn.events.onInputUp.add(func, context);
   }
 
   setLevel(level) {

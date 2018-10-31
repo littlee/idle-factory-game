@@ -115,16 +115,20 @@ class Game extends window.Phaser.State {
 
     this.upBtnWarehouse = new BtnUpgrade(this.game, 0, 0, 'warehouse');
     this.upBtnWarehouse.alignIn(this.wall, window.Phaser.LEFT_CENTER, -60, -10);
-    this.upBtnWarehouse.onClick(() => {
+    this.upBtnWarehouse.onClick((target, pointer, isOver) => {
       console.log('仓库升级按钮');
-      this.modalWarehose.visible = true;
+      if (isOver) {
+        this.modalWarehose.visible = true;
+      }
     });
 
     this.upBtnMarket = new BtnUpgrade(this.game, 0, 0, 'market');
     this.upBtnMarket.alignIn(this.wall, window.Phaser.RIGHT_CENTER, -50, -10);
-    this.upBtnMarket.onClick(() => {
+    this.upBtnMarket.onClick((target, pointer, isOver) => {
       console.log('市场升级按钮');
-      this.modalMarket.visible = true;
+      if (isOver) {
+        this.modalMarket.visible = true;
+      }
     });
 
     // modals
@@ -516,7 +520,7 @@ class Game extends window.Phaser.State {
     this.btnShop.anchor.setTo(0, 1);
     this.btnShop.inputEnabled = true;
     this.btnShop.input.priorityID = PRIORITY_ID;
-    this.btnShop.events.onInputDown.add(() => {
+    this.btnShop.events.onInputUp.add(() => {
       console.log('click btn shop');
     });
 
@@ -528,8 +532,9 @@ class Game extends window.Phaser.State {
     this.btnBlueprint.anchor.setTo(0, 1);
     this.btnBlueprint.inputEnabled = true;
     this.btnBlueprint.input.priorityID = PRIORITY_ID;
-    this.btnBlueprint.events.onInputDown.add(() => {
+    this.btnBlueprint.events.onInputUp.add((target, pointer, isOver) => {
       console.log('click btn blueprint');
+      if (!isOver) return false;
       this.modalProdUpgrade = new ModalProdUpgrade({
         game: this.game,
         headingTxt: '生产产品升级',
@@ -548,9 +553,11 @@ class Game extends window.Phaser.State {
     this.btnXCash.anchor.setTo(0.5, 1);
     this.btnXCash.inputEnabled = true;
     this.btnXCash.input.priorityID = PRIORITY_ID;
-    this.btnXCash.events.onInputDown.add(() => {
+    this.btnXCash.events.onInputUp.add((target, pointer, isOver) => {
       console.log('click btn x cash');
-      this.modalAdCampaign.visible = true;
+      if (isOver) {
+        this.modalAdCampaign.visible = true;
+      }
     });
     this.btnXCashTxt = this.add.text(0, 0, '视频', {
       fontSize: '38px',
@@ -570,8 +577,9 @@ class Game extends window.Phaser.State {
     this.btnWheelCoin.anchor.setTo(1);
     this.btnWheelCoin.inputEnabled = true;
     this.btnWheelCoin.input.priorityID = PRIORITY_ID;
-    this.btnWheelCoin.events.onInputDown.add(() => {
+    this.btnWheelCoin.events.onInputUp.add((target, pointer, isOver) => {
       console.log('click btn wheel coin');
+      if (!isOver) return false;
       this.modalSkill = new ModalSkill({
         game: this.game,
         close: 'destory'
@@ -610,8 +618,10 @@ class Game extends window.Phaser.State {
     this.warehouseGround.endFill();
 
     this.warehouse = new Warehouse(this.game, 100, 450);
-    this.warehouse.onClick(() => {
-      this.modalRescources.visible = true;
+    this.warehouse.onClick((target, pointer, isOver) => {
+      if (isOver) {
+        this.modalRescources.visible = true;
+      }
     });
 
     this.modalRescources = new ModalRescources({

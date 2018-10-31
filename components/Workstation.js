@@ -298,20 +298,22 @@ class Workstation extends window.Phaser.Group {
 
     this.upBtn = new BtnUpgrade(this.game, 0, 0, 'workstation');
     this.upBtn.alignIn(this.table, window.Phaser.BOTTOM_CENTER, 0, 30);
-    this.upBtn.onClick(() => {
+    this.upBtn.onClick((target, pointer, isOver) => {
       console.log('点击工作台升级按钮');
-      this.workestationLevelModal = new ModalLevel({
-        game: this.game,
-        type: 'workstation',
-        currLevel: this.upBtn.getLevel(),
-        coupledBtn: this.upBtn,
-        workstation: this,
-        close: 'destory'
-      });
-      this.workestationLevelModal.onDestroy.add(() => {
-        this.workestationLevelModal = null;
-      });
-      this.workestationLevelModal.visible = true;
+      if (isOver) {
+        this.workestationLevelModal = new ModalLevel({
+          game: this.game,
+          type: 'workstation',
+          currLevel: this.upBtn.getLevel(),
+          coupledBtn: this.upBtn,
+          workstation: this,
+          close: 'destory'
+        });
+        this.workestationLevelModal.onDestroy.add(() => {
+          this.workestationLevelModal = null;
+        });
+        this.workestationLevelModal.visible = true;
+      }
     });
   };
 

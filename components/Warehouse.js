@@ -116,7 +116,7 @@ class Warehouse extends window.Phaser.Group {
   onClick(func, context) {
     this.table.inputEnabled = true;
     this.table.input.priorityID = 999;
-    this.table.events.onInputDown.add(func, context);
+    this.table.events.onInputUp.add(func, context);
   }
 }
 
