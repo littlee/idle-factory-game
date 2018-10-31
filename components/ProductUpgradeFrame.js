@@ -114,7 +114,7 @@ class ProductUpgradeFrame extends window.Phaser.Group {
     this.tagName.alignTo(this.tag, Phaser.BOTTOM_LEFT, -20, -CONFIG.frameTagH);
 
     // tag img
-    this.tagImg = this.game.make.image(0, 0, `reso_${this.reso}`);
+    this.tagImg = this.game.make.image(0, 0, 'material', `reso_${this.reso}`);
     this.tagImg.scale.x = CONFIG.tagImgScale;
     this.tagImg.scale.y = CONFIG.tagImgScale;
     this.tagImg.alignTo(this.tagName, Phaser.RIGHT_BOTTOM, 5, -5);

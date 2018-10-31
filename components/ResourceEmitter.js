@@ -1,5 +1,3 @@
-
-
 class ResourceEmitter extends window.Phaser.Particles.Arcade.Emitter {
   constructor(
     game,
@@ -13,7 +11,7 @@ class ResourceEmitter extends window.Phaser.Particles.Arcade.Emitter {
   ) {
     super(game, x, y, 10);
 
-    this.makeParticles(key);
+    this.makeParticles('material', key);
 
     if (Array.isArray(xSpeed)) {
       this.setXSpeed(xSpeed[0], xSpeed[1]);
@@ -38,12 +36,20 @@ class ResourceEmitter extends window.Phaser.Particles.Arcade.Emitter {
 
   changeTexture(key) {
     this.particleKey = key;
-    if (Array.isArray(key) && key.length > 1) {
-      this.forEach(p =>
-        p.loadTexture(key[this.game.rnd.between(0, key.length - 1)])
-      );
+    if (Array.isArray(key)) {
+      if (key.length > 1) {
+        this.forEach(p =>
+          p.loadTexture(
+            'material',
+            key[this.game.rnd.between(0, key.length - 1)]
+          )
+        );
+      }
+      else {
+        this.forEach(p => p.loadTexture('material', key[0]));
+      }
     } else {
-      this.forEach(p => p.loadTexture(key));
+      this.forEach(p => p.loadTexture('material', key));
     }
   }
 

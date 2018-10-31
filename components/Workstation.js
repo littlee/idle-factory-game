@@ -214,6 +214,7 @@ class Workstation extends window.Phaser.Group {
     this.productBtnItem = this.game.make.sprite(
       0,
       0,
+      'material',
       SourceImg.get(this._data.output)
     );
     this.productBtnItem.scale.setTo(TEXTURE_SCALE);

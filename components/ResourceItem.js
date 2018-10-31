@@ -49,7 +49,7 @@ class ResourceItem extends window.Phaser.Group {
     this.bg.drawRect(0, 0, CONFIG.width, CONFIG.height);
     this.bg.endFill();
 
-    this.icon = this.game.make.image(20, 42, this.key);
+    this.icon = this.game.make.image(20, 42, 'material', this.key);
     this.icon.anchor.setTo(0, 0.5);
     this.icon.scale.x = CONFIG.imgScale;
     this.icon.scale.y = CONFIG.imgScale;

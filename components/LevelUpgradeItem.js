@@ -73,7 +73,15 @@ class LevelUpgradeItem extends window.Phaser.Group {
     this.base.anchor.set(0, 0.5);
 
     // 区分是icon类的图，还是reso || prod
-    this.icon = this.game.make.image(0, CONFIG.height / 2, this.key);
+
+    
+    if (this.key.indexOf('icon') !== -1) {
+      this.icon = this.game.make.image(0, CONFIG.height / 2, this.key);
+    }
+    else {
+      this.icon = this.game.make.image(0, CONFIG.height / 2, 'material', this.key);
+    }
+
     this.icon.anchor.set(0, 0.5);
     if (this.key.indexOf('icon') === -1) {
       this.icon.anchor.set(-0.15, 0.5);

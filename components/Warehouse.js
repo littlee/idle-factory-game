@@ -59,7 +59,7 @@ class Warehouse extends window.Phaser.Group {
     this.goods = this.game.add.group();
     Object.keys(GOODS_MAP).forEach(goodKey => {
       let item = GOODS_MAP[goodKey];
-      let good = this.goods.create(item.x, item.y, item.key, null, false);
+      let good = this.goods.create(item.x, item.y, 'material', item.key, false);
       good.scale.setTo(0.5);
     });
 
@@ -83,15 +83,13 @@ class Warehouse extends window.Phaser.Group {
     this.add(this.goods);
     this.add(this.goodsOutputs);
 
-    // this.outputGoods(['ore', 'copper', 'rubber']);
-
     this.addGood('ore');
   }
 
   addGood(key) {
     this._data.currentGoods.push(key);
     this.goods.forEachDead(item => {
-      if (item.key === GOODS_MAP[key].key) {
+      if (item.frameName === GOODS_MAP[key].key) {
         item.revive();
       }
     });

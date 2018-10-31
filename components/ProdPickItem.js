@@ -70,17 +70,17 @@ class ProdPickItem extends window.Phaser.Group {
   _updateOutputUI = () => {
     let latestKey = Production.getLatestTextureByKey(this.outputKey);
     if (this.output.key === latestKey) return false;
-    this.output.loadTexture(latestKey, true);
+    this.output.loadTexture('material', latestKey, true);
   }
 
   _updateInputUI = () => {
     let reso = ['reso_ore', 'reso_copper', 'reso_aluminium', 'reso_rubber', 'reso_barrel', 'reso_plug'];
      // this.input.forEach() loadTexture('')
      this.inputGroup.children.forEach((item, index) => {
-      if (reso.indexOf(item.key) === -1) {
+      if (reso.indexOf(item.frameName) === -1) {
         let latestKey = Production.getLatestTextureByKey(this.inputKeyList[index]);
         if (item.key === latestKey) return false;
-        item.loadTexture(latestKey, true);
+        item.loadTexture('material', latestKey, true);
       }
      });
   }
@@ -101,7 +101,7 @@ class ProdPickItem extends window.Phaser.Group {
   }
 
   _drawOutput = () => {
-    this.output = this.game.make.image(0, 0, `prod_${this.outputKey}`);
+    this.output = this.game.make.image(0, 0, 'material', `prod_${this.outputKey}`);
     this.output.scale.x = CONFIG.scaleFactor;
     this.output.scale.y = CONFIG.scaleFactor;
 
@@ -112,8 +112,8 @@ class ProdPickItem extends window.Phaser.Group {
     this.inputGroup = this.game.make.group();
 
     if (this.prodOrder === 4) {
-      this.input1 = this.game.make.image(0, 0, `prod_${this.inputKeyList[0]}`);
-      this.input2 = this.game.make.image(0, 0, `prod_${this.inputKeyList[1]}`);
+      this.input1 = this.game.make.image(0, 0, 'material', `prod_${this.inputKeyList[0]}`);
+      this.input2 = this.game.make.image(0, 0, 'material', `prod_${this.inputKeyList[1]}`);
       this.input1.scale.x = CONFIG.scaleFactor;
       this.input1.scale.y = CONFIG.scaleFactor;
       this.input2.scale.x = CONFIG.scaleFactor;
@@ -126,7 +126,7 @@ class ProdPickItem extends window.Phaser.Group {
       this.inputGroup.addChild(this.input1);
       this.inputGroup.addChild(this.input2);
     } else if (this.prodOrder === 3) {
-      this.input1 = this.game.make.image(0, 0, `prod_${this.inputKeyList[0]}`);
+      this.input1 = this.game.make.image(0, 0, 'material', `prod_${this.inputKeyList[0]}`);
       this.input1.scale.x = CONFIG.scaleFactor;
       this.input1.scale.y = CONFIG.scaleFactor;
       this.input1.alignTo(this.output, Phaser.LEFT_BOTTOM, -200);
@@ -135,7 +135,7 @@ class ProdPickItem extends window.Phaser.Group {
       this.inputGroup.addChild(this.input1);
 
     } else {
-      this.input1 = this.game.make.image(0, 0, `reso_${this.inputKeyList[0]}`);
+      this.input1 = this.game.make.image(0, 0, 'material', `reso_${this.inputKeyList[0]}`);
       this.input1.scale.x = CONFIG.scaleFactor;
       this.input1.scale.y = CONFIG.scaleFactor;
 

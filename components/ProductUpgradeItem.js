@@ -153,7 +153,7 @@ class ProductUpgradeItem extends window.Phaser.Group {
     this.bg = this.game.make.image(0, 0, this.keyBg);
     this.bg.anchor.setTo(0.5, 0.5);
 
-    this.prodImg = this.game.make.image(0, 0, this.keyProdWithTexture);
+    this.prodImg = this.game.make.image(0, 0, 'material', this.keyProdWithTexture);
     this.prodImg.anchor.setTo(0.5, 0.5);
     this.prodImg.scale.x = CONFIG.prodImgScale;
     this.prodImg.scale.y = CONFIG.prodImgScale;

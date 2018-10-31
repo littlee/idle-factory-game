@@ -167,6 +167,7 @@ class WorkerWarehouse extends window.Phaser.Group {
 
   giveToStation(keys) {
     let emtKeys = keys.map(k => SourceImg.get(k));
+    // console.log(emtKeys);
     this.emt.changeTexture(emtKeys);
     this.emt.start();
 

@@ -19,7 +19,7 @@ class ResourecePile extends window.Phaser.Group {
 
     this.pile = this.game.add.group();
     let texture = SourceImg.get(key);
-    this.pile.createMultiple(5, texture, null, true, (item, index) => {
+    this.pile.createMultiple(5, 'material', texture, true, (item, index) => {
       item.scale.setTo(0.43);
       if (index === 0) {
         this._data.pileWidth = item.width;
@@ -55,7 +55,7 @@ class ResourecePile extends window.Phaser.Group {
     this._data.resourceKey = key;
     this.pile.forEach((item) => {
       let texture = SourceImg.get(key);
-      item.loadTexture(texture);
+      item.loadTexture('material', texture);
       if (this.pile.getChildIndex(item) === 0) {
         this._data.pileWidth = item.width;
       }
