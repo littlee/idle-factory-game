@@ -94,7 +94,7 @@ class Workstation extends window.Phaser.Group {
 
     this._data = {
       isLocked: true,
-      isBought: index === 1 ? true : false,
+      isBought: false,
       isWorking: false,
       input: getInitInput(initOutput),
       output: initOutput,
@@ -573,7 +573,7 @@ class Workstation extends window.Phaser.Group {
     if (this.outputTimer) {
       this.game.time.events.remove(this.outputTimer);
     }
-    this.inputItemsAni.start();
+    this.inputItemsAni && this.inputItemsAni.start();
     if (this.getCollectType() === COLLECT_TYPES.PROD) {
       this.outputItemsAniLeft.start();
     } else {
@@ -769,7 +769,7 @@ class Workstation extends window.Phaser.Group {
     this.outputItemsAniRight.changeTexture(outputTextureKey);
     this.outputGiveAni.changeTexture(outputTextureKey);
 
-    this.productBtnItem.loadTexture(outputTextureKey);
+    this.productBtnItem.loadTexture('material', outputTextureKey);
   }
 
   multipleSpeed(times) {
