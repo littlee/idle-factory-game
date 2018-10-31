@@ -138,8 +138,11 @@ class Workstation extends window.Phaser.Group {
     this.buyBtnSuperCash.alignIn(this.table, window.Phaser.TOP_LEFT, -5, -5);
     this.buyBtnSuperCash.inputEnabled = true;
     this.buyBtnSuperCash.input.priorityID = PRIORITY_ID;
-    this.buyBtnSuperCash.events.onInputDown.add(
-      this.buy.bind(this, 'superCash')
+    this.buyBtnSuperCash.events.onInputUp.add(
+      (target, pointer, isOver) => {
+        if (!isOver) return false;
+        this.buy.bind(this, 'superCash')();
+      }
     );
 
     this.buyBtnSuperCashText = this.game.make.text(0, 0, '0', BTN_TEXT_STYLE);
@@ -154,7 +157,12 @@ class Workstation extends window.Phaser.Group {
     this.buyBtnCash.alignIn(this.table, window.Phaser.TOP_RIGHT, -10, -5);
     this.buyBtnCash.inputEnabled = true;
     this.buyBtnCash.input.priorityID = PRIORITY_ID;
-    this.buyBtnCash.events.onInputDown.add(this.buy.bind(this, 'cash'));
+    this.buyBtnCash.events.onInputUp.add(
+      (target, pointer, isOver) => {
+        if (!isOver) return false;
+        this.buy.bind(this, 'cash')();
+      }
+    );
 
     this.buyBtnCashText = this.game.make.text(0, 0, '0', BTN_TEXT_STYLE);
     this.buyBtnCashText.alignIn(
@@ -199,8 +207,9 @@ class Workstation extends window.Phaser.Group {
     this.productBtn.inputEnabled = true;
     this.productBtn.input.priorityID = PRIORITY_ID;
 
-    this.productBtn.events.onInputDown.add(() => {
+    this.productBtn.events.onInputUp.add((target, pointer, isOver) => {
       console.log('点击工作台产品按钮');
+      if (!isOver) return false;
       this.modalProdPick = new ModalProdPick({
         game: this.game,
         workstation: this
@@ -275,9 +284,11 @@ class Workstation extends window.Phaser.Group {
     this.boxHolderProd.alignTo(this.table, window.Phaser.BOTTOM_LEFT, -20, -5);
     this.boxHolderProd.inputEnabled = true;
     this.boxHolderProd.input.priorityID = PRIORITY_ID;
-    this.boxHolderProd.events.onInputDown.add(
-      this.setCollectType.bind(this, COLLECT_TYPES.PROD)
-    );
+    this.boxHolderProd.events.onInputUp.add((target, pointer, isOver) => {
+      if (!isOver) return false;
+      this.setCollectType.bind(this, COLLECT_TYPES.PROD)();
+      console.log('this.boxHolderProd', isOver);
+    });
 
     this.outputGiveAni = new ResourceEmitter(
       this.game,
@@ -292,9 +303,11 @@ class Workstation extends window.Phaser.Group {
     this.boxHolderCash.alignTo(this.table, window.Phaser.BOTTOM_RIGHT, -20, -5);
     this.boxHolderCash.inputEnabled = true;
     this.boxHolderCash.input.priorityID = PRIORITY_ID;
-    this.boxHolderCash.events.onInputDown.add(
-      this.setCollectType.bind(this, COLLECT_TYPES.CASH)
-    );
+    this.boxHolderCash.events.onInputUp.add((target, pointer, isOver) => {
+      if (!isOver) return false;
+      this.setCollectType.bind(this, COLLECT_TYPES.CASH)();
+      console.log('this.boxHolderCash', isOver);
+    });
 
     this.upBtn = new BtnUpgrade(this.game, 0, 0, 'workstation');
     this.upBtn.alignIn(this.table, window.Phaser.BOTTOM_CENTER, 0, 30);
