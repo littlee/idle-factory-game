@@ -13,21 +13,27 @@ class BtnIdleCash extends window.Phaser.Group {
     this.x = x;
     this.y = y;
     this.unit = '/min';
+    this.value = '0';
 
     this.img = this.game.make.image(0, 0, 'btn_idle_cash');
     this.add(this.img);
 
-    this.text = this.game.make.text(55, 50, '0' + this.unit, TEXT_STYLE);
+    this.text = this.game.make.text(55, 50, formatBigNum(this.value) + this.unit, TEXT_STYLE);
     this.add(this.text);
   }
 
   setText(text) {
-    this.text.setText(formatBigNum(text) + this.unit, true);
+    this.value = text;
+    this.text.setText(formatBigNum(this.value) + this.unit, true);
   }
 
   onClick(func, context) {
     this.img.inputEnabled = true;
     this.img.events.onInputDown.add(func, context);
+  }
+
+  getValue = () => {
+    return this.value;
   }
 }
 

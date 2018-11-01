@@ -107,6 +107,8 @@ class Start extends window.Phaser.State {
     this.load.image('btn_prodLocked', 'images/btn_prodLocked.png');
     this.load.image('btn_tick', 'images/btn_tick.png');
     this.load.image('btn_tick_activated', 'images/btn_tick_activated.png');
+    this.load.image('btn_collect', 'images/btn_collect.png');
+    this.load.image('btn_share2', 'images/btn_share2.png');
     this.load.image('bubble_percentage', 'images/bubble_percentage.png');
     this.load.image('clock_yellow', 'images/clock_yellow.png');
     this.load.image('progressBarSaleBoost', 'images/progressBarSaleBoost.png');
@@ -124,6 +126,7 @@ class Start extends window.Phaser.State {
     this.load.image('icon_base', 'images/icon_base.png');
     this.load.image('icon_skill_factory2', 'images/icon_skill_factory2.png');
     this.load.image('icon_skill_factory1', 'images/icon_skill_factory1.png');
+    this.load.image('idle_chunk', 'images/idle_bunk.png');
     this.load.image('skill_panel_heading', 'images/skill_panel_heading.png');
   }
 

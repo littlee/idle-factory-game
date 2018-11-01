@@ -91,7 +91,7 @@ class ModalRaw extends window.Phaser.Group {
     // init group 的 position & size: this.x this.y this.w this.h
     this.x = (this.cameraView.width - this.w) / 2;
     this.y = (this.cameraView.height - this.h) / 2;
-    this.visible = false;
+    this.visible = this.close === 'visible' ? false : true;
   };
 
   _createOuterVeil = () => {

@@ -7,7 +7,7 @@ import BtnSuperCash from '../components/BtnSuperCash';
 
 import Warehouse from '../components/Warehouse';
 import Market from '../components/Market';
-import Workstation, { COLLECT_TYPES } from '../components/Workstation';
+import Workstation from '../components/Workstation';
 
 import WorkerWarehouse from '../components/WorkerWarehouse';
 import WorkerMarket from '../components/WorkerMarket';
@@ -21,13 +21,14 @@ import ModalRescources from '../components/ModalResources.js';
 import ModalAdCampaign from '../components/ModalAdCampaign';
 import ModalProdUpgrade from '../components/ModalProdUpgrade';
 import ModalSkill from '../components/ModalSkills.js';
+import ModalOffline from '../components/ModalOffline.js';
 
 import range from '../js/libs/_/range';
 import Big from '../js/libs/big.min';
-import { arrayIntersect } from '../utils';
+import { arrayIntersect, formatBigNum } from '../utils';
 
 import { upgradedMap } from '../js/config.js';
-import { LevelMap, prodUpgradeMap } from '../components/puedoLevelMap.js';
+import { prodUpgradeMap } from '../components/puedoLevelMap.js';
 import Production from '../store/Production.js';
 import moment from '../js/libs/moment.min.js';
 
@@ -146,6 +147,7 @@ class Game extends window.Phaser.State {
     this.modalAdCampaign = new ModalAdCampaign({
       game: this.game
     });
+
 
     // TODO: make 30 workstations
     const WORKSTATION_START_Y = 915;
@@ -844,6 +846,34 @@ class Game extends window.Phaser.State {
     prodUpgradeMap[productName][prodTexture].pieActivatedTimestamp = deadTs;
     let lastestKey = Production.getLatestTextureByKey(productName);
     this.updateProdTextureAfterUpgrade(productName, lastestKey);
+  }
+
+  showModalIdle = (value) => {
+    let now = moment.utc().format('x');
+    let diff = now - value;
+    let duration = moment.duration(diff);
+    let formattedMinutes = duration.asMinutes().toFixed(2);
+    if (formattedMinutes < 1) return false;
+    let idleValue = this.btnIdleCash.getValue();
+    let idleCoin = idleValue.times(formattedMinutes);
+
+    let hourLeft = Math.floor(formattedMinutes / 60);
+    let minuteLeft = formattedMinutes % 60;
+    let humanizedTime = hourLeft
+      ? Math.floor(minuteLeft)
+        ? `${hourLeft}小时${Math.floor(minuteLeft)}分钟`
+        : `${hourLeft}小时`
+      : `${minuteLeft}分钟`
+
+    this.modalOffline = new ModalOffline({
+      game: this.game,
+      coin: idleCoin,
+      duration: humanizedTime
+    });
+
+    console.log('距离上次离开的已过去：', formattedMinutes, '分钟');
+    console.log('当下每分钟可以生产金额：', formatBigNum(idleCoin));
+    console.log('this.modalOffline: ', this.modalOffline.visible);
   }
 }
 
