@@ -798,7 +798,8 @@ class Game extends window.Phaser.State {
 		let diff = now - value;
 		let duration = moment.duration(diff);
 		let formattedMinutes = Math.floor(duration.asMinutes());
-		if (formattedMinutes < 1) return false;
+    if (formattedMinutes < 1) return false;
+
 		let idleValue = this.btnIdleCash.getValue();
 		let idleCoin = idleValue.times(formattedMinutes);
 
