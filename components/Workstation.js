@@ -87,6 +87,7 @@ function getInitInput(output) {
 class Workstation extends window.Phaser.Group {
   constructor(game, x, y, stationLevel = 1, index = 1) {
     super(game);
+    this.state = this.game.state.states[this.game.state.current];
     this.x = x;
     this.y = y;
 
@@ -489,6 +490,10 @@ class Workstation extends window.Phaser.Group {
 
     if (this._onAfterBuyFunc) {
       this._onAfterBuyFunc.call(this._onAfterBuyContext, type, priceOfType);
+    }
+    if (this._data.index !== 0) {
+      console.log('ws: ', this._data.level);
+      this.state.updateIdleCash();
     }
   }
 

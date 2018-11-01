@@ -593,6 +593,7 @@ class ModalLevel extends ModalRaw {
     }
   };
 
+  // bug-prone
   _updateProducePerMin4Ws = () => {
     if (this._data.type !== 'workstation') return false;
     let value = this.MAP[`level${this._data.currLevel}`].output;
@@ -624,6 +625,7 @@ class ModalLevel extends ModalRaw {
       }
       this.prod.updateItemValue();
       this.iconPower.updateItemValue();
+      this._updateBtnIdleCash();
     }
   };
 
@@ -658,7 +660,7 @@ class ModalLevel extends ModalRaw {
   _getMaxTransportedValue = opts => {
     if (this._data.type === 'market') {
       let allTime = getMrtWorkerTimePerRound(
-        5,
+        this.state.getCurrWorkingWsCount(),
         opts.capacity,
         opts.loadingSpeed,
         opts.walkSpeed
@@ -666,7 +668,7 @@ class ModalLevel extends ModalRaw {
       return getMaxTransportedSpeed(allTime, opts.capacity);
     } else if (this._data.type === 'warehouse') {
       let allTime = getWhsWorkerTimePerRound(
-        5,
+        this.state.getCurrWorkingWsCount(),
         opts.capacity,
         opts.loadingSpeed,
         opts.walkSpeed
