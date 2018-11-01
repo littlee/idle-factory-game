@@ -138,12 +138,10 @@ class Workstation extends window.Phaser.Group {
     this.buyBtnSuperCash.alignIn(this.table, window.Phaser.TOP_LEFT, -5, -5);
     this.buyBtnSuperCash.inputEnabled = true;
     this.buyBtnSuperCash.input.priorityID = PRIORITY_ID;
-    this.buyBtnSuperCash.events.onInputUp.add(
-      (target, pointer, isOver) => {
-        if (!isOver) return false;
-        this.buy.bind(this, 'superCash')();
-      }
-    );
+    this.buyBtnSuperCash.events.onInputUp.add((target, pointer, isOver) => {
+      if (!isOver) return false;
+      this.buy.bind(this, 'superCash')();
+    });
 
     this.buyBtnSuperCashText = this.game.make.text(0, 0, '0', BTN_TEXT_STYLE);
     this.buyBtnSuperCashText.alignIn(
@@ -157,12 +155,10 @@ class Workstation extends window.Phaser.Group {
     this.buyBtnCash.alignIn(this.table, window.Phaser.TOP_RIGHT, -10, -5);
     this.buyBtnCash.inputEnabled = true;
     this.buyBtnCash.input.priorityID = PRIORITY_ID;
-    this.buyBtnCash.events.onInputUp.add(
-      (target, pointer, isOver) => {
-        if (!isOver) return false;
-        this.buy.bind(this, 'cash')();
-      }
-    );
+    this.buyBtnCash.events.onInputUp.add((target, pointer, isOver) => {
+      if (!isOver) return false;
+      this.buy.bind(this, 'cash')();
+    });
 
     this.buyBtnCashText = this.game.make.text(0, 0, '0', BTN_TEXT_STYLE);
     this.buyBtnCashText.alignIn(
@@ -258,21 +254,12 @@ class Workstation extends window.Phaser.Group {
       0
     );
 
-    this.outputItemsAniLeft = new ResourceEmitter(
+    this.outputItemsAni = new ResourceEmitter(
       this.game,
-      this.table.x + this.table.width / 2 - 30,
-      this.table.y + this.table.height / 2 - 20,
+      this.table.x + this.table.width / 2,
+      this.table.y + this.table.height / 2 - 30,
       SourceImg.get(this._data.output),
-      -100,
-      100
-    );
-
-    this.outputItemsAniRight = new ResourceEmitter(
-      this.game,
-      this.table.x + this.table.width / 2 + 30,
-      this.table.y + this.table.height / 2 - 20,
-      SourceImg.get(this._data.output),
-      100,
+      -120,
       100
     );
 
@@ -346,8 +333,7 @@ class Workstation extends window.Phaser.Group {
     this.productGroup.add(this.inputItemGroup);
     this.productGroup.add(this.outputItems);
     this.productGroup.add(this.inputItemsAni);
-    this.productGroup.add(this.outputItemsAniLeft);
-    this.productGroup.add(this.outputItemsAniRight);
+    this.productGroup.add(this.outputItemsAni);
     this.productGroup.add(this.boxHolderProd);
     this.productGroup.add(this.boxHolderCash);
     this.productGroup.add(this.boxCollect);
@@ -574,10 +560,11 @@ class Workstation extends window.Phaser.Group {
       this.game.time.events.remove(this.outputTimer);
     }
     this.inputItemsAni && this.inputItemsAni.start();
+    this.outputItemsAni.start();
     if (this.getCollectType() === COLLECT_TYPES.PROD) {
-      this.outputItemsAniLeft.start();
+      this.outputItemsAni.setXSpeed(-120, -120);
     } else {
-      this.outputItemsAniRight.start();
+      this.outputItemsAni.setXSpeed(120, 120);
     }
 
     if (this._data.outputDelay === INIT_OUTPUT_DELAY) {
@@ -596,8 +583,7 @@ class Workstation extends window.Phaser.Group {
   stopWork() {
     this._data.isWorking = false;
     this.inputItemsAni.stop();
-    this.outputItemsAniLeft.stop();
-    this.outputItemsAniRight.stop();
+    this.outputItemsAni.stop();
     this.worker.stop();
     if (this.outputTimer) {
       this.game.time.events.remove(this.outputTimer);
@@ -661,19 +647,23 @@ class Workstation extends window.Phaser.Group {
       this.boxCollect.alignIn(this.boxHolderCash, window.Phaser.CENTER, 0, -5);
       this.boxHolderCash.frame = 1;
       this.boxHolderProd.frame = 0;
-      this.outputItemsAniLeft.stop();
       if (!this._getHasNoInput()) {
         this.inputItemsAni.start();
-        this.outputItemsAniRight.start();
+        this.outputItemsAni.setXSpeed(120, 120);
+      }
+      else {
+        this.outputItemsAni.stop();
       }
     } else if (collectType === COLLECT_TYPES.PROD) {
       this.boxCollect.alignIn(this.boxHolderProd, window.Phaser.CENTER, 0, -5);
       this.boxHolderProd.frame = 1;
       this.boxHolderCash.frame = 0;
-      this.outputItemsAniRight.stop();
       if (!this._getHasNoInput()) {
         this.inputItemsAni.start();
-        this.outputItemsAniLeft.start();
+        this.outputItemsAni.setXSpeed(-120, -120);
+      }
+      else {
+        this.outputItemsAni.stop();
       }
     }
   }
@@ -725,8 +715,7 @@ class Workstation extends window.Phaser.Group {
 
     let outputTexture = SourceImg.get(outputKey);
     this.outputItems.changeTexture(outputKey);
-    this.outputItemsAniLeft.changeTexture(outputTexture);
-    this.outputItemsAniRight.changeTexture(outputTexture);
+    this.outputItemsAni.changeTexture(outputTexture);
     this.outputGiveAni.changeTexture(outputTexture);
 
     this.productBtnItem.loadTexture('material', outputTexture);
@@ -765,8 +754,7 @@ class Workstation extends window.Phaser.Group {
     this.inputItemsAni.changeTexture(inputTextureKeys);
 
     let outputTextureKey = SourceImg.get(this._data.output);
-    this.outputItemsAniLeft.changeTexture(outputTextureKey);
-    this.outputItemsAniRight.changeTexture(outputTextureKey);
+    this.outputItemsAni.changeTexture(outputTextureKey);
     this.outputGiveAni.changeTexture(outputTextureKey);
 
     this.productBtnItem.loadTexture('material', outputTextureKey);
