@@ -31,22 +31,22 @@ function getFontStyle(fSize, color, align, weight) {
 const SKILL_PRICE_MAP = {
   red: {
     bought1: {
-      coinNeeded: '100'
+      coinNeeded: '1000'
     },
     bought2: {
-      coinNeeded: '200'
+      coinNeeded: '20000'
     },
     bought3: {
-      coinNeeded: '300'
+      coinNeeded: '300000'
     },
     bought4: {
-      coinNeeded: '400'
+      coinNeeded: '400000'
     },
     bought5: {
-      coinNeeded: '500'
+      coinNeeded: '500000'
     },
     bought6: {
-      coinNeeded: '600'
+      coinNeeded: '600000'
     }
   },
   yellow: {}

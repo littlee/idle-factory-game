@@ -492,7 +492,6 @@ class Workstation extends window.Phaser.Group {
       this._onAfterBuyFunc.call(this._onAfterBuyContext, type, priceOfType);
     }
     if (this._data.index !== 0) {
-      console.log('ws: ', this._data.level);
       this.state.updateIdleCash();
     }
   }
@@ -515,8 +514,9 @@ class Workstation extends window.Phaser.Group {
   }
 
   setProducePerMin = value => {
-    console.log('producePerMin set!', value);
+    // console.log('producePerMin set!', value);
     this._data.producePerMin = Big(value);
+    this.state.updateIdleCash();
   };
 
   getProducePerMin = () => {

@@ -677,12 +677,11 @@ class Game extends window.Phaser.State {
 		let marketMaxCash = this.modalMarket.getMarketMaxTransported();
 		let marketPart = marketMaxCash.times(mWorkerCount);
     let filteredWsList = this.getCurrWorkingWsList();
-    console.log('filteredWsList: ', filteredWsList);
 		let wsPart =
 			filteredWsList.length === 1
 				? filteredWsList[0].getProducePerMin()
 				: filteredWsList.map(item => item.getProducePerMin()).reduce((prev, curr) => prev.plus(curr));
-		console.log(`wsPart: ${wsPart}, marketPart: ${marketPart}`);
+		// console.log(`wsPart: ${wsPart}, marketPart: ${marketPart}`);
 		let result = wsPart.gte(marketPart) ? marketPart: wsPart ;
 		return result.div(20);
 	}
@@ -714,7 +713,6 @@ class Game extends window.Phaser.State {
 	// 升级好产品之后workstation的UI改，这里也要改工作台弹窗里头的UI
 	updateProdTextureAfterUpgrade = (prodName, lastestKey) => {
 		let workingGroup = this.workstationGroup.children.filter((item) => item.getIsBought());
-		console.log('workingGroup.length: ', workingGroup.length);
 		workingGroup.forEach((item, index) => {
 			item.updateTexture();
 			if (item.modalProdPick) {
@@ -799,7 +797,7 @@ class Game extends window.Phaser.State {
 		let now = moment.utc().format('x');
 		let diff = now - value;
 		let duration = moment.duration(diff);
-		let formattedMinutes = duration.asMinutes().toFixed(2);
+		let formattedMinutes = Math.floor(duration.asMinutes());
 		if (formattedMinutes < 1) return false;
 		let idleValue = this.btnIdleCash.getValue();
 		let idleCoin = idleValue.times(formattedMinutes);
@@ -819,7 +817,6 @@ class Game extends window.Phaser.State {
 
 	getCurrWorkingWsCount = () => {
 		let filtered = this.workstationGroup.children.filter((item) => item.getIsBought());
-		console.log('工作中的ws数目： ', filtered.length);
 		return filtered.length;
 	};
 
