@@ -1,16 +1,21 @@
 import serverConfig from '../server_config';
 // import Big from '../js/libs/big.min.js';
 // import { formatBigNum } from '../utils';
+import moment from '../js/libs/moment.min.js';
 
 import atlasData from '../__static/images/atlas/material';
 // console.log(atlas);
 
 class Start extends window.Phaser.State {
-  init() {
+  init(payload) {
     this.stage.backgroundColor = '#fff';
     this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
     this.scale.pageAlignHorizontally = true;
     this.scale.pageAlignVertically = true;
+
+    if (payload !== undefined) {
+      this.payload = payload;
+    }
   }
 
   preload() {
@@ -131,10 +136,11 @@ class Start extends window.Phaser.State {
   }
 
   create() {
+    if (this.payload) {
+      this.state.start('Game', true, false, this.payload);
+    }
     this.state.start('Game');
     // this.state.start('Test');
-
-    // console.log(formatBigNum(Big('123456789123456789')))
   }
 }
 

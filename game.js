@@ -24,34 +24,28 @@ var game = new Phaser.Game({
 //   enableDebug: true
 // });
 
-try {
-  window.wx.onHide(() => {
-    console.log('隐藏到后台');
-    window.wx.setStorageSync('hideTs', moment.utc().format('x'));
-  });
-
-  window.wx.onShow(() => {
-    // 计算时间差值，计算出分钟数，传入GameState的方法。控制弹窗的出现
-    console.log('恢复到前台');
-    let value = window.wx.getStorageSync('hideTs');
-    if (value === undefined) {
-      console.log('首次加载');
-    } else {
-      let currState = game.state.current;
-      if (currState === 'Game') {
-        game.state.states[currState].showModalIdle(value);
-      }
-    }
-  });
-} catch(e) {
-  console.log('wx lifecycle hook err: ', e);
-}
-
-
-
 window.game = game;
 
 game.state.add('Start', StartState, false);
 game.state.add('Game', GameState, false);
 game.state.add('Test', TestState, false);
-game.state.start('Start');
+
+window.wx.onHide(() => {
+  console.log('隐藏到后台');
+  window.wx.setStorageSync('hideTs', moment.utc().format('x'));
+});
+
+window.wx.onShow(() => {
+  // 计算时间差值，计算出分钟数，传入GameState的方法。控制弹窗的出现
+  console.log('恢复到前台');
+  let payload = window.wx.getStorageSync('hideTs');
+  let currState = game.state.states[game.state.current];
+  console.log('hideTs:',  payload);
+  // test
+  if (currState === undefined) {
+    game.state.start('Start', true, false, payload);
+  } else {
+    currState._showModalIdle(payload);
+  }
+});
+

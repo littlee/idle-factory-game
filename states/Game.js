@@ -49,6 +49,11 @@ let workstationPrice = range(30).map((index) => {
 });
 
 class Game extends window.Phaser.State {
+  init(payload) {
+    if (payload) {
+      this.payload = payload;
+    }
+  }
 	// create(): execution order inside MATTERS!!
 	create() {
 		// this.result = true;
@@ -198,11 +203,15 @@ class Game extends window.Phaser.State {
 		this.modalAdCampaign = new ModalAdCampaign({
 			game: this.game
 		});
-
     // for cash-value-responsive-UI-related
 		this._updateWhateverNeed2KnowCoinValue();
 		// 需要在实例化market modal之后再执行
-		this.updateIdleCash();
+    this.updateIdleCash();
+
+    if (this.payload) {
+      console.log('来自start');
+      this._showModalIdle(this.payload);
+    }
 	}
 
 	update() {
@@ -793,11 +802,13 @@ class Game extends window.Phaser.State {
 		this.updateProdTextureAfterUpgrade(productName, lastestKey);
 	};
 
-	showModalIdle = (value) => {
-		let now = moment.utc().format('x');
+	_showModalIdle = (value) => {
+    let now = moment.utc().format('x');
+    console.log('now value: ', now, value);
 		let diff = now - value;
 		let duration = moment.duration(diff);
-		let formattedMinutes = Math.floor(duration.asMinutes());
+    let formattedMinutes = Math.floor(duration.asMinutes());
+    // console.log('formattedMinutes: ', formattedMinutes);
     if (formattedMinutes < 1) return false;
 
 		let idleValue = this.btnIdleCash.getValue();
