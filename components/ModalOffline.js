@@ -59,7 +59,6 @@ class ModalOffline extends ModalRaw {
 
 	_getContextGroupInit = () => {
     const OFFSET = this.headingH;
-    console.log('检查： ', formatBigNum(this.coin));
     this.chunk = this.game.make.image((this.w - 444) / 2, OFFSET * 2, 'idle_chunk');
 
     this.timeDesTxt = this.game.make.text(OFFSET, 0, CONFIG.desPart + this.duration, getFontStyle());

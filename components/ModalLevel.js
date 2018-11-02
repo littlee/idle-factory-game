@@ -544,8 +544,7 @@ class ModalLevel extends ModalRaw {
       this._data.currLevel + increment <= Object.keys(this.MAP).length
     ) {
       increment = increment + 1;
-      futureOptCoin += this._getCustomizedLevelInfoFromMap(increment)
-        .coinNeeded;
+      futureOptCoin = Big(futureOptCoin).plus(this._getCustomizedLevelInfoFromMap(increment).coinNeeded);
       tmpBig = Big(futureOptCoin);
     }
     // console.log('settled for curr vs needed: ', currCoin.valueOf(), tmpBig.minus(this._getCustomizedLevelInfoFromMap(increment).coinNeeded).valueOf());
@@ -553,6 +552,7 @@ class ModalLevel extends ModalRaw {
       this._data.currLevel + increment > Object.keys(this.MAP).length
         ? Object.keys(this.MAP).length
         : this._data.currLevel + increment - 1;
+    // console.log('this.maxAvailableLevel: ', this.maxAvailableLevel);
     return this.maxAvailableLevel;
   };
 
