@@ -15,13 +15,14 @@ const CONFIG = {
   priceTags: {
     'ore': '0',
     'copper': '1000',
-    'oilBarrel': '2000', //'3000000',
+    'barrel': '2000', //'3000000',
     'plug': '3000', //'4000000000',
     'aluminium': '50000000', //'5000000000000',
     'rubber': '900000000', //'6000000000000000'
   },
 };
 
+// item初始化的数据来自resourceTable, viz., warehouse
 class ModalRescources extends ModalRaw {
   constructor({
     game,
@@ -44,92 +45,28 @@ class ModalRescources extends ModalRaw {
   _getInit = () => {
     this._prepBeforeContentGroup();
     /* real content goes here */
-    this.getContextGroupInit();
+    this._getContextGroupInit();
 
     this._prepAfterContentGroup();
   };
 
-  getContextGroupInit = () => {
+  _getContextGroupInit = () => {
     // 添加的东西 y 要 >= this.headingH
     const OFFSET = this.headingH;
-    this.re1 = new ResourceItem({
-      game: this.game,
-      parent: this.contentGroup,
-      key: 'reso_ore',
-      pWidth: this.w,
-      y: OFFSET,
-      resourcesTable: this.resourcesTable,
-      coinNeeded: CONFIG.priceTags.ore,
-      cashNeeded: null
-    });
-
-    this.re2 = new ResourceItem({
-      game: this.game,
-      parent: this.contentGroup,
-      key: 'reso_copper',
-      pWidth: this.w,
-      y: OFFSET + 85 + 17,
-      resourcesTable: this.resourcesTable,
-      coinNeeded: CONFIG.priceTags.copper,
-      cashNeeded: null
-    });
-
-    this.re3 = new ResourceItem({
-      game: this.game,
-      parent: this.contentGroup,
-      key: 'reso_barrel',
-      pWidth: this.w,
-      y: OFFSET + 85 * 2 + 17 * 2,
-      resourcesTable: this.resourcesTable,
-      coinNeeded: CONFIG.priceTags.oilBarrel,
-      cashNeeded: null
-    });
-
-    this.re4 = new ResourceItem({
-      game: this.game,
-      parent: this.contentGroup,
-      key: 'reso_plug',
-      pWidth: this.w,
-      y: OFFSET + 85 * 3 + 17 * 3,
-      resourcesTable: this.resourcesTable,
-      coinNeeded: CONFIG.priceTags.plug,
-      cashNeeded: null
-    });
-
-    this.re5 = new ResourceItem({
-      game: this.game,
-      parent: this.contentGroup,
-      key: 'reso_aluminium',
-      pWidth: this.w,
-      y: OFFSET + 85 * 4 + 17 * 4,
-      resourcesTable: this.resourcesTable,
-      coinNeeded: CONFIG.priceTags.aluminium,
-      cashNeeded: null
-    });
-
-    this.re6 = new ResourceItem({
-      game: this.game,
-      parent: this.contentGroup,
-      key: 'reso_rubber',
-      pWidth: this.w,
-      y: OFFSET + 85 * 5 + 17 * 5,
-      resourcesTable: this.resourcesTable,
-      coinNeeded: CONFIG.priceTags.rubber,
-      cashNeeded: null
+    let resoList = ['ore', 'copper', 'barrel', 'plug', 'aluminium', 'rubber'];
+    resoList.forEach((item, index) => {
+      this[`re${index + 1}`] = new ResourceItem({
+        game: this.game,
+        parent: this.contentGroup,
+        key: `reso_${item}`,
+        pWidth: this.w,
+        y: OFFSET + 85 * index + 17 * index,
+        resourcesTable: this.resourcesTable,
+        coinNeeded: CONFIG.priceTags[item],
+        cashNeeded: null
+      });
     });
   }
-
-  // 不用
-  getInfo2Stored = () => {
-    let info = {};
-    info.re1 = this.re1.getData();
-    info.re2 = this.re2.getData();
-    info.re3 = this.re3.getData();
-    info.re4 = this.re4.getData();
-    info.re5 = this.re5.getData();
-    info.re6 = this.re6.getData();
-    return info;
-  };
 
   // 更新BtnBuy
   updateBtnBuyUI = (currCoin) => {

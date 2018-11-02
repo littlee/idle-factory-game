@@ -13,7 +13,7 @@ import BoxCollect from './BoxCollect';
 import SourceImg from '../resource/SourceImg';
 import Production from '../store/Production';
 
-import { OUTPUT_INPUT_MAP } from '../js/config.js';
+import { OUTPUT_INPUT_INFO } from '../js/config.js';
 
 const MAX_INPUT_PILE = 2;
 const A_MINUTE = 60000;
@@ -75,7 +75,7 @@ const OUTPUT_PRODUCE_MAP = {
 const TEXTURE_SCALE = 0.43;
 
 function getInitInput(output) {
-  return OUTPUT_INPUT_MAP[output].reduce((input, key) => {
+  return OUTPUT_INPUT_INFO[output].inputList.reduce((input, key) => {
     input[key] = {
       amount: Big(0),
       amountHu: '0'
@@ -209,7 +209,8 @@ class Workstation extends window.Phaser.Group {
       if (!isOver) return false;
       this.modalProdPick = new ModalProdPick({
         game: this.game,
-        workstation: this
+        workstation: this,
+        resourcesTable: this.state.warehouse
       });
       this.modalProdPick.onDestroy.add(() => {
         console.log('destroy done modalProdPick');
@@ -421,7 +422,7 @@ class Workstation extends window.Phaser.Group {
   _getHasNoInput() {
     let { input, output } = this._data;
 
-    let inputAmt = Object.keys(pick(input, OUTPUT_INPUT_MAP[output])).map(
+    let inputAmt = Object.keys(pick(input, OUTPUT_INPUT_INFO[output].inputList)).map(
       key => {
         return input[key].amount;
       }
@@ -690,7 +691,7 @@ class Workstation extends window.Phaser.Group {
     let { input } = this._data;
     // return Object.keys(input);
     // console.log('xx', pick(input, ['ore']));
-    return Object.keys(pick(input, OUTPUT_INPUT_MAP[this._data.output]));
+    return Object.keys(pick(input, OUTPUT_INPUT_INFO[this._data.output].inputList));
   }
 
   setOutput(outputKey) {
@@ -726,7 +727,7 @@ class Workstation extends window.Phaser.Group {
     this.productBtnItem.loadTexture('material', outputTexture);
 
     let { input } = this._data;
-    let inputKeys = OUTPUT_INPUT_MAP[this._data.output];
+    let inputKeys = OUTPUT_INPUT_INFO[this._data.output].inputList;
     this.inputItemGroup.forEach(inItem => {
       let index = this.inputItemGroup.getChildIndex(inItem);
       if (inputKeys[index]) {

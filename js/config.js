@@ -1,70 +1,109 @@
-export const OUTPUT_INPUT_MAP = {
-  steel: ['ore'],
-  can: ['ore'],
-  drill: ['steel'],
-  toaster: ['steel', 'can'],
 
-  battery: ['copper'],
-  coffeeMachine: ['copper'],
-  mp3: ['battery'],
-  speaker: ['battery', 'mp3'],
+export const OUTPUT_INPUT_INFO = {
+  steel: {
+    inputList: ['ore'],
+    cnDes: '2钢筋',
+  },
+  can: {
+    inputList: ['ore'],
+    cnDes: '2罐子'
+  },
+  drill: {
+    inputList: ['steel'],
+    cnDes: '1电砖'
+  },
+  toaster: {
+    inputList: ['steel', 'can'],
+    cnDes: '1烤箱'
+  },
 
-  plasticBar: ['barrel'],
-  wheel: ['barrel'],
-  screen: ['plasticBar'],
-  phone: ['plasticBar', 'screen'],
+  battery: {
+    inputList: ['copper'],
+    cnDes: '2电池'
+  },
+  coffeeMachine: {
+    inputList: ['copper'],
+    cnDes: '2咖啡机'
+  },
+  mp3: {
+    inputList: ['battery'],
+    cnDes: '3MP3'
+  },
+  speaker: {
+    inputList: ['battery', 'mp3'],
+    cnDes: '1扩音器'
+  },
 
-  circuit: ['plug'],
-  tv: ['plug'],
-  computer: ['circuit'],
-  vr: ['circuit', 'computer'],
+  plasticBar: {
+    inputList: ['barrel'],
+    cnDes: '2塑料条'
+  },
+  wheel: {
+    inputList: ['barrel'],
+    cnDes: '2车轮'
+  },
+  screen: {
+    inputList: ['plasticBar'],
+    cnDes: '3屏幕'
+  },
+  phone: {
+    inputList: ['plasticBar', 'screen'],
+    cnDes: '1手机'
+  },
+
+  circuit: {
+    inputList: ['plug'],
+    cnDes: '2芯片'
+  },
+  tv: {
+    inputList: ['plug'],
+    cnDes: '1TV'
+  },
+  computer: {
+    inputList: ['circuit'],
+    cnDes: '1电脑'
+  },
+  vr: {
+    inputList: ['circuit', 'computer'],
+    cnDes: '1VR'
+  },
 
   // aluminium goes here
-  engine: ['aluminium'],
-  solarPanel: ['aluminium'],
-  car: ['engine'],
-  telescope: ['engine', 'car'],
+  engine: {
+    inputList: ['aluminium'],
+    cnDes: '2引擎'
+  },
+  solarPanel: {
+    inputList: ['aluminium'],
+    cnDes: '3太阳能板'
+  },
+  car: {
+    inputList: ['engine'],
+    cnDes: '3汽车'
+  },
+  telescope: {
+    inputList: ['engine', 'car'],
+    cnDes: '1望远镜'
+  },
 
   // rubber goes here
-  projector: ['rubber'],
-  headset: ['rubber'],
-  walkieTalkie: ['projector'],
-  radio: ['projector', 'walkieTalkie']
+  projector: {
+    inputList: ['rubber'],
+    cnDes: '1投影仪'
+  },
+  headset: {
+    inputList: ['rubber'],
+    cnDes: '2耳机'
+  },
+  walkieTalkie: {
+    inputList: ['projector'],
+    cnDes: '对讲机'
+  },
+  radio: {
+    inputList: ['projector', 'walkieTalkie'],
+    cnDes: '2收音机'
+  },
 };
-
-export const PROD_DES = {
-  steel: '2钢筋',
-  can: '2罐子',
-  drill: '1电砖',
-  toaster: '1烤箱',
-
-  battery: '2电池',
-  coffeeMachine: '2咖啡机',
-  mp3: '3MP3',
-  speaker: '1扩音器',
-
-  plasticBar: '2塑料条',
-  wheel: '2车轮',
-  screen: '3屏幕',
-  phone: '1手机',
-
-  circuit: '2芯片',
-  tv: '1TV',
-  computer: '1电脑',
-  vr: '1VR',
-
-  // aluminium goes here
-  engine: '2引擎',
-  solarPanel: '3太阳能板',
-  car: '3汽车',
-  telescope: '1望远镜',
-
-  projector: '1投影仪',
-  headset: '2耳机',
-  walkieTalkie: '3对讲机',
-  radio: '2收音机'
-};
-
 export const CN_NAME_MAP = {
   ore: '铁矿',
   copper: '黄铜',

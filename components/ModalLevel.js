@@ -106,6 +106,7 @@ function getValidImgKey(name) {
 /*
 这里默认都给children boost priority到1001，所以scroll的input是听不到的。这里不需要滑动，所以没关系。
 根据初始化弹窗拿到的当前等级数，来初始化弹窗内item的curr和futrue显示，外加升级btn的数额和颜色。
+如果modal是workstation, output所需要的input是来自所属的workstation.
 */
 class ModalLevel extends ModalRaw {
   constructor({

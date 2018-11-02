@@ -203,11 +203,12 @@ class ProdPickFrame extends window.Phaser.Group {
 
   }
 
+  // 拿到本frame当前第一个还没被购买的item
   _getNextAvailableLockedItemIdx = () => {
-    let targetItem = this.itemGroup.children.findIndex(item => {
+    let targetIdx = this.itemGroup.children.findIndex(item => {
       return item.flagBought === false;
     });
-    return targetItem === -1 ? null : targetItem;
+    return targetIdx === -1 ? null : targetIdx;
   }
 
   updateItemTexture = (prodName) => {
@@ -238,16 +239,21 @@ class ProdPickFrame extends window.Phaser.Group {
     }
   }
 
+  /* 前提frame解锁时候，第一个item一定是buyable的UI。
+  所以，frame有4种UI: 1)第一个item是buyable,剩下3个是locked;
+  2) 第一个/第二个是bought, 第二/第三个是buyable, 第四个是locked；
+  3）第1-3个都是bought, 第四个是buyable, 没有locked。
+  4）4个都是bought */
   showCorrectFrameUI = () => {
+    // 拿到当前即将被设置成buyable状态的item，可能是个null，如果frame是第四种状态的话
     let targetIdx = this._getNextAvailableLockedItemIdx();
-
     if (targetIdx === null) return true;
+
     this.itemGroup.children[targetIdx].setItem2BuyableUI();
     if (targetIdx + 1 <= this.itemGroup.children.length - 1) {
       this.itemGroup.children[targetIdx + 1].setItem2LockedUI();
     }
   }
-
 
 
   getUnlocked = () => {

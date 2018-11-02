@@ -1,8 +1,7 @@
-import { OUTPUT_INPUT_MAP, PROD_DES, prod_info } from '../js/config.js';
 import Big from '../js/libs/big.min';
 import { formatBigNum } from '../utils';
 
-import { upgradedMap } from '../js/config.js';
+import { OUTPUT_INPUT_INFO, prod_info, upgradedMap } from '../js/config.js';
 import Production from '../store/Production.js';
 
 const CONFIG = {
@@ -38,12 +37,12 @@ class ProdPickItem extends window.Phaser.Group {
 
     this.prodOrder = prodOrder;
     this.outputKey = output; // 需要根据product的等级来变化UI
-    this.inputKeyList = OUTPUT_INPUT_MAP[output];
+    this.inputKeyList = OUTPUT_INPUT_INFO[output].inputList;
 
     this.price = Big(prod_info[output].price);
     this.coinNeeded = Big(prod_info[output].coinNeeded);
     this.cashNeeded = prod_info[output].cashNeeded;
-    this.prodDes = PROD_DES[output];
+    this.prodDes = OUTPUT_INPUT_INFO[output].cnDes;
 
     this._getInit();
   }

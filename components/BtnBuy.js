@@ -1,6 +1,4 @@
-// import Big from '../js/libs/big.min';
 import { formatBigNum } from '../utils';
-import { resoList } from '../js/config.js';
 /*
 处理成组件，显示的金额通过传入显示，调用fn来实现改动。可以实时反映当前coin的数目够不够买东西。
 【问题】功能是相似的，但是购买按钮的尺寸大小不一。
@@ -23,7 +21,7 @@ const INIT = {
   boughtFlag: false
 };
 
-// 如果是作为item的话
+// 单单给 ModalResource 用, 购买了原料只需要去改变resourceTable的currentGoods
 class BtnBuy extends window.Phaser.Group {
   constructor({
     game,
@@ -37,14 +35,13 @@ class BtnBuy extends window.Phaser.Group {
 
   }) {
     super(game, undefined);
-    this.resoList = resoList;
+    this.state  = this.game.state.states[this.game.state.current];
 
     this.alignToObj = alignToObj;
     this.resourcesTable = resourcesTable;
     this.can = false;
     this.target2buy = target2buy;
     this.upperLayer = upperLayer;
-    this.state  = this.game.state.states[this.game.state.current];
 
     this.keyCoinAble = 'btn_cash_able2buy';
     this.keyCoinUnable = 'btn_cash_unable2buy';
@@ -96,6 +93,29 @@ class BtnBuy extends window.Phaser.Group {
     return this._data;
   }
 
+  _handleClick = (target, pointer, isOver) => {
+    if (!isOver) return false;
+    if (this.can === true) {
+      this.resourcesTable.addGood(this.target2buy);
+      this._setBoughtFlagTrue();
+      // 这里去拿state的方法，减coin + 让modalProdPick的frame解锁
+      this.state.subtractCash(this._data.coinNeeded);
+      return true;
+    }
+    return false;
+  }
+
+  _setBoughtFlagTrue = () => {
+    this._data.boughtFlag = true;
+    this.btn.visible = !this._data.boughtFlag;
+    this.coinNeededTxt.visible = !this._data.boughtFlag;
+    this.iconTick.visible = this._data.boughtFlag;
+  };
+
+  _getFormattedCoin = () => {
+    return formatBigNum(this._data.coinNeeded);
+  }
+
   greyOutBtnOrNot = (currCoin) => {
     // first invoke, currCoin is undefined
     if (currCoin === undefined) return false;
@@ -111,30 +131,6 @@ class BtnBuy extends window.Phaser.Group {
 
   isBought = () => {
     return this._data.boughtFlag;
-  }
-
-  _handleClick = (target, pointer, isOver) => {
-    if (!isOver) return false;
-    if (this.can === true) {
-      this.resourcesTable.addGood(this.target2buy);
-      this._setBoughtFlagTrue();
-      // 这里去拿state的方法，减coin + 让modalProdPick的frame解锁
-      this.state.subtractCash(this._data.coinNeeded);
-      this.resoList.find(item => item.name === this.target2buy).unlocked = true;
-      return true;
-    }
-    return false;
-  }
-
-  _setBoughtFlagTrue = () => {
-    this._data.boughtFlag = true;
-    this.btn.visible = !this._data.boughtFlag;
-    this.coinNeededTxt.visible = !this._data.boughtFlag;
-    this.iconTick.visible = this._data.boughtFlag;
-  };
-
-  _getFormattedCoin = () => {
-    return formatBigNum(this._data.coinNeeded);
   }
 
   // _getFormattedCash = () => {

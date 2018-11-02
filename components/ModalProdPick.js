@@ -2,9 +2,8 @@ import ModalRaw from './ModalRaw.js';
 import ProdPickFrame from './ProdPickFrame.js';
 
 import range from '../js/libs/_/range';
-import { resoList } from '../js/config.js';
 
-// TODO: production Upgrade texture changing
+// frame是否解锁初始信息来自resourceTable, 即warehouse
 class ModalProdPick extends ModalRaw {
   constructor({
     game,
@@ -13,6 +12,7 @@ class ModalProdPick extends ModalRaw {
     boost = false,
     contentMargin = 100,
     workstation,
+    resourcesTable,
     close = 'destory'
   }) {
     super(
@@ -35,7 +35,8 @@ class ModalProdPick extends ModalRaw {
     this.workstation = workstation;
     this.workstationOutput = this.workstation.getOutputKey();
 
-    this.resoList = resoList;
+    this.currResoList = resourcesTable.getCurrentGoods();
+    console.log('this.currResoList',  this.currResoList);
     this._getInit();
 
     // 因为现在是关闭就destroy, 所以，在init的时候，需要自行先去初始化所有btn的正确UI。
@@ -58,29 +59,20 @@ class ModalProdPick extends ModalRaw {
   _getContextGroupInit = () => {
     const OFFSET = this.headingH;
     this.frameGroup = this.game.make.group();
+    let resoList = ['ore', 'copper', 'barrel', 'plug', 'aluminium', 'rubber'];
 
-    range(6).forEach((item) => {
-      this[`frame${item}`] = new ProdPickFrame({
+    resoList.forEach((item, index) => {
+      this[`frame${index}`] = new ProdPickFrame({
         game: this.game,
-        reso: this.resoList[item].name,
-        unlocked: this.resoList[item].unlocked,
+        reso: item,
+        unlocked: this.currResoList.indexOf(item) > -1,
         parentWidth: this.w,
-        offsetTop: OFFSET * 1.5 + (405 + 50) * item,
+        offsetTop: OFFSET * 1.5 + (405 + 50) * index,
         modal: this
       });
-      this.frameGroup.addChild(this[`frame${item}`]);
+      this.frameGroup.addChild(this[`frame${index}`]);
     });
     this._addAllChildren();
-  };
-
-  updateResoList = (newGoodsList) => {
-    // get curr added reso
-    let currAddedReso = newGoodsList[newGoodsList.length - 1];
-    let targetIdx = this.resoList.findIndex(item => {
-      return item.name === currAddedReso;
-    });
-    this.resoList[targetIdx].unlocked = true;
-    this[`frame${targetIdx}`].getUnlocked();
   };
 
   updateTexture = (prodName) => {

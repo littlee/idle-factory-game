@@ -52,6 +52,7 @@ class Game extends window.Phaser.State {
   init(payload) {
     if (payload) {
       this.payload = payload;
+      // 存好值给下面的初始化
     }
   }
 	// create(): execution order inside MATTERS!!
@@ -210,7 +211,7 @@ class Game extends window.Phaser.State {
 
     if (this.payload) {
       console.log('来自start');
-      this._showModalIdle(this.payload);
+      this.showModalIdle(this.payload);
     }
 	}
 
@@ -802,7 +803,7 @@ class Game extends window.Phaser.State {
 		this.updateProdTextureAfterUpgrade(productName, lastestKey);
 	};
 
-	_showModalIdle = (value) => {
+	showModalIdle = (value) => {
     let now = moment.utc().format('x');
     console.log('now value: ', now, value);
 		let diff = now - value;
@@ -834,7 +835,7 @@ class Game extends window.Phaser.State {
 
 	getCurrWorkingWsList = () => {
 		return this.workstationGroup.children.filter((item) => item.getIsBought());
-	};
+  };
 }
 
 export default Game;

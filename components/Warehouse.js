@@ -42,16 +42,17 @@ export const GOODS = {
   rubber: 'rubber'
 };
 
+// 从GameState拿currGoodsList来初始化
 class Warehouse extends window.Phaser.Group {
   static RESOURCE = ['ore', 'copper', 'barrel', 'plug', 'aluminium', 'rubber'];
 
-  constructor(game, x, y) {
+  constructor(game, x, y, currGoodsList) {
     super(game);
     this.x = x;
     this.y = y;
 
     this._data = {
-      currentGoods: []
+      currentGoods: currGoodsList ? currGoodsList : [],
     };
 
     this.table = this.game.make.image(0, 0, 'warehouse_table');
@@ -95,6 +96,7 @@ class Warehouse extends window.Phaser.Group {
     });
   }
 
+  // SAVE
   getCurrentGoods() {
     return this._data.currentGoods;
   }
