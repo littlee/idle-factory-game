@@ -1,7 +1,7 @@
 import Big from '../js/libs/big.min';
 import { formatBigNum } from '../utils';
 
-import { OUTPUT_INPUT_INFO, prod_info, upgradedMap } from '../js/config.js';
+import { OUTPUT_INPUT_INFO } from '../js/config.js';
 import Production from '../store/Production.js';
 
 const CONFIG = {
@@ -25,23 +25,23 @@ function getFontStyle(fSize, color, align, weight) {
   };
 }
 
+// 需要存下prodInfo, this.state.upgradedMap
 class ProdPickItem extends window.Phaser.Group {
   constructor({game, output, prodOrder, parentFrame}) {
     super(game);
     this.state = this.game.state.states[this.game.state.current];
     this.parentFrame = parentFrame;
-    this.itemMap = upgradedMap[parentFrame.reso].find(item => item.name === output);
+    this.itemMap = this.state.upgradedMap[parentFrame.reso].find(item => item.name === output);
 
-    this.flagBought = prod_info[output].bought; // share
-    this.flagActivated = prod_info[output].activated; // private
+    this.flagBought = this.state.prodInfo[output].bought; // share
+    this.flagActivated = this.state.prodInfo[output].activated; // private
+    this.price = Big(this.state.prodInfo[output].price);
+    this.coinNeeded = Big(this.state.prodInfo[output].coinNeeded);
+    this.cashNeeded = this.state.prodInfo[output].cashNeeded;
 
     this.prodOrder = prodOrder;
     this.outputKey = output; // 需要根据product的等级来变化UI
     this.inputKeyList = OUTPUT_INPUT_INFO[output].inputList;
-
-    this.price = Big(prod_info[output].price);
-    this.coinNeeded = Big(prod_info[output].coinNeeded);
-    this.cashNeeded = prod_info[output].cashNeeded;
     this.prodDes = OUTPUT_INPUT_INFO[output].cnDes;
 
     this._getInit();
@@ -74,7 +74,6 @@ class ProdPickItem extends window.Phaser.Group {
 
   _updateInputUI = () => {
     let reso = ['reso_ore', 'reso_copper', 'reso_aluminium', 'reso_rubber', 'reso_barrel', 'reso_plug'];
-     // this.input.forEach() loadTexture('')
      this.inputGroup.children.forEach((item, index) => {
       if (reso.indexOf(item.frameName) === -1) {
         let latestKey = Production.getLatestTextureByKey(this.inputKeyList[index]);
@@ -240,8 +239,8 @@ class ProdPickItem extends window.Phaser.Group {
       if (!isOver) return false;
       if (this.btnCoin.key === 'btn_prod_coin_disable') return false;
       this.state.subtractCash(this.coinNeeded);
-      this._makeFlagBoughtTrue();
-      this.setItem2BoughtNotActivatedUI();
+      this._makeFlagBoughtTrue(); // 该this.state.prodInfo的值。
+      this.setItem2BoughtNotActivatedUI(); // 被点击买了，则变成已经买的UI
       this.parentFrame.showCorrectFrameUI();
     });
   }
@@ -259,8 +258,8 @@ class ProdPickItem extends window.Phaser.Group {
 
   _makeFlagBoughtTrue = () => {
     this.flagBought = true;
-    this.itemMap.bought = true;
-    prod_info[this.outputKey].bought = true;
+    this.itemMap.bought = true; // update confing.js 中 updatedMap的值。
+    this.state.prodInfo[this.outputKey].bought = true; // update config.js 中 this.state.prodInfo的值。
   }
 
   _handleTickClick = () => {
@@ -276,17 +275,20 @@ class ProdPickItem extends window.Phaser.Group {
 
   getActivated = () => {
     this.flagActivated = true;
+    this.state.prodInfo[this.outputKey].activated = true;
   }
 
   getDeactivated = () => {
     this.flagActivated = false;
+    this.state.prodInfo[this.outputKey].activated = false;
   }
 
 
+  // 如果是正确的初始化信息，这里应该没问题
   _showInitUI = () => {
     let targetKey = this.parentFrame.modal.workstationOutput;
-
     if (this.outputKey === targetKey) {
+      console.log('curr targetKe: ', targetKey);
       this.getActivated();
       this.setItem2Activated();
     } else if (this.flagBought === true) {
@@ -302,17 +304,12 @@ class ProdPickItem extends window.Phaser.Group {
     this.panelTick.visible = false;
   }
 
-  // FIX ME!!!
   _showTheRightBtnCoinUI = (currCoin) => {
     if (currCoin.lt(this.coinNeeded)) {
       this.btnCoin.loadTexture('btn_prod_coin_disable', true);
     } else {
       this.btnCoin.loadTexture('btn_prod_coin', true);
     }
-  }
-
-  _setFlagBought2True = () => {
-    this.flagBought = true;
   }
 
   updateTexture = () => {

@@ -25,9 +25,9 @@ import ModalOffline from '../components/ModalOffline.js';
 
 import range from '../js/libs/_/range';
 import Big from '../js/libs/big.min';
-import { arrayIntersect, formatBigNum } from '../utils';
+import { arrayIntersect } from '../utils';
 
-import { upgradedMap } from '../js/config.js';
+import { upgradedMap, prodInfo } from '../js/config.js';
 import { prodUpgradeMap } from '../components/puedoLevelMap.js';
 import Production from '../store/Production.js';
 import moment from '../js/libs/moment.min.js';
@@ -49,17 +49,14 @@ let workstationPrice = range(30).map((index) => {
 });
 
 class Game extends window.Phaser.State {
-  init(payload) {
-    if (payload) {
-      this.payload = payload;
-      // 存好值给下面的初始化
-    }
-  }
+	init(payload) {
+		this.hideTs = payload ? payload.hideTs : undefined;
+		this.upgradedMap = payload ? payload.upgradedMap : upgradedMap; // 给prodPickItem, ModalResources
+    this.prodInfo = payload ? payload.prodInfo : prodInfo; // 给prodPickItem用
+    this.currGoodsList = payload? payload.currGoodsList : [];
+	}
 	// create(): execution order inside MATTERS!!
 	create() {
-		// this.result = true;
-		this.upgradedMap = upgradedMap;
-
 		this.physics.startSystem(window.Phaser.Physics.ARCADE);
 		// bg of warehouse of raw material
 		this.bgGroup = this.game.add.group();
@@ -204,15 +201,15 @@ class Game extends window.Phaser.State {
 		this.modalAdCampaign = new ModalAdCampaign({
 			game: this.game
 		});
-    // for cash-value-responsive-UI-related
+		// for cash-value-responsive-UI-related
 		this._updateWhateverNeed2KnowCoinValue();
 		// 需要在实例化market modal之后再执行
-    this.updateIdleCash();
+		this.updateIdleCash();
 
-    if (this.payload) {
-      console.log('来自start');
-      this.showModalIdle(this.payload);
-    }
+		if (this.hideTs) {
+			console.log('来自start');
+			this.showModalIdle(this.hideTs);
+		}
 	}
 
 	update() {
@@ -464,9 +461,8 @@ class Game extends window.Phaser.State {
 		};
 	}
 
+	// top and bottom menu bar
 	_createMenus = () => {
-		// top and bottom menu bar
-
 		// top
 		this.menuTop = this.add.graphics();
 		this.menuTop.beginFill(0x5a5858);
@@ -577,7 +573,7 @@ class Game extends window.Phaser.State {
 		this.warehouseGround.drawRect(0, 0, this.world.width / 2, 674);
 		this.warehouseGround.endFill();
 
-		this.warehouse = new Warehouse(this.game, 100, 450);
+		this.warehouse = new Warehouse(this.game, 100, 450, this.currGoodsList);
 		this.warehouse.onClick((target, pointer, isOver) => {
 			if (isOver) {
 				this.modalRescources.visible = true;
@@ -686,13 +682,13 @@ class Game extends window.Phaser.State {
 		let mWorkerCount = this.modalMarket.getMarketWorkerNumber();
 		let marketMaxCash = this.modalMarket.getMarketMaxTransported();
 		let marketPart = marketMaxCash.times(mWorkerCount);
-    let filteredWsList = this.getCurrWorkingWsList();
+		let filteredWsList = this.getCurrWorkingWsList();
 		let wsPart =
 			filteredWsList.length === 1
 				? filteredWsList[0].getProducePerMin()
-				: filteredWsList.map(item => item.getProducePerMin()).reduce((prev, curr) => prev.plus(curr));
+				: filteredWsList.map((item) => item.getProducePerMin()).reduce((prev, curr) => prev.plus(curr));
 		// console.log(`wsPart: ${wsPart}, marketPart: ${marketPart}`);
-		let result = wsPart.gte(marketPart) ? marketPart: wsPart ;
+		let result = wsPart.gte(marketPart) ? marketPart : wsPart;
 		return result.div(20);
 	}
 
@@ -766,10 +762,6 @@ class Game extends window.Phaser.State {
 		}
 	};
 
-	changeUpgradedMapValue = (value) => {
-		this.upgradedMap = value;
-	};
-
 	// this.bellRed
 	upgradeBellRed() {
 		this.bellRed.upgradeSkillDuration();
@@ -804,13 +796,13 @@ class Game extends window.Phaser.State {
 	};
 
 	showModalIdle = (value) => {
-    let now = moment.utc().format('x');
-    console.log('now value: ', now, value);
+		let now = moment.utc().format('x');
+		console.log('now value: ', now, value);
 		let diff = now - value;
 		let duration = moment.duration(diff);
-    let formattedMinutes = Math.floor(duration.asMinutes());
-    // console.log('formattedMinutes: ', formattedMinutes);
-    if (formattedMinutes < 1) return false;
+		let formattedMinutes = Math.floor(duration.asMinutes());
+		// console.log('formattedMinutes: ', formattedMinutes);
+		if (formattedMinutes < 1) return false;
 
 		let idleValue = this.btnIdleCash.getValue();
 		let idleCoin = idleValue.times(formattedMinutes);
@@ -835,7 +827,16 @@ class Game extends window.Phaser.State {
 
 	getCurrWorkingWsList = () => {
 		return this.workstationGroup.children.filter((item) => item.getIsBought());
-  };
+	};
+
+	saveAllRelevantData = () => {
+		return {
+			hideTs: moment.utc().format('x'),
+			prodInfo: this.prodInfo,
+      upgradedMap: this.upgradedMap,
+      currGoodsList: this.warehouse.getCurrentGoods
+		};
+	};
 }
 
 export default Game;

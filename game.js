@@ -33,21 +33,25 @@ game.state.add('Test', TestState, false);
 window.wx.onHide(() => {
   console.log('隐藏到后台');
   // 存下该存的东西
-  window.wx.setStorageSync('hideTs', moment.utc().format('x'));
+  // window.wx.setStorageSync('hideTs', moment.utc().format('x'));
+  let data = game.state.states[game.state.current].saveAllRelevantData();
+  console.log('data type: ', typeof data);
+  window.wx.setStorageSync('idleFactory', data);
 });
 
 window.wx.onShow(() => {
   // 计算时间差值，计算出分钟数，传入GameState的方法。控制弹窗的出现
   console.log('恢复到前台');
   // 拿存下的信息
-  let payload = window.wx.getStorageSync('hideTs');
+  let payload = window.wx.getStorageSync('idleFactory');
   let currState = game.state.states[game.state.current];
-  console.log('hideTs:',  payload);
+  console.log('idleFactory:',  payload);
   // 渲染分两种情况
-  if (currState === undefined) {
+  if (currState === undefined || !payload) {
+    console.log('yes?');
     game.state.start('Start', true, false, payload);
   } else {
-    currState.showModalIdle(payload);
+    currState.showModalIdle(payload.hideTs);
   }
 });
 

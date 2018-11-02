@@ -104,6 +104,7 @@ export const OUTPUT_INPUT_INFO = {
     cnDes: '2收音机'
   },
 };
+
 export const CN_NAME_MAP = {
   ore: '铁矿',
   copper: '黄铜',
@@ -143,7 +144,7 @@ export const CN_NAME_MAP = {
   radio: '收音机'
 };
 
-export let prod_info = {
+export let prodInfo = {
   steel: {
     price: 5,
     coinNeeded: 0,
@@ -432,6 +433,7 @@ export let upgradedMap = {
   ]
 };
 
+// 可以消失
 export let resoList = [
   {
     name: 'ore',

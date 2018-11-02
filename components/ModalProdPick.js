@@ -95,6 +95,7 @@ class ModalProdPick extends ModalRaw {
   deactivateCurrActiveFrame = () => {
     let frame = this.frameGroup.children.find(item => item.active === true);
     if (frame === undefined) return false;
+    // deactivate当前active的frame
     frame
       .deactivateCurrActiveItem()
       .deactivateFrame();

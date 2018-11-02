@@ -1,9 +1,9 @@
 import moment from '../js/libs/moment.min.js';
+import Big from '../js/libs/big.min';
+import { formatBigNum } from '../utils';
 
 import Production from '../store/Production.js';
 import { prodUpgradeMap } from './puedoLevelMap.js';
-import Big from '../js/libs/big.min';
-import { formatBigNum } from '../utils';
 
 const TIMESTAMP = 1538820968140;
 
