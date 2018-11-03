@@ -3,7 +3,7 @@ import Big from '../js/libs/big.min';
 import { formatBigNum } from '../utils';
 
 import Production from '../store/Production.js';
-import { prodUpgradeMap } from './puedoLevelMap.js';
+// import {prodUpgradeMap } from './puedoLevelMap.js';
 
 const TIMESTAMP = 1538820968140;
 
@@ -113,14 +113,15 @@ class ProductUpgradeItem extends window.Phaser.Group {
   }) {
     super(game, parent);
     this.state = this.game.state.states[this.game.state.current];
+    this.prodUpgradeMap = this.state.prodUpgradeMap;
 
     this.posX = x;
     this.posY = y;
 
     this.prodTexture = prodTexture;
     this.product = product;
-    this.coin = Big(prodUpgradeMap[this.product][this.prodTexture].coin);
-    this.cash = Big(prodUpgradeMap[this.product][this.prodTexture].cash);
+    this.coin = Big(this.prodUpgradeMap[this.product][this.prodTexture].coin);
+    this.cash = Big(this.prodUpgradeMap[this.product][this.prodTexture].cash);
 
     this.keyBg = `bg_${prodTexture}`;
     this.keyProdWithTexture = prodTexture === 'base' ? `prod_${product}` : `prod_${product}_${prodTexture}`;
@@ -136,8 +137,8 @@ class ProductUpgradeItem extends window.Phaser.Group {
     this.upgraded = false;
 
     this._data = {
-      countDownDuration: prodUpgradeMap[this.product][this.prodTexture].duration,
-      pieActivatedTimestamp: prodUpgradeMap[this.product][this.prodTexture].pieActivatedTimestamp,
+      countDownDuration: this.prodUpgradeMap[this.product][this.prodTexture].duration,
+      pieActivatedTimestamp: this.prodUpgradeMap[this.product][this.prodTexture].pieActivatedTimestamp,
       step: null,
       incrementPercentage: incrementPercentage
     };
@@ -292,7 +293,7 @@ class ProductUpgradeItem extends window.Phaser.Group {
 
     this._data.pieActivatedTimestamp = moment.utc().format('x');
     // 存下正确的时间戳
-    prodUpgradeMap[this.product][this.prodTexture].pieActivatedTimestamp = this._data.pieActivatedTimestamp;
+    this.prodUpgradeMap[this.product][this.prodTexture].pieActivatedTimestamp = this._data.pieActivatedTimestamp;
     this._updateDurationTxtUI();
     // this.txtTimer = setTimeout(this._updateDurationTxtUI, this.txtTimeout);
     this._reDrawPie();
@@ -318,8 +319,8 @@ class ProductUpgradeItem extends window.Phaser.Group {
     // 更新product UI的key
     let currLevel = TEXTURE_LEVEL_MAP[this.prodTexture];
     Production.setLevelByKey(this.product, currLevel);
-    // 改变prodUpgradeMap的值 稍等，应该没事
-    prodUpgradeMap[this.product][this.prodTexture].pieActivatedTimestamp = TIMESTAMP;
+    // 改变this.prodUpgradeMap的值 稍等，应该没事
+    this.prodUpgradeMap[this.product][this.prodTexture].pieActivatedTimestamp = TIMESTAMP;
     this.state.updateProdTextureAfterUpgrade(this.product);
   }
 

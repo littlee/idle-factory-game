@@ -61,7 +61,6 @@ class ProductUpgradeFrame extends window.Phaser.Group {
     super(game, parent);
     this.modal = modalRef;
     this.state = this.game.state.states[this.game.state.current];
-    // this.prodList = RESO_PRODLIST_MAP[reso]; // 格式 ['steel', 'can', 'drill', 'toaster']
     this.prodList = filterResoList(upgradeMap[reso]); // 格式 ['steel', 'can', 'drill', 'toaster']
     this.reso = reso;
     this.tagCnName = RESO_TAGNAME_MAP[reso];
@@ -181,6 +180,10 @@ class ProductUpgradeFrame extends window.Phaser.Group {
   };
 
   syncCountdown4relatedChildren = timestring => {
+    // 其他非active的frame在初始化话的时候，不会先被执行了setBigVeil4Children
+    if (!this.inactiveChildren) {
+      this.setBigVeil4Children();
+    }
     // 要在setBigVeil4Children()之后调用
     let product = this.modal.getActivatedProduct();
     this.inactiveChildren.forEach(item => {

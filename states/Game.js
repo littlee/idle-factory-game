@@ -53,8 +53,12 @@ class Game extends window.Phaser.State {
 		this.hideTs = payload ? payload.hideTs : undefined;
 		this.upgradedMap = payload ? payload.upgradedMap : upgradedMap; // 给prodPickItem, ModalResources
     this.prodInfo = payload ? payload.prodInfo : prodInfo; // 给prodPickItem用
-    this.currGoodsList = payload? payload.currGoodsList : [];
-	}
+    this.currGoodsList = payload ? payload.currGoodsList : [];
+    this.currCoin = payload ? payload.currCoin : undefined;
+    this.idleCoinSpeed = payload ? payload.idleCoinSpeed : '0';
+    this.prodUpgradeMap = payload ? payload.prodUpgradeMap : prodUpgradeMap;
+  }
+
 	// create(): execution order inside MATTERS!!
 	create() {
 		this.physics.startSystem(window.Phaser.Physics.ARCADE);
@@ -469,8 +473,8 @@ class Game extends window.Phaser.State {
 		this.menuTop.drawRect(0, 0, this.world.width, 81);
 		this.menuTop.endFill();
 
-		this.btnIdleCash = new BtnIdleCash(this.game, 0, 0);
-		this.btnCash = new BtnCash(this.game, 186, 0);
+		this.btnIdleCash = new BtnIdleCash(this.game, 0, 0, this.idleCoinSpeed);
+		this.btnCash = new BtnCash(this.game, 186, 0, this.currCoin);
 		this.btnSuperCash = new BtnSuperCash(this.game, 186 * 2, 0);
 
 		this.btnCash.onClick(() => {
@@ -771,7 +775,7 @@ class Game extends window.Phaser.State {
 		// setTimeout
 		// after timeout done, do upgrade for
 		// when modal inits, clear this timer is the timer is still active
-		let ts = prodUpgradeMap[productName][prodTexture].pieActivatedTimestamp;
+		let ts = this.prodUpgradeMap[productName][prodTexture].pieActivatedTimestamp;
 		let now = moment.utc().format('x');
 		let miliRemained = now - ts;
 		if (durationMilis >= miliRemained) {
@@ -790,7 +794,7 @@ class Game extends window.Phaser.State {
 	upgradeOnBehalfOfModal = (productName, prodLevelIdx, prodTexture, deadTs) => {
 		console.log('modal关闭, timer接力');
 		Production.setLevelByKey(productName, prodLevelIdx);
-		prodUpgradeMap[productName][prodTexture].pieActivatedTimestamp = deadTs;
+		this.prodUpgradeMap[productName][prodTexture].pieActivatedTimestamp = deadTs;
 		let lastestKey = Production.getLatestTextureByKey(productName);
 		this.updateProdTextureAfterUpgrade(productName, lastestKey);
 	};
@@ -834,7 +838,10 @@ class Game extends window.Phaser.State {
 			hideTs: moment.utc().format('x'),
 			prodInfo: this.prodInfo,
       upgradedMap: this.upgradedMap,
-      currGoodsList: this.warehouse.getCurrentGoods
+      prodUpgradeMap: this.prodUpgradeMap,
+      currGoodsList: this.warehouse.getCurrentGoods(),
+      currCoin: this.btnCash.getCash(),
+      idleCoinSpeed: this.btnIdleCash.getValue(), // 可以不存没啥用
 		};
 	};
 }

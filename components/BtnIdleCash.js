@@ -1,4 +1,4 @@
-// import Big from '../js/libs/big.min';
+import Big from '../js/libs/big.min';
 import { formatBigNum } from '../utils';
 
 const TEXT_STYLE = {
@@ -8,12 +8,12 @@ const TEXT_STYLE = {
 };
 
 class BtnIdleCash extends window.Phaser.Group {
-  constructor(game, x, y) {
+  constructor(game, x, y, value = '0') {
     super(game);
     this.x = x;
     this.y = y;
     this.unit = '/min';
-    this.value = '0';
+    this.value = Big(value);
 
     this.img = this.game.make.image(0, 0, 'btn_idle_cash');
     this.add(this.img);
