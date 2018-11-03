@@ -33,10 +33,10 @@ class ModalProdPick extends ModalRaw {
     this.state = this.game.state.states[this.game.state.current];
     this.activatedProdKey = null;
     this.workstation = workstation;
-    this.workstationOutput = this.workstation.getOutputKey();
+    this.workstationOutput = this.workstation.getOutputKey(); // for item to render correct activated prod
 
     this.currResoList = resourcesTable.getCurrentGoods();
-    console.log('this.currResoList',  this.currResoList);
+    // console.log('this.currResoList',  this.currResoList);
     this._getInit();
 
     // 因为现在是关闭就destroy, 所以，在init的时候，需要自行先去初始化所有btn的正确UI。

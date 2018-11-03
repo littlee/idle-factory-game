@@ -3,13 +3,12 @@ import Big from '../js/libs/big.min';
 import { formatBigNum } from '../utils';
 
 import Production from '../store/Production.js';
-// import {prodUpgradeMap } from './puedoLevelMap.js';
 
 const TIMESTAMP = 1538820968140;
 
 const CONFIG = {
   prodStrokeWidth: 4,
-  prodRegularStrokeColor: 0x03832e, // 0x03832e
+  prodRegularStrokeColor: 0x03832e,
   prodHighlightedStrokeColor: 0x39ec43,
   bubbleColor: 0x004818,
   clockScaleFactor: 0.4,

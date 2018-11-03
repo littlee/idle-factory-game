@@ -144,183 +144,57 @@ export const CN_NAME_MAP = {
   radio: '收音机'
 };
 
-export let prodInfo = {
-  steel: {
-    price: 5,
-    coinNeeded: 0,
-    cashNeeded: 0,
-    bought: true,
-    activated: false
-  },
-  can: {
-    price: 10,
-    coinNeeded: 1000,
-    cashNeeded: 100,
-    bought: false,
-    activated: false
-  },
-  drill: {
-    price: 250,
-    coinNeeded: 1000,
-    cashNeeded: 200,
-    bought: false,
-    activated: false
-  },
-  toaster: {
-    price: 1000,
-    coinNeeded: 1000,
-    cashNeeded: 250,
-    bought: false,
-    activated: false
-  },
-  battery: {
-    price: 1000,
-    coinNeeded: 1500,
-    cashNeeded: 200,
-    bought: false,
-    activated: false
-  },
-  coffeeMachine: {
-    price: 1000,
-    coinNeeded: 1000,
-    cashNeeded: 300,
-    bought: false,
-    activated: false
-  },
-  mp3: {
-    price: 1000,
-    coinNeeded: 1000,
-    cashNeeded: 350,
-    bought: false,
-    activated: false
-  },
-  speaker: {
-    price: 10000,
-    coinNeeded: 10500000,
-    cashNeeded: 350,
-    bought: false,
-    activated: false
-  },
+const PROD_LIST = [
+	'steel',
+	'can',
+	'drill',
+	'toaster',
+	'battery',
+	'coffeeMachine',
+	'mp3',
+	'speaker',
+	'plasticBar',
+	'wheel',
+	'screen',
+	'phone',
+	'circuit',
+	'tv',
+	'computer',
+	'vr',
+	'engine',
+	'solarPanel',
+	'car',
+	'telescope',
+	'projector',
+	'headset',
+	'walkieTalkie',
+	'radio'
+];
 
-  plasticBar: {
-    price: 5000,
-    coinNeeded: 10000000,
-    cashNeeded: 350,
-    bought: false,
-    activated: false
-  },
-  wheel: {
-    price: 5000,
-    coinNeeded: 10000000,
-    cashNeeded: 350,
-    bought: false,
-    activated: false
-  },
-  screen: {
-    price: 5000,
-    coinNeeded: 10000000,
-    cashNeeded: 350,
-    bought: false,
-    activated: false
-  },
-  phone: {
-    price: 5000,
-    coinNeeded: 10000000,
-    cashNeeded: 350,
-    bought: false,
-    activated: false
-  },
-
-  circuit: {
-    price: 5000,
-    coinNeeded: 10000000,
-    cashNeeded: 350,
-    bought: false,
-    activated: false
-  },
-  tv: {
-    price: 5000,
-    coinNeeded: 10000000,
-    cashNeeded: 350,
-    bought: false,
-    activated: false
-  },
-  computer: {
-    price: 5000,
-    coinNeeded: 10000000,
-    cashNeeded: 350,
-    bought: false,
-    activated: false
-  },
-  vr: {
-    price: 5000,
-    coinNeeded: 10000000,
-    cashNeeded: 350,
-    bought: false,
-    activated: false
-  },
-
-  engine: {
-    price: 5000,
-    coinNeeded: 10000000,
-    cashNeeded: 350,
-    bought: false,
-    activated: false
-  },
-
-  solarPanel: {
-    price: 5000,
-    coinNeeded: 10000000,
-    cashNeeded: 350,
-    bought: false,
-    activated: false
-  },
-
-  car: {
-    price: 5000,
-    coinNeeded: 10000000,
-    cashNeeded: 350,
-    bought: false,
-    activated: false
-  },
-
-  telescope: {
-    price: 5000,
-    coinNeeded: 10000000,
-    cashNeeded: 350,
-    bought: false,
-    activated: false
-  },
-
-  projector: {
-    price: 5000,
-    coinNeeded: 10000000,
-    cashNeeded: 350,
-    bought: false,
-    activated: false
-  },
-  headset: {
-    price: 5000,
-    coinNeeded: 10000000,
-    cashNeeded: 350,
-    bought: false,
-    activated: false
-  },
-  walkieTalkie: {
-    price: 5000,
-    coinNeeded: 10000000,
-    cashNeeded: 350,
-    bought: false,
-    activated: false
-  },
-  radio: {
-    price: 5000,
-    coinNeeded: 10000000,
-    cashNeeded: 350,
-    bought: false,
-    activated: false
-  }
-};
+/* steel: {
+  price: 5,
+  coinNeeded: 0,
+  cashNeeded: 0,
+  bought: true,
+  activated: false
+},
+can: {
+  price: 10,
+  coinNeeded: 1000,
+  cashNeeded: 100,
+  bought: false,
+  activated: false
+}, */
+export let prodInfo = PROD_LIST.reduce((prev, curr, index) => {
+  prev[curr] = {
+    price: 5 * (index + 1),
+    coinNeeded: `${index}000`,
+    cashNeeded: 100 * index,
+    bought: index === 0 ? true : false,
+    activated: false,
+  };
+  return prev;
+}, {});
 
 export let upgradedMap = {
   ore: [
@@ -433,36 +307,8 @@ export let upgradedMap = {
   ]
 };
 
-// 可以消失
-export let resoList = [
-  {
-    name: 'ore',
-    unlocked: true
-  },
-  {
-    name: 'copper',
-    unlocked: false
-  },
-  {
-    name: 'barrel',
-    unlocked: false
-  },
-  {
-    name: 'plug',
-    unlocked: false
-  },
-  {
-    name: 'aluminium',
-    unlocked: false
-  },
-  {
-    name: 'rubber',
-    unlocked: false
-  }
-];
-
 export let bellRedInfo = {
-  boughtCount: 1,
+  boughtCount: 1, // skills point bought total count
   level: 1,
-  point: 0,
+  point: 0, // skills point bought but haven't used count
 };

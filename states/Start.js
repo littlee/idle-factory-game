@@ -1,7 +1,4 @@
 import serverConfig from '../server_config';
-// import Big from '../js/libs/big.min.js';
-// import { formatBigNum } from '../utils';
-import moment from '../js/libs/moment.min.js';
 
 import atlasData from '../__static/images/atlas/material';
 // console.log(atlas);

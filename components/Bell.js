@@ -8,14 +8,15 @@ const TIMER_TEXT_STYLE = {
 
 const REPEAT_INTERVAL = 1000;
 
+// 没存下cooldown开始的时间戳
 class Bell extends window.Phaser.Group {
-  constructor(game, x, y, color = 'red') {
+  constructor(game, x, y, color = 'red', skillDuration = 30) {
     super(game);
 
     this._data = {
       isOnSkill: false,
-      skillDuration: 30,
-      skillRestSec: 30,
+      skillDuration: skillDuration,
+      skillRestSec: skillDuration,
       isOnCooldown: false,
       cooldownDuration: 15 * 60,
       cooldownRestSec: 15 * 60,
@@ -221,6 +222,10 @@ class Bell extends window.Phaser.Group {
     this.bellHandle.visible = true;
     this.bellTimer.visible = true;
     this.bellTimerText.visible = true;
+  }
+
+  getSkillDuration = () => {
+    return this._data.skillDuration;
   }
 }
 

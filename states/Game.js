@@ -27,7 +27,7 @@ import range from '../js/libs/_/range';
 import Big from '../js/libs/big.min';
 import { arrayIntersect } from '../utils';
 
-import { upgradedMap, prodInfo } from '../js/config.js';
+import { upgradedMap, prodInfo, bellRedInfo } from '../js/config.js';
 import { prodUpgradeMap } from '../components/puedoLevelMap.js';
 import Production from '../store/Production.js';
 import moment from '../js/libs/moment.min.js';
@@ -57,6 +57,8 @@ class Game extends window.Phaser.State {
     this.currCoin = payload ? payload.currCoin : undefined;
     this.idleCoinSpeed = payload ? payload.idleCoinSpeed : '0';
     this.prodUpgradeMap = payload ? payload.prodUpgradeMap : prodUpgradeMap;
+    this.skillDurationRed = payload ? payload.skillDurationRed : undefined;
+    this.bellRedInfo = payload ? payload.bellRedInfo : bellRedInfo;
   }
 
 	// create(): execution order inside MATTERS!!
@@ -75,7 +77,7 @@ class Game extends window.Phaser.State {
 		// group 1-5
 
 		// 速度提升 3 倍
-		this.bellRed = new Bell(this.game, 80, 116, 'red');
+		this.bellRed = new Bell(this.game, 80, 116, 'red', this.skillDurationRed);
 		this.bellRed.unlock();
 		this.bellRed.onSkill(() => {
 			this.workerWarehouseGroup.forEach((worker) => {
@@ -801,7 +803,7 @@ class Game extends window.Phaser.State {
 
 	showModalIdle = (value) => {
 		let now = moment.utc().format('x');
-		console.log('now value: ', now, value);
+		// console.log('now value: ', now, value);
 		let diff = now - value;
 		let duration = moment.duration(diff);
 		let formattedMinutes = Math.floor(duration.asMinutes());
@@ -839,6 +841,8 @@ class Game extends window.Phaser.State {
 			prodInfo: this.prodInfo,
       upgradedMap: this.upgradedMap,
       prodUpgradeMap: this.prodUpgradeMap,
+      bellRedInfo: this.bellRedInfo,
+      skillDurationRed: this.bellRed.getSkillDuration(),
       currGoodsList: this.warehouse.getCurrentGoods(),
       currCoin: this.btnCash.getCash(),
       idleCoinSpeed: this.btnIdleCash.getValue(), // 可以不存没啥用

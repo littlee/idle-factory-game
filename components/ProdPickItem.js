@@ -288,7 +288,7 @@ class ProdPickItem extends window.Phaser.Group {
   _showInitUI = () => {
     let targetKey = this.parentFrame.modal.workstationOutput;
     if (this.outputKey === targetKey) {
-      console.log('curr targetKe: ', targetKey);
+      console.log('modal初始化时在生产的产品: ', targetKey);
       this.getActivated();
       this.setItem2Activated();
     } else if (this.flagBought === true) {

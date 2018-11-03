@@ -1,7 +1,7 @@
-import Big from '../js/libs/big.min';
+// import Big from '../js/libs/big.min';
 import { formatBigNum } from '../utils';
 
-import { bellRedInfo } from '../js/config.js';
+// import { bellRedInfo } from '../js/config.js';
 
 import ModalRaw from './ModalRaw.js';
 
@@ -99,11 +99,11 @@ class ModalSkills extends ModalRaw {
 
     this.state = this.game.state.states[this.game.state.current];
     // curr upgraded level, 需要可以被初始化到指定的级数，对应的bell也是要可以实现对应的初始化
-    this.levelRed = bellRedInfo.level;
+    this.levelRed = this.state.bellRedInfo.level;
     this.levelYellow = 1;
-    this.boughtRedCount = bellRedInfo.boughtCount;
+    this.boughtRedCount = this.state.bellRedInfo.boughtCount;
     // skills point bought but haven't used
-    this.pointRed = bellRedInfo.point;
+    this.pointRed = this.state.bellRedInfo.point;
     this.pointYellow = 0;
     // coinNeeded to buy
     this.coin4BellRed = SKILL_PRICE_MAP.red[`bought${this.boughtRedCount}`] ? SKILL_PRICE_MAP.red[`bought${this.boughtRedCount}`].coinNeeded : 0;
@@ -371,9 +371,9 @@ class ModalSkills extends ModalRaw {
   _buySkillRed = () => {
     // 相关技能点数目增加
     this.pointRed += 1;
-    bellRedInfo.point += 1;
+    this.state.bellRedInfo.point += 1;
     this.boughtRedCount += 1; // key!!!
-    bellRedInfo.boughtCount += 1;
+    this.state.bellRedInfo.boughtCount += 1;
     this.skillCountTxt1.setText(this.pointRed);
     // 更新够不够点去升级铃铃
     this._updateSpeedUpgradeBtnUI();
@@ -387,10 +387,10 @@ class ModalSkills extends ModalRaw {
     console.log('红铃铃升级');
     // point要减少点数，外部的bell的数字增加，自身的UI变，btnUI也要变
     this.pointRed -= this.point4BellRed;
-    bellRedInfo.point -= this.point4BellRed;
+    this.state.bellRedInfo.point -= this.point4BellRed;
     this.skillCountTxt1.setText(this.pointRed);
     this.levelRed += 1;
-    bellRedInfo.level += 1;
+    this.state.bellRedInfo.level += 1;
     this.redLevelTxt.setText(`${this.levelRed}级`);
     // 更新下一次升级需要的点书
     if (this.levelRed <= Object.keys(BELL_LEVEL_MAP.red).length ) {
