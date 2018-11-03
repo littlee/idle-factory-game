@@ -2,7 +2,7 @@ import { LevelMap } from './puedoLevelMap.js';
 import range from '../js/libs/_/range';
 import Big from '../js/libs/big.min';
 
-const INIT_LEVEL = 1;
+// const INIT_LEVEL = 1;
 
 const BTN_TEXT_STYLE = {
   font: 'Arail',
@@ -11,7 +11,7 @@ const BTN_TEXT_STYLE = {
 };
 
 class BtnUpgrade extends window.Phaser.Group {
-  constructor(game, x, y, type) {
+  constructor(game, x, y, type, currLevel = 1) {
     super(game);
     this.x = x;
     this.y = y;
@@ -23,7 +23,7 @@ class BtnUpgrade extends window.Phaser.Group {
 
 
     this._data = {
-      level: null
+      level: currLevel
     };
 
     this.btn = this.game.make.sprite(0, 0, 'btn_level');
@@ -38,7 +38,8 @@ class BtnUpgrade extends window.Phaser.Group {
     this.btnText = this.game.make.text(0, 0, '等级', BTN_TEXT_STYLE);
     this.btnText.alignIn(this.btn, window.Phaser.TOP_CENTER, 0, -15);
 
-    this.levelText = this.game.make.text(0, 0, '', BTN_TEXT_STYLE);
+    this.levelText = this.game.make.text(0, 0, this._data.level.toString(), BTN_TEXT_STYLE);
+    this.levelText.alignIn(this.btn, window.Phaser.BOTTOM_CENTER, 0, -5);
 
     this.add(this.btn);
     this.add(this.arrow50);
@@ -47,12 +48,12 @@ class BtnUpgrade extends window.Phaser.Group {
     this.add(this.btnText);
     this.add(this.levelText);
 
-    this._init();
+    // this._init();
   }
 
-  _init() {
-    this.setLevel(INIT_LEVEL);
-  }
+  // _init() {
+  //   this.setLevel(INIT_LEVEL);
+  // }
 
    _getCustomizedLevelCoinNeeded = (upCount) => {
     let targetLevel = upCount + this._data.level;

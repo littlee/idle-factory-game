@@ -59,6 +59,8 @@ class Game extends window.Phaser.State {
     this.prodUpgradeMap = payload ? payload.prodUpgradeMap : prodUpgradeMap;
     this.skillDurationRed = payload ? payload.skillDurationRed : undefined;
     this.bellRedInfo = payload ? payload.bellRedInfo : bellRedInfo;
+    this.upBtnWarehouseLevel = payload ? payload.upBtnWarehouseLevel : 1;
+    this.upBtnMarketLevel = payload ? payload.upBtnMarketLevel : 1;
   }
 
 	// create(): execution order inside MATTERS!!
@@ -112,7 +114,7 @@ class Game extends window.Phaser.State {
 			this.market.resetMultiple();
 		});
 
-		this.upBtnWarehouse = new BtnUpgrade(this.game, 0, 0, 'warehouse');
+		this.upBtnWarehouse = new BtnUpgrade(this.game, 0, 0, 'warehouse', this.upBtnWarehouseLevel);
 		this.upBtnWarehouse.alignIn(this.wall, window.Phaser.LEFT_CENTER, -60, -10);
 		this.upBtnWarehouse.onClick((target, pointer, isOver) => {
 			console.log('仓库升级按钮');
@@ -121,7 +123,7 @@ class Game extends window.Phaser.State {
 			}
 		});
 
-		this.upBtnMarket = new BtnUpgrade(this.game, 0, 0, 'market');
+		this.upBtnMarket = new BtnUpgrade(this.game, 0, 0, 'market', this.upBtnMarketLevel);
 		this.upBtnMarket.alignIn(this.wall, window.Phaser.RIGHT_CENTER, -50, -10);
 		this.upBtnMarket.onClick((target, pointer, isOver) => {
 			console.log('市场升级按钮');
@@ -846,6 +848,8 @@ class Game extends window.Phaser.State {
       currGoodsList: this.warehouse.getCurrentGoods(),
       currCoin: this.btnCash.getCash(),
       idleCoinSpeed: this.btnIdleCash.getValue(), // 可以不存没啥用
+      upBtnWarehouseLevel: this.upBtnWarehouse.getLevel(),
+      upBtnMarketLevel: this.upBtnMarket.getLevel(),
 		};
 	};
 }

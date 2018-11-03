@@ -1,13 +1,12 @@
 import Big from '../js/libs/big.min';
+import range from '../js/libs/_/range';
 
 import ModalRaw from './ModalRaw.js';
 import LevelUpgradeItem from './LevelUpgradeItem.js';
 import PanelUpgrade from './PanelUpgrade.js';
 
 import { LevelMap } from './puedoLevelMap.js';
-import range from '../js/libs/_/range';
 import { CN_NAME_MAP } from '../js/config.js';
-
 import Production from '../store/Production.js';
 
 const LEVEL = {
@@ -111,11 +110,9 @@ function getValidImgKey(name) {
 class ModalLevel extends ModalRaw {
   constructor({
     game,
-    opts,
     type = 'market',
     coupledBtn = null,
     currLevel = null,
-    desLevel = null,
     workstation = null,
     close
   }) {
@@ -160,12 +157,7 @@ class ModalLevel extends ModalRaw {
 
     this._data = {
       type,
-      currLevel:
-        currLevel === null
-          ? type === 'workstation'
-            ? this.coupledBtn.getLevel()
-            : INIT.currLevel
-          : currLevel,
+      currLevel: this.coupledBtn.getLevel(),
       desLevel: null
     };
     this.prevLevel = this._data.currLevel;
@@ -183,7 +175,7 @@ class ModalLevel extends ModalRaw {
     this._prepBeforeContentGroup();
     /* real content goes here */
     this._overwriteHeadingTxt();
-    this.getContextGroupInit();
+    this._getContextGroupInit();
 
     this._prepAfterContentGroup();
   };
@@ -192,7 +184,7 @@ class ModalLevel extends ModalRaw {
     this.heading.setText(this._data.currLevel + this.headingPart, true);
   };
 
-  getContextGroupInit = () => {
+  _getContextGroupInit = () => {
     // 添加的东西 y 要 >= this.headingH
     const OFFSET = this.headingH;
     this.avatarBg = this.game.make.graphics(
