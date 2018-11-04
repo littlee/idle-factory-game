@@ -422,15 +422,63 @@ class Workstation extends window.Phaser.Group {
   _getHasNoInput() {
     let { input, output } = this._data;
 
-    let inputAmt = Object.keys(pick(input, OUTPUT_INPUT_INFO[output].inputList)).map(
-      key => {
-        return input[key].amount;
-      }
-    );
+    let inputAmt = Object.keys(
+      pick(input, OUTPUT_INPUT_INFO[output].inputList)
+    ).map(key => {
+      return input[key].amount;
+    });
 
     return inputAmt.some(amount => {
       return amount.lte(0);
     });
+  }
+
+  getSaveInfo() {
+    return {
+      isLocked: this._data.isLocked,
+      isBought: this._data.isBought,
+      input: this._data.input,
+      output: this._data.output,
+      outputAmount: this._data.outputAmount,
+      producePerMin: this._data.producePerMin,
+      outputDelay: this._data.outputDelay, // ???
+      collectType: this._data.collectType
+    };
+  }
+
+  restoreFromSaveInfo(info) {
+    this._data.isLocked = info.isLocked;
+    this._data.isBought = info.isBought;
+    this._data.input = info.input;
+    this._data.output = info.output;
+    this._data.outputAmount = info.outputAmount;
+    this._data.producePerMin = info.producePerMin;
+    this._data.outputDelay = info.outputDelay;
+    this._data.collectType = info.collectType;
+
+    if (!this._data.isLocked) {
+      this.beAbleToBuy();
+    }
+
+    if (this._data.isBought) {
+      this._drawProductProduceStuffs();
+      this._drawWorkerManager();
+      this._addProductionStuffs();
+      this._addTheRest();
+
+      this.setCollectType(this._data.collectType);
+
+      this.buyBtnGroup.visible = false;
+      this.tableCover.visible = false;
+
+      this.manager.visible = true;
+      this.worker.visible = true;
+      this.productGroup.visible = true;
+
+      if (!this._getHasNoInput()) {
+        this.startWork();
+      }
+    }
   }
 
   // public methods
@@ -656,8 +704,7 @@ class Workstation extends window.Phaser.Group {
       if (!this._getHasNoInput()) {
         this.inputItemsAni.start();
         this.outputItemsAni.setXSpeed(120, 120);
-      }
-      else {
+      } else {
         this.outputItemsAni.stop();
       }
     } else if (collectType === COLLECT_TYPES.PROD) {
@@ -667,8 +714,7 @@ class Workstation extends window.Phaser.Group {
       if (!this._getHasNoInput()) {
         this.inputItemsAni.start();
         this.outputItemsAni.setXSpeed(-120, -120);
-      }
-      else {
+      } else {
         this.outputItemsAni.stop();
       }
     }
@@ -691,7 +737,9 @@ class Workstation extends window.Phaser.Group {
     let { input } = this._data;
     // return Object.keys(input);
     // console.log('xx', pick(input, ['ore']));
-    return Object.keys(pick(input, OUTPUT_INPUT_INFO[this._data.output].inputList));
+    return Object.keys(
+      pick(input, OUTPUT_INPUT_INFO[this._data.output].inputList)
+    );
   }
 
   setOutput(outputKey) {
@@ -702,16 +750,6 @@ class Workstation extends window.Phaser.Group {
     this._data.outputAmount.prod = Big(0);
 
     let nextInitInput = getInitInput(this._data.output);
-    // Object.keys(nextInitInput).forEach(key => {
-    //   // merge existing input amount;
-    //   if (this._data.input[key]) {
-    //     nextInitInput[key].amount = this._data.input[key].amount;
-    //     nextInitInput[key].amountHu = this._data.input[key].amountHu;
-    //   }
-    // });
-    // this._data.input = nextInitInput;
-    // console.log(this._data.input);
-
     Object.keys(nextInitInput).forEach(key => {
       // only merge new keys
       if (!this._data.input[key]) {

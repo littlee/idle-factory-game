@@ -60,7 +60,9 @@ class Game extends window.Phaser.State {
     this.skillDurationRed = payload ? payload.skillDurationRed : undefined;
     this.bellRedInfo = payload ? payload.bellRedInfo : bellRedInfo;
     this.upBtnWarehouseLevel = payload ? payload.upBtnWarehouseLevel : 1;
-    this.upBtnMarketLevel = payload ? payload.upBtnMarketLevel : 1;
+		this.upBtnMarketLevel = payload ? payload.upBtnMarketLevel : 1;
+		
+		this.workstationInfo = payload ? payload.workstationInfo : [];
   }
 
 	// create(): execution order inside MATTERS!!
@@ -150,6 +152,7 @@ class Game extends window.Phaser.State {
 			workstation.onAfterBuy(this._afterBuyWorkstation, this);
 			this.workstationGroup.add(workstation);
 		});
+		window.wsg = this.workstationGroup;
 
 		this.workerWarehouseGroup = this.add.group();
 		range(10).forEach((index) => {
@@ -191,8 +194,15 @@ class Game extends window.Phaser.State {
 		});
 
 		// after create all object
-		this.workstationGroup.children[0].beAbleToBuy();
-		this.workstationGroup.children[0].buy('cash');
+		if (this.workstationInfo && this.workstationInfo.length) {
+			this.workstationInfo.forEach((info, i) => {
+				this.workstationGroup.children[i].restoreFromSaveInfo(info);
+			});
+		}
+		else {
+			this.workstationGroup.children[0].beAbleToBuy();
+			this.workstationGroup.children[0].buy('cash');
+		}
 
 		// modals, 需要在第一个ws购买之后再实例化
 		this.modalWarehose = new ModalLevel({
@@ -304,6 +314,12 @@ class Game extends window.Phaser.State {
 					worker.setIsOnRoutine(false);
 				}
 			}
+		});
+	}
+
+	_getWorkstationSaveInfo() {
+		return this.workstationGroup.children.filter(item => !item.getIsLocked()).map(item => {
+			return item.getSaveInfo();
 		});
 	}
 
@@ -498,6 +514,7 @@ class Game extends window.Phaser.State {
 		this.btnShop.input.priorityID = PRIORITY_ID;
 		this.btnShop.events.onInputUp.add(() => {
 			console.log('click btn shop');
+			console.log(this._getWorkstationSaveInfo());
 		});
 
 		this.btnBlueprint = this.add.sprite(130, this.world.height, 'btn_blueprint');
@@ -849,7 +866,9 @@ class Game extends window.Phaser.State {
       currCoin: this.btnCash.getCash(),
       idleCoinSpeed: this.btnIdleCash.getValue(), // 可以不存没啥用
       upBtnWarehouseLevel: this.upBtnWarehouse.getLevel(),
-      upBtnMarketLevel: this.upBtnMarket.getLevel(),
+			upBtnMarketLevel: this.upBtnMarket.getLevel(),
+			
+			workstationInfo: this._getWorkstationSaveInfo()
 		};
 	};
 }
