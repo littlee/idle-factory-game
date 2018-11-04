@@ -49,12 +49,12 @@ const SOURCE_IMG_MAP = {
     'prod_battery_ruby'
   ],
   coffee_machine: [
-    'prod_coffee_machine',
-    'prod_coffee_machine_bronze',
-    'prod_coffee_machine_silver',
-    'prod_coffee_machine_gold',
-    'prod_coffee_machine_jade',
-    'prod_coffee_machine_ruby'
+    'prod_coffeeMachine',
+    'prod_coffeeMachine_bronze',
+    'prod_coffeeMachine_silver',
+    'prod_coffeeMachine_gold',
+    'prod_coffeeMachine_jade',
+    'prod_coffeeMachine_ruby'
   ],
   mp3: [
     'prod_mp3',
@@ -71,6 +71,134 @@ const SOURCE_IMG_MAP = {
     'prod_speaker_gold',
     'prod_speaker_jade',
     'prod_speaker_ruby'
+  ],
+  car: [
+    'prod_car',
+    'prod_car_bronze',
+    'prod_car_silver',
+    'prod_car_gold',
+    'prod_car_jade',
+    'prod_car_ruby'
+  ],
+  circuit: [
+    'prod_circuit',
+    'prod_circuit_bronze',
+    'prod_circuit_silver',
+    'prod_circuit_gold',
+    'prod_circuit_jade',
+    'prod_circuit_ruby'
+  ],
+  computer: [
+    'prod_computer',
+    'prod_computer_bronze',
+    'prod_computer_silver',
+    'prod_computer_gold',
+    'prod_computer_jade',
+    'prod_computer_ruby'
+  ],
+  engine: [
+    'prod_engine',
+    'prod_engine_bronze',
+    'prod_engine_silver',
+    'prod_engine_gold',
+    'prod_engine_jade',
+    'prod_engine_ruby'
+  ],
+  headset: [
+    'prod_headset',
+    'prod_headset_bronze',
+    'prod_headset_silver',
+    'prod_headset_gold',
+    'prod_headset_jade',
+    'prod_headset_ruby'
+  ],
+  phone: [
+    'prod_phone',
+    'prod_phone_bronze',
+    'prod_phone_silver',
+    'prod_phone_gold',
+    'prod_phone_jade',
+    'prod_phone_ruby'
+  ],
+  plasticBar: [
+    'prod_plasticBar',
+    'prod_plasticBar_bronze',
+    'prod_plasticBar_silver',
+    'prod_plasticBar_gold',
+    'prod_plasticBar_jade',
+    'prod_plasticBar_ruby'
+  ],
+  projector: [
+    'prod_projector',
+    'prod_projector_bronze',
+    'prod_projector_silver',
+    'prod_projector_gold',
+    'prod_projector_jade',
+    'prod_projector_ruby'
+  ],
+  radio: [
+    'prod_radio',
+    'prod_radio_bronze',
+    'prod_radio_silver',
+    'prod_radio_gold',
+    'prod_radio_jade',
+    'prod_radio_ruby'
+  ],
+  screen: [
+    'prod_screen',
+    'prod_screen_bronze',
+    'prod_screen_silver',
+    'prod_screen_gold',
+    'prod_screen_jade',
+    'prod_screen_ruby'
+  ],
+  solarPanel: [
+    'prod_solarPanel',
+    'prod_solarPanel_bronze',
+    'prod_solarPanel_silver',
+    'prod_solarPanel_gold',
+    'prod_solarPanel_jade',
+    'prod_solarPanel_ruby'
+  ],
+  telescope: [
+    'prod_telescope',
+    'prod_telescope_bronze',
+    'prod_telescope_silver',
+    'prod_telescope_gold',
+    'prod_telescope_jade',
+    'prod_telescope_ruby'
+  ],
+  tv: [
+    'prod_tv',
+    'prod_tv_bronze',
+    'prod_tv_silver',
+    'prod_tv_gold',
+    'prod_tv_jade',
+    'prod_tv_ruby'
+  ],
+  vr: [
+    'prod_vr',
+    'prod_vr_bronze',
+    'prod_vr_silver',
+    'prod_vr_gold',
+    'prod_vr_jade',
+    'prod_vr_ruby'
+  ],
+  walkieTalkie: [
+    'prod_walkieTalkie',
+    'prod_walkieTalkie_bronze',
+    'prod_walkieTalkie_silver',
+    'prod_walkieTalkie_gold',
+    'prod_walkieTalkie_jade',
+    'prod_walkieTalkie_ruby'
+  ],
+  wheel: [
+    'prod_wheel',
+    'prod_wheel_bronze',
+    'prod_wheel_silver',
+    'prod_wheel_gold',
+    'prod_wheel_jade',
+    'prod_wheel_ruby'
   ]
 };
 
@@ -85,6 +213,5 @@ const SourceImg = {
     }
   }
 };
-
 
 export default SourceImg;
