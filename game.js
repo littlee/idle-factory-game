@@ -20,9 +20,9 @@ var game = new Phaser.Game({
   enableDebug: false
 });
 
-window.wx.setEnableDebug({
-  enableDebug: true
-});
+// window.wx.setEnableDebug({
+//   enableDebug: true
+// });
 
 window.game = game;
 
