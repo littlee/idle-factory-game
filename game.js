@@ -37,9 +37,6 @@ window.wx.onShareAppMessage(() => {
     imageUrl: '__static/images/share.png'
   };
 });
-// window.wx.shareAppMessage({
-//   title: 'xx'
-// });
 
 window.wx.onHide(() => {
   console.log('隐藏到后台');
