@@ -48,7 +48,7 @@ window.wx.onHide(() => {
 
 window.wx.onShow((opts) => {
   // 计算时间差值，计算出分钟数，传入GameState的方法。控制弹窗的出现
-  console.log('恢复到前台 opts: ', opts );
+  console.log('恢复到前台');
   // 拿存下的信息
   let payload = window.wx.getStorageSync('idleFactory');
   if (payload) {
