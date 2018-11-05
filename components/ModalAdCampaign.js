@@ -167,7 +167,7 @@ class ModalAdCampagin extends ModalRaw {
     this.maxHourTxt.anchor.setTo(0, 0.5);
     this.maxHourTxt.alignTo(bar, Phaser.BOTTOM_CENTER, 0, 10);
 
-    this.btn = this.game.make.image(this.w / 2, 700, this.keyBtn);
+    this.btn = this.game.make.image(this.w / 2, 700, this.keyBtnUnable);
     this.btn.anchor.setTo(0.5, 0);
     this.btn.events.onInputDown.add(this.handleBtnClick);
     // 需要有一个unavailable的key可以替换这个btn
@@ -200,8 +200,8 @@ class ModalAdCampagin extends ModalRaw {
   }
 
   checkWetherNeedToDecreaseHasWatchedTime = () => {
-    let maxSeconds = '';
-    let diff = maxSeconds - this.remainedSeconds;
+    // let maxSeconds = '';
+    // let diff = maxSeconds - this.remainedSeconds;
 
   }
 
@@ -230,7 +230,7 @@ class ModalAdCampagin extends ModalRaw {
   }
 
   _decideUIOfBtn = () => {
-    if (this.hasWatchedTimes === this.maxWatchTimes) {
+    if (this.hasWatchedTimes === this.maxWatchTimes || this.keyBtnUnable === this.btn.key) {
       this.btn.loadTexture(this.keyBtnUnable);
     } else {
       this.btn.loadTexture(this.keyBtnAble);
@@ -241,6 +241,7 @@ class ModalAdCampagin extends ModalRaw {
   // 38px
   handleBtnClick = () => {
     console.log('点击去看广告');
+    if (this.btn.key === this.keyBtnUnable) return false;
     this.hasWatchedTimes = this.hasWatchedTimes === this.maxWatchTimes ? this.hasWatchedTimes : this.hasWatchedTimes + 1 ;
     this._decideUIOfBtn();
     this.redrawColorBars();
