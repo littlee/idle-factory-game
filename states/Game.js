@@ -319,8 +319,13 @@ class Game extends window.Phaser.State {
 				}
 			}
 		});
-	}
+  }
 
+  shutdown () {
+    this.modalMarket = null;
+    this.modalWarehose = null;
+
+  }
 	_getWorkstationSaveInfo() {
 		return this.workstationGroup.children.filter(item => !item.getIsLocked()).map(item => {
 			return item.getSaveInfo();
@@ -504,8 +509,7 @@ class Game extends window.Phaser.State {
 		this.btnCash.onClick(() => {
 			console.log('cash clicked');
 		});
-		this.btnCash.onChange(this._onCashChange);
-
+    this.btnCash.onChange(this._onCashChange);
 		// bottom
 		this.menuBottom = this.add.graphics();
 		this.menuBottom.beginFill(0x5a5858);
@@ -518,7 +522,7 @@ class Game extends window.Phaser.State {
 		this.btnShop.input.priorityID = PRIORITY_ID;
 		this.btnShop.events.onInputUp.add(() => {
 			console.log('click btn shop');
-		});
+    });
 
 		this.btnBlueprint = this.add.sprite(130, this.world.height, 'btn_blueprint');
 		this.btnBlueprint.anchor.setTo(0, 1);

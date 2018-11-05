@@ -2,10 +2,10 @@
 // import ModalRaw from '../components/ModalRaw.js';
 // import ModalLevel from '../components/ModalLevel.js';
 // import ModalRescources from '../components/ModalResources.js';
-import ModalAdCampaign from '../components/ModalAdCampaign';
+// import ModalAdCampaign from '../components/ModalAdCampaign';
 // import ModalProdUpgrade from '../components/ModalProdUpgrade';
 // import ModalSkills from '../components/ModalSkills';
-import ModalOffline from '../components/ModalOffline.js';
+// import ModalOffline from '../components/ModalOffline.js';
 // import ModalProdPick from '../components/ModalProdPick.js';
 
 
@@ -53,23 +53,24 @@ class Game extends window.Phaser.State {
     // });
 
 
-    let modal = new ModalOffline({
-      game: this.game,
-    });
+    // let modal = new ModalOffline({
+    //   game: this.game,
+    // });
 
 
-    // btn-egg
-    modal.visible = true;
-    let icon = this.add.image(this.game.width, 100, 'test_iconEgg');
-    icon.anchor.set(1, 0);
-    icon.inputEnabled = true;
-    icon.events.onInputDown.add(() => {
-      console.log('egg is clicked');
-      modal.visible = true;
-    });
-
+    // // btn-egg
+    // modal.visible = true;
+    // let icon = this.add.image(this.game.width, 100, 'test_iconEgg');
+    // icon.anchor.set(1, 0);
+    // icon.inputEnabled = true;
+    // icon.events.onInputDown.add(() => {
+    //   console.log('egg is clicked');
+    //   modal.visible = true;
+    // });
+    console.log('being here');
 
     // let sprite
+    this.state.start('Start');
 
   }
 
