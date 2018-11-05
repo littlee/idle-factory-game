@@ -48,7 +48,7 @@ const SOURCE_IMG_MAP = {
     'prod_battery_jade',
     'prod_battery_ruby'
   ],
-  coffee_machine: [
+  coffeeMachine: [
     'prod_coffeeMachine',
     'prod_coffeeMachine_bronze',
     'prod_coffeeMachine_silver',

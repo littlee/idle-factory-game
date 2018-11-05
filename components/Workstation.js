@@ -422,6 +422,8 @@ class Workstation extends window.Phaser.Group {
   _getHasNoInput() {
     let { input, output } = this._data;
 
+    // console.log(input);
+
     let inputAmt = Object.keys(
       pick(input, OUTPUT_INPUT_INFO[output].inputList)
     ).map(key => {
@@ -449,9 +451,15 @@ class Workstation extends window.Phaser.Group {
   restoreFromSaveInfo(info) {
     this._data.isLocked = info.isLocked;
     this._data.isBought = info.isBought;
+    Object.keys(info.input).forEach(k => {
+      info.input[k].amount = Big(info.input[k].amount);
+    });
     this._data.input = info.input;
     this._data.output = info.output;
+    info.outputAmount.cash = Big(info.outputAmount.cash);
+    info.outputAmount.prod = Big(info.outputAmount.prod);
     this._data.outputAmount = info.outputAmount;
+    info.producePerMin = Big(info.producePerMin);
     this._data.producePerMin = info.producePerMin;
     this._data.outputDelay = info.outputDelay;
     this._data.collectType = info.collectType;
