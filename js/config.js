@@ -1,4 +1,4 @@
-
+import range from '../js/libs/_/range';
 export const OUTPUT_INPUT_INFO = {
   steel: {
     inputList: ['ore'],
@@ -188,7 +188,7 @@ can: {
 export let prodInfo = PROD_LIST.reduce((prev, curr, index) => {
   prev[curr] = {
     price: 5 * (index + 1),
-    coinNeeded: `${index}000`,
+    coinNeeded: (( index < 3 ) ? 3000 * index : 3000 * range(index).reduce((prev, curr) => prev + curr)) + '',
     cashNeeded: 100 * index,
     bought: index === 0 ? true : false,
     activated: false,

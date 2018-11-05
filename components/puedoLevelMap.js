@@ -7,7 +7,7 @@ export const LevelMap = {
 			capacity: 4000 + index * 600 + '',
 			loadingSpeed: 2000 + index * 1000 + '',
 			walkSpeed: 0.05 * (1 + index),
-			coinNeeded: 2000 * index + ''
+			coinNeeded: (( index < 3 ) ? 2000 * index : 2000 * range(index).reduce((prev, curr) => prev + curr)) + ''
 		};
 		return prev;
 	}, {}),
@@ -19,7 +19,7 @@ export const LevelMap = {
 			capacity: 4000 + index * 800 + '',
 			loadingSpeed: 2000 + index * 1000 + '',
 			walkSpeed: 0.03 * (1 + index),
-			coinNeeded: 3000 * index + ''
+      coinNeeded: (( index < 3 ) ? 3000 * index : 3000 * range(index).reduce((prev, curr) => prev + curr)) + ''
 		};
 		return prev;
 	}, {}),
@@ -28,10 +28,11 @@ export const LevelMap = {
 		prev[`level${index + 1}`] = {
 			level: index + 1,
 			count: index + 1,
-			input: 10000 + 1000 * index + '',
-			output: 10000 + 1000 * index + '',
-			power: 1000 + 100 * index + '',
-			coinNeeded: 1000 * index + ''
+			input: 2000 + 1000 * index + '',
+			output: 2000 + 1000 * index + '',
+			power: 500 + 100 * index + '',
+			// coinNeeded: 1000 * index + '',
+			coinNeeded: (( index < 3 ) ? 1000 * index : 1000 * range(index).reduce((prev, curr) => prev + curr)) + ''
 		};
 		return prev;
 	}, {})

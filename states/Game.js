@@ -226,8 +226,6 @@ class Game extends window.Phaser.State {
 		// for cash-value-responsive-UI-related
     this._updateWhateverNeed2KnowCoinValue();
     // 需要在实例化market modal之后再执行
-    // ....???FIX ME
-    console.log('sucker!!!');
     this.updateIdleCash();
 
 
@@ -720,9 +718,6 @@ class Game extends window.Phaser.State {
 			filteredWsList.length === 1
 				? filteredWsList[0].getProducePerMin()
 				: filteredWsList.map((item) => item.getProducePerMin()).reduce((prev, curr) => prev.plus(curr));
-    console.log(wsPart instanceof Big);
-    console.log('filteredWsList.length ', filteredWsList.length);
-    console.log('filteredWsList[0] ', filteredWsList[0].getProducePerMin().toString());
 		let result = wsPart.gte(marketPart) ? marketPart : wsPart;
 		return result.div(20);
 	}
