@@ -196,7 +196,6 @@ class Game extends window.Phaser.State {
 		// after create all object
 		if (this.workstationInfo && this.workstationInfo.length) {
 			this.workstationInfo.forEach((info, i) => {
-        console.log('restore index: ', i);
         this.workstationGroup.children[i].restoreFromSaveInfo(info);
 			});
 		}

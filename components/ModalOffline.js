@@ -92,9 +92,7 @@ class ModalOffline extends ModalRaw {
 
   _handleCoinCollection = (target, point, isOver) => {
     if (!isOver) return false;
-    if (this.hasClickShare) {
-      this.coin = this.coin.times(2);
-    }
+
     this.state.addCash(this.coin);
     this._handleClose();
   }
@@ -108,6 +106,9 @@ class ModalOffline extends ModalRaw {
       title: '工业大亨2',
       imageUrl: '__static/images/share.png'
     });
+
+    this.coin = this.coin.times(2);
+    this.coin2Collect.setText(formatBigNum(this.coin), true);
   }
 };
 
