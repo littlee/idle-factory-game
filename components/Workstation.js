@@ -1,5 +1,6 @@
 import { formatBigNum } from '../utils';
 import Big from '../js/libs/big.min';
+// window.Big = Big;
 import range from '../js/libs/_/range';
 import pick from '../js/libs/_/pick';
 
@@ -432,23 +433,28 @@ class Workstation extends window.Phaser.Group {
       return input[key].amount;
     });
 
-    if (this._data.index === 1) {
-      console.log('c1', inputAmt.map(i => i.toString()));
-    }
-
     return inputAmt.some(amount => {
       return amount.lte(0);
     });
   }
 
   getSaveInfo() {
+    let inputInStr = Object.keys(this._data.input).reduce((map, key) => {
+      map[key] = {
+        amount: this._data.input[key].amount.toString()
+      };
+      return map;
+    }, {});;
     return {
       isLocked: this._data.isLocked,
       isBought: this._data.isBought,
-      input: this._data.input,
+      input: inputInStr,
       output: this._data.output,
-      outputAmount: this._data.outputAmount,
-      producePerMin: this._data.producePerMin,
+      outputAmount: {
+        prod: this._data.outputAmount.prod.toString(),
+        cash: this._data.outputAmount.cash.toString(),
+      },
+      producePerMin: this._data.producePerMin.toString(),
       outputDelay: INIT_OUTPUT_DELAY,
       collectType: this._data.collectType,
       level: (this.upBtn && this.upBtn.getLevel()) || 1
@@ -461,12 +467,19 @@ class Workstation extends window.Phaser.Group {
     Object.keys(info.input).forEach(k => {
       info.input[k].amount = Big(info.input[k].amount);
     });
-    this._data.input = info.input;
+    // this._data.input = info.input;
+    this._data.input = {
+      ore: {
+        amount: Big(0)
+      }
+    };
     this._data.output = info.output;
     info.outputAmount.cash = Big(info.outputAmount.cash);
+
     info.outputAmount.prod = Big(info.outputAmount.prod);
     this._data.outputAmount = info.outputAmount;
     info.producePerMin = Big(info.producePerMin);
+
     this._data.producePerMin = info.producePerMin;
     this._data.outputDelay = info.outputDelay;
     this._data.collectType = info.collectType;

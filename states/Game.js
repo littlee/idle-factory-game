@@ -708,6 +708,7 @@ class Game extends window.Phaser.State {
 		let marketMaxCash = this.modalMarket.getMarketMaxTransported();
 		let marketPart = marketMaxCash.times(mWorkerCount);
 		let filteredWsList = this.getCurrWorkingWsList();
+		// console.log('filteredWsList', filteredWsList.map(i => i._data));
 		let wsPart =
 			filteredWsList.length === 1
 				? filteredWsList[0].getProducePerMin()

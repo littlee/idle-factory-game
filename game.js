@@ -46,7 +46,7 @@ window.wx.onHide(() => {
   // 存下该存的东西
   // window.wx.setStorageSync('hideTs', moment.utc().format('x'));
   let data = game.state.states[game.state.current].saveAllRelevantData();
-  window.wx.setStorageSync('idleFactory', data);
+  window.wx.setStorageSync('idleFactory', JSON.stringify(data));
 });
 
 window.wx.onShow(() => {
@@ -54,11 +54,14 @@ window.wx.onShow(() => {
   console.log('恢复到前台');
   // 拿存下的信息
   let payload = window.wx.getStorageSync('idleFactory');
+  if (payload) {
+    payload = JSON.parse(payload);
+  }
   let currState = game.state.states[game.state.current];
   // console.log('idleFactory:',  payload);
   // 渲染分两种情况
   if (currState === undefined || !payload) {
-    game.state.start('Start', true, false, payload);
+    game.state.start('Start', true, false, payload || null);
   } else {
     currState.showModalIdle(payload.hideTs);
   }
