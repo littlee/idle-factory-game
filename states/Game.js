@@ -861,7 +861,7 @@ class Game extends window.Phaser.State {
 
 	saveAllRelevantData = () => {
 		return {
-			hideTs: '1538820968140', //moment.utc().format('x'),
+			hideTs: moment.utc().format('x'),
 			prodInfo: this.prodInfo,
       upgradedMap: this.upgradedMap,
       prodUpgradeMap: this.prodUpgradeMap,

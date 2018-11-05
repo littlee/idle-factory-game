@@ -52,7 +52,16 @@ class ResourceItem extends window.Phaser.Group {
 		this.icon = this.game.make.image(20, 42, 'material', this.key);
 		this.icon.anchor.setTo(0, 0.5);
 		this.icon.scale.x = CONFIG.imgScale;
-		this.icon.scale.y = CONFIG.imgScale;
+    this.icon.scale.y = CONFIG.imgScale;
+
+    // if (this.key === 'reso_ore') {
+    //   this.icon.events.onInputDown.add(() => {
+    //     this.littlee = setTimeout();
+    //   });
+    //   this.icon.events.onInputUp.add(() => {
+    //     console.log('yes???');
+    //   });
+    // }
 
 		this.bgVeil = this.game.make.graphics(0, 0);
 		this.bgVeil.beginFill(CONFIG.bgColor, CONFIG.bgUnableAlpha);
