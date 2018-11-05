@@ -15,6 +15,8 @@ import Production from '../store/Production';
 
 import { OUTPUT_INPUT_INFO } from '../js/config.js';
 
+import { LevelMap } from './puedoLevelMap';
+
 const MAX_INPUT_PILE = 2;
 const A_MINUTE = 60000;
 
@@ -103,7 +105,7 @@ class Workstation extends window.Phaser.Group {
         cash: Big(0),
         prod: Big(0)
       },
-      producePerMin: Big(10000),
+      producePerMin: Big(LevelMap.workstation['level1'].output),
       outputDelay: INIT_OUTPUT_DELAY,
       price: {
         cash: Big(0),
@@ -443,8 +445,9 @@ class Workstation extends window.Phaser.Group {
       output: this._data.output,
       outputAmount: this._data.outputAmount,
       producePerMin: this._data.producePerMin,
-      outputDelay: this._data.outputDelay, // ???
-      collectType: this._data.collectType
+      outputDelay: INIT_OUTPUT_DELAY,
+      collectType: this._data.collectType,
+      level: (this.upBtn && this.upBtn.getLevel()) || 1
     };
   }
 
@@ -482,6 +485,8 @@ class Workstation extends window.Phaser.Group {
       this.manager.visible = true;
       this.worker.visible = true;
       this.productGroup.visible = true;
+
+      this.upBtn && this.upBtn.setLevel(info.level);
 
       if (!this._getHasNoInput()) {
         this.startWork();
@@ -730,7 +735,6 @@ class Workstation extends window.Phaser.Group {
 
   setLevel(level) {
     this._data.level = level;
-    // this.levelText.setText(level);
   }
 
   getLevel() {

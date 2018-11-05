@@ -30,6 +30,17 @@ game.state.add('Start', StartState, false);
 game.state.add('Game', GameState, false);
 game.state.add('Test', TestState, false);
 
+window.wx.showShareMenu({});
+window.wx.onShareAppMessage(() => {
+  return {
+    title: '工业大亨2',
+    imageUrl: '__static/images/share.png'
+  };
+});
+// window.wx.shareAppMessage({
+//   title: 'xx'
+// });
+
 window.wx.onHide(() => {
   console.log('隐藏到后台');
   // 存下该存的东西
@@ -52,4 +63,3 @@ window.wx.onShow(() => {
     currState.showModalIdle(payload.hideTs);
   }
 });
-
