@@ -2,6 +2,7 @@
 import regeneratorRuntime from '../js/libs/regenerator-runtime';
 import Big from '../js/libs/big.min';
 import { formatBigNum } from '../utils';
+import { LevelMap } from './puedoLevelMap';
 
 const CARRY_NUM_STYLE = {
   font: 'Arail',
@@ -19,9 +20,9 @@ class WorkerMarket extends window.Phaser.Group {
     this._data = {
       carry: Big(0),
       onRoutine: false,
-      capacity: Big(4000),
-      loadingSpeed: Big(2000),
-      walkSpeed: 0.1,
+      capacity: Big(LevelMap.market['level1'].capacity),
+      loadingSpeed: Big(LevelMap.market['level1'].loadingSpeed),
+      walkSpeed: Big(LevelMap.market['level1'].walkSpeed),
       prevSpeed: null
     };
 

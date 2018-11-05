@@ -519,7 +519,6 @@ class Game extends window.Phaser.State {
 		this.btnShop.input.priorityID = PRIORITY_ID;
 		this.btnShop.events.onInputUp.add(() => {
 			console.log('click btn shop');
-			console.log(this._getWorkstationSaveInfo());
 		});
 
 		this.btnBlueprint = this.add.sprite(130, this.world.height, 'btn_blueprint');

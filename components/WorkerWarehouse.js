@@ -11,6 +11,7 @@ import ResourceEmitter from './ResourceEmitter';
 import SourceImg from '../resource/SourceImg';
 import Big from '../js/libs/big.min';
 import { formatBigNum } from '../utils';
+import { LevelMap } from './puedoLevelMap';
 
 const CARRY_NUM_STYLE = {
   font: 'Arail',
@@ -34,9 +35,9 @@ class WorkerWarehouse extends window.Phaser.Group {
     this._data = {
       carry: {},
       onRoutine: false,
-      capacity: Big(4000),
-      loadingSpeed: Big(2000),
-      walkSpeed: 0.1,
+      capacity: Big(LevelMap.warehouse['level1'].capacity),
+      loadingSpeed: Big(LevelMap.warehouse['level1'].loadingSpeed),
+      walkSpeed: Big(LevelMap.warehouse['level1'].walkSpeed),
       prevSpeed: null
     };
 
