@@ -478,9 +478,12 @@ class Workstation extends window.Phaser.Group {
 
     info.outputAmount.prod = Big(info.outputAmount.prod);
     this._data.outputAmount = info.outputAmount;
+    console.log('info.producePerMin before is: ', typeof info.producePerMin);
     info.producePerMin = Big(info.producePerMin);
+    console.log('info.producePerMin after: ', info.producePerMin);
 
     this._data.producePerMin = info.producePerMin;
+    console.log('this._data.producePerMin is big? ', this._data.producePerMin instanceof Big);
     this._data.outputDelay = info.outputDelay;
     this._data.collectType = info.collectType;
 

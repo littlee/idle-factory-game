@@ -61,7 +61,7 @@ class Game extends window.Phaser.State {
     this.bellRedInfo = payload ? payload.bellRedInfo : bellRedInfo;
     this.upBtnWarehouseLevel = payload ? payload.upBtnWarehouseLevel : 1;
 		this.upBtnMarketLevel = payload ? payload.upBtnMarketLevel : 1;
-		
+
 		this.workstationInfo = payload ? payload.workstationInfo : [];
   }
 
@@ -196,38 +196,45 @@ class Game extends window.Phaser.State {
 		// after create all object
 		if (this.workstationInfo && this.workstationInfo.length) {
 			this.workstationInfo.forEach((info, i) => {
-				this.workstationGroup.children[i].restoreFromSaveInfo(info);
+        console.log('restore index: ', i);
+        this.workstationGroup.children[i].restoreFromSaveInfo(info);
 			});
 		}
 		else {
 			this.workstationGroup.children[0].beAbleToBuy();
 			this.workstationGroup.children[0].buy('cash');
-		}
+    }
+
 
 		// modals, 需要在第一个ws购买之后再实例化
 		this.modalWarehose = new ModalLevel({
 			game: this.game,
 			type: 'warehouse',
 			coupledBtn: this.upBtnWarehouse
-		});
+    });
 
 		this.modalMarket = new ModalLevel({
 			game: this.game,
 			coupledBtn: this.upBtnMarket
-		});
+    });
+
 
 		this.modalAdCampaign = new ModalAdCampaign({
 			game: this.game
-		});
+    });
+
 		// for cash-value-responsive-UI-related
-		this._updateWhateverNeed2KnowCoinValue();
-		// 需要在实例化market modal之后再执行
-		this.updateIdleCash();
+    this._updateWhateverNeed2KnowCoinValue();
+    // 需要在实例化market modal之后再执行
+    // ....???FIX ME
+    console.log('sucker!!!');
+    this.updateIdleCash();
+
 
 		if (this.hideTs) {
 			console.log('来自start');
 			this.showModalIdle(this.hideTs);
-		}
+    }
 	}
 
 	update() {
@@ -713,7 +720,9 @@ class Game extends window.Phaser.State {
 			filteredWsList.length === 1
 				? filteredWsList[0].getProducePerMin()
 				: filteredWsList.map((item) => item.getProducePerMin()).reduce((prev, curr) => prev.plus(curr));
-		// console.log(`wsPart: ${wsPart}, marketPart: ${marketPart}`);
+    console.log(wsPart instanceof Big);
+    console.log('filteredWsList.length ', filteredWsList.length);
+    console.log('filteredWsList[0] ', filteredWsList[0].getProducePerMin().toString());
 		let result = wsPart.gte(marketPart) ? marketPart : wsPart;
 		return result.div(20);
 	}
@@ -864,11 +873,11 @@ class Game extends window.Phaser.State {
       bellRedInfo: this.bellRedInfo,
       skillDurationRed: this.bellRed.getSkillDuration(),
       currGoodsList: this.warehouse.getCurrentGoods(),
-      currCoin: this.btnCash.getCash(),
-      idleCoinSpeed: this.btnIdleCash.getValue(), // 可以不存没啥用
+      currCoin: this.btnCash.getCash().toString(),
+      idleCoinSpeed: this.btnIdleCash.getValue().toString(), // 可以不存没啥用
       upBtnWarehouseLevel: this.upBtnWarehouse.getLevel(),
 			upBtnMarketLevel: this.upBtnMarket.getLevel(),
-			
+
 			workstationInfo: this._getWorkstationSaveInfo()
 		};
 	};

@@ -34,7 +34,8 @@ class ProdPickItem extends window.Phaser.Group {
     this.itemMap = this.state.upgradedMap[parentFrame.reso].find(item => item.name === output);
 
     this.flagBought = this.state.prodInfo[output].bought; // share
-    this.flagActivated = this.state.prodInfo[output].activated; // private
+    // this.flagActivated = this.state.prodInfo[output].activated; // private
+    this.flagActivated = null; // private
     this.price = Big(this.state.prodInfo[output].price);
     this.coinNeeded = Big(this.state.prodInfo[output].coinNeeded);
     this.cashNeeded = this.state.prodInfo[output].cashNeeded;
