@@ -175,17 +175,19 @@ class WorkerWarehouse extends window.Phaser.Group {
     let giveMap = {};
     keys.forEach(key => {
       let { carry } = this._data;
-      let decAmount = carry[key].amount.div(carry[key].stationAmount);
+      if (carry[key].stationAmount > 0) {
+        let decAmount = carry[key].amount.div(carry[key].stationAmount);
 
-      carry[key].amount = carry[key].amount.minus(decAmount);
-      carry[key].amountHu = carry[key].amount.toString();
-      carry[key].stationAmount -= 1;
+        carry[key].amount = carry[key].amount.minus(decAmount);
+        carry[key].amountHu = carry[key].amount.toString();
+        carry[key].stationAmount -= 1;
 
-      totalGive = totalGive.plus(decAmount);
-      giveMap[key] = {
-        amount: decAmount,
-        amountHu: decAmount.toString()
-      };
+        totalGive = totalGive.plus(decAmount);
+        giveMap[key] = {
+          amount: decAmount,
+          amountHu: decAmount.toString()
+        };
+      }
     });
 
     let { loadingSpeed } = this._data;

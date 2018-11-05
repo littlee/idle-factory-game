@@ -410,13 +410,13 @@ class Workstation extends window.Phaser.Group {
         };
         return map;
       }, {});
-    this.inputItemGroup.forEach(item => {
-      let index = this.inputItemGroup.getChildIndex(item);
-      if (inputKeys[index]) {
-        item.setNum(formatBigNum(this._data.input[inputKeys[index]].amount));
-      } else {
-        item.setNum(0);
-      }
+
+    this.getInputKeys().forEach(key => {
+      this.inputItemGroup.forEach(inItem => {
+        if (inItem.getKey() === key) {
+          inItem.setNum(formatBigNum(this._data.input[key].amount));
+        }
+      });
     });
     return true;
   }
@@ -431,6 +431,10 @@ class Workstation extends window.Phaser.Group {
     ).map(key => {
       return input[key].amount;
     });
+
+    if (this._data.index === 1) {
+      console.log('c1', inputAmt.map(i => i.toString()));
+    }
 
     return inputAmt.some(amount => {
       return amount.lte(0);
@@ -670,7 +674,7 @@ class Workstation extends window.Phaser.Group {
     });
 
     // update visual
-    Object.keys(input).forEach(key => {
+    this.getInputKeys().forEach(key => {
       this.inputItemGroup.forEach(inItem => {
         if (inItem.getKey() === key) {
           inItem.setNum(formatBigNum(input[key].amount));

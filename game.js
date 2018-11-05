@@ -2,7 +2,7 @@ import './js/libs/weapp-adapter';
 import './js/libs/symbol';
 import './js/libs/stub';
 import './js/phaserGlobals';
-import moment from './js/libs/moment.min.js';
+// import moment from './js/libs/moment.min.js';
 
 import StartState from './states/Start.js';
 import GameState from './states/Game.js';
