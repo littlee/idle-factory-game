@@ -193,6 +193,7 @@ class Game extends window.Phaser.State {
 		this.fps = this.add.text(20, 100, this.game.time.fps + '', {
 			fontSize: '50px'
 		});
+		this.fps.visible = false;
 
 		// after create all object
 		if (this.workstationInfo && this.workstationInfo.length) {
