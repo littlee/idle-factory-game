@@ -47,8 +47,6 @@ class ModalOffline extends ModalRaw {
     this.state = this.game.state.states[this.game.state.current];
     this.coin = Big(coin);
     this.duration = duration;
-    this.hasClickShare = false;
-    this.hasShare = false;
     this._getInit();
 	}
 
@@ -77,7 +75,7 @@ class ModalOffline extends ModalRaw {
 
     this.btnShare2 = this.game.make.image(0, 0, 'btn_share2');
     this.btnShare2.alignTo(this.chunk, Phaser.BOTTOM_RIGHT, 0, -20);
-    this.btnShare2.events.onInputUp.add(this._handleShareClicked);
+    this.btnShare2.events.onInputUp.addOnce(this._handleShareClicked);
 
     this._addAllObjects();
   };
@@ -99,16 +97,13 @@ class ModalOffline extends ModalRaw {
 
   _handleShareClicked = (target, point, isOver) => {
     if (!isOver) return false;
-    if (this.hasClickShare) return false;
-    this.hasClickShare = true;
+    if (this.state.offlineCoin !== '0') return false;
     this.coin = this.coin.times(2);
-
+    this.coin2Collect.setText(formatBigNum(this.coin), true);
     window.wx.shareAppMessage({
       title: '工业大亨2',
       imageUrl: '__static/images/share.png'
     });
-
-    console.log('this.coin2Collect: ', this.coin2Collect.text);
   }
 
   doubleCoinValue = () => {

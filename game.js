@@ -2,7 +2,6 @@ import './js/libs/weapp-adapter';
 import './js/libs/symbol';
 import './js/libs/stub';
 import './js/phaserGlobals';
-// import moment from './js/libs/moment.min.js';
 
 import StartState from './states/Start.js';
 import GameState from './states/Game.js';
@@ -41,27 +40,23 @@ window.wx.onShareAppMessage(() => {
 window.wx.onHide(() => {
   console.log('隐藏到后台');
   // 存下该存的东西
-  // window.wx.setStorageSync('hideTs', moment.utc().format('x'));
-  let data = game.state.states[game.state.current].saveAllRelevantData();
+  let data = game.state.getCurrentState().saveAllRelevantData();
   window.wx.setStorageSync('idleFactory', JSON.stringify(data));
 });
 
 window.wx.onShow((opts) => {
   // 计算时间差值，计算出分钟数，传入GameState的方法。控制弹窗的出现
   console.log('恢复到前台');
-  // 拿存下的信息
   let payload = window.wx.getStorageSync('idleFactory');
   if (payload) {
     payload = JSON.parse(payload);
   }
-  let currState = game.state.states[game.state.current];
-  // console.log('idleFactory:',  payload);
+  let currState = game.state.getCurrentState();
   // 渲染分两种情况
   if (currState === undefined || !payload) {
-    console.log('payload: ', payload);
     game.state.start('Start', true, false, payload || null);
   } else {
-    console.log('payload.hideTs: ', payload.hideTs);
-    currState.showModalIdle(payload.hideTs);
+    currState.offlineCoin = payload.offlineCoin; // for one-time-off share click
+    currState.showModalIdle(payload.hideTs, payload.offlineCoin, payload.offlineDuration);
   }
 });

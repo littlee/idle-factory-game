@@ -228,9 +228,7 @@ class Game extends window.Phaser.State {
     // 需要在实例化market modal之后再执行
     this.updateIdleCash();
 
-
 		if (this.hideTs) {
-			console.log('来自start');
 			this.showModalIdle(this.hideTs);
     }
 	}
@@ -828,20 +826,31 @@ class Game extends window.Phaser.State {
 		this.updateProdTextureAfterUpgrade(productName, lastestKey);
 	};
 
-	showModalIdle = (value) => {
+	showModalIdle = (value, offlineCoin, offlineDuration) => {
+    console.log('showModalIdle');
 		let now = moment.utc().format('x');
-		// console.log('now value: ', now, value);
 		let diff = now - value;
 		let duration = moment.duration(diff);
 		let formattedMinutes = Math.floor(duration.asMinutes());
 
-    if (this.modalOffline) {
-      console.log('改变coin值');
-      this.modalOffline.doubleCoinValue();
+    // if (this.modalOffline) {
+    //   console.log('改变coin值');
+    //   this.modalOffline.doubleCoinValue();
+    // }
+    if (offlineCoin !== '0' && offlineCoin !== undefined) {
+      console.log('重现离线modal: ', offlineCoin);
+      this.modalOffline = new ModalOffline({
+        game: this.game,
+        coin: offlineCoin,
+        duration: offlineDuration
+      });
+      this.modalOffline.onDestroy.add(() => {
+        this.modalOffline = null;
+      });
+      return false;
     }
-		if (formattedMinutes < 1) return false;
+    if (formattedMinutes < 1) return false;
 
-    console.log('只会触发一次');
 		let idleValue = this.btnIdleCash.getValue();
 		let idleCoin = idleValue.times(formattedMinutes);
 
@@ -850,7 +859,8 @@ class Game extends window.Phaser.State {
 		let humanizedTime = hourLeft
 			? Math.floor(minuteLeft) ? `${hourLeft}小时${Math.floor(minuteLeft)}分钟` : `${hourLeft}小时`
 			: `${minuteLeft}分钟`;
-
+    console.log('idleCoin: ', idleCoin);
+    console.log('humanizedTime: ', humanizedTime);
 		this.modalOffline = new ModalOffline({
 			game: this.game,
 			coin: idleCoin,
@@ -871,6 +881,15 @@ class Game extends window.Phaser.State {
 	};
 
 	saveAllRelevantData = () => {
+    let offlineCoin = '0';
+    let offlineDuration = '0';
+    if (this.modalOffline) {
+      offlineCoin = this.modalOffline.getCoinValue().toString();
+      offlineDuration = this.modalOffline.getDuration();
+      console.log('存转发前modal的值', offlineCoin, offlineDuration);
+      this.modalOffline.destroy();
+    }
+
 		return {
 			hideTs: moment.utc().format('x'),
 			prodInfo: this.prodInfo,
@@ -883,6 +902,8 @@ class Game extends window.Phaser.State {
       idleCoinSpeed: this.btnIdleCash.getValue().toString(), // 可以不存没啥用
       upBtnWarehouseLevel: this.upBtnWarehouse.getLevel(),
       upBtnMarketLevel: this.upBtnMarket.getLevel(),
+      offlineCoin,
+      offlineDuration,
 
 			workstationInfo: this._getWorkstationSaveInfo()
 		};
