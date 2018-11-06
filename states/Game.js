@@ -60,7 +60,8 @@ class Game extends window.Phaser.State {
     this.skillDurationRed = payload ? payload.skillDurationRed : undefined;
     this.bellRedInfo = payload ? payload.bellRedInfo : bellRedInfo;
     this.upBtnWarehouseLevel = payload ? payload.upBtnWarehouseLevel : 1;
-		this.upBtnMarketLevel = payload ? payload.upBtnMarketLevel : 1;
+    this.upBtnMarketLevel = payload ? payload.upBtnMarketLevel : 1;
+    this.offlineCoin = payload ? payload.offlineCoin : '0';
 
 		this.workstationInfo = payload ? payload.workstationInfo : [];
   }
@@ -833,9 +834,14 @@ class Game extends window.Phaser.State {
 		let diff = now - value;
 		let duration = moment.duration(diff);
 		let formattedMinutes = Math.floor(duration.asMinutes());
-		// console.log('formattedMinutes: ', formattedMinutes);
+
+    if (this.modalOffline) {
+      console.log('改变coin值');
+      this.modalOffline.doubleCoinValue();
+    }
 		if (formattedMinutes < 1) return false;
 
+    console.log('只会触发一次');
 		let idleValue = this.btnIdleCash.getValue();
 		let idleCoin = idleValue.times(formattedMinutes);
 
@@ -849,7 +855,10 @@ class Game extends window.Phaser.State {
 			game: this.game,
 			coin: idleCoin,
 			duration: humanizedTime
-		});
+    });
+    this.modalOffline.onDestroy.add(() => {
+      this.modalOffline = null;
+    });
 	};
 
 	getCurrWorkingWsCount = () => {
@@ -873,7 +882,7 @@ class Game extends window.Phaser.State {
       currCoin: this.btnCash.getCash().toString(),
       idleCoinSpeed: this.btnIdleCash.getValue().toString(), // 可以不存没啥用
       upBtnWarehouseLevel: this.upBtnWarehouse.getLevel(),
-			upBtnMarketLevel: this.upBtnMarket.getLevel(),
+      upBtnMarketLevel: this.upBtnMarket.getLevel(),
 
 			workstationInfo: this._getWorkstationSaveInfo()
 		};

@@ -27,7 +27,7 @@ class ModalOffline extends ModalRaw {
 		width = CONFIG.width,
     headingTxt = CONFIG.headingTxt,
     duration,
-    coin = '10099990008009090909',
+    coin,
 		close = 'destroy'
 	}) {
 		super(
@@ -67,13 +67,13 @@ class ModalOffline extends ModalRaw {
     this.timeDesTxt.setTextBounds(0, 0, 444, 40);
     this.timeDesTxt.alignTo(this.chunk, Phaser.TOP_LEFT, 0, 20);
 
-    this.coin2Collect = this.game.make.text(0, 0, formatBigNum(this.coin), getFontStyle('36px', '#f8fc6a', '', 'bold'));
-    this.coin2Collect.setTextBounds(0, 0, 145, 60);
-    this.coin2Collect.alignTo(this.chunk, Phaser.RIGHT_BOTTOM, -155, -125);
-
     this.btnCollect = this.game.make.image(0, 0, 'btn_collect');
     this.btnCollect.alignTo(this.chunk, Phaser.BOTTOM_LEFT);
     this.btnCollect.events.onInputUp.add(this._handleCoinCollection);
+
+    this.coin2Collect = this.game.make.text(0, 0, formatBigNum(this.coin), getFontStyle('36px', '#f8fc6a', '', 'bold'));
+    this.coin2Collect.setTextBounds(0, 0, 145, 60);
+    this.coin2Collect.alignTo(this.chunk, Phaser.RIGHT_BOTTOM, -155, -125);
 
     this.btnShare2 = this.game.make.image(0, 0, 'btn_share2');
     this.btnShare2.alignTo(this.chunk, Phaser.BOTTOM_RIGHT, 0, -20);
@@ -101,14 +101,26 @@ class ModalOffline extends ModalRaw {
     if (!isOver) return false;
     if (this.hasClickShare) return false;
     this.hasClickShare = true;
+    this.coin = this.coin.times(2);
 
     window.wx.shareAppMessage({
       title: '工业大亨2',
       imageUrl: '__static/images/share.png'
     });
 
-    this.coin = this.coin.times(2);
+    console.log('this.coin2Collect: ', this.coin2Collect.text);
+  }
+
+  doubleCoinValue = () => {
     this.coin2Collect.setText(formatBigNum(this.coin), true);
+  }
+
+  getCoinValue = () => {
+    return this.coin;
+  }
+
+  getDuration = () => {
+    return this.duration;
   }
 };
 

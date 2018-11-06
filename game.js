@@ -20,9 +20,9 @@ var game = new Phaser.Game({
   enableDebug: false
 });
 
-// window.wx.setEnableDebug({
-//   enableDebug: true
-// });
+window.wx.setEnableDebug({
+  enableDebug: true
+});
 
 window.game = game;
 
@@ -58,8 +58,10 @@ window.wx.onShow((opts) => {
   // console.log('idleFactory:',  payload);
   // 渲染分两种情况
   if (currState === undefined || !payload) {
+    console.log('payload: ', payload);
     game.state.start('Start', true, false, payload || null);
   } else {
+    console.log('payload.hideTs: ', payload.hideTs);
     currState.showModalIdle(payload.hideTs);
   }
 });
