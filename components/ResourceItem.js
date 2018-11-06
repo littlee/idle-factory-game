@@ -54,14 +54,18 @@ class ResourceItem extends window.Phaser.Group {
 		this.icon.scale.x = CONFIG.imgScale;
     this.icon.scale.y = CONFIG.imgScale;
 
-    // if (this.key === 'reso_ore') {
-    //   this.icon.events.onInputDown.add(() => {
-    //     this.littlee = setTimeout();
-    //   });
-    //   this.icon.events.onInputUp.add(() => {
-    //     console.log('yes???');
-    //   });
-    // }
+    if (this.key === 'reso_ore') {
+      this.icon.events.onInputDown.add(() => {
+        this.littlee = this.game.time.events.add(2000, () => {
+          window.wx.clearStorageSync();
+          this.game.state.restart();
+        });
+      });
+      this.icon.events.onInputUp.add(() => {
+        console.log('input Up');
+        this.game.time.events.remove(this.littlee);
+      });
+    }
 
 		this.bgVeil = this.game.make.graphics(0, 0);
 		this.bgVeil.beginFill(CONFIG.bgColor, CONFIG.bgUnableAlpha);
