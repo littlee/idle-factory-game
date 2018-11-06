@@ -1,4 +1,5 @@
 import ProductUpgradeItem from './ProductUpgradeItem.js';
+import { CN_NAME_MAP } from '../js/config.js';
 
 const CONFIG = {
   itemGap: 638 / 6,
@@ -116,7 +117,7 @@ class ProductUpgradeLine extends window.Phaser.Group {
     this.bigVeilClock = this.game.make.image(0, 0, 'clock_yellow');
     this.bigVeilClock.alignTo(this.bigVeil, Phaser.TOP_LEFT, -150, -45);
 
-    this.bigCountdownTxt = this.game.make.text(0, 0, this.activatedProduct + '研究中...' + this.timeRemained, getFontStyle());
+    this.bigCountdownTxt = this.game.make.text(0, 0, '研究中...' + this.timeRemained, getFontStyle());
     this.bigCountdownTxt.alignTo(this.bigVeilClock, Phaser.RIGHT_BOTTOM, 20, -this.bigVeilClock.height / 4);
 
     this.bigVeilGroup.addChild(this.bigVeil);
@@ -231,7 +232,7 @@ class ProductUpgradeLine extends window.Phaser.Group {
   resetBigCountdownTxt = (timeString, prod) => {
     this.timeRemained = timeString;
     this.activatedProduct = prod;
-    this.bigCountdownTxt.setText(this.activatedProduct + '研究中...' + this.timeRemained, true);
+    this.bigCountdownTxt.setText(CN_NAME_MAP[this.activatedProduct] + '研究中...' + this.timeRemained, true);
   }
 
   getProdLineProductName = () => {

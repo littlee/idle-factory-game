@@ -68,7 +68,7 @@ function formatRemainedSecond(secs) {
   if (hours > 0) {
     return minutes === 0 ? `${hours}h` : `${hours}h${minutes}m`;
   } else if (minutes > 0) {
-    return `${minutes}m${seconds}s`;
+    return seconds === 0 ? `${minutes}m` : `${minutes}m${seconds}s`;
   } else {
     return `${seconds}s`;
   }
@@ -391,6 +391,8 @@ class ProductUpgradeItem extends window.Phaser.Group {
     }
     this._data.step = seconds / 360;
     this.durationInMiliSeconds = seconds * 1000;
+    // formate this._data.countDownDuration and update the corresponding text
+    this.countDownTxt.setText(formatRemainedSecond(this.durationInMiliSeconds / 1000));
     // console.log('this.durationInMiliSeconds: ', this.durationInMiliSeconds);
   };
 
