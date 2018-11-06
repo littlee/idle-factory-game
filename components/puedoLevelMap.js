@@ -1,6 +1,6 @@
 import range from '../js/libs/_/range';
 export const LevelMap = {
-	warehouse: range(20).reduce((prev, curr, index) => {
+	warehouse: range(200).reduce((prev, curr, index) => {
 		prev[`level${index + 1}`] = {
 			level: index + 1,
 			count: Math.floor(index / 2) + 1,
@@ -12,7 +12,7 @@ export const LevelMap = {
 		return prev;
 	}, {}),
 
-	market: range(20).reduce((prev, curr, index) => {
+	market: range(200).reduce((prev, curr, index) => {
 		prev[`level${index + 1}`] = {
 			level: index + 1,
 			count: Math.floor(index / 2) + 1,
@@ -24,7 +24,7 @@ export const LevelMap = {
 		return prev;
 	}, {}),
 
-	workstation: range(20).reduce((prev, curr, index) => {
+	workstation: range(200).reduce((prev, curr, index) => {
 		prev[`level${index + 1}`] = {
 			level: index + 1,
 			count: index + 1,
