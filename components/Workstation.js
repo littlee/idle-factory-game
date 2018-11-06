@@ -467,12 +467,7 @@ class Workstation extends window.Phaser.Group {
     Object.keys(info.input).forEach(k => {
       info.input[k].amount = Big(info.input[k].amount);
     });
-    // this._data.input = info.input;
-    this._data.input = {
-      ore: {
-        amount: Big(0)
-      }
-    };
+    this._data.input = info.input;
     this._data.output = info.output;
     info.outputAmount.cash = Big(info.outputAmount.cash);
 
@@ -505,6 +500,7 @@ class Workstation extends window.Phaser.Group {
 
       this.upBtn && this.upBtn.setLevel(info.level);
 
+      this.updateTexture();
       if (!this._getHasNoInput()) {
         this.startWork();
       }
